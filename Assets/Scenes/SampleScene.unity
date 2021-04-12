@@ -174,7 +174,6 @@ MonoBehaviour:
   MinStepDistance: 0.3
   StepHeight: 0.1
   StepSpeed: 10
-  ForwardShiftDivider: 40
   OtherFoot: {fileID: 2027316183}
 --- !u!1 &170171480
 GameObject:
@@ -774,6 +773,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BananaMan
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 2f6f23d88ba1e274bbf5655b2986bc52,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a235afbca23017c46bfa87379f24989e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f6f23d88ba1e274bbf5655b2986bc52, type: 3}
 --- !u!4 &1233849695 stripped
@@ -1299,7 +1303,6 @@ MonoBehaviour:
   MinStepDistance: 0.3
   StepHeight: 0.1
   StepSpeed: 10
-  ForwardShiftDivider: 40
   OtherFoot: {fileID: 8164133}
 --- !u!1 &2138677391
 GameObject:
