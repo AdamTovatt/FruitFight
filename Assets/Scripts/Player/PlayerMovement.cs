@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool CalculateIsGrounded()
     {
-        Ray ray = new Ray(transform.position, -Vector3.up);
+        Ray ray = new Ray(transform.position + Vector3.up * 0.4f, -Vector3.up);
 
         RaycastHit hit;
         bool raycastResult = Physics.Raycast(ray, out hit);

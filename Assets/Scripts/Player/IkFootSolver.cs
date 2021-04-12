@@ -47,7 +47,6 @@ public class IkFootSolver : MonoBehaviour
 
         Vector3 searchPosition = GetGroundPosition(appliedStepDistance + playerVelocity.Velocity / ForwardShiftDivider);
 
-        Debug.Log(lerp + " o: " + OtherFoot.IsMoving);
         if(Vector3.Distance(newPosition, searchPosition) > appliedStepDistance && !OtherFoot.IsMoving && lerp >= 1)
         {
             lerp = 0;

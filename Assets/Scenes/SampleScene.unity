@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerMovement: {fileID: 238618792}
-  FootSpacing: 0.3
+  FootSpacing: 0.2
   RightFoot: 0
   StepDistance: 0.6
   MinStepDistance: 0.3
@@ -1085,13 +1085,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.13932854, y: 0.5877714, z: -0.103639804, w: 0.79017156}
-  m_LocalPosition: {x: -5.3, y: 1.45, z: -1.75}
+  m_LocalRotation: {x: 0.1227211, y: 0.6967418, z: -0.12285405, w: 0.6959865}
+  m_LocalPosition: {x: -8.499, y: 3.811, z: 0.168}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 20, y: 73.288, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 90.062, z: 0}
 --- !u!114 &1687258586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1293,7 +1293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerMovement: {fileID: 238618792}
-  FootSpacing: 0.3
+  FootSpacing: 0.2
   RightFoot: 1
   StepDistance: 0.6
   MinStepDistance: 0.3
