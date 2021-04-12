@@ -11,7 +11,6 @@ public class IkFootSolver : MonoBehaviour
     public float MinStepDistance = 0.2f;
     public float StepHeight = 0.4f;
     public float StepSpeed = 10f;
-    public float ForwardShiftDivider = 10f;
     public IkFootSolver OtherFoot;
 
     public bool IsMoving { get { return lerp < 1; } }
@@ -45,7 +44,7 @@ public class IkFootSolver : MonoBehaviour
 
         float appliedStepDistance = Mathf.Max(playerVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
 
-        Vector3 searchPosition = GetGroundPosition(appliedStepDistance + playerVelocity.Velocity / ForwardShiftDivider);
+        Vector3 searchPosition = GetGroundPosition(appliedStepDistance);
 
         if(Vector3.Distance(newPosition, searchPosition) > appliedStepDistance && !OtherFoot.IsMoving && lerp >= 1)
         {
