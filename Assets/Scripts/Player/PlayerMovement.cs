@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private PlayerControls controls;
     private Vector2 move;
-    private Rigidbody rigidbody;
+    public Rigidbody RigidBody;
 
     public float Speed = 5f;
     public float JumpStrength = 5f;
@@ -30,15 +30,13 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         controls = new PlayerControls();
-        rigidbody = gameObject.GetComponent<Rigidbody>();
+        RigidBody = gameObject.GetComponent<Rigidbody>();
         distanceToGround = gameObject.GetComponent<Collider>().bounds.extents.y + 1f;
 
         controls.Gameplay.Attack.performed += (context) => { Attack(); };
         controls.Gameplay.Jump.performed += (context) => { Jump(); };
         controls.Gameplay.Move.performed += (context) => { move = context.ReadValue<Vector2>(); };
         controls.Gameplay.Move.canceled += (controls) => { move = Vector2.zero; };
-
-        Debug.Log(distanceToGround);
     }
 
     private void Update()
@@ -55,14 +53,15 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movementX = (cameraRight * move.x * Speed) / 100f;
         Vector3 movementY = (cameraForward * move.y * Speed) / 100f;
 
-        Vector3 newPosition = rigidbody.transform.position + movementX + movementY;
+        Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
-        rigidbody.MovePosition(newPosition);
-        rigidbody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
+        RigidBody.MovePosition(newPosition);
+        if (newPosition - transform.position != Vector3.zero)
+            RigidBody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
-        rigidbody.AddForce(-Vector3.up);
+        RigidBody.AddForce(-Vector3.up);
     }
 
     private void Attack()
@@ -73,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         if (IsGrounded)
-            rigidbody.AddForce(new Vector3(0, 50f * JumpStrength, 0));
+            RigidBody.AddForce(new Vector3(0, 50f * JumpStrength, 0));
     }
 
     private void OnEnable()
