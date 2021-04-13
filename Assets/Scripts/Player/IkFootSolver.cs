@@ -25,6 +25,8 @@ public class IkFootSolver : MonoBehaviour
 
     private float lerp;
 
+    private bool InDefaultPosition = true;
+
     AverageVelocityKeeper playerVelocity;
 
     void Start()
@@ -46,17 +48,35 @@ public class IkFootSolver : MonoBehaviour
 
         Vector3 searchPosition = GetGroundPosition(appliedStepDistance);
 
-        if(Vector3.Distance(newPosition, searchPosition) > appliedStepDistance && !OtherFoot.IsMoving && lerp >= 1)
+        if (!PlayerMovement.StandingStill && playerVelocity.Velocity != 0)
         {
-            lerp = 0;
-            oldPosition = currentPosition;
-            newPosition = searchPosition;
+            float distance = Vector3.Distance(newPosition, searchPosition);
+            if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
+            {
+                InDefaultPosition = false;
+                lerp = 0;
+                oldPosition = currentPosition;
+                newPosition = searchPosition;
+            }
+        }
+        else
+        {
+            if (!InDefaultPosition)
+            {
+                InDefaultPosition = true;
+                searchPosition = GetGroundPosition(0);
+                lerp = 0;
+                oldPosition = currentPosition;
+                newPosition = searchPosition;
+            }
         }
 
-        if(lerp < 1)
+        if (lerp < 1)
         {
             Vector3 footPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
-            footPosition.y += Mathf.Sin(lerp * Mathf.PI) * StepHeight;
+
+            if (!InDefaultPosition)
+                footPosition.y += Mathf.Sin(lerp * Mathf.PI) * StepHeight;
 
             currentPosition = footPosition;
             lerp += Time.deltaTime * StepSpeed;

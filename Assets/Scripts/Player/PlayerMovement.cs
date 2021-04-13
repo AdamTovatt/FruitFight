@@ -12,8 +12,11 @@ public class PlayerMovement : MonoBehaviour
     public float Speed = 5f;
     public float JumpStrength = 5f;
     public float DistanceToGround = 0.25f;
+    public float MovementInputCutoff = 0.2f;
 
     public Transform Camera;
+
+    public bool StandingStill { get { return move == Vector2.zero; } }
 
     public bool IsGrounded
     {
@@ -25,18 +28,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     private bool? _isGrounded = null;
-    private float distanceToGround;
 
     private void Awake()
     {
         controls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
-        distanceToGround = gameObject.GetComponent<Collider>().bounds.extents.y + 1f;
 
         controls.Gameplay.Attack.performed += (context) => { Attack(); };
         controls.Gameplay.Jump.performed += (context) => { Jump(); };
-        controls.Gameplay.Move.performed += (context) => { move = context.ReadValue<Vector2>(); };
-        controls.Gameplay.Move.canceled += (controls) => { move = Vector2.zero; };
+        controls.Gameplay.Move.performed += (context) => { Move(context.ReadValue<Vector2>()); };
+        controls.Gameplay.Move.canceled += (context) => { Move(Vector2.zero); };
     }
 
     private void Update()
@@ -56,12 +57,20 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
         RigidBody.MovePosition(newPosition);
-        if (newPosition - transform.position != Vector3.zero)
+        if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero)
             RigidBody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
         RigidBody.AddForce(-Vector3.up);
+    }
+
+    private void Move(Vector2 moveValue)
+    {
+        if (moveValue.magnitude > MovementInputCutoff)
+            move = moveValue;
+        else
+            move = Vector2.zero;
     }
 
     private void Attack()
