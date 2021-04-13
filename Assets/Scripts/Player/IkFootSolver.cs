@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class IkFootSolver : MonoBehaviour
 {
-    public PlayerMovement PlayerMovement;
+    public MovingCharacter CharacterMovement;
     public float FootSpacing = 0.3f;
     public bool RightFoot = false;
     public float StepDistance = 0.5f;
     public float MinStepDistance = 0.2f;
     public float StepHeight = 0.4f;
     public float StepSpeed = 10f;
+    public float FootJumpPositionHeight = 1f;
     public IkFootSolver OtherFoot;
 
     public bool IsMoving { get { return lerp < 1; } }
 
-    private int terrainLayer;
-    private Transform player;
+    private Transform character;
     private float appliedFootSpacing;
 
     private Vector3 oldPosition;
@@ -25,15 +25,15 @@ public class IkFootSolver : MonoBehaviour
 
     private float lerp;
 
-    private bool InDefaultPosition = true;
+    private bool inDefaultPosition = true;
+    private bool inJumpPosition = false;
 
-    AverageVelocityKeeper playerVelocity;
+    AverageVelocityKeeper characterVelocity;
 
     void Start()
     {
-        playerVelocity = PlayerMovement.gameObject.GetComponent<AverageVelocityKeeper>();
-        player = PlayerMovement.transform;
-        terrainLayer = LayerMask.NameToLayer("Terrain");
+        characterVelocity = CharacterMovement.gameObject.GetComponent<AverageVelocityKeeper>();
+        character = CharacterMovement.transform;
         appliedFootSpacing = FootSpacing * (RightFoot ? 1f : -1f);
 
         currentPosition = GetGroundPosition(0);
@@ -44,38 +44,46 @@ public class IkFootSolver : MonoBehaviour
     {
         transform.position = currentPosition;
 
-        float appliedStepDistance = Mathf.Max(playerVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
+        float appliedStepDistance = Mathf.Max(characterVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
 
         Vector3 searchPosition = GetGroundPosition(appliedStepDistance);
 
-        if (!PlayerMovement.StandingStill && playerVelocity.Velocity != 0)
+        if (CharacterMovement.IsGrounded)
         {
-            float distance = Vector3.Distance(newPosition, searchPosition);
-            if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
+            inJumpPosition = false;
+            if (!CharacterMovement.StandingStill && characterVelocity.Velocity != 0)
             {
-                InDefaultPosition = false;
-                lerp = 0;
-                oldPosition = currentPosition;
-                newPosition = searchPosition;
+                float distance = Vector3.Distance(newPosition, searchPosition);
+                if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
+                {
+                    inDefaultPosition = false;
+                    lerp = 0;
+                    oldPosition = currentPosition;
+                    newPosition = searchPosition;
+                }
+            }
+            else
+            {
+                if (!inDefaultPosition)
+                {
+                    inDefaultPosition = true;
+                    searchPosition = GetGroundPosition(0);
+                    lerp = 0;
+                    oldPosition = currentPosition;
+                    newPosition = searchPosition;
+                }
             }
         }
         else
         {
-            if (!InDefaultPosition)
-            {
-                InDefaultPosition = true;
-                searchPosition = GetGroundPosition(0);
-                lerp = 0;
-                oldPosition = currentPosition;
-                newPosition = searchPosition;
-            }
+            currentPosition = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing);
         }
 
         if (lerp < 1)
         {
             Vector3 footPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
 
-            if (!InDefaultPosition)
+            if (!inDefaultPosition)
                 footPosition.y += Mathf.Sin(lerp * Mathf.PI) * StepHeight;
 
             currentPosition = footPosition;
@@ -89,7 +97,7 @@ public class IkFootSolver : MonoBehaviour
 
     private Vector3 GetGroundPosition(float forward)
     {
-        Ray ray = new Ray(player.position + (Vector3.up * 0.5f) + (player.right * appliedFootSpacing) + (player.forward * forward), Vector3.down);
+        Ray ray = new Ray(character.position + (Vector3.up * 0.5f) + (character.right * appliedFootSpacing) + (character.forward * forward), Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit info, 10))
             return info.point;
 

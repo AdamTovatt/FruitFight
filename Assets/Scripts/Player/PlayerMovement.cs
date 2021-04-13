@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MovingCharacter
 {
     private PlayerControls controls;
     private Vector2 move;
@@ -16,9 +16,9 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform Camera;
 
-    public bool StandingStill { get { return move == Vector2.zero; } }
+    public override bool StandingStill { get { return move == Vector2.zero; } }
 
-    public bool IsGrounded
+    public override bool IsGrounded
     {
         get
         {
