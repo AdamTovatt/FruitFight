@@ -57,6 +57,7 @@ public class PlayerMovement : MovingCharacter
         Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
         RigidBody.MovePosition(newPosition);
+
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero)
             RigidBody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
 

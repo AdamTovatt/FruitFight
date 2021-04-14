@@ -19,9 +19,9 @@ public class IkFootSolver : MonoBehaviour
     private Transform character;
     private float appliedFootSpacing;
 
-    private Vector3 oldPosition;
-    private Vector3 currentPosition;
-    private Vector3 newPosition;
+    public Vector3 OldPosition { get; private set; }
+    public Vector3 CurrentPosition { get; private set; }
+    public Vector3 NewPosition { get; private set; }
 
     private float lerp;
 
@@ -30,19 +30,22 @@ public class IkFootSolver : MonoBehaviour
 
     AverageVelocityKeeper characterVelocity;
 
+    public delegate void PositionUpdatedEventHandler(object sender, Vector3 newPosition);
+    public event PositionUpdatedEventHandler PositionUpdated;
+
     void Start()
     {
         characterVelocity = CharacterMovement.gameObject.GetComponent<AverageVelocityKeeper>();
         character = CharacterMovement.transform;
         appliedFootSpacing = FootSpacing * (RightFoot ? 1f : -1f);
 
-        currentPosition = GetGroundPosition(0);
+        CurrentPosition = GetGroundPosition(0);
         lerp = 1;
     }
 
     void Update()
     {
-        transform.position = currentPosition;
+        transform.position = CurrentPosition;
 
         float appliedStepDistance = Mathf.Max(characterVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
 
@@ -53,13 +56,14 @@ public class IkFootSolver : MonoBehaviour
             inJumpPosition = false;
             if (!CharacterMovement.StandingStill && characterVelocity.Velocity != 0)
             {
-                float distance = Vector3.Distance(newPosition, searchPosition);
+                float distance = Vector3.Distance(NewPosition, searchPosition);
                 if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
                 {
                     inDefaultPosition = false;
                     lerp = 0;
-                    oldPosition = currentPosition;
-                    newPosition = searchPosition;
+                    OldPosition = CurrentPosition;
+                    NewPosition = searchPosition;
+                    PositionUpdated?.Invoke(this, NewPosition);
                 }
             }
             else
@@ -69,29 +73,31 @@ public class IkFootSolver : MonoBehaviour
                     inDefaultPosition = true;
                     searchPosition = GetGroundPosition(0);
                     lerp = 0;
-                    oldPosition = currentPosition;
-                    newPosition = searchPosition;
+                    OldPosition = CurrentPosition;
+                    NewPosition = searchPosition;
                 }
             }
         }
         else
         {
-            currentPosition = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing);
+            inJumpPosition = true;
+            inDefaultPosition = false;
+            CurrentPosition = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing);
         }
 
         if (lerp < 1)
         {
-            Vector3 footPosition = Vector3.Lerp(oldPosition, newPosition, lerp);
+            Vector3 footPosition = Vector3.Lerp(OldPosition, NewPosition, lerp);
 
             if (!inDefaultPosition)
                 footPosition.y += Mathf.Sin(lerp * Mathf.PI) * StepHeight;
 
-            currentPosition = footPosition;
+            CurrentPosition = footPosition;
             lerp += Time.deltaTime * StepSpeed;
         }
         else
         {
-            oldPosition = newPosition;
+            OldPosition = NewPosition;
         }
     }
 
@@ -107,6 +113,6 @@ public class IkFootSolver : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(newPosition, 0.05f);
+        Gizmos.DrawSphere(NewPosition, 0.05f);
     }
 }
