@@ -1058,10 +1058,10 @@ MonoBehaviour:
   IkFootSolver: {fileID: 8164133}
   CharacterMovement: {fileID: 238618792}
   RightArm: 0
-  ArmDistanceToBody: 0.75
-  ArmHeight: 0.8
+  ArmDistanceToBody: 0.6
+  ArmHeight: 0.55
   ArmSwingSpeed: 15
-  ArmForward: 1.2
+  ArmForward: 0
 --- !u!1 &1458322688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,10 +1263,10 @@ MonoBehaviour:
   IkFootSolver: {fileID: 2027316183}
   CharacterMovement: {fileID: 238618792}
   RightArm: 1
-  ArmDistanceToBody: 0.75
-  ArmHeight: 0.8
+  ArmDistanceToBody: 0.6
+  ArmHeight: 0.55
   ArmSwingSpeed: 15
-  ArmForward: 1.2
+  ArmForward: 0
 --- !u!1 &1687258581
 GameObject:
   m_ObjectHideFlags: 0

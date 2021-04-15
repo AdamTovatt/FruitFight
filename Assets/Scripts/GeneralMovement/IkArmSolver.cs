@@ -21,13 +21,18 @@ public class IkArmSolver : MonoBehaviour
 
     void Start()
     {
-        IkFootSolver.PositionUpdated += (sender, newPosition) => { FootPositionWasUpdated(newPosition); };
+        //IkFootSolver.PositionUpdated += (sender, newPosition) => { FootPositionWasUpdated(newPosition); };
     }
 
     void Update()
     {
+        CurrentPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
+        CurrentPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
+        CurrentPosition += CharacterMovement.transform.forward * ArmForward;
+        CurrentPosition += CharacterMovement.transform.up * ArmHeight;
         transform.position = CurrentPosition;
 
+        /*
         if (lerp < 1) //this has to be changed, the arm should move relative to the body, not to the world. It should move with the body, not be anchored to the ground
         {
             Vector3 armPosition = Vector3.Lerp(OldPosition, NewPosition, lerp);
@@ -39,15 +44,16 @@ public class IkArmSolver : MonoBehaviour
         {
             OldPosition = NewPosition;
         }
+        */
     }
 
     private void FootPositionWasUpdated(Vector3 newPosition)
     {
         lerp = 0;
         OldPosition = CurrentPosition;
-        NewPosition = CharacterMovement.transform.position + (CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody));
+        NewPosition = CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
         //NewPosition += (CharacterMovement.transform.position - newPosition);
-        NewPosition += (IkFootSolver.OldPosition - IkFootSolver.NewPosition);
+        NewPosition += CharacterMovement.transform.position - IkFootSolver.NewPosition;
         NewPosition += CharacterMovement.transform.forward * ArmForward;
         NewPosition += CharacterMovement.transform.up * ArmHeight;
     }
@@ -56,7 +62,7 @@ public class IkArmSolver : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CurrentPosition, 0.05f);
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(NewPosition, 0.05f);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawSphere(NewPosition, 0.05f);
     }
 }
