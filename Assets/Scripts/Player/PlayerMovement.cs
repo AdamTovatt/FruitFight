@@ -13,8 +13,12 @@ public class PlayerMovement : MovingCharacter
     public float JumpStrength = 5f;
     public float DistanceToGround = 0.25f;
     public float MovementInputCutoff = 0.2f;
+    public float PunchDistance = 0.5f;
+    public float PunchHeight = 0.5f;
 
     public Transform Camera;
+
+    public override event AttackHandler OnPunched;
 
     public override bool StandingStill { get { return move == Vector2.zero; } }
 
@@ -34,7 +38,7 @@ public class PlayerMovement : MovingCharacter
         controls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
 
-        controls.Gameplay.Attack.performed += (context) => { Attack(); };
+        controls.Gameplay.Attack.performed += (context) => { Punch(); };
         controls.Gameplay.Jump.performed += (context) => { Jump(); };
         controls.Gameplay.Move.performed += (context) => { Move(context.ReadValue<Vector2>()); };
         controls.Gameplay.Move.canceled += (context) => { Move(Vector2.zero); };
@@ -74,9 +78,19 @@ public class PlayerMovement : MovingCharacter
             move = Vector2.zero;
     }
 
-    private void Attack()
+    private void Punch()
     {
+        Vector3? punchTargetPoint = FindPunchTargetPoint();
 
+        if(punchTargetPoint == null)
+        {
+            OnPunched?.Invoke(this, transform.position + transform.forward * PunchDistance + transform.up * PunchHeight);
+        }
+    }
+
+    private Vector3? FindPunchTargetPoint()
+    {
+        return null;
     }
 
     private void Jump()

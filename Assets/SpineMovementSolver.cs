@@ -29,7 +29,8 @@ public class SpineMovementSolver : MonoBehaviour
 
     void Update()
     {
-        transform.position = CurrentPosition + distanceToCharacterTransform + Character.transform.position;
+        transform.position = CurrentPosition + (Character.transform.rotation * distanceToCharacterTransform) + Character.transform.position;
+        Debug.Log(CurrentPosition);
 
         if(lerp < 1 && Character.IsGrounded)
         {

@@ -18,19 +18,48 @@ public class IkArmSolver : MonoBehaviour
     public Vector3 OldPosition { get; private set; }
 
     private float lerp = 1;
+    private bool punching = false;
+    private Vector3 punchStartPosition;
+    private Vector3 punchEndPosition;
 
     void Start()
     {
-
+        CharacterMovement.OnPunched += (sender, punchPosition) => { Punch(punchPosition); };
     }
 
     void Update()
     {
-        CurrentPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
-        CurrentPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
-        CurrentPosition += CharacterMovement.transform.forward * ArmForward;
-        CurrentPosition += CharacterMovement.transform.up * ArmHeight;
-        transform.position = CurrentPosition;
+        if (!punching)
+        {
+            CurrentPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
+            CurrentPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
+            CurrentPosition += CharacterMovement.transform.forward * ArmForward;
+            CurrentPosition += CharacterMovement.transform.up * ArmHeight;
+            transform.position = CurrentPosition;
+        }
+        else
+        {
+            if (lerp < 2)
+            {
+                if (lerp < 1)
+                    CurrentPosition = Vector3.Lerp(punchStartPosition, punchEndPosition, lerp);
+                transform.position = CurrentPosition;
+
+                lerp += Time.deltaTime * ArmSwingSpeed;
+            }
+            else
+            {
+                punching = false;
+            }
+        }
+    }
+
+    private void Punch(Vector3 position)
+    {
+        lerp = 0;
+        punchStartPosition = CurrentPosition;
+        punchEndPosition = position;
+        punching = true;
     }
 
     private void OnDrawGizmos()
