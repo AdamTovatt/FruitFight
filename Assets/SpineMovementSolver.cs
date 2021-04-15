@@ -25,8 +25,6 @@ public class SpineMovementSolver : MonoBehaviour
     {
         distanceToCharacterTransform = transform.position - Character.transform.position;
         characterVelocity = Character.GetComponent<AverageVelocityKeeper>();
-
-        //LeftFoot.PositionUpdated += (sender, newPosition) => { FootWasMoved(); };
     }
 
     void Update()
@@ -45,12 +43,5 @@ public class SpineMovementSolver : MonoBehaviour
             lerp = 0;
             OldPosition = NewPosition;
         }
-    }
-
-    private void FootWasMoved()
-    {
-        lerp = 0;
-        OldPosition = Vector3.up * BounceHeight;
-        NewPosition = Vector3.zero;
     }
 }
