@@ -2308,6 +2308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 663280433297521736}
+  - component: {fileID: 5354935247409686505}
   m_Layer: 0
   m_Name: Spine02
   m_TagString: Untagged
@@ -2315,6 +2316,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5354935247409686505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5354935247409686504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535f392430948504b8701ce5faa0b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RightFoot: {fileID: 2027316183}
+  LeftFoot: {fileID: 8164133}
+  Character: {fileID: 238618792}
+  BounceSpeed: 1.8
+  BounceHeight: 0.1
+  CharacterMaxVelocity: 4
 --- !u!1 &5503163096584804406
 GameObject:
   m_ObjectHideFlags: 0
