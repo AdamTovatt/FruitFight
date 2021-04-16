@@ -4,9 +4,14 @@ using UnityEngine;
 
 public abstract class MovingCharacter : MonoBehaviour
 {
+    public enum AttackSide
+    {
+        Right, Left, Both
+    }
+
     public abstract bool IsGrounded { get; }
     public abstract bool StandingStill { get; }
 
-    public delegate void AttackHandler(object sender, Vector3 attackPoint);
+    public delegate void AttackHandler(object sender, Vector3 attackPoint, AttackSide attackSide);
     public abstract event AttackHandler OnPunched;
 }

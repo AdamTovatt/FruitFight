@@ -15,6 +15,7 @@ public class PlayerMovement : MovingCharacter
     public float MovementInputCutoff = 0.2f;
     public float PunchDistance = 0.5f;
     public float PunchHeight = 0.5f;
+    public float PunchWidth = 0.5f;
 
     public Transform Camera;
 
@@ -84,7 +85,10 @@ public class PlayerMovement : MovingCharacter
 
         if(punchTargetPoint == null)
         {
-            OnPunched?.Invoke(this, transform.position + transform.forward * PunchDistance + transform.up * PunchHeight);
+            AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
+            Vector3 punchPosition = transform.position + transform.forward * PunchDistance + transform.up * PunchHeight;
+            punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
+            OnPunched?.Invoke(this, punchPosition, side);
         }
     }
 

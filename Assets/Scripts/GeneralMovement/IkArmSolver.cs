@@ -24,7 +24,7 @@ public class IkArmSolver : MonoBehaviour
 
     void Start()
     {
-        CharacterMovement.OnPunched += (sender, punchPosition) => { Punch(punchPosition); };
+        CharacterMovement.OnPunched += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
     }
 
     void Update()
@@ -54,8 +54,13 @@ public class IkArmSolver : MonoBehaviour
         }
     }
 
-    private void Punch(Vector3 position)
+    private void Punch(Vector3 position, MovingCharacter.AttackSide attackSide)
     {
+        if (RightArm && attackSide == MovingCharacter.AttackSide.Left)
+            return;
+        if (!RightArm && attackSide == MovingCharacter.AttackSide.Right)
+            return;
+
         lerp = 0;
         punchStartPosition = CurrentPosition;
         punchEndPosition = position;
