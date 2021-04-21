@@ -30,7 +30,7 @@ public class JellyBean : MonoBehaviour
     public delegate void StateChangedHandler(object sender, JellyBeanState newState);
     public event StateChangedHandler OnStateChanged;
 
-    private Rigidbody rigidbody;
+    private Rigidbody _rigidbody;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -39,11 +39,22 @@ public class JellyBean : MonoBehaviour
     private float randomTimeMin = 0;
     private float randomTimeMax = 0;
 
+    private Vector3 CurrentTargetPosition
+    {
+        get
+        {
+            if (targetSubPosition == Vector3.zero)
+                return targetPosition;
+            return targetSubPosition;
+        }
+    }
+
+    private Vector3 targetSubPosition;
     private Vector3 targetPosition;
 
     void Start()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody>();
+        _rigidbody = gameObject.GetComponent<Rigidbody>();
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };
         State = Random.Range(1, 3) > 1 ? JellyBeanState.Idle : JellyBeanState.Roaming;
@@ -58,7 +69,6 @@ public class JellyBean : MonoBehaviour
             case JellyBeanState.Roaming:
                 if (TimeInCurrentState < 5f + randomTimeAddition)
                 {
-                    Debug.Log(Vector3.Distance(targetPosition, transform.position));
                     if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
                     {
                         targetPosition = GetNewTargetPosition();
@@ -105,20 +115,11 @@ public class JellyBean : MonoBehaviour
 
     private void MoveTowardsTarget(float speed)
     {
-        Vector3 targetDirection = (targetPosition - transform.position);
+        Vector3 targetDirection = (CurrentTargetPosition - transform.position);
         targetDirection.y = 0;
         targetDirection.Normalize();
 
-        Ray visionOfTargetRay = new Ray(transform.position, targetPosition);
-        if(Physics.Raycast(visionOfTargetRay, out RaycastHit hit))
-        {
-            if((hit.point - targetPosition).sqrMagnitude > 0.1)
-            {
-
-            }
-        }
-
-        rigidbody.MovePosition(transform.position + (targetDirection * speed * 5) * Time.deltaTime);
+        _rigidbody.MovePosition(transform.position + (targetDirection * speed * 5) * Time.deltaTime);
     }
 
     private Vector3 GetNewTargetPosition()
@@ -131,7 +132,7 @@ public class JellyBean : MonoBehaviour
         result += Vector3.up * 0.05f;
 
         Ray groundRay = new Ray(result, Vector3.up * -1);
-        if(Physics.Raycast(groundRay, out RaycastHit groundHit, LayerMask.NameToLayer("Terrain")))
+        if (Physics.Raycast(groundRay, out RaycastHit groundHit, LayerMask.NameToLayer("Terrain")))
         {
             result = groundHit.point;
         }
@@ -140,15 +141,56 @@ public class JellyBean : MonoBehaviour
             result.y = transform.position.y;
         }
 
+        Vector3 towardsTarget = result - transform.position;
+        Ray visionOfTargetRay = new Ray(transform.position, towardsTarget);
+        if (Physics.Raycast(visionOfTargetRay, out RaycastHit hit))
+        {
+            Debug.Log((hit.point - result).sqrMagnitude);
+            if ((hit.point - result).sqrMagnitude > 0.1)
+            {
+                Vector3 cross = Vector3.Cross(hit.normal, Vector3.up);
+
+                right = hit.point + cross.normalized * 1;
+                left = hit.point + cross.normalized * -1;
+
+                if(VectorIsNegative(Vector3.Scale(cross.normalized * 1, towardsTarget)))
+                {
+                    result = right;
+                }
+                else
+                {
+                    result = left;
+                }
+            }
+        }
+
         return result;
     }
 
+    private bool VectorIsNegative(Vector3 vector)
+    {
+        if (vector.x < 0 || vector.y < 0 || vector.z < 0)
+            return true;
+        return false;
+    }
+
+    private Vector3 right;
+    private Vector3 left;
+
     private void OnDrawGizmos()
     {
-        if(targetPosition != Vector3.zero)
+        if (targetPosition != Vector3.zero)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(targetPosition, 0.08f);
+        }
+
+        if (right != Vector3.zero)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(right, 0.1f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(left, 0.1f);
         }
     }
 

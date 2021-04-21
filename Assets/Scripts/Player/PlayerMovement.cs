@@ -109,7 +109,7 @@ public class PlayerMovement : MovingCharacter
 
     private void OnEnable()
     {
-        controls.Gameplay.Enable();
+        controls?.Gameplay.Enable();
     }
 
     private void OnDisable()
