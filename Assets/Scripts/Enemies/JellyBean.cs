@@ -10,6 +10,7 @@ public class JellyBean : MonoBehaviour
     public float RoamSpeed = 1f;
     public float RoamNewTargetRange = 5f;
     public float PersonalBoundaryDistance = 0.1f;
+    public float DiscoveryRadius = 4f;
 
     public JellyBeanState State
     {
@@ -64,6 +65,12 @@ public class JellyBean : MonoBehaviour
     {
         StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.Camera.transform.position);
 
+        if((GameManager.Instance.Players[0].transform.position - transform.position).sqrMagnitude < DiscoveryRadius)
+        {
+            targetPosition = GameManager.Instance.Players[0].transform.position;
+            State = JellyBeanState.Chasing;
+        }
+
         switch (State)
         {
             case JellyBeanState.Roaming:
@@ -102,6 +109,7 @@ public class JellyBean : MonoBehaviour
                 }
                 break;
             case JellyBeanState.Chasing:
+                MoveTowardsTarget(RoamSpeed * 5);
                 break;
             case JellyBeanState.Confused:
                 State = JellyBeanState.Idle;
@@ -145,7 +153,6 @@ public class JellyBean : MonoBehaviour
         Ray visionOfTargetRay = new Ray(transform.position, towardsTarget);
         if (Physics.Raycast(visionOfTargetRay, out RaycastHit hit))
         {
-            Debug.Log((hit.point - result).sqrMagnitude);
             if ((hit.point - result).sqrMagnitude > 0.1)
             {
                 Vector3 cross = Vector3.Cross(hit.normal, Vector3.up);

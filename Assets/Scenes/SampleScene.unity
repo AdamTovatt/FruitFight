@@ -1222,6 +1222,7 @@ MonoBehaviour:
   RoamSpeed: 1
   RoamNewTargetRange: 5
   PersonalBoundaryDistance: 0.4
+  DiscoveryRadius: 4
 --- !u!114 &1319713714
 MonoBehaviour:
   m_ObjectHideFlags: 0
