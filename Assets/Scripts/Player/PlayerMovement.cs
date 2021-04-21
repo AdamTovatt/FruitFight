@@ -8,6 +8,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerControls controls;
     private Vector2 move;
     public Rigidbody RigidBody;
+    private Transform Camera;
 
     public float Speed = 5f;
     public float JumpStrength = 5f;
@@ -16,8 +17,6 @@ public class PlayerMovement : MovingCharacter
     public float PunchDistance = 0.5f;
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
-
-    public Transform Camera;
 
     public override event AttackHandler OnPunched;
 
@@ -43,6 +42,11 @@ public class PlayerMovement : MovingCharacter
         controls.Gameplay.Jump.performed += (context) => { Jump(); };
         controls.Gameplay.Move.performed += (context) => { Move(context.ReadValue<Vector2>()); };
         controls.Gameplay.Move.canceled += (context) => { Move(Vector2.zero); };
+    }
+
+    private void Start()
+    {
+        Camera = GameManager.Instance.Camera.transform;
     }
 
     private void Update()
