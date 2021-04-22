@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class JellyBean : MonoBehaviour
+public class JellyBean : MovingCharacter
 {
     public TextMeshPro StatusText;
 
     public float RoamSpeed = 1f;
     public float RoamNewTargetRange = 5f;
+    public float ChaseSpeed = 3f;
     public float PersonalBoundaryDistance = 0.1f;
     public float DiscoveryRadius = 4f;
+    public float DistanceToGround = 0.1f;
 
     public JellyBeanState State
     {
@@ -30,8 +33,10 @@ public class JellyBean : MonoBehaviour
 
     public delegate void StateChangedHandler(object sender, JellyBeanState newState);
     public event StateChangedHandler OnStateChanged;
+    public override event AttackHandler OnPunched;
 
-    private Rigidbody _rigidbody;
+    private NavMeshAgent navMeshAgent;
+    private Rigidbody rigidbody;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -50,25 +55,76 @@ public class JellyBean : MonoBehaviour
         }
     }
 
+    public override bool IsGrounded
+    {
+        get
+        {
+            if (_isGrounded == null)
+                _isGrounded = CalculateIsGrounded();
+            Debug.Log((bool)_isGrounded);
+            return (bool)_isGrounded;
+        }
+    }
+    private bool? _isGrounded = null;
+
+    public override bool StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
+
     private Vector3 targetSubPosition;
     private Vector3 targetPosition;
+    private Transform target;
 
     void Start()
     {
-        _rigidbody = gameObject.GetComponent<Rigidbody>();
+        rigidbody = gameObject.GetComponent<Rigidbody>();
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };
         State = Random.Range(1, 3) > 1 ? JellyBeanState.Idle : JellyBeanState.Roaming;
+
+        rigidbody.isKinematic = true;
     }
 
     void Update()
     {
         StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.Camera.transform.position);
 
-        if((GameManager.Instance.Players[0].transform.position - transform.position).sqrMagnitude < DiscoveryRadius)
+        if (target == null)
         {
-            targetPosition = GameManager.Instance.Players[0].transform.position;
-            State = JellyBeanState.Chasing;
+            PlayerMovement closestPlayer = null;
+            float closestPlayerDistance = 100000;
+
+            foreach (PlayerMovement player in GameManager.Instance.Players)
+            {
+                float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+                if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
+                {
+                    if (closestPlayerDistance > distanceSquared)
+                    {
+                        closestPlayer = player;
+                        closestPlayerDistance = distanceSquared;
+                    }
+                }
+            }
+
+            if (closestPlayer != null)
+            {
+                target = closestPlayer.transform;
+                State = JellyBeanState.Chasing;
+            }
+        }
+
+        if (target != null)
+        {
+            if ((target.position - transform.position).sqrMagnitude < DiscoveryRadius * DiscoveryRadius * 2)
+            {
+                targetPosition = target.position;
+            }
+            else
+            {
+                target = null;
+                State = JellyBeanState.Confused;
+            }
         }
 
         switch (State)
@@ -78,10 +134,10 @@ public class JellyBean : MonoBehaviour
                 {
                     if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
                     {
-                        targetPosition = GetNewTargetPosition();
+                        State = JellyBeanState.Roaming;
                     }
 
-                    MoveTowardsTarget(RoamSpeed);
+                    navMeshAgent.SetDestination(targetPosition);
                 }
                 else
                 {
@@ -105,11 +161,11 @@ public class JellyBean : MonoBehaviour
                 }
                 else
                 {
-
+                    //idle
                 }
                 break;
             case JellyBeanState.Chasing:
-                MoveTowardsTarget(RoamSpeed * 5);
+                navMeshAgent.SetDestination(targetPosition);
                 break;
             case JellyBeanState.Confused:
                 State = JellyBeanState.Idle;
@@ -119,15 +175,6 @@ public class JellyBean : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    private void MoveTowardsTarget(float speed)
-    {
-        Vector3 targetDirection = (CurrentTargetPosition - transform.position);
-        targetDirection.y = 0;
-        targetDirection.Normalize();
-
-        _rigidbody.MovePosition(transform.position + (targetDirection * speed * 5) * Time.deltaTime);
     }
 
     private Vector3 GetNewTargetPosition()
@@ -149,40 +196,19 @@ public class JellyBean : MonoBehaviour
             result.y = transform.position.y;
         }
 
-        Vector3 towardsTarget = result - transform.position;
-        Ray visionOfTargetRay = new Ray(transform.position, towardsTarget);
-        if (Physics.Raycast(visionOfTargetRay, out RaycastHit hit))
-        {
-            if ((hit.point - result).sqrMagnitude > 0.1)
-            {
-                Vector3 cross = Vector3.Cross(hit.normal, Vector3.up);
-
-                right = hit.point + cross.normalized * 1;
-                left = hit.point + cross.normalized * -1;
-
-                if(VectorIsNegative(Vector3.Scale(cross.normalized * 1, towardsTarget)))
-                {
-                    result = right;
-                }
-                else
-                {
-                    result = left;
-                }
-            }
-        }
-
         return result;
     }
 
-    private bool VectorIsNegative(Vector3 vector)
+    private bool HasVisionOfTransform(Transform target)
     {
-        if (vector.x < 0 || vector.y < 0 || vector.z < 0)
-            return true;
+        Ray ray = new Ray(transform.position, transform.position - target.position);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            return hit.transform == target;
+        }
+
         return false;
     }
-
-    private Vector3 right;
-    private Vector3 left;
 
     private void OnDrawGizmos()
     {
@@ -190,14 +216,6 @@ public class JellyBean : MonoBehaviour
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(targetPosition, 0.08f);
-        }
-
-        if (right != Vector3.zero)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(right, 0.1f);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(left, 0.1f);
         }
     }
 
@@ -211,19 +229,38 @@ public class JellyBean : MonoBehaviour
         switch (newState)
         {
             case JellyBeanState.Roaming:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.speed = RoamSpeed;
                 targetPosition = GetNewTargetPosition();
                 break;
             case JellyBeanState.Idle:
+                navMeshAgent.isStopped = true;
                 break;
             case JellyBeanState.Chasing:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.speed = ChaseSpeed;
                 break;
             case JellyBeanState.Confused:
+                navMeshAgent.isStopped = true;
                 break;
             case JellyBeanState.Searching:
+                navMeshAgent.isStopped = false;
                 break;
             default:
                 throw new System.Exception("No such state for: " + ToString());
         }
+    }
+
+    private bool CalculateIsGrounded()
+    {
+        Ray ray = new Ray(transform.position + Vector3.up * 0.1f, -Vector3.up);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            return hit.transform.tag == "Ground" && hit.distance <= DistanceToGround;
+        }
+
+        return false;
     }
 }
 

@@ -87,7 +87,7 @@ public class PlayerMovement : MovingCharacter
     {
         Vector3? punchTargetPoint = FindPunchTargetPoint();
 
-        if(punchTargetPoint == null)
+        if (punchTargetPoint == null)
         {
             AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
             Vector3 punchPosition = transform.position + transform.forward * PunchDistance + transform.up * PunchHeight;
@@ -121,9 +121,9 @@ public class PlayerMovement : MovingCharacter
     {
         Ray ray = new Ray(transform.position + Vector3.up * 0.4f, -Vector3.up);
 
-        RaycastHit hit;
-        bool raycastResult = Physics.Raycast(ray, out hit);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+            return hit.transform.tag == "Ground" && hit.distance <= DistanceToGround;
 
-        return hit.transform.tag == "Ground" && hit.distance <= DistanceToGround;
+        return false;
     }
 }
