@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AverageVelocityKeeper : MonoBehaviour
 {
@@ -14,38 +15,48 @@ public class AverageVelocityKeeper : MonoBehaviour
 
     private PointAndTime lastSample = null;
 
+    private NavMeshAgent navMeshAgent = null;
+
     void Start()
     {
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         lastSample = new PointAndTime(transform.position, Time.timeAsDouble, null);
     }
 
     void Update()
     {
-        if(lastSample == null)
-            lastSample = new PointAndTime(transform.position, Time.timeAsDouble, null);
-
-        PointAndTime currentSample = null;
-        double currentTime = Time.timeAsDouble;
-        if (currentTime - lastSample.Time > TimeResolution)
+        if (navMeshAgent == null)
         {
-            currentSample = new PointAndTime(transform.position, currentTime, lastSample);
-            points.Add(currentSample);
-            if (points.Count > TimeSamples)
+            if (lastSample == null)
+                lastSample = new PointAndTime(transform.position, Time.timeAsDouble, null);
+
+            PointAndTime currentSample = null;
+            double currentTime = Time.timeAsDouble;
+            if (currentTime - lastSample.Time > TimeResolution)
             {
-                points.RemoveAt(0);
+                currentSample = new PointAndTime(transform.position, currentTime, lastSample);
+                points.Add(currentSample);
+                if (points.Count > TimeSamples)
+                {
+                    points.RemoveAt(0);
+                }
+                lastSample = currentSample;
             }
-            lastSample = currentSample;
-        }
 
-        double totalPassedTime = 0;
-        float totalDistance = 0f;
-        foreach (PointAndTime point in points)
+            double totalPassedTime = 0;
+            float totalDistance = 0f;
+            foreach (PointAndTime point in points)
+            {
+                totalPassedTime += point.TimeToPrevious;
+                totalDistance += point.DistanceToPrevious;
+            }
+
+            _velocity = (float)(totalDistance / totalPassedTime);
+        }
+        else
         {
-            totalPassedTime += point.TimeToPrevious;
-            totalDistance += point.DistanceToPrevious;
+            _velocity = navMeshAgent.velocity.magnitude;
         }
-
-        _velocity = (float)(totalDistance / totalPassedTime);
     }
 }
 

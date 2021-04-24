@@ -268,7 +268,7 @@ Transform:
   - {fileID: 474650997}
   - {fileID: 1437369717}
   m_Father: {fileID: 543450653677402333}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &43673598
 MonoBehaviour:
@@ -941,7 +941,7 @@ Transform:
   - {fileID: 1392719114}
   - {fileID: 278853462}
   m_Father: {fileID: 543450653677402333}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &849872301
 MonoBehaviour:
@@ -982,6 +982,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850476054}
+  - component: {fileID: 850476055}
   m_Layer: 0
   m_Name: ArmTargetLeft
   m_TagString: Untagged
@@ -1003,6 +1004,25 @@ Transform:
   m_Father: {fileID: 474650997}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850476055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850476053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c13817377373fa429fef23ebc1b8e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IkFootSolver: {fileID: 571795553}
+  CharacterMovement: {fileID: 1319713713}
+  RightArm: 0
+  ArmDistanceToBody: 0.3
+  ArmHeight: 0.34
+  ArmSwingSpeed: 1.2
+  ArmForward: 0.05
 --- !u!1 &1206211788
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,6 +1032,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1206211789}
+  - component: {fileID: 1206211790}
   m_Layer: 0
   m_Name: ArmTargetRight
   m_TagString: Untagged
@@ -1033,6 +1054,25 @@ Transform:
   m_Father: {fileID: 1437369717}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1206211790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206211788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c13817377373fa429fef23ebc1b8e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IkFootSolver: {fileID: 1672278670}
+  CharacterMovement: {fileID: 1319713713}
+  RightArm: 1
+  ArmDistanceToBody: 0.3
+  ArmHeight: 0.34
+  ArmSwingSpeed: 1.2
+  ArmForward: 0.05
 --- !u!1 &1319713710
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,9 +1184,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.2
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 25
   avoidancePriority: 50
-  m_AngularSpeed: 450
+  m_AngularSpeed: 500
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -7082,7 +7122,6 @@ Transform:
   m_Children:
   - {fileID: 8879528566779209795}
   - {fileID: 6303818256023258786}
-  - {fileID: 5653519914201706445}
   - {fileID: 5201705101699159349}
   - {fileID: 3977777623462981497}
   - {fileID: 43673597}
@@ -7229,7 +7268,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: a0986e11cacffcf4f82275be4323a50c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7291,7 +7330,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 912ea01699218454c879ec1a9963688a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7367,7 +7406,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 912ea01699218454c879ec1a9963688a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7431,7 +7470,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 543450653677402333}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4143750440018722790
 GameObject:
@@ -7507,7 +7546,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 543450653677402333}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5409163725411825929
 GameObject:
@@ -7565,12 +7604,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6657560127607483552}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0.60149896, z: 0.09843375}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0.63380796, y: -0.000000092207266, z: -0.00000008187079, w: 0.7734904}
+  m_LocalPosition: {x: 0, y: 0.0029956691, z: 0.001213626}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 543450653677402333}
-  m_RootOrder: 2
+  m_Father: {fileID: 8866606251179752773}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &5797384429634536096
 SkinnedMeshRenderer:
@@ -7592,7 +7631,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 912ea01699218454c879ec1a9963688a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7891,6 +7930,7 @@ Transform:
   - {fileID: 6361365368602113689}
   - {fileID: 169330499647803102}
   - {fileID: 6016199304568355363}
+  - {fileID: 5653519914201706445}
   m_Father: {fileID: 8879528566779209795}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7918,6 +7958,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8866606251179752773}
+  - component: {fileID: 8948528269070776412}
   m_Layer: 0
   m_Name: Spine01
   m_TagString: Untagged
@@ -7925,3 +7966,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8948528269070776412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8948528269070776411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535f392430948504b8701ce5faa0b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RightFoot: {fileID: 1672278670}
+  LeftFoot: {fileID: 571795553}
+  Character: {fileID: 1319713713}
+  BounceSpeed: 4
+  BounceHeight: 0.1
+  CharacterMaxVelocity: 4
