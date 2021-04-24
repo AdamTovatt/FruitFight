@@ -15,6 +15,11 @@ public class JellyBean : MovingCharacter
     public float DiscoveryRadius = 4f;
     public float DistanceToGround = 0.1f;
 
+    public Transform JellyBeanModel;
+    public Texture2D TextureNormal;
+    public Texture2D TextureGlitter;
+    public List<Color> CoatingColors;
+
     public JellyBeanState State
     {
         get { return _state; }
@@ -37,6 +42,7 @@ public class JellyBean : MovingCharacter
 
     private NavMeshAgent navMeshAgent;
     private Rigidbody rigidbody;
+    private Renderer renderer;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -77,6 +83,10 @@ public class JellyBean : MovingCharacter
     {
         rigidbody = gameObject.GetComponent<Rigidbody>();
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+        renderer = JellyBeanModel.GetComponent<Renderer>();
+
+        renderer.material.mainTexture = Random.Range(1, 3) > 1 ? TextureGlitter : TextureNormal;
+        renderer.material.color = CoatingColors[Random.Range(0, CoatingColors.Count)];
 
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };

@@ -5,8 +5,20 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject Prefab;
+    public bool SpawnAtStart = true;
+    public bool SpawnAtInterval = false;
+    public float SecondsBetweenSpawning = 5f;
 
     void Start()
+    {
+        if (SpawnAtStart)
+            SpawnObject();
+
+        if (SpawnAtInterval)
+            InvokeRepeating("SpawnOneInstance", SecondsBetweenSpawning, SecondsBetweenSpawning);
+    }
+
+    public void SpawnOneInstance()
     {
         SpawnObject();
     }
