@@ -54,7 +54,7 @@ public class IkFootSolver : MonoBehaviour
         if (CharacterMovement.IsGrounded)
         {
             inJumpPosition = false;
-            if (!CharacterMovement.StandingStill && characterVelocity.Velocity != 0)
+            if (!CharacterMovement.StandingStill && characterVelocity.Velocity != 0) //character is moving
             {
                 float distance = Vector3.Distance(NewPosition, searchPosition);
                 if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
@@ -66,15 +66,11 @@ public class IkFootSolver : MonoBehaviour
                     PositionUpdated?.Invoke(this, NewPosition);
                 }
             }
-            else
+            else //character is not moving
             {
                 if (!inDefaultPosition)
                 {
-                    inDefaultPosition = true;
-                    searchPosition = GetGroundPosition(0);
-                    lerp = 0;
-                    OldPosition = CurrentPosition;
-                    NewPosition = searchPosition;
+                    SetDefaultPosition();
                 }
             }
         }
@@ -98,6 +94,17 @@ public class IkFootSolver : MonoBehaviour
         else
         {
             OldPosition = NewPosition;
+        }
+    }
+
+    public void SetDefaultPosition()
+    {
+        if (!inDefaultPosition)
+        {
+            inDefaultPosition = true;
+            lerp = 0;
+            OldPosition = CurrentPosition;
+            NewPosition = GetGroundPosition(0);
         }
     }
 

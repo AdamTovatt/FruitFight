@@ -11,6 +11,7 @@ public class JellyBean : MovingCharacter
     public float RoamSpeed = 1f;
     public float RoamNewTargetRange = 5f;
     public float ChaseSpeed = 3f;
+    public float SearchSpeed = 2f;
     public float PersonalBoundaryDistance = 0.1f;
     public float DiscoveryRadius = 4f;
     public float DistanceToGround = 0.1f;
@@ -51,23 +52,12 @@ public class JellyBean : MovingCharacter
     private float randomTimeMin = 0;
     private float randomTimeMax = 0;
 
-    private Vector3 CurrentTargetPosition
-    {
-        get
-        {
-            if (targetSubPosition == Vector3.zero)
-                return targetPosition;
-            return targetSubPosition;
-        }
-    }
-
     public override bool IsGrounded
     {
         get
         {
             if (_isGrounded == null)
                 _isGrounded = CalculateIsGrounded();
-            Debug.Log((bool)_isGrounded);
             return (bool)_isGrounded;
         }
     }
@@ -75,9 +65,11 @@ public class JellyBean : MovingCharacter
 
     public override bool StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
 
-    private Vector3 targetSubPosition;
     private Vector3 targetPosition;
     private Transform target;
+    private Vector3 targetLastSeenPosition;
+
+    private int searchTargetReachedCount = 0;
 
     void Start()
     {
@@ -124,15 +116,18 @@ public class JellyBean : MovingCharacter
             }
         }
 
-        if (target != null)
+        if (target != null) //has target
         {
-            if ((target.position - transform.position).sqrMagnitude < DiscoveryRadius * DiscoveryRadius * 2)
+            if ((target.position - transform.position).sqrMagnitude < DiscoveryRadius * DiscoveryRadius * 2 || HasVisionOfTransform(target)) //target in range
             {
-                targetPosition = target.position;
+                targetPosition = target.position; //update target position
             }
-            else
+            else //target was lost
             {
+                targetLastSeenPosition = target.position;
                 target = null;
+                targetPosition = transform.position;
+                searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
                 State = JellyBeanState.Confused;
             }
         }
@@ -142,12 +137,12 @@ public class JellyBean : MovingCharacter
             case JellyBeanState.Roaming:
                 if (TimeInCurrentState < 5f + randomTimeAddition)
                 {
+                    navMeshAgent.SetDestination(targetPosition);
+
                     if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
                     {
                         State = JellyBeanState.Roaming;
                     }
-
-                    navMeshAgent.SetDestination(targetPosition);
                 }
                 else
                 {
@@ -171,25 +166,48 @@ public class JellyBean : MovingCharacter
                 }
                 else
                 {
-                    //idle
+                    //do nothing
                 }
                 break;
             case JellyBeanState.Chasing:
                 navMeshAgent.SetDestination(targetPosition);
                 break;
             case JellyBeanState.Confused:
-                State = JellyBeanState.Idle;
+                navMeshAgent.SetDestination(targetPosition);
+
+                if (TimeInCurrentState > 1f + randomTimeAddition)
+                {
+                    State = JellyBeanState.Searching;
+                }
                 break;
             case JellyBeanState.Searching:
+                if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
+                {
+                    if (searchTargetReachedCount < 5 + Random.Range(0, 1)) //if we haven't reached our search target to many times we want to search again
+                    {
+                        targetLastSeenPosition = GetNewTargetPosition(RoamNewTargetRange / 2);
+                        searchTargetReachedCount++; //so the jelly bean will stop searching eventually
+                        State = JellyBeanState.Confused;
+                    }
+                    else //stop searching, we've looked for long enough
+                    {
+                        State = JellyBeanState.Idle;
+                    }
+                }
+
+                if (TimeInCurrentState > 12f + randomTimeAddition)
+                {
+                    State = JellyBeanState.Idle;
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private Vector3 GetNewTargetPosition()
+    private Vector3 GetNewTargetPosition(float targetDistance)
     {
-        Vector3 randomPosition = Random.insideUnitSphere * RoamNewTargetRange;
+        Vector3 randomPosition = Random.insideUnitSphere * targetDistance;
         randomPosition.y = transform.position.y;
 
         Vector3 result = transform.position + randomPosition;
@@ -211,7 +229,7 @@ public class JellyBean : MovingCharacter
 
     private bool HasVisionOfTransform(Transform target)
     {
-        Ray ray = new Ray(transform.position, transform.position - target.position);
+        Ray ray = new Ray(transform.position + transform.up * 0.5f, target.position - transform.position);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             return hit.transform == target;
@@ -241,20 +259,24 @@ public class JellyBean : MovingCharacter
             case JellyBeanState.Roaming:
                 navMeshAgent.isStopped = false;
                 navMeshAgent.speed = RoamSpeed;
-                targetPosition = GetNewTargetPosition();
+                targetPosition = GetNewTargetPosition(RoamNewTargetRange);
                 break;
             case JellyBeanState.Idle:
-                navMeshAgent.isStopped = true;
+                navMeshAgent.isStopped = false;
+                navMeshAgent.SetDestination(transform.position);
                 break;
             case JellyBeanState.Chasing:
                 navMeshAgent.isStopped = false;
                 navMeshAgent.speed = ChaseSpeed;
                 break;
             case JellyBeanState.Confused:
-                navMeshAgent.isStopped = true;
+                navMeshAgent.isStopped = false;
                 break;
             case JellyBeanState.Searching:
                 navMeshAgent.isStopped = false;
+                navMeshAgent.speed = SearchSpeed;
+                targetPosition = targetLastSeenPosition;
+                navMeshAgent.SetDestination(targetPosition);
                 break;
             default:
                 throw new System.Exception("No such state for: " + ToString());
