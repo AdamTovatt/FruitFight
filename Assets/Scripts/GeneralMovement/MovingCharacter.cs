@@ -13,5 +13,7 @@ public abstract class MovingCharacter : MonoBehaviour
     public abstract bool StandingStill { get; }
 
     public delegate void AttackHandler(object sender, Vector3 attackPoint, AttackSide attackSide);
-    public abstract event AttackHandler OnPunched;
+    public abstract event AttackHandler OnAttack;
+
+    public abstract void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength);
 }

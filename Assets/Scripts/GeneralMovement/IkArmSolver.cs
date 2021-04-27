@@ -24,7 +24,7 @@ public class IkArmSolver : MonoBehaviour
 
     void Start()
     {
-        CharacterMovement.OnPunched += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
+        CharacterMovement.OnAttack += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
     }
 
     void Update()

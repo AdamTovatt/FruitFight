@@ -18,7 +18,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
 
-    public override event AttackHandler OnPunched;
+    public override event AttackHandler OnAttack;
 
     public override bool StandingStill { get { return move == Vector2.zero; } }
 
@@ -85,20 +85,18 @@ public class PlayerMovement : MovingCharacter
 
     private void Punch()
     {
-        Vector3? punchTargetPoint = FindPunchTargetPoint();
+        AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
+        Vector3 punchPosition = transform.position + transform.forward * PunchDistance + transform.up * PunchHeight;
+        punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
+        OnAttack?.Invoke(this, punchPosition, side);
 
-        if (punchTargetPoint == null)
+        List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position, 2f, transform.forward, 1f, 90f);
+        foreach (RaycastHit hit in hits)
         {
-            AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
-            Vector3 punchPosition = transform.position + transform.forward * PunchDistance + transform.up * PunchHeight;
-            punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
-            OnPunched?.Invoke(this, punchPosition, side);
+            JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
+            if (jellyBean != null)
+                jellyBean.WasAttacked(transform.position, transform, 5f);
         }
-    }
-
-    private Vector3? FindPunchTargetPoint()
-    {
-        return null;
     }
 
     private void Jump()
@@ -125,5 +123,10 @@ public class PlayerMovement : MovingCharacter
             return hit.transform.tag == "Ground" && hit.distance <= DistanceToGround;
 
         return false;
+    }
+
+    public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
+    {
+        throw new System.NotImplementedException();
     }
 }
