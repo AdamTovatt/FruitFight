@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class JellyBean : MovingCharacter
 {
     public TextMeshPro StatusText;
+    public GameObject DeadPrefab;
 
     public float RoamSpeed = 1f;
     public float RoamNewTargetRange = 5f;
@@ -23,6 +24,8 @@ public class JellyBean : MovingCharacter
     public Texture2D TextureNormal;
     public Texture2D TextureGlitter;
     public List<Color> CoatingColors;
+
+    public JellyBeanMaterialSettings MaterialSettings { get; private set; }
 
     public JellyBeanState State
     {
@@ -85,8 +88,7 @@ public class JellyBean : MovingCharacter
 
         CurrentHealth = MaxHealth;
 
-        renderer.material.mainTexture = Random.Range(1, 3) > 1 ? TextureGlitter : TextureNormal;
-        renderer.material.color = CoatingColors[Random.Range(0, CoatingColors.Count)];
+        MaterialSettings = SetMaterialSettings(renderer);
 
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };
@@ -215,11 +217,16 @@ public class JellyBean : MovingCharacter
             }
         }
 
-        if(knockBack)
+        if (knockBack)
         {
             float timeSinceKnockBack = Time.time - knockBackTime;
-            if((rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
+            if ((rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
             {
+                if (CurrentHealth <= 0)
+                {
+                    Die();
+                }
+
                 knockBack = false;
                 rigidbody.isKinematic = true;
                 navMeshAgent.enabled = true;
@@ -229,13 +236,24 @@ public class JellyBean : MovingCharacter
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
-        CurrentHealth -= attackStrength;
-        rigidbody.isKinematic = false;
-        navMeshAgent.enabled = false;
-        rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
-        rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
-        knockBack = true;
-        knockBackTime = Time.time;
+        if (!knockBack)
+        {
+            CurrentHealth -= attackStrength;
+
+            rigidbody.isKinematic = false;
+            navMeshAgent.enabled = false;
+            rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
+            rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
+            knockBack = true;
+            knockBackTime = Time.time;
+        }
+    }
+
+    public void Die()
+    {
+        GameObject deadJellyBean = Instantiate(DeadPrefab, transform.position + new Vector3(0, 0.7f, 0), transform.rotation);
+        SetMaterialSettings(deadJellyBean.GetComponentInChildren<Renderer>(), MaterialSettings);
+        Destroy(gameObject);
     }
 
     private Vector3 GetNewTargetPosition(float targetDistance)
@@ -258,6 +276,19 @@ public class JellyBean : MovingCharacter
         }
 
         return result;
+    }
+
+    private JellyBeanMaterialSettings SetMaterialSettings(Renderer renderer, JellyBeanMaterialSettings materialSettings = null)
+    {
+        if (materialSettings == null)
+        {
+            materialSettings = new JellyBeanMaterialSettings(Random.Range(1, 3), Random.Range(0, CoatingColors.Count));
+        }
+
+        renderer.material.mainTexture = materialSettings.MainTexture > 1 ? TextureGlitter : TextureNormal;
+        renderer.material.color = CoatingColors[materialSettings.Color];
+
+        return materialSettings;
     }
 
     private bool HasVisionOfTransform(Transform target)
@@ -326,6 +357,18 @@ public class JellyBean : MovingCharacter
         }
 
         return false;
+    }
+}
+
+public class JellyBeanMaterialSettings
+{
+    public int MainTexture { get; set; }
+    public int Color { get; set; }
+
+    public JellyBeanMaterialSettings(int mainTexture, int color)
+    {
+        MainTexture = mainTexture;
+        Color = color;
     }
 }
 

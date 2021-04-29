@@ -869,7 +869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4768720915529816196, guid: ff6a711dd66649d4e8b1403e0c309eda, type: 3}
   SpawnAtStart: 1
-  SpawnAtInterval: 1
+  SpawnAtInterval: 0
   SecondsBetweenSpawning: 3
 --- !u!4 &1590746306
 Transform:

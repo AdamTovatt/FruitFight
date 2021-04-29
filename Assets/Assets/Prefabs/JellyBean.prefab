@@ -1024,12 +1024,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StatusText: {fileID: 4768720915174604152}
+  DeadPrefab: {fileID: 5933942025891265981, guid: 10adf5ca9b835cc4fab62d42d267d53e,
+    type: 3}
   RoamSpeed: 0.8
   RoamNewTargetRange: 5
   ChaseSpeed: 3
+  SearchSpeed: 2
   PersonalBoundaryDistance: 0.4
   DiscoveryRadius: 3
   DistanceToGround: 0.3
+  MaxHealth: 10
   JellyBeanModel: {fileID: 728964469066429983}
   TextureNormal: {fileID: 2800000, guid: 546909d019d7b1f4284b2c1808edfe15, type: 3}
   TextureGlitter: {fileID: 2800000, guid: aaf62dd2af43e284f874e8f2b691a467, type: 3}
