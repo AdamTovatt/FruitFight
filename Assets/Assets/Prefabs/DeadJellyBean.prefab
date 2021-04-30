@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5933942025891265980}
   - component: {fileID: 5933942025891265978}
   - component: {fileID: 5933942025891265977}
+  - component: {fileID: -7335634180461007252}
   m_Layer: 0
   m_Name: DeadJellyBean
   m_TagString: Untagged
@@ -74,6 +75,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 60
+--- !u!114 &-7335634180461007252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933942025891265981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 274d0ae719705634d94b53fd67319c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714, type: 3}
+  SpawnAtStart: 1
+  SpawnAtInterval: 0
+  SecondsBetweenSpawning: 5
 --- !u!1 &6816463038771377159
 GameObject:
   m_ObjectHideFlags: 0
