@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StatusText: {fileID: 4768720915174604152}
-  DeadPrefab: {fileID: 5933942025891265981, guid: 10adf5ca9b835cc4fab62d42d267d53e,
+  DeadPrefab: {fileID: 6685402637311709369, guid: 10adf5ca9b835cc4fab62d42d267d53e,
     type: 3}
   RoamSpeed: 0.8
   RoamNewTargetRange: 5

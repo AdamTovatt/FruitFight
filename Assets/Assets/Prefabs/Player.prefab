@@ -568,6 +568,7 @@ GameObject:
   - component: {fileID: 2012823961798305033}
   - component: {fileID: 2012823961798305029}
   - component: {fileID: 2012823961798305030}
+  - component: {fileID: 3348936503559169664}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -667,6 +668,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeSamples: 10
   TimeResolution: 0.02
+--- !u!114 &3348936503559169664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9992afd451eca49dd94525a3b780ac8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SphereOfInfluenceRadius: 6
+  AttractionPointOffset: {x: 0, y: 0.85, z: 0}
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

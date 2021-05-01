@@ -11,12 +11,12 @@ public class Hover : MonoBehaviour
 
     private void Start()
     {
-        startPosition = transform.position;
+        startPosition = transform.localPosition;
     }
 
     private void Update()
     {
         float newY = Mathf.Sin(Time.time * Speed) * Height;
-        transform.position = new Vector3(startPosition.x, startPosition.y + newY, startPosition.z);
+        transform.localPosition = new Vector3(startPosition.x, startPosition.y + newY, startPosition.z);
     }
 }

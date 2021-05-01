@@ -18,6 +18,8 @@ public class PlayerMovement : MovingCharacter
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
 
+    public int JellyBeans { get; set; }
+
     public override event AttackHandler OnAttack;
 
     public override bool StandingStill { get { return move == Vector2.zero; } }
@@ -128,5 +130,18 @@ public class PlayerMovement : MovingCharacter
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void AbsorbedItem(AbsorbableItemType itemType)
+    {
+        switch (itemType)
+        {
+            case AbsorbableItemType.JellyBean:
+                JellyBeans++;
+                Debug.Log("Jelly beans: " + JellyBeans);
+                break;
+            default:
+                break;
+        }
     }
 }
