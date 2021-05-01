@@ -1,19 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AbsorbableItem : MonoBehaviour
 {
     public AbsorbableItemType Type;
+    public float AbsorbDelay = 0f;
+
+    private PlayerMovement absorbingPlayer = null;
 
     private void OnTriggerEnter(Collider other)
     {
         PlayerMovement player = other.transform.GetComponent<PlayerMovement>();
-        if (player != null)
+        if (player != null && absorbingPlayer == null)
         {
-            player.AbsorbedItem(Type);
-            Destroy(gameObject);
+            absorbingPlayer = player;
+            this.CallWithDelay(Absorb, AbsorbDelay);
         }
+    }
+
+    private void Absorb()
+    {
+        absorbingPlayer.AbsorbedItem(Type);
+        Destroy(gameObject);
     }
 }
 
