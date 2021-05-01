@@ -7,6 +7,7 @@ public class Magnet : MonoBehaviour
 {
     public float SphereOfInfluenceRadius = 3f;
     public float Strength = 5f;
+    public float MaxSpeed = 6f;
 
     public List<MagnetAttractor> Targets { get; private set; }
 
@@ -26,7 +27,7 @@ public class Magnet : MonoBehaviour
         foreach (MagnetAttractor target in Targets)
         {
             Vector3 distance = transform.position - target.AttractionPoint;
-            transform.position = Vector3.MoveTowards(transform.position, target.AttractionPoint, Mathf.Min(4f, Strength / (distance.sqrMagnitude / 2)) * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, target.AttractionPoint, Mathf.Min(MaxSpeed, Strength / (distance.sqrMagnitude / 2)) * Time.deltaTime);
         }
     }
 

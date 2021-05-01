@@ -1030,7 +1030,7 @@ MonoBehaviour:
   RoamNewTargetRange: 5
   ChaseSpeed: 3
   SearchSpeed: 2
-  PersonalBoundaryDistance: 0.4
+  PersonalBoundaryDistance: 0.62
   DiscoveryRadius: 3
   DistanceToGround: 0.3
   MaxHealth: 10

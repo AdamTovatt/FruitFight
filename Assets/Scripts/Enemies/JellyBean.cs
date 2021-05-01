@@ -182,6 +182,11 @@ public class JellyBean : MovingCharacter
                     }
                     break;
                 case JellyBeanState.Chasing:
+                    if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
+                    {
+                        targetPosition = transform.position;
+                    }
+
                     navMeshAgent.SetDestination(targetPosition);
                     break;
                 case JellyBeanState.Confused:

@@ -76,8 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86fc4ed6b3a949d5a71e49a444de847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SphereOfInfluenceRadius: 6
+  SphereOfInfluenceRadius: 4
   Strength: 5
+  MaxSpeed: 6
 --- !u!114 &1743792567914784870
 MonoBehaviour:
   m_ObjectHideFlags: 0
