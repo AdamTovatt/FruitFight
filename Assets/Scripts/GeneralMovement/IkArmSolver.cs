@@ -6,6 +6,7 @@ public class IkArmSolver : MonoBehaviour
 {
     public IkFootSolver IkFootSolver;
     public MovingCharacter CharacterMovement;
+    public TrailRenderer Trail;
 
     public bool RightArm = false;
     public float ArmDistanceToBody = 0.5f;
@@ -21,34 +22,47 @@ public class IkArmSolver : MonoBehaviour
     private bool punching = false;
     private Vector3 punchStartPosition;
     private Vector3 punchEndPosition;
+    private Vector3 characterPositionAtStartPunch;
 
     void Start()
     {
         CharacterMovement.OnAttack += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
+        Trail.enabled = false;
     }
 
     void Update()
     {
+        Vector3 swingPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
+        swingPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
+        swingPosition += CharacterMovement.transform.forward * ArmForward;
+        swingPosition += CharacterMovement.transform.up * ArmHeight;
+
         if (!punching)
         {
-            CurrentPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
-            CurrentPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
-            CurrentPosition += CharacterMovement.transform.forward * ArmForward;
-            CurrentPosition += CharacterMovement.transform.up * ArmHeight;
+            CurrentPosition = swingPosition;
             transform.position = CurrentPosition;
         }
         else
         {
-            if (lerp < 2)
+            Vector3 characterOffsetSincePunchStart = CharacterMovement.transform.position - characterPositionAtStartPunch;
+            punchEndPosition += characterOffsetSincePunchStart;
+
+            if (lerp < 3)
             {
                 if (lerp < 1)
                     CurrentPosition = Vector3.Lerp(punchStartPosition, punchEndPosition, lerp);
+                else if (lerp > 1 && lerp < 2)
+                    CurrentPosition = punchEndPosition;
+                else
+                    CurrentPosition = Vector3.Lerp(punchEndPosition, swingPosition, lerp - 2);
+
                 transform.position = CurrentPosition;
 
                 lerp += Time.deltaTime * ArmSwingSpeed;
             }
             else
             {
+                Trail.enabled = false;
                 punching = false;
             }
         }
@@ -64,6 +78,8 @@ public class IkArmSolver : MonoBehaviour
         lerp = 0;
         punchStartPosition = CurrentPosition;
         punchEndPosition = position;
+        characterPositionAtStartPunch = CharacterMovement.transform.position;
+        Trail.enabled = true;
         punching = true;
     }
 

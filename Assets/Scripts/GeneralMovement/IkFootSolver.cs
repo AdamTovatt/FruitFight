@@ -54,7 +54,7 @@ public class IkFootSolver : MonoBehaviour
         if (CharacterMovement.IsGrounded)
         {
             inJumpPosition = false;
-            if (!CharacterMovement.StandingStill && characterVelocity.Velocity != 0) //character is moving
+            if (!CharacterMovement.StandingStill && characterVelocity.Velocity > 0) //character is moving
             {
                 float distance = Vector3.Distance(NewPosition, searchPosition);
                 if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
@@ -94,6 +94,7 @@ public class IkFootSolver : MonoBehaviour
         else
         {
             OldPosition = NewPosition;
+            inDefaultPosition = false;
         }
     }
 
