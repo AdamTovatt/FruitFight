@@ -30,11 +30,4 @@ public class Magnet : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, target.AttractionPoint, Mathf.Min(MaxSpeed, Strength / (distance.sqrMagnitude / 2)) * Time.deltaTime);
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        if (Targets.Count > 0)
-            Gizmos.DrawCube(Targets[0].AttractionPoint, new Vector3(0.2f, 0.2f, 0.2f));
-    }
 }

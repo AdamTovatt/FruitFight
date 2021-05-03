@@ -27,7 +27,8 @@ public class IkArmSolver : MonoBehaviour
     void Start()
     {
         CharacterMovement.OnAttack += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
-        Trail.enabled = false;
+        if (Trail != null)
+            Trail.enabled = false;
     }
 
     void Update()
@@ -62,7 +63,8 @@ public class IkArmSolver : MonoBehaviour
             }
             else
             {
-                Trail.enabled = false;
+                if (Trail != null)
+                    Trail.enabled = false;
                 punching = false;
             }
         }
@@ -79,7 +81,10 @@ public class IkArmSolver : MonoBehaviour
         punchStartPosition = CurrentPosition;
         punchEndPosition = position;
         characterPositionAtStartPunch = CharacterMovement.transform.position;
-        Trail.enabled = true;
+
+        if (Trail != null)
+            Trail.enabled = true;
+
         punching = true;
     }
 

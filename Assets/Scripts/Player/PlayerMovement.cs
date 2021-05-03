@@ -92,7 +92,7 @@ public class PlayerMovement : MovingCharacter
         punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
         OnAttack?.Invoke(this, punchPosition, side);
 
-        List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position, 2f, transform.forward, 1f, 90f);
+        List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f);
         foreach (RaycastHit hit in hits)
         {
             JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
