@@ -5,7 +5,7 @@ public static class CustomPhysics
 {
     public static List<RaycastHit> ConeCastAll(Vector3 origin, float maxRadius, Vector3 direction, float maxDistance, float coneAngle)
     {
-        RaycastHit[] sphereCastHits = Physics.SphereCastAll(origin - new Vector3(0, 0, maxRadius), maxRadius, direction, maxDistance);
+        RaycastHit[] sphereCastHits = Physics.SphereCastAll(origin - direction.normalized * maxRadius, maxRadius, direction, maxDistance);
         List<RaycastHit> coneCastHits = new List<RaycastHit>();
 
         if (sphereCastHits.Length > 0)
