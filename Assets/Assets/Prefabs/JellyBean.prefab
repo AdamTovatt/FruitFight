@@ -941,6 +941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IkFootSolver: {fileID: 4768720914909270436}
   CharacterMovement: {fileID: 4768720915529816219}
+  Trail: {fileID: 0}
   RightArm: 1
   ArmDistanceToBody: 0.3
   ArmHeight: 0.34
@@ -1036,7 +1037,7 @@ MonoBehaviour:
   MaxHealth: 10
   JellyBeanModel: {fileID: 728964469066429983}
   TextureNormal: {fileID: 2800000, guid: 546909d019d7b1f4284b2c1808edfe15, type: 3}
-  TextureGlitter: {fileID: 2800000, guid: aaf62dd2af43e284f874e8f2b691a467, type: 3}
+  TextureGlitter: {fileID: 2800000, guid: cc2e4027798a07049b91b92f9770cb39, type: 3}
   CoatingColors:
   - {r: 0.6320754, g: 0.15801886, b: 0.22530153, a: 1}
   - {r: 0.15899952, g: 0.74509805, b: 0.15686272, a: 1}
@@ -1363,6 +1364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IkFootSolver: {fileID: 4768720916007652171}
   CharacterMovement: {fileID: 4768720915529816219}
+  Trail: {fileID: 0}
   RightArm: 0
   ArmDistanceToBody: 0.3
   ArmHeight: 0.34
