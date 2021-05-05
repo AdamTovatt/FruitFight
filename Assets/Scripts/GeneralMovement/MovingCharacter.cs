@@ -9,6 +9,7 @@ public abstract class MovingCharacter : MonoBehaviour
         Right, Left, Both
     }
 
+    public abstract bool StopFootSetDefault { get; }
     public abstract bool IsGrounded { get; }
     public abstract bool StandingStill { get; }
 

@@ -94,7 +94,8 @@ public class IkFootSolver : MonoBehaviour
         else
         {
             OldPosition = NewPosition;
-            inDefaultPosition = false;
+            if (!CharacterMovement.StopFootSetDefault)
+                inDefaultPosition = false;
         }
     }
 

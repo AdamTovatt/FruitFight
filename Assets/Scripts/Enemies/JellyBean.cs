@@ -56,6 +56,8 @@ public class JellyBean : MovingCharacter
     private float randomTimeMin = 0;
     private float randomTimeMax = 0;
 
+    public override bool StopFootSetDefault { get { return knockBack; } }
+
     public override bool IsGrounded
     {
         get
@@ -230,11 +232,15 @@ public class JellyBean : MovingCharacter
                     Die();
                 }
 
+                Debug.Log("set false");
                 knockBack = false;
                 rigidbody.isKinematic = true;
                 navMeshAgent.enabled = true;
             }
         }
+
+        if (!knockBack)
+            _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
     }
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
@@ -351,6 +357,9 @@ public class JellyBean : MovingCharacter
 
     private bool CalculateIsGrounded()
     {
+        if (knockBack)
+            return false;
+
         Ray ray = new Ray(transform.position + Vector3.up * 0.1f, -Vector3.up);
 
         if (Physics.Raycast(ray, out RaycastHit hit))

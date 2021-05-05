@@ -22,6 +22,7 @@ public class PlayerMovement : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
+    public override bool StopFootSetDefault { get { return false; } }
     public override bool StandingStill { get { return move == Vector2.zero; } }
 
     public override bool IsGrounded

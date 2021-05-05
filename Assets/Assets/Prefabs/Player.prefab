@@ -605,7 +605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RigidBody: {fileID: 2012823961798305032}
   Speed: 8
-  JumpStrength: 6
+  JumpStrength: 8
   DistanceToGround: 0.5
   MovementInputCutoff: 0.2
   PunchDistance: 0.5
