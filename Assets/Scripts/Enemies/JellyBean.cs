@@ -21,9 +21,7 @@ public class JellyBean : MovingCharacter
     public float CurrentHealth { get; private set; }
 
     public Transform JellyBeanModel;
-    public Texture2D TextureNormal;
-    public Texture2D TextureGlitter;
-    public List<Color> CoatingColors;
+    public List<Texture2D> CoatingTextures;
 
     public JellyBeanMaterialSettings MaterialSettings { get; private set; }
 
@@ -287,11 +285,10 @@ public class JellyBean : MovingCharacter
     {
         if (materialSettings == null)
         {
-            materialSettings = new JellyBeanMaterialSettings(Random.Range(1, 3), Random.Range(0, CoatingColors.Count));
+            materialSettings = new JellyBeanMaterialSettings(Random.Range(0, CoatingTextures.Count));
         }
 
-        renderer.material.mainTexture = materialSettings.MainTexture > 1 ? TextureGlitter : TextureNormal;
-        renderer.material.color = CoatingColors[materialSettings.Color];
+        renderer.material.mainTexture = CoatingTextures[materialSettings.MainTexture];
 
         return materialSettings;
     }
@@ -368,12 +365,10 @@ public class JellyBean : MovingCharacter
 public class JellyBeanMaterialSettings
 {
     public int MainTexture { get; set; }
-    public int Color { get; set; }
 
-    public JellyBeanMaterialSettings(int mainTexture, int color)
+    public JellyBeanMaterialSettings(int mainTexture)
     {
         MainTexture = mainTexture;
-        Color = color;
     }
 }
 

@@ -1036,20 +1036,27 @@ MonoBehaviour:
   DistanceToGround: 0.3
   MaxHealth: 10
   JellyBeanModel: {fileID: 728964469066429983}
-  TextureNormal: {fileID: 2800000, guid: 546909d019d7b1f4284b2c1808edfe15, type: 3}
-  TextureGlitter: {fileID: 2800000, guid: cc2e4027798a07049b91b92f9770cb39, type: 3}
-  CoatingColors:
-  - {r: 0.6320754, g: 0.15801886, b: 0.22530153, a: 1}
-  - {r: 0.15899952, g: 0.74509805, b: 0.15686272, a: 1}
-  - {r: 0.43719426, g: 0.8301887, b: 0.2232111, a: 1}
-  - {r: 0.83137256, g: 0.22352949, b: 0.2235294, a: 1}
-  - {r: 0.27429688, g: 0.7018343, b: 0.8679245, a: 1}
-  - {r: 0.23335709, g: 0.33419624, b: 0.7169812, a: 1}
-  - {r: 0.9102298, g: 0.9245283, b: 0.5538448, a: 1}
-  - {r: 0.29369885, g: 0.8301887, b: 0.31877926, a: 1}
-  - {r: 0.9622642, g: 0.4493592, b: 0.69220346, a: 1}
-  - {r: 1, g: 0.55285704, b: 0.28773582, a: 1}
-  - {r: 0.4245283, g: 0.27279913, b: 0.19023673, a: 1}
+  CoatingTextures:
+  - {fileID: 2800000, guid: 7f8f719ff37741d41a4aa5267db39563, type: 3}
+  - {fileID: 2800000, guid: cc2e4027798a07049b91b92f9770cb39, type: 3}
+  - {fileID: 2800000, guid: 4674fb608b402a746b92a72d61d280d0, type: 3}
+  - {fileID: 2800000, guid: f528f241acd3f44438ef0195f6ddf867, type: 3}
+  - {fileID: 2800000, guid: 280bd75f11f85b049b4dda5a3fb439d7, type: 3}
+  - {fileID: 2800000, guid: e7551e4b2c068d74d88de6a494a77269, type: 3}
+  - {fileID: 2800000, guid: eb92bf59df2db9d4187d1dcb6546f36d, type: 3}
+  - {fileID: 2800000, guid: 159546a2919821d43b426a4c3d0f347f, type: 3}
+  - {fileID: 2800000, guid: e69eee2d1b951fe4388dc81853bb7fb5, type: 3}
+  - {fileID: 2800000, guid: 073104f744322f946bcea128dd608397, type: 3}
+  - {fileID: 2800000, guid: 1110177c6b3bdad4398ed3e498f859a3, type: 3}
+  - {fileID: 2800000, guid: f9d325a7e48d2184c91b342bfa841455, type: 3}
+  - {fileID: 2800000, guid: ecb76f78e2da14f4593aaf07233d928c, type: 3}
+  - {fileID: 2800000, guid: 54d924f24440d9f49961d46db90bdd2e, type: 3}
+  - {fileID: 2800000, guid: 1a283afdf3da8814baed49bcd8f223d9, type: 3}
+  - {fileID: 2800000, guid: 871a4721ec813e84683261b7b49fc919, type: 3}
+  - {fileID: 2800000, guid: fef0e30fefc08bf4bb2c8190bf2faea8, type: 3}
+  - {fileID: 2800000, guid: 10720e70fe8ff9f4cab11aca6ff20449, type: 3}
+  - {fileID: 2800000, guid: 7ac6a6314fbf54e48b4c2de2db6ed4cd, type: 3}
+  - {fileID: 2800000, guid: 53ded51a8c2f34f4aa9d46d8266f16d7, type: 3}
 --- !u!54 &4768720915529816217
 Rigidbody:
   m_ObjectHideFlags: 0
