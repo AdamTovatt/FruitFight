@@ -93,11 +93,18 @@ public class PlayerMovement : MovingCharacter
         OnAttack?.Invoke(this, punchPosition, side);
 
         List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f);
+        hits.AddRange(CustomPhysics.ConeCastAll(transform.position + (transform.forward * 0.5f) + (transform.up * DistanceToGround), 1f, transform.forward * -1, 0.6f, 50f));
+
+        List<Transform> checkedTransforms = new List<Transform>();
         foreach (RaycastHit hit in hits)
         {
-            JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
-            if (jellyBean != null)
-                jellyBean.WasAttacked(transform.position, transform, 5f);
+            if (!checkedTransforms.Contains(hit.transform))
+            {
+                checkedTransforms.Add(hit.transform);
+                JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
+                if (jellyBean != null)
+                    jellyBean.WasAttacked(transform.position, transform, 5f);
+            }
         }
     }
 
