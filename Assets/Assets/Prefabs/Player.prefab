@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 2012823961798305029}
   - component: {fileID: 2012823961798305030}
   - component: {fileID: 3348936503559169664}
+  - component: {fileID: -9148304447794050845}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -682,6 +683,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SphereOfInfluenceRadius: 6
   AttractionPointOffset: {x: 0, y: 0.85, z: 0}
+--- !u!114 &-9148304447794050845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: fcd32eb1a5d50374b8526311afeac325,
+    type: 3}
+  m_NotificationBehavior: 3
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: db48b010-6e6c-4778-8143-dbb81240b54e
+    m_ActionName: Gameplay/Jump[/XInputControllerWindows/buttonSouth,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8971fb32-191a-4cb2-aa31-acdf3ddea034
+    m_ActionName: Gameplay/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 14eaef13-6244-48b7-8f46-a4d31f07d2ce
+    m_ActionName: Gameplay/Attack[/XInputControllerWindows/buttonEast,/Keyboard/e,/Keyboard/k]
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Gameplay
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

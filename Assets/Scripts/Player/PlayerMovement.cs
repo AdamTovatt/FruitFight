@@ -5,10 +5,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MovingCharacter
 {
-    private PlayerControls controls;
     private Vector2 move;
     public Rigidbody RigidBody;
     private Transform Camera;
+    private PlayerInput playerInput;
+    private PlayerControls playerControls;
+    private Dictionary<System.Guid, PlayerInputAction> inputActions;
 
     public float Speed = 5f;
     public float JumpStrength = 5f;
@@ -17,6 +19,8 @@ public class PlayerMovement : MovingCharacter
     public float PunchDistance = 0.5f;
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
+
+    public bool ControlsEnabled { get; set; }
 
     public int JellyBeans { get; set; }
 
@@ -38,13 +42,48 @@ public class PlayerMovement : MovingCharacter
 
     private void Awake()
     {
-        controls = new PlayerControls();
+        ControlsEnabled = true;
+        inputActions = new Dictionary<System.Guid, PlayerInputAction>();
+        playerInput = gameObject.GetComponent<PlayerInput>();
+        playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
 
-        controls.Gameplay.Attack.performed += (context) => { Punch(); };
-        controls.Gameplay.Jump.performed += (context) => { Jump(); };
-        controls.Gameplay.Move.performed += (context) => { Move(context.ReadValue<Vector2>()); };
-        controls.Gameplay.Move.canceled += (context) => { Move(Vector2.zero); };
+        inputActions.Add(playerControls.Gameplay.Attack.id, PlayerInputAction.Attack);
+        inputActions.Add(playerControls.Gameplay.Jump.id, PlayerInputAction.Jump);
+        inputActions.Add(playerControls.Gameplay.Move.id, PlayerInputAction.Move);
+
+        playerInput.onActionTriggered += HandleAction;
+    }
+
+    private void HandleAction(InputAction.CallbackContext context)
+    {
+        if (ControlsEnabled)
+        {
+            if (!inputActions.ContainsKey(context.action.id))
+                throw new System.Exception("Unknown action: " + context.action.name);
+
+            PlayerInputAction action = inputActions[context.action.id];
+
+            switch (action)
+            {
+                case PlayerInputAction.Attack:
+                    if (context.performed)
+                        Punch();
+                    break;
+                case PlayerInputAction.Jump:
+                    if (context.performed)
+                        Jump();
+                    break;
+                case PlayerInputAction.Move:
+                    if (context.performed)
+                        Move(context.ReadValue<Vector2>());
+                    else
+                        Move(Vector2.zero);
+                    break;
+                default:
+                    throw new System.Exception("Unknown action: " + context.action.name);
+            }
+        }
     }
 
     private void Start()
@@ -117,12 +156,12 @@ public class PlayerMovement : MovingCharacter
 
     private void OnEnable()
     {
-        controls?.Gameplay.Enable();
+        ControlsEnabled = true;
     }
 
     private void OnDisable()
     {
-        controls.Gameplay.Disable();
+        ControlsEnabled = false;
     }
 
     private bool CalculateIsGrounded()
@@ -152,4 +191,9 @@ public class PlayerMovement : MovingCharacter
                 break;
         }
     }
+}
+
+public enum PlayerInputAction
+{
+    Attack, Jump, Move
 }
