@@ -133,7 +133,6 @@ public class PlayerMovement : MovingCharacter
         OnAttack?.Invoke(this, punchPosition, side);
 
         List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f);
-        hits.AddRange(CustomPhysics.ConeCastAll(transform.position + (transform.forward * 0.5f) + (transform.up * DistanceToGround), 1f, transform.forward * -1, 0.6f, 50f));
 
         List<Transform> checkedTransforms = new List<Transform>();
         foreach (RaycastHit hit in hits)
