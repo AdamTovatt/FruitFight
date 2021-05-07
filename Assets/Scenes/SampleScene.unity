@@ -301,9 +301,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e600280203e7b4bbd4deca77e8182b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Players: []
+  PlayerCharacters: []
   Camera: {fileID: 1687258584}
   IsDebug: 0
+  PlayerPrefab: {fileID: 2012823961798305035, guid: 7a8b9f89619f22843b473f64af50bf2b,
+    type: 3}
 --- !u!4 &473548615
 Transform:
   m_ObjectHideFlags: 0
@@ -372,10 +374,10 @@ MonoBehaviour:
   m_JoinAction:
     m_UseReference: 0
     m_Action:
-      m_Name: 
+      m_Name: Join
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 
+      m_Id: 2922118a-0300-4e80-ab8a-ee75ad8e89a4
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []

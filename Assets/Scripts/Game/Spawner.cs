@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
         GameObject result = Instantiate(theObject, transform.position, transform.rotation);
 
         if (result.tag == "Player")
-            GameManager.Instance.Players.Add(result.GetComponent<PlayerMovement>());
+            GameManager.Instance.PlayerCharacters.Add(result.GetComponent<PlayerMovement>());
 
         return result;
     }
