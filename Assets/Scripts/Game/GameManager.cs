@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public List<User> Users;
+    public List<PlayerConfiguration> Users;
     public List<PlayerMovement> PlayerCharacters;
     public Camera Camera;
     public bool IsDebug = false;
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
-        Users = new List<User>();
+        Users = new List<PlayerConfiguration>();
         PlayerCharacters = new List<PlayerMovement>();
 
         playerInputManager = gameObject.GetComponent<PlayerInputManager>();
@@ -32,10 +32,10 @@ public class GameManager : MonoBehaviour
 
     private void PlayerJoined(PlayerInput playerInput)
     {
-        User joiningUser = new User(true) { ConnectedInput = playerInput };
+        PlayerConfiguration joiningUser = new PlayerConfiguration(playerInput);
         Users.Add(joiningUser);
         PlayerInput[] players = FindObjectsOfType<PlayerInput>();
-        PlayerCharacters.Add(joiningUser.ConnectedInput.transform.GetComponent<PlayerMovement>());
+        PlayerCharacters.Add(joiningUser.Input.transform.GetComponent<PlayerMovement>());
     }
 
     public void Update()
