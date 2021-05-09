@@ -168,8 +168,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrefabKeys: 0000000001000000
   PrefabValues:
-  - {fileID: 5895467557684559203, guid: 7d0aa012d85b70c49a292f89ba3d3d52, type: 3}
-  - {fileID: 6665214440304850404, guid: 727a3d864ba6e1c48a7d245cc52db9cd, type: 3}
+  - {fileID: 194766919192681541, guid: b5c9d19f6a0cd33469f7a12674f92785, type: 3}
+  - {fileID: 8223617940993882012, guid: 170f3e704c991b54cb4b9e94ad9f4c55, type: 3}
 --- !u!1 &556949023
 GameObject:
   m_ObjectHideFlags: 0

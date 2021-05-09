@@ -42,9 +42,9 @@ public class PlayerSetupMenuController : MonoBehaviour
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
         uiBananaMan.SetHat((Prefab)(hat-1));
 
-        //ReadyPanel.SetActive(true);
-        //ReadyButton.Select();
-        //MenuPanel.SetActive(false);
+        ReadyPanel.SetActive(true);
+        ReadyButton.Select();
+        MenuPanel.SetActive(false);
     }
 
     public void ReadyPlayer()

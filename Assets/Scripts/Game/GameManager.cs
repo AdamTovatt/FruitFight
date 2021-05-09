@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
             playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
             GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
             PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
+            GameObject playerHat = Instantiate(PrefabKeeper.Instance.GetPrefab((Prefab)(playerConfiguration.Hat - 1)), playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
+            playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
             playerMovement.InitializePlayerInput(playerConfiguration);
             PlayerCharacters.Add(playerMovement);
         }

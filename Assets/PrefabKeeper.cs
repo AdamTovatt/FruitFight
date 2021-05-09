@@ -41,5 +41,5 @@ public class PrefabKeeper : MonoBehaviour
 
 public enum Prefab
 {
-    CylinderHat, CubeHat
+    WizardHat, Beanie
 }
