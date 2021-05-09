@@ -8,10 +8,11 @@ public class PlayerSetupMenuController : MonoBehaviour
 {
     public int PlayerIndex { get; set; }
 
-    public TextMeshProUGUI titleText;
-    public GameObject readyPanel;
-    public GameObject menuPanel;
-    public Button readyButton;
+    public TextMeshProUGUI TitleText;
+    public GameObject ReadyPanel;
+    public GameObject MenuPanel;
+    public Button ReadyButton;
+    public UiModelDisplay UiModelDisplay;
 
     private float ignoreInputTime = 1.5f;
     private bool inputEnabled;
@@ -27,7 +28,7 @@ public class PlayerSetupMenuController : MonoBehaviour
     public void SetPlayerIndex(int playerIndex)
     {
         PlayerIndex = playerIndex;
-        titleText.SetText(string.Format("Player {0}", (playerIndex + 1).ToString()));
+        TitleText.SetText(string.Format("Player {0}", (playerIndex + 1).ToString()));
         ignoreInputTime = Time.time + ignoreInputTime;
     }
 
@@ -37,9 +38,13 @@ public class PlayerSetupMenuController : MonoBehaviour
             return;
 
         PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
-        readyPanel.SetActive(true);
-        readyButton.Select();
-        menuPanel.SetActive(false);
+
+        UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
+        uiBananaMan.SetHat((Prefab)(hat-1));
+
+        //ReadyPanel.SetActive(true);
+        //ReadyButton.Select();
+        //MenuPanel.SetActive(false);
     }
 
     public void ReadyPlayer()
@@ -48,6 +53,6 @@ public class PlayerSetupMenuController : MonoBehaviour
             return;
 
         PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex);
-        readyButton.gameObject.SetActive(false);
+        ReadyButton.gameObject.SetActive(false);
     }
 }

@@ -51,6 +51,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     private void HandlePlayerJoin(PlayerInput playerInput)
     {
         Debug.Log("Player joined: " + playerInput.playerIndex);
+        Debug.Log("player object: " + playerInput.transform.name);
 
         if(!PlayerConfigurations.Any(p => p.PlayerIndex == playerInput.playerIndex))
         {
