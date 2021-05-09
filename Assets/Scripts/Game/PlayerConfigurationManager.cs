@@ -9,6 +9,7 @@ public class PlayerConfigurationManager : MonoBehaviour
 {
     public int MaxPlayers = 2;
 
+    public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
     private PlayerInputManager playerInputManager;
 
@@ -54,7 +55,33 @@ public class PlayerConfigurationManager : MonoBehaviour
         if(!PlayerConfigurations.Any(p => p.PlayerIndex == playerInput.playerIndex))
         {
             playerInput.transform.SetParent(transform);
+            playerInput.SwitchCurrentActionMap(InputModeEnumToString(CurrentInputMode));
             PlayerConfigurations.Add(new PlayerConfiguration(playerInput));
+        }
+    }
+
+    public void SetInputMode(InputMode mode)
+    {
+        string inputModeName = InputModeEnumToString(mode);
+
+        foreach(PlayerConfiguration playerConfiguration in PlayerConfigurations.ToArray())
+        {
+            playerConfiguration.Input.SwitchCurrentActionMap(inputModeName);
+        }
+
+        CurrentInputMode = mode;
+    }
+
+    private string InputModeEnumToString(InputMode inputModeEnum)
+    {
+        switch (inputModeEnum)
+        {
+            case InputMode.Gameplay:
+                return "Gameplay";
+            case InputMode.Ui:
+                return "Ui";
+            default:
+                throw new System.Exception("No input mode with name: " + inputModeEnum.ToString());
         }
     }
 
@@ -62,4 +89,9 @@ public class PlayerConfigurationManager : MonoBehaviour
     {
         throw new System.NotImplementedException();
     }
+}
+
+public enum InputMode
+{
+    Gameplay, Ui
 }

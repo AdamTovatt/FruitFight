@@ -1042,11 +1042,11 @@ MonoBehaviour:
   m_ActionsAsset: {fileID: -944628639613478452, guid: fcd32eb1a5d50374b8526311afeac325,
     type: 3}
   m_PointAction: {fileID: 0}
-  m_MoveAction: {fileID: 2870074502143582813, guid: fcd32eb1a5d50374b8526311afeac325,
+  m_MoveAction: {fileID: 5207149726145411121, guid: fcd32eb1a5d50374b8526311afeac325,
     type: 3}
-  m_SubmitAction: {fileID: 2430169753360400011, guid: fcd32eb1a5d50374b8526311afeac325,
+  m_SubmitAction: {fileID: 4812097135919911695, guid: fcd32eb1a5d50374b8526311afeac325,
     type: 3}
-  m_CancelAction: {fileID: 5565043180091163702, guid: fcd32eb1a5d50374b8526311afeac325,
+  m_CancelAction: {fileID: -2725822468156702045, guid: fcd32eb1a5d50374b8526311afeac325,
     type: 3}
   m_LeftClickAction: {fileID: 0}
   m_MiddleClickAction: {fileID: 0}

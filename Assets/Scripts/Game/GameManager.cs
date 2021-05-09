@@ -24,9 +24,6 @@ public class GameManager : MonoBehaviour
         Users = new List<PlayerConfiguration>();
         PlayerCharacters = new List<PlayerMovement>();
 
-        playerInputManager = gameObject.GetComponent<PlayerInputManager>();
-        playerInputManager.onPlayerJoined += PlayerJoined;
-
         Instance = this;
     }
 
@@ -41,19 +38,12 @@ public class GameManager : MonoBehaviour
 
         foreach(PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
         {
+            playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
             GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
             PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
             playerMovement.InitializePlayerInput(playerConfiguration);
             PlayerCharacters.Add(playerMovement);
         }
-    }
-
-    private void PlayerJoined(PlayerInput playerInput)
-    {
-        PlayerConfiguration joiningUser = new PlayerConfiguration(playerInput);
-        Users.Add(joiningUser);
-        PlayerInput[] players = FindObjectsOfType<PlayerInput>();
-        PlayerCharacters.Add(joiningUser.Input.transform.GetComponent<PlayerMovement>());
     }
 
     public void Update()
