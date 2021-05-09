@@ -51,8 +51,11 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.Attack.id, PlayerInputAction.Attack);
         inputActions.Add(playerControls.Gameplay.Jump.id, PlayerInputAction.Jump);
         inputActions.Add(playerControls.Gameplay.Move.id, PlayerInputAction.Move);
+    }
 
-        playerInput.onActionTriggered += HandleAction;
+    public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
+    {
+        playerConfiguration.Input.onActionTriggered += HandleAction;
     }
 
     private void HandleAction(InputAction.CallbackContext context)

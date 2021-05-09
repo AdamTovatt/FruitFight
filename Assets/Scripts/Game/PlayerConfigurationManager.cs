@@ -9,7 +9,7 @@ public class PlayerConfigurationManager : MonoBehaviour
 {
     public int MaxPlayers = 2;
 
-    private List<PlayerConfiguration> playerConfigurations;
+    public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
     private PlayerInputManager playerInputManager;
 
     public static PlayerConfigurationManager Instance { get; private set; }
@@ -28,20 +28,20 @@ public class PlayerConfigurationManager : MonoBehaviour
 
             Instance = this;
             DontDestroyOnLoad(Instance);
-            playerConfigurations = new List<PlayerConfiguration>();
+            PlayerConfigurations = new List<PlayerConfiguration>();
         }
     }
 
     public void SetPlayerHat(int index, int hat)
     {
         Debug.Log("hat: " + hat);
-        playerConfigurations[index].Hat = hat;
+        PlayerConfigurations[index].Hat = hat;
     }
 
     public void ReadyPlayer(int index)
     {
-        playerConfigurations[index].IsReady = true;
-        if(playerConfigurations.All(p => p.IsReady == true))
+        PlayerConfigurations[index].IsReady = true;
+        if(PlayerConfigurations.All(p => p.IsReady == true))
         {
             SceneManager.LoadScene("SampleScene");
         }
@@ -51,10 +51,10 @@ public class PlayerConfigurationManager : MonoBehaviour
     {
         Debug.Log("Player joined: " + playerInput.playerIndex);
 
-        if(!playerConfigurations.Any(p => p.PlayerIndex == playerInput.playerIndex))
+        if(!PlayerConfigurations.Any(p => p.PlayerIndex == playerInput.playerIndex))
         {
             playerInput.transform.SetParent(transform);
-            playerConfigurations.Add(new PlayerConfiguration(playerInput));
+            PlayerConfigurations.Add(new PlayerConfiguration(playerInput));
         }
     }
 

@@ -30,6 +30,24 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    public void Start()
+    {
+        StartLevel();
+    }
+
+    public void StartLevel()
+    {
+        PlayerSpawnpoint playerSpawnpoint = GameObject.FindObjectOfType<PlayerSpawnpoint>();
+
+        foreach(PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
+        {
+            GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+            PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
+            playerMovement.InitializePlayerInput(playerConfiguration);
+            PlayerCharacters.Add(playerMovement);
+        }
+    }
+
     private void PlayerJoined(PlayerInput playerInput)
     {
         PlayerConfiguration joiningUser = new PlayerConfiguration(playerInput);
