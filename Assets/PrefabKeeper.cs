@@ -34,7 +34,10 @@ public class PrefabKeeper : MonoBehaviour
     public GameObject GetPrefab(Prefab prefab)
     {
         if (!prefabs.ContainsKey(prefab))
+        {
+            Debug.LogError("No prefab " + prefab + " exists");
             return null;
+        }
         return prefabs[prefab];
     }
 }
