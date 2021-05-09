@@ -85,9 +85,9 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
-    private void HandlePlayerLeft(PlayerInput obj)
+    private void HandlePlayerLeft(PlayerInput playerInput)
     {
-        throw new System.NotImplementedException();
+        PlayerConfigurations = PlayerConfigurations.Where(x => x.PlayerIndex != playerInput.playerIndex).ToList();
     }
 }
 
