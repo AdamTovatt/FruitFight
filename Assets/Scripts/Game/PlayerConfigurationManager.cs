@@ -48,6 +48,11 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
+    public void UnReadyPlayer(int index)
+    {
+        PlayerConfigurations[index].IsReady = false;
+    }
+
     private void HandlePlayerJoin(PlayerInput playerInput)
     {
         Debug.Log("Player joined: " + playerInput.playerIndex);

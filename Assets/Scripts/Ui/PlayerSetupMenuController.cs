@@ -10,8 +10,8 @@ public class PlayerSetupMenuController : MonoBehaviour
     public int PlayerIndex { get { return playerInput.playerIndex; } }
 
     public TextMeshProUGUI TitleText;
-    public GameObject ReadyPanel;
-    public GameObject MenuPanel;
+    public GameObject ReadyText;
+    public TextMeshProUGUI ReadyInstructionsText;
     public Button ReadyButton;
     public UiModelDisplay UiModelDisplay;
     public MultipleChoiceSlider HatSlider;
@@ -19,8 +19,9 @@ public class PlayerSetupMenuController : MonoBehaviour
     private float ignoreInputTime = 0.2f;
     private bool inputEnabled;
     private PlayerInput playerInput;
+    private PlayerControls playerControls;
 
-    private string[] hatTexts = new string[] { "No hat", "Wizard Hat", "Beanie" };
+    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->" };
 
     void Update()
     {
@@ -30,12 +31,35 @@ public class PlayerSetupMenuController : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
+
     private void Start()
     {
+        UiModelDisplay.GetComponent<RawImage>().enabled = true;
         HatSlider.Slider.Select();
         HatSlider.SetText(hatTexts[0]);
         HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
         HatSlider.Slider.value = HatSlider.Slider.value + 1;
+
+        playerInput.onActionTriggered += HandleInput;
+    }
+
+    private void HandleInput(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+            return;
+
+        if(context.action.id == playerControls.Ui.Select.id)
+        {
+            ReadyPlayer();
+        }
+        else if(context.action.id == playerControls.Ui.Cancel.id)
+        {
+
+        }
     }
 
     public void SetPlayerIndex(PlayerInput input)
@@ -60,12 +84,7 @@ public class PlayerSetupMenuController : MonoBehaviour
         Prefab? hatPrefab = null;
         if (hat > 0)
             hatPrefab = (Prefab)(hat - 1);
-        Debug.Log("hat prefab: " +hatPrefab);
         uiBananaMan.SetHat(hatPrefab);
-
-        //ReadyPanel.SetActive(true);
-        //ReadyButton.Select();
-        //MenuPanel.SetActive(false);
     }
 
     public void ReadyPlayer()
@@ -73,7 +92,18 @@ public class PlayerSetupMenuController : MonoBehaviour
         if (!inputEnabled)
             return;
 
+        ReadyText.gameObject.SetActive(true);
+        ReadyInstructionsText.text = "Press esc to unready";
         PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex);
-        ReadyButton.gameObject.SetActive(false);
+    }
+
+    public void UnReadyPlayer()
+    {
+        if (!inputEnabled)
+            return;
+
+        ReadyText.gameObject.SetActive(false);
+        ReadyInstructionsText.text = "Press e to ready up";
+        PlayerConfigurationManager.Instance.UnReadyPlayer(PlayerIndex);
     }
 }
