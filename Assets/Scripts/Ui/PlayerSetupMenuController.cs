@@ -12,7 +12,6 @@ public class PlayerSetupMenuController : MonoBehaviour
     public TextMeshProUGUI TitleText;
     public GameObject ReadyText;
     public TextMeshProUGUI ReadyInstructionsText;
-    public Button ReadyButton;
     public UiModelDisplay UiModelDisplay;
     public MultipleChoiceSlider HatSlider;
 
@@ -44,6 +43,7 @@ public class PlayerSetupMenuController : MonoBehaviour
         HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
 
         playerInput.onActionTriggered += HandleInput;
+        ReadyInstructionsText.text = string.Format("Press {0} to ready up", GetButtonName(playerControls.Ui.Select));
     }
 
     private void HandleInput(InputAction.CallbackContext context)
@@ -88,13 +88,18 @@ public class PlayerSetupMenuController : MonoBehaviour
         uiBananaMan.SetHat(hatPrefab);
     }
 
+    private string GetButtonName(InputAction inputAction)
+    {
+        return inputAction.name;
+    }
+
     public void ReadyPlayer()
     {
         if (!inputEnabled)
             return;
 
         ReadyText.gameObject.SetActive(true);
-        ReadyInstructionsText.text = "Press esc to unready";
+        ReadyInstructionsText.text = string.Format("Press {0} to unready", GetButtonName(playerControls.Ui.Cancel));
         PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex);
     }
 
@@ -104,7 +109,7 @@ public class PlayerSetupMenuController : MonoBehaviour
             return;
 
         ReadyText.gameObject.SetActive(false);
-        ReadyInstructionsText.text = "Press e to ready up";
+        ReadyInstructionsText.text = string.Format("Press {0} to ready up", GetButtonName(playerControls.Ui.Select));
         PlayerConfigurationManager.Instance.UnReadyPlayer(PlayerIndex);
     }
 }

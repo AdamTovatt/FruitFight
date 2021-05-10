@@ -31,14 +31,17 @@ public class PrefabKeeper : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public GameObject GetPrefab(Prefab prefab)
+    public GameObject GetPrefab(Prefab? prefab)
     {
-        if (!prefabs.ContainsKey(prefab))
+        if (prefab == null)
+            return null;
+
+        if (!prefabs.ContainsKey((Prefab)prefab))
         {
             Debug.LogError("No prefab " + prefab + " exists");
             return null;
         }
-        return prefabs[prefab];
+        return prefabs[(Prefab)prefab];
     }
 }
 

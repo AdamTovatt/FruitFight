@@ -34,20 +34,23 @@ public class MultipleChoiceSlider : MonoBehaviour
 
     private void HandleInput(InputAction.CallbackContext context)
     {
-        if (!context.performed)
-            return;
-
-        if (Time.time - lastInputTime < 0.2f)
-            return;
-
-        if (context.action.id == playerControls.Ui.Move.id)
+        if (InputEnabled)
         {
-            lastInputTime = Time.time;
+            if (!context.performed)
+                return;
 
-            Vector2 inputValue = context.ReadValue<Vector2>();
+            if (Time.time - lastInputTime < 0.2f)
+                return;
 
-            sliderValue += inputValue.x > 0 ? 1 : -1;
-            ValueChanged();
+            if (context.action.id == playerControls.Ui.Move.id)
+            {
+                lastInputTime = Time.time;
+
+                Vector2 inputValue = context.ReadValue<Vector2>();
+
+                sliderValue += inputValue.x > 0 ? 1 : -1;
+                ValueChanged();
+            }
         }
     }
 

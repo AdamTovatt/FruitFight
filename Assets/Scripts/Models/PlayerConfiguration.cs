@@ -24,4 +24,15 @@ public class PlayerConfiguration
             IsLocal = true;
         }
     }
+
+    public Prefab? GetHatAsPrefabEnum()
+    {
+        if (Hat == 1)
+            return Prefab.WizardHat;
+
+        if (Hat == 2)
+            return Prefab.Beanie;
+
+        return null;
+    }
 }
