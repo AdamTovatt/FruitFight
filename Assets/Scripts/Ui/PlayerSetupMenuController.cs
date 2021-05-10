@@ -25,7 +25,7 @@ public class PlayerSetupMenuController : MonoBehaviour
 
     void Update()
     {
-        if(Time.time > ignoreInputTime)
+        if (Time.time > ignoreInputTime)
         {
             inputEnabled = true;
         }
@@ -39,10 +39,9 @@ public class PlayerSetupMenuController : MonoBehaviour
     private void Start()
     {
         UiModelDisplay.GetComponent<RawImage>().enabled = true;
-        HatSlider.Slider.Select();
+        HatSlider.InitializeInput(playerInput);
         HatSlider.SetText(hatTexts[0]);
         HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
-        HatSlider.Slider.value = HatSlider.Slider.value + 1;
 
         playerInput.onActionTriggered += HandleInput;
     }
@@ -52,13 +51,15 @@ public class PlayerSetupMenuController : MonoBehaviour
         if (!context.performed)
             return;
 
-        if(context.action.id == playerControls.Ui.Select.id)
+        if (context.action.id == playerControls.Ui.Select.id)
         {
+            HatSlider.InputEnabled = false;
             ReadyPlayer();
         }
-        else if(context.action.id == playerControls.Ui.Cancel.id)
+        else if (context.action.id == playerControls.Ui.Cancel.id)
         {
-
+            HatSlider.InputEnabled = true;
+            UnReadyPlayer();
         }
     }
 

@@ -1,58 +1,69 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class MultipleChoiceSlider : MonoBehaviour
 {
-    public Slider Slider { get { return _slider; } }
-    private Slider _slider;
-
     public TextMeshProUGUI Text;
     public List<int> Choices;
 
     public delegate void ValueChangedHandler(MultipleChoiceSlider sender, int value);
     public event ValueChangedHandler OnValueChanged;
 
-    private float lastChangeTime;
-    private bool firstKeyStroke = true;
+    public bool InputEnabled { get; set; } = true;
+
+    public int Value { get { return sliderValue; } }
+
+    private int sliderValue;
+    private float lastInputTime;
+    private PlayerInput playerInput;
+    private PlayerControls playerControls;
 
     void Awake()
     {
-        _slider = gameObject.GetComponent<Slider>();
-        _slider.onValueChanged.AddListener(delegate { ValueChanged(_slider.value); });
-        _slider.maxValue = Choices.Count;
-        _slider.minValue = -1;
-        lastChangeTime = Time.time;
+        lastInputTime = Time.time;
+        playerControls = new PlayerControls();
     }
 
-    private void ValueChanged(float value)
+    public void InitializeInput(PlayerInput playerInput)
     {
-        if (Time.time - lastChangeTime < 0.2f)
+        this.playerInput = playerInput;
+        this.playerInput.onActionTriggered += HandleInput;
+    }
+
+    private void HandleInput(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
             return;
 
-        if (firstKeyStroke)
-        {
-            firstKeyStroke = false;
-            OnValueChanged?.Invoke(this, Choices[1]);
-            _slider.value = _slider.minValue + 2;
-            lastChangeTime = Time.time;
+        if (Time.time - lastInputTime < 0.2f)
             return;
+
+        if (context.action.id == playerControls.Ui.Move.id)
+        {
+            lastInputTime = Time.time;
+
+            Vector2 inputValue = context.ReadValue<Vector2>();
+
+            sliderValue += inputValue.x > 0 ? 1 : -1;
+            ValueChanged();
+        }
+    }
+
+    private void ValueChanged()
+    {
+        if (sliderValue < 0)
+        {
+            sliderValue = Choices.Count - 1;
         }
 
-        if (value == Choices.Count)
+        if (sliderValue > Choices.Count - 1)
         {
-            _slider.value = _slider.minValue + 1;
+            sliderValue = 0;
         }
-        else if(value == -1)
-        {
-            _slider.value = _slider.maxValue - 1;
-        }
-        else
-        {
-            OnValueChanged?.Invoke(this, Choices[(int)value]);
-        }
+
+        OnValueChanged?.Invoke(this, Choices[sliderValue]);
     }
 
     public void SetText(string text)
