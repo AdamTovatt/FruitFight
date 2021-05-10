@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        if (PlayerConfigurationManager.Instance == null)
+        {
+            SceneManager.LoadScene("PlayerSetup");
+            return;
+        }
+
         PlayerSpawnpoint playerSpawnpoint = GameObject.FindObjectOfType<PlayerSpawnpoint>();
 
         foreach(PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())

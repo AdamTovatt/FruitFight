@@ -16,9 +16,11 @@ public class PlayerSetupMenuController : MonoBehaviour
     public UiModelDisplay UiModelDisplay;
     public MultipleChoiceSlider HatSlider;
 
-    private float ignoreInputTime = 1.5f;
+    private float ignoreInputTime = 0.2f;
     private bool inputEnabled;
     private PlayerInput playerInput;
+
+    private string[] hatTexts = new string[] { "No hat", "Wizard Hat", "Beanie" };
 
     void Update()
     {
@@ -31,7 +33,9 @@ public class PlayerSetupMenuController : MonoBehaviour
     private void Start()
     {
         HatSlider.Slider.Select();
+        HatSlider.SetText(hatTexts[0]);
         HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
+        HatSlider.Slider.value = HatSlider.Slider.value + 1;
     }
 
     public void SetPlayerIndex(PlayerInput input)
@@ -43,14 +47,12 @@ public class PlayerSetupMenuController : MonoBehaviour
 
     private void HatSliderValueChanged(int value)
     {
+        HatSlider.SetText(hatTexts[value]);
         SetHat(value);
     }
 
     public void SetHat(int hat)
     {
-        if (!inputEnabled)
-            return;
-
         PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
 
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();

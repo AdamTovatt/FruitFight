@@ -15,22 +15,43 @@ public class MultipleChoiceSlider : MonoBehaviour
     public delegate void ValueChangedHandler(MultipleChoiceSlider sender, int value);
     public event ValueChangedHandler OnValueChanged;
 
+    private float lastChangeTime;
+    private bool firstKeyStroke = true;
+
     void Awake()
     {
         _slider = gameObject.GetComponent<Slider>();
         _slider.onValueChanged.AddListener(delegate { ValueChanged(_slider.value); });
         _slider.maxValue = Choices.Count;
+        _slider.minValue = -1;
+        lastChangeTime = Time.time;
     }
 
     private void ValueChanged(float value)
     {
+        if (Time.time - lastChangeTime < 0.2f)
+            return;
+
+        if (firstKeyStroke)
+        {
+            firstKeyStroke = false;
+            OnValueChanged?.Invoke(this, Choices[1]);
+            _slider.value = _slider.minValue + 2;
+            lastChangeTime = Time.time;
+            return;
+        }
+
         if (value == Choices.Count)
         {
-            _slider.value = _slider.minValue;
+            _slider.value = _slider.minValue + 1;
+        }
+        else if(value == -1)
+        {
+            _slider.value = _slider.maxValue - 1;
         }
         else
         {
-            OnValueChanged?.Invoke(this, (int)value);
+            OnValueChanged?.Invoke(this, Choices[(int)value]);
         }
     }
 
