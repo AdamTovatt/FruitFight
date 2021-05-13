@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2119924117487380495}
   - component: {fileID: 4219745896705727685}
   - component: {fileID: 3264574443759789939}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BuildingCubeGrass
   m_TagString: Ground
   m_Icon: {fileID: 0}

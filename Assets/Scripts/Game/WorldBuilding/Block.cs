@@ -9,6 +9,8 @@ public class Block
     public int Y;
     public int Z;
 
+    public Vector3 Position { get { return new Vector3(X, Y, Z); } }
+
     public BlockInfo Info { get { if (_info == null) { _info = WorldBuilder.GetBlockInfo(BlockInfoId); } return _info; } }
     [NonSerialized]
     private BlockInfo _info;

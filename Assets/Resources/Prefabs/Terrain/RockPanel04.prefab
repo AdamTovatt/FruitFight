@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6356163322502868011}
   - component: {fileID: 8041875637183013774}
   - component: {fileID: 5223766554259855172}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: RockPanel04
   m_TagString: Untagged
   m_Icon: {fileID: 0}

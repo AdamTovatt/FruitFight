@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class PlayerConfigurationManager : MonoBehaviour
 {
     public int MaxPlayers = 2;
+    public GameObject GameManagerPrefab;
 
     public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
@@ -47,7 +48,11 @@ public class PlayerConfigurationManager : MonoBehaviour
             SceneManager.LoadScene("SampleScene");
         }
 
-        GameManager.Instance.StartLevel();
+        SceneManager.sceneLoaded += (scene, loadMode) => 
+        {
+            Instantiate(GameManagerPrefab, transform.position, transform.rotation);
+            GameManager.ShouldStartLevel = true; 
+        };
     }
 
     public void UnReadyPlayer(int index)

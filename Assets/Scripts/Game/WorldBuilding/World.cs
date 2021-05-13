@@ -21,17 +21,22 @@ public class World
     public static World FromJson(string json)
     {
         World world = JsonUtility.FromJson<World>(json);
+        float startTime = Time.realtimeSinceStartup;
         world.CalculateNeighborsA();
+        Debug.Log("Calculate A: " + (Time.realtimeSinceStartup - startTime).ToString());
+        startTime = Time.realtimeSinceStartup;
+        world.CalculateNeighborsB();
+        Debug.Log("Calculate B: " + (Time.realtimeSinceStartup - startTime).ToString());
         return world;
     }
 
-    private void CalculateNeighborsA()
+    private void CalculateNeighborsA() //only blocks of same BlockType can be neighbors
     {
         for (int i = 0; i < Blocks.Count; i++)
         {
             Block block = Blocks[i];
             IEnumerable<Block> blocksOfSameType = Blocks.Where(x => x.Info.BlockType == block.Info.BlockType);
-        
+
             NeighborSet x = new NeighborSet();
             NeighborSet y = new NeighborSet();
             NeighborSet z = new NeighborSet();
@@ -57,7 +62,7 @@ public class World
                     z.Positive = otherBlock;
                 else if (distanceZ == requiredVerticalDistance * -1)
                     z.Negative = otherBlock;
-            }           
+            }
 
             block.NeighborX = x;
             block.NeighborY = y;
@@ -65,7 +70,7 @@ public class World
         }
     }
 
-    private void CalculateNeighborsB()
+    private void CalculateNeighborsB() //only blocks of same BlockType can be neighbors
     {
         for (int i = 0; i < Blocks.Count; i++)
         {
@@ -74,20 +79,20 @@ public class World
 
             NeighborSet x = new NeighborSet()
             {
-                Positive = blocksOfSameType.Where(b => b.X == block.X + (block.Info.Width / 2) + (b.Info.Width / 2)).FirstOrDefault(),
-                Negative = blocksOfSameType.Where(b => b.X == block.X - (block.Info.Width / 2) - (b.Info.Width / 2)).FirstOrDefault(),
+                Positive = blocksOfSameType.Where(b => b.Z == block.Z && b.Y == block.Y && b.X == block.X + (block.Info.Width / 2) + (b.Info.Width / 2)).FirstOrDefault(),
+                Negative = blocksOfSameType.Where(b => b.Z == block.Z && b.Y == block.Y && b.X == block.X - (block.Info.Width / 2) - (b.Info.Width / 2)).FirstOrDefault(),
             };
 
             NeighborSet y = new NeighborSet()
             {
-                Positive = blocksOfSameType.Where(b => b.Y == block.Y + (block.Info.Height / 2) + (b.Info.Height / 2)).FirstOrDefault(),
-                Negative = blocksOfSameType.Where(b => b.Y == block.Y - (block.Info.Height / 2) - (b.Info.Height / 2)).FirstOrDefault(),
+                Positive = blocksOfSameType.Where(b => b.X == block.X && b.Z == block.Z && b.Y == block.Y + (block.Info.Height / 2) + (b.Info.Height / 2)).FirstOrDefault(),
+                Negative = blocksOfSameType.Where(b => b.X == block.X && b.Z == block.Z && b.Y == block.Y - (block.Info.Height / 2) - (b.Info.Height / 2)).FirstOrDefault(),
             };
 
             NeighborSet z = new NeighborSet()
             {
-                Positive = blocksOfSameType.Where(b => b.Z == block.Z + (block.Info.Width / 2) + (b.Info.Width / 2)).FirstOrDefault(),
-                Negative = blocksOfSameType.Where(b => b.Z == block.Z - (block.Info.Width / 2) - (b.Info.Width / 2)).FirstOrDefault(),
+                Positive = blocksOfSameType.Where(b => b.X == block.X && b.Y == block.Y && b.Z == block.Z + (block.Info.Width / 2) + (b.Info.Width / 2)).FirstOrDefault(),
+                Negative = blocksOfSameType.Where(b => b.X == block.X && b.Y == block.Y && b.Z == block.Z - (block.Info.Width / 2) - (b.Info.Width / 2)).FirstOrDefault(),
             };
 
             block.NeighborX = x;

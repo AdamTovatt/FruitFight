@@ -117,7 +117,7 @@ public class IkFootSolver : MonoBehaviour
             return info.point;
 
         Debug.LogWarning("No ground position found for next footstep");
-        return Vector3.zero;
+        return CurrentPosition;
     }
 
     private void OnDrawGizmos()

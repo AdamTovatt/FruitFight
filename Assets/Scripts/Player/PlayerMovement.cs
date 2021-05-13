@@ -53,11 +53,6 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.Move.id, PlayerInputAction.Move);
     }
 
-    private void Start()
-    {
-        Camera = UnityEngine.Camera.main.transform;
-    }
-
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
     {
         playerConfiguration.Input.onActionTriggered += HandleAction;
@@ -97,7 +92,7 @@ public class PlayerMovement : MovingCharacter
     private void Update()
     {
         if (Camera == null)
-            Camera = UnityEngine.Camera.main.transform;
+            Camera = GameManager.Instance.MultipleTargetCamera.transform;
 
         Vector3 cameraForward = Camera.forward;
         Vector3 cameraRight = Camera.right;

@@ -99,7 +99,7 @@ public class JellyBean : MovingCharacter
 
     void Update()
     {
-        StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.Camera.transform.position);
+        StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.MultipleTargetCamera.transform.position);
 
         if (target == null)
         {

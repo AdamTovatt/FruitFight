@@ -67,6 +67,11 @@ public class WorldBuilder : MonoBehaviour
         return prefabLookup[name];
     }
 
+    public GameObject GetPrefab(List<string> nameVariations)
+    {
+        return GetPrefab(nameVariations[Random.Range(0, nameVariations.Count)]);
+    }
+
     public void LoadPrefabs(World world)
     {
         foreach(Block block in world.Blocks)
@@ -108,7 +113,22 @@ public class WorldBuilder : MonoBehaviour
 
         foreach(Block block in world.Blocks)
         {
-            Instantiate(GetPrefab(block.Info.Prefab), new Vector3(block.X, block.Y, block.Z), Quaternion.identity, transform);
+            previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
+
+            if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
+                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 90, 0), transform));
+            if (block.NeighborX.Negative == null)
+                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, -90, 0), transform));
+
+            if (block.NeighborZ.Positive == null)
+                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 0, 0), transform));
+            if (block.NeighborZ.Negative == null)
+                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 180, 0), transform));
         }
+    }
+
+    public void AddPreviousWorldObjects(GameObject gameObject)
+    {
+        previousWorldObjects.Add(gameObject);
     }
 }

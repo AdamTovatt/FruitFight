@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxPlayers: 2
+  GameManagerPrefab: {fileID: 2800476988953670052, guid: de5aa8b50f222e34792cbcfd8fc64b91,
+    type: 3}
 --- !u!114 &1573996814734352970
 MonoBehaviour:
   m_ObjectHideFlags: 0
