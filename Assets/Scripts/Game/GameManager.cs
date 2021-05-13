@@ -52,15 +52,12 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
-        Debug.Log("Start level");
         WorldBuilder.Instance.Build("01");
         navMeshSurface.BuildNavMesh();
-        Debug.Log("Level was built");
 
         GameObject cameraObject = Instantiate(CameraPrefab, transform.position, transform.rotation);
         WorldBuilder.Instance.AddPreviousWorldObjects(cameraObject);
         MultipleTargetCamera = cameraObject.GetComponent<MultipleTargetCamera>();
-        Debug.Log(MultipleTargetCamera);
 
         PlayerSpawnpoint playerSpawnpoint = FindObjectOfType<PlayerSpawnpoint>();
 

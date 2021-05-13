@@ -26,7 +26,6 @@ public class IkFootSolver : MonoBehaviour
     private float lerp;
 
     private bool inDefaultPosition = true;
-    private bool inJumpPosition = false;
 
     AverageVelocityKeeper characterVelocity;
 
@@ -53,7 +52,6 @@ public class IkFootSolver : MonoBehaviour
 
         if (CharacterMovement.IsGrounded)
         {
-            inJumpPosition = false;
             if (!CharacterMovement.StandingStill && characterVelocity.Velocity > 0) //character is moving
             {
                 float distance = Vector3.Distance(NewPosition, searchPosition);
@@ -76,7 +74,6 @@ public class IkFootSolver : MonoBehaviour
         }
         else
         {
-            inJumpPosition = true;
             inDefaultPosition = false;
             CurrentPosition = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing);
         }

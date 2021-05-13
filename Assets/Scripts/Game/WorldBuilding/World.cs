@@ -21,12 +21,7 @@ public class World
     public static World FromJson(string json)
     {
         World world = JsonUtility.FromJson<World>(json);
-        float startTime = Time.realtimeSinceStartup;
-        world.CalculateNeighborsA();
-        Debug.Log("Calculate A: " + (Time.realtimeSinceStartup - startTime).ToString());
-        startTime = Time.realtimeSinceStartup;
-        world.CalculateNeighborsB();
-        Debug.Log("Calculate B: " + (Time.realtimeSinceStartup - startTime).ToString());
+        world.CalculateNeighbors();
         return world;
     }
 
@@ -70,7 +65,7 @@ public class World
         }
     }
 
-    private void CalculateNeighborsB() //only blocks of same BlockType can be neighbors
+    private void CalculateNeighbors() //only blocks of same BlockType can be neighbors
     {
         for (int i = 0; i < Blocks.Count; i++)
         {

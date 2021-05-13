@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class OnlyShowIfDebug : MonoBehaviour
 {
-    private Renderer renderer;
+    private Renderer objectRenderer;
 
     void Start()
     {
-        renderer = gameObject.GetComponent<Renderer>();
-        renderer.enabled = false;
+        objectRenderer = gameObject.GetComponent<Renderer>();
+        objectRenderer.enabled = false;
         
         if (GameManager.Instance.IsDebug)
-            renderer.enabled = true;
+            objectRenderer.enabled = true;
 
-        GameManager.Instance.OnDebugStateChanged += (gameManager, newState) => { renderer.enabled = newState; };
+        GameManager.Instance.OnDebugStateChanged += (gameManager, newState) => { objectRenderer.enabled = newState; };
     }
 }

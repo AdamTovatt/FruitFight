@@ -46,8 +46,8 @@ public class JellyBean : MovingCharacter
     public override event AttackHandler OnAttack;
 
     private NavMeshAgent navMeshAgent;
-    private Rigidbody rigidbody;
-    private Renderer renderer;
+    private Rigidbody _rigidbody;
+    private Renderer _renderer;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -82,19 +82,21 @@ public class JellyBean : MovingCharacter
 
     void Start()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody>();
+        _rigidbody = gameObject.GetComponent<Rigidbody>();
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        renderer = JellyBeanModel.GetComponent<Renderer>();
+        _renderer = JellyBeanModel.GetComponent<Renderer>();
 
         CurrentHealth = MaxHealth;
 
-        MaterialSettings = SetMaterialSettings(renderer);
+        MaterialSettings = SetMaterialSettings(_renderer);
 
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };
         State = Random.Range(1, 3) > 1 ? JellyBeanState.Idle : JellyBeanState.Roaming;
 
-        rigidbody.isKinematic = true;
+        OnAttack += (sender, attackPosition, attackSide) => { };
+
+        _rigidbody.isKinematic = true;
     }
 
     void Update()
@@ -225,7 +227,7 @@ public class JellyBean : MovingCharacter
         if (knockBack)
         {
             float timeSinceKnockBack = Time.time - knockBackTime;
-            if ((rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
+            if ((_rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
             {
                 if (CurrentHealth <= 0)
                 {
@@ -234,7 +236,7 @@ public class JellyBean : MovingCharacter
 
                 Debug.Log("set false");
                 knockBack = false;
-                rigidbody.isKinematic = true;
+                _rigidbody.isKinematic = true;
                 navMeshAgent.enabled = true;
             }
         }
@@ -249,10 +251,10 @@ public class JellyBean : MovingCharacter
         {
             CurrentHealth -= attackStrength;
 
-            rigidbody.isKinematic = false;
+            _rigidbody.isKinematic = false;
             navMeshAgent.enabled = false;
-            rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
-            rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
+            _rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
+            _rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
             knockBack = true;
             knockBackTime = Time.time;
         }

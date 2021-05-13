@@ -17,7 +17,7 @@ public class MultipleTargetCamera : MonoBehaviour
     private Vector3 moveVelocity;
     private Vector3 rotateVelocity;
     private Vector3 oldCenterPoint;
-    private Camera camera;
+    private Camera _camera;
 
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class MultipleTargetCamera : MonoBehaviour
 
     private void Start()
     {
-        camera = gameObject.GetComponent<Camera>();
+        _camera = gameObject.GetComponent<Camera>();
     }
 
     private void Update()
@@ -62,7 +62,7 @@ public class MultipleTargetCamera : MonoBehaviour
     private void Zoom()
     {
         float newZoom = Mathf.Lerp(maxZoom, minZoom, GetGreatestDistance() / zoomLimiter);
-        camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, newZoom, Time.deltaTime);
+        _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, newZoom, Time.deltaTime);
     }
 
     private float GetGreatestDistance()

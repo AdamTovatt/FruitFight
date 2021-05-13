@@ -8,7 +8,6 @@ public class PlayerMovement : MovingCharacter
     private Vector2 move;
     public Rigidbody RigidBody;
     private Transform Camera;
-    private PlayerInput playerInput;
     private PlayerControls playerControls;
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
 
@@ -44,7 +43,6 @@ public class PlayerMovement : MovingCharacter
     {
         ControlsEnabled = true;
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
-        playerInput = gameObject.GetComponent<PlayerInput>();
         playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
 
