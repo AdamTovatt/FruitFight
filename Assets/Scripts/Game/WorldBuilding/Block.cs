@@ -4,10 +4,14 @@ using UnityEngine;
 [Serializable]
 public class Block
 {
-    public BlockInfo Info;
+    public int BlockInfoId;
     public int X;
     public int Y;
     public int Z;
+
+    public BlockInfo Info { get { if (_info == null) { _info = WorldBuilder.GetBlockInfo(BlockInfoId); } return _info; } }
+    [NonSerialized]
+    private BlockInfo _info;
 
     public NeighborSet NeighborX { get; set; }
     public NeighborSet NeighborY { get; set; }
@@ -15,10 +19,26 @@ public class Block
 
     public Block(BlockInfo info, int x, int y, int z)
     {
-        Info = info;
+        _info = info;
         X = x;
         Y = y;
         Z = z;
+    }
+
+    public Block(int blockInfoId, int x, int y, int z)
+    {
+        _info = WorldBuilder.GetBlockInfo(blockInfoId);
+        X = x;
+        Y = y;
+        Z = z;
+    }
+
+    public void FetchBlockInfo()
+    {
+        if (_info == null)
+        {
+            _info = WorldBuilder.GetBlockInfo(BlockInfoId);
+        }
     }
 }
 

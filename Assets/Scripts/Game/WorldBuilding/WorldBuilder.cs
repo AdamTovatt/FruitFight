@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorldBuilder : MonoBehaviour
 {
     public static WorldBuilder Instance;
+    public static Dictionary<int, BlockInfo> BlockInfoLookup;
 
     private Dictionary<string, GameObject> prefabLookup;
     private List<int> loadedBlocks;
@@ -27,8 +28,25 @@ public class WorldBuilder : MonoBehaviour
         blockInfoContainer = new BlockInfoContainer();
         loadedBlocks = new List<int>();
         prefabLookup = new Dictionary<string, GameObject>();
+        BlockInfoLookup = new Dictionary<int, BlockInfo>();
 
         blockInfoContainer = JsonUtility.FromJson<BlockInfoContainer>(LoadTextFile("Configuration/BlockInfoContainer"));
+        
+        foreach(BlockInfo blockInfo in blockInfoContainer.Infos)
+        {
+            BlockInfoLookup.Add(blockInfo.Id, blockInfo);
+        }
+    }
+
+    public static BlockInfo GetBlockInfo(int infoId)
+    {
+        if (!BlockInfoLookup.ContainsKey(infoId))
+        {
+            Debug.LogError("Missing key: " + infoId + " in BlockInfoLookup");
+            return null;
+        }
+
+        return BlockInfoLookup[infoId];
     }
 
     public void Build(string worldName)
@@ -47,16 +65,6 @@ public class WorldBuilder : MonoBehaviour
         }
 
         return prefabLookup[name];
-    }
-
-    private string LoadTextFile(string path)
-    {
-        return Resources.Load<TextAsset>(path).text;
-    }
-
-    private void LoadPrefab(string name)
-    {
-        prefabLookup.Add(name, Resources.Load<GameObject>(string.Format("Prefabs/Terrain/{0}", name)));
     }
 
     public void LoadPrefabs(World world)
@@ -79,6 +87,16 @@ public class WorldBuilder : MonoBehaviour
                 loadedBlocks.Add(block.Info.Id);
             }
         }
+    }
+
+    private string LoadTextFile(string path)
+    {
+        return Resources.Load<TextAsset>(path).text;
+    }
+
+    private void LoadPrefab(string name)
+    {
+        prefabLookup.Add(name, Resources.Load<GameObject>(string.Format("Prefabs/Terrain/{0}", name)));
     }
 
     private void BuildWorld(World world)

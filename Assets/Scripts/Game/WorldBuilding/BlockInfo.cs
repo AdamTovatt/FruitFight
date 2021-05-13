@@ -21,7 +21,7 @@ public class BlockInfo
 
 public enum BlockType
 {
-    Large
+    Large, Invisible
 }
 
 [Serializable]

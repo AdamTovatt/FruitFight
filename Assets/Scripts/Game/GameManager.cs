@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        Camera = Camera.main;
+
         if (PlayerConfigurationManager.Instance == null)
         {
             SceneManager.LoadScene("PlayerSetup");

@@ -12,6 +12,14 @@
         "RockPanel03",
         "RockPanel04"
       ]
+    },
+    {
+      "Id": 2,
+      "BlockType": 1,
+      "Width": 1,
+      "Height": 1,
+      "Prefab": "PlayerStart",
+      "EdgePrefabs": []
     }
   ]
 }

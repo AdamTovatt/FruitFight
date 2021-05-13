@@ -1,37 +1,19 @@
 {
   "Blocks": [
     {
-      "Info": {
-        "Id": 1,
-        "BlockType": 0,
-        "Width": 4,
-        "Height": 4,
-        "Prefab": "BuildingCubeGrass",
-        "EdgePrefabs": [
-          "RockPanel01",
-          "RockPanel02",
-          "RockPanel03",
-          "RockPanel04"
-        ]
-      },
+      "BlockInfoId":  2,
+      "X": 0,
+      "Y": 2,
+      "Z": 0
+    },
+    {
+      "BlockInfoId": 1,
       "X": 0,
       "Y": 0,
       "Z": 0
     },
     {
-      "Info": {
-        "Id": 1,
-        "BlockType": 0,
-        "Width": 4,
-        "Height": 4,
-        "Prefab": "BuildingCubeGrass",
-        "EdgePrefabs": [
-          "RockPanel01",
-          "RockPanel02",
-          "RockPanel03",
-          "RockPanel04"
-        ]
-      },
+      "BlockInfoId": 1,
       "X": 4,
       "Y": 0,
       "Z": 0
