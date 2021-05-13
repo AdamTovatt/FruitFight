@@ -30,20 +30,20 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        StartLevel();
-    }
-
-    public void StartLevel()
-    {
         if (PlayerConfigurationManager.Instance == null)
         {
             SceneManager.LoadScene("PlayerSetup");
             return;
         }
+    }
+
+    public void StartLevel()
+    {
+        WorldBuilder.Instance.Build("01");
 
         PlayerSpawnpoint playerSpawnpoint = GameObject.FindObjectOfType<PlayerSpawnpoint>();
 
-        foreach(PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
+        foreach (PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
         {
             playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
             GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(oldIsDebug != IsDebug)
+        if (oldIsDebug != IsDebug)
         {
             OnDebugStateChanged?.Invoke(this, IsDebug);
         }

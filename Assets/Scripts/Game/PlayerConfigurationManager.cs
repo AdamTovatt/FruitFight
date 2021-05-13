@@ -46,6 +46,8 @@ public class PlayerConfigurationManager : MonoBehaviour
         {
             SceneManager.LoadScene("SampleScene");
         }
+
+        GameManager.Instance.StartLevel();
     }
 
     public void UnReadyPlayer(int index)
