@@ -116,7 +116,8 @@ public class IkFootSolver : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit info, 10))
             return info.point;
 
-        throw new System.Exception("No ground position found for next footstep");
+        Debug.LogWarning("No ground position found for next footstep");
+        return Vector3.zero;
     }
 
     private void OnDrawGizmos()
