@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerControls playerControls;
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
 
+    public Transform PunchSphereTransform;
     public float Speed = 5f;
     public float JumpStrength = 5f;
     public float DistanceToGround = 0.25f;
@@ -18,6 +20,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchDistance = 0.5f;
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
+    public float PunchSphereRadius = 0.4f;
 
     public bool ControlsEnabled { get; set; }
 
@@ -131,10 +134,12 @@ public class PlayerMovement : MovingCharacter
         punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
         OnAttack?.Invoke(this, punchPosition, side);
 
-        List<RaycastHit> hits = CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f);
+        List<Transform> hits = new List<Transform>();
+        CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f).ForEach(x => hits.Add(x.transform));
+        Physics.OverlapSphere(PunchSphereTransform.position, PunchSphereRadius).ToList().ForEach(x => hits.Add(x.transform));
 
         List<Transform> checkedTransforms = new List<Transform>();
-        foreach (RaycastHit hit in hits)
+        foreach (Transform hit in hits)
         {
             if (!checkedTransforms.Contains(hit.transform))
             {
