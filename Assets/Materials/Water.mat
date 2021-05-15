@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: -6465566751694194690, guid: 051bbb7d61458d84eb7dc7524dfce1f6,
+  m_Shader: {fileID: -6465566751694194690, guid: 8c9ac78095fc8d8478e34fcbed2ebcc4,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -34,14 +34,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - RippleDensity: 45
+    - FoamDistance: 0.15
+    - FoamSize: 20
+    - FoamSpeed: 0.4
+    - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
-    - WaterDepth: 3.33
-    - WaveSpeed: 0.0005
+    - Tiling: 2
+    - WaterDepth: 0.5
+    - WaveHeight: 0.5
+    - WaveSize: 5
+    - WaveSpeed: 0.1
     m_Colors:
     - BaseColor: {r: 0.13501248, g: 0.47923034, b: 0.7735849, a: 0}
     - RippleColor: {r: 0.3477808, g: 1.005721, b: 1.798281, a: 0}
-    - WaterColor: {r: 0, g: 0, b: 0, a: 0}
-    - WaveHeight: {r: 1, g: 0.02, b: 1, a: 0}
+    - _Offset: {r: 0, g: -0.92, b: 0, a: 0}
   m_BuildTextureStacks: []
