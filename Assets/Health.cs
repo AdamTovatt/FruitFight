@@ -36,15 +36,17 @@ public class Health : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.transform.tag == "Water")
+        if (other.transform.tag == "Water")
         {
             if (CanDie)
             {
                 OnDied?.Invoke(this);
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
-                Destroy(gameObject);
+                DestroyWithDelay destroyWithDelay = gameObject.AddComponent<DestroyWithDelay>();
+                destroyWithDelay.DelaySeconds = 0.2f;
+                //Destroy(gameObject);
             }
         }
     }
