@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 2012823961798305030}
   - component: {fileID: 3348936503559169664}
   - component: {fileID: -9148304447794050845}
+  - component: {fileID: -1100488477938289283}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -614,6 +615,8 @@ MonoBehaviour:
   PunchDistance: 0.5
   PunchHeight: 0.9
   PunchWidth: 0.15
+  PunchSphereRadius: 0.4
+  PunchStrength: 5
 --- !u!54 &2012823961798305032
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -728,6 +731,23 @@ MonoBehaviour:
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-1100488477938289283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4552327f2d3edba44836f4b195052650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartHealth: 100
+  WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
+    type: 3}
+  DestroyOnDeath: 1
+  CanDie: 1
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

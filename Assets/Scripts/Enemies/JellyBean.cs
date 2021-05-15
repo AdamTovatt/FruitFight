@@ -17,11 +17,9 @@ public class JellyBean : MovingCharacter
     public float DiscoveryRadius = 4f;
     public float DistanceToGround = 0.1f;
 
-    public float MaxHealth = 10;
-    public float CurrentHealth { get; private set; }
-
     public Transform JellyBeanModel;
     public List<Texture2D> CoatingTextures;
+    public Health Health;
 
     public JellyBeanMaterialSettings MaterialSettings { get; private set; }
 
@@ -85,8 +83,6 @@ public class JellyBean : MovingCharacter
         _rigidbody = gameObject.GetComponent<Rigidbody>();
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         _renderer = JellyBeanModel.GetComponent<Renderer>();
-
-        CurrentHealth = MaxHealth;
 
         MaterialSettings = SetMaterialSettings(_renderer);
 
@@ -229,12 +225,11 @@ public class JellyBean : MovingCharacter
             float timeSinceKnockBack = Time.time - knockBackTime;
             if ((_rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
             {
-                if (CurrentHealth <= 0)
+                if (Health.CurrentHealth <= 0)
                 {
                     Die();
                 }
 
-                Debug.Log("set false");
                 knockBack = false;
                 _rigidbody.isKinematic = true;
                 navMeshAgent.enabled = true;
@@ -249,8 +244,6 @@ public class JellyBean : MovingCharacter
     {
         if (!knockBack)
         {
-            CurrentHealth -= attackStrength;
-
             _rigidbody.isKinematic = false;
             navMeshAgent.enabled = false;
             _rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);

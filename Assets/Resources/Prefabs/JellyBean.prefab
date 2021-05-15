@@ -961,6 +961,7 @@ GameObject:
   - component: {fileID: 4768720915529816219}
   - component: {fileID: 4768720915529816217}
   - component: {fileID: 4768720915529816222}
+  - component: {fileID: 5065833842122769581}
   m_Layer: 0
   m_Name: JellyBean
   m_TagString: Untagged
@@ -1034,7 +1035,6 @@ MonoBehaviour:
   PersonalBoundaryDistance: 0.62
   DiscoveryRadius: 3
   DistanceToGround: 0.3
-  MaxHealth: 10
   JellyBeanModel: {fileID: 728964469066429983}
   CoatingTextures:
   - {fileID: 2800000, guid: 7f8f719ff37741d41a4aa5267db39563, type: 3}
@@ -1057,6 +1057,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 10720e70fe8ff9f4cab11aca6ff20449, type: 3}
   - {fileID: 2800000, guid: 7ac6a6314fbf54e48b4c2de2db6ed4cd, type: 3}
   - {fileID: 2800000, guid: 53ded51a8c2f34f4aa9d46d8266f16d7, type: 3}
+  Health: {fileID: 5065833842122769581}
 --- !u!54 &4768720915529816217
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1095,6 +1096,23 @@ NavMeshAgent:
   m_BaseOffset: -0.08
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
+--- !u!114 &5065833842122769581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768720915529816196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4552327f2d3edba44836f4b195052650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartHealth: 10
+  WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
+    type: 3}
+  DestroyOnDeath: 0
+  CanDie: 1
 --- !u!1 &4768720915613935198
 GameObject:
   m_ObjectHideFlags: 0

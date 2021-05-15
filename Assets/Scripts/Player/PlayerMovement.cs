@@ -21,6 +21,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchHeight = 0.5f;
     public float PunchWidth = 0.5f;
     public float PunchSphereRadius = 0.4f;
+    public float PunchStrength = 5f;
 
     public bool ControlsEnabled { get; set; }
 
@@ -141,12 +142,21 @@ public class PlayerMovement : MovingCharacter
         List<Transform> checkedTransforms = new List<Transform>();
         foreach (Transform hit in hits)
         {
-            if (!checkedTransforms.Contains(hit.transform))
+            if (hit != this.transform)
             {
-                checkedTransforms.Add(hit.transform);
-                JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
-                if (jellyBean != null)
-                    jellyBean.WasAttacked(transform.position, transform, 5f);
+                if (!checkedTransforms.Contains(hit.transform))
+                {
+                    checkedTransforms.Add(hit.transform);
+
+                    Health health = hit.transform.GetComponent<Health>();
+
+                    if (health != null)
+                        health.CurrentHealth -= PunchStrength;
+
+                    JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
+                    if (jellyBean != null)
+                        jellyBean.WasAttacked(transform.position, transform, PunchStrength);
+                }
             }
         }
     }
