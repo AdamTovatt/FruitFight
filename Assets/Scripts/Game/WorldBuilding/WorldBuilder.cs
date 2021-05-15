@@ -67,9 +67,9 @@ public class WorldBuilder : MonoBehaviour
         return prefabLookup[name];
     }
 
-    public GameObject GetPrefab(List<string> nameVariations)
+    public GameObject GetPrefab(List<string> nameVariations, System.Random random)
     {
-        return GetPrefab(nameVariations[Random.Range(0, nameVariations.Count)]);
+        return GetPrefab(nameVariations[random.Next(0, nameVariations.Count)]);
     }
 
     public void LoadPrefabs(World world)
@@ -131,15 +131,17 @@ public class WorldBuilder : MonoBehaviour
 
             if (block.Info.BlockType == BlockType.Large)
             {
+                System.Random random = new System.Random((int)(block.Position.x + block.Position.y + block.Position.z));
+
                 if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
-                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 90, 0), transform));
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 90, 0), transform));
                 if (block.NeighborX.Negative == null)
-                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, -90, 0), transform));
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, -90, 0), transform));
 
                 if (block.NeighborZ.Positive == null)
-                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 0, 0), transform));
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 0, 0), transform));
                 if (block.NeighborZ.Negative == null)
-                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 180, 0), transform));
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 180, 0), transform));
             }
         }
     }
