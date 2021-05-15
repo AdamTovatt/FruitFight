@@ -31,8 +31,8 @@ public class WorldBuilder : MonoBehaviour
         BlockInfoLookup = new Dictionary<int, BlockInfo>();
 
         blockInfoContainer = JsonUtility.FromJson<BlockInfoContainer>(LoadTextFile("Configuration/BlockInfoContainer"));
-        
-        foreach(BlockInfo blockInfo in blockInfoContainer.Infos)
+
+        foreach (BlockInfo blockInfo in blockInfoContainer.Infos)
         {
             BlockInfoLookup.Add(blockInfo.Id, blockInfo);
         }
@@ -58,7 +58,7 @@ public class WorldBuilder : MonoBehaviour
 
     public GameObject GetPrefab(string name)
     {
-        if(!prefabLookup.ContainsKey(name))
+        if (!prefabLookup.ContainsKey(name))
         {
             Debug.LogError("The prefab: " + name + " has not been loaded correctly. LoadPrefabs() should be called before getting a prefab");
             LoadPrefab(name);
@@ -74,7 +74,7 @@ public class WorldBuilder : MonoBehaviour
 
     public void LoadPrefabs(World world)
     {
-        foreach(Block block in world.Blocks)
+        foreach (Block block in world.Blocks)
         {
             if (!loadedBlocks.Contains(block.Info.Id))
             {
@@ -106,24 +106,41 @@ public class WorldBuilder : MonoBehaviour
 
     private void BuildWorld(World world)
     {
-        foreach(GameObject gameObject in previousWorldObjects)
+        foreach (GameObject gameObject in previousWorldObjects)
         {
             Destroy(gameObject);
         }
 
-        foreach(Block block in world.Blocks)
+        foreach (Block block in world.Blocks)
         {
-            previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
+            if (block.Info.BlockType == BlockType.Large || block.Info.BlockType == BlockType.Invisible)
+            {
+                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
+            }
+            else if (block.Info.BlockType == BlockType.Ocean)
+            {
+                int width = block.Info.Width;
+                for (int x = -5; x < 5; x++)
+                {
+                    for (int y = -5; y < 5; y++)
+                    {
+                        previousWorldObjects.Add(Instantiate(GetPrefab("Water"), new Vector3(x * width, -2f, y * width), Quaternion.identity, transform));
+                    }
+                }
+            }
 
-            if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
-                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 90, 0), transform));
-            if (block.NeighborX.Negative == null)
-                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, -90, 0), transform));
+            if (block.Info.BlockType == BlockType.Large)
+            {
+                if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 90, 0), transform));
+                if (block.NeighborX.Negative == null)
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, -90, 0), transform));
 
-            if (block.NeighborZ.Positive == null)
-                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 0, 0), transform));
-            if (block.NeighborZ.Negative == null)
-                previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 180, 0), transform));
+                if (block.NeighborZ.Positive == null)
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 0, 0), transform));
+                if (block.NeighborZ.Negative == null)
+                    previousWorldObjects.Add(Instantiate(GetPrefab(block.Info.EdgePrefabs), block.Position, Quaternion.Euler(0, 180, 0), transform));
+            }
         }
     }
 
