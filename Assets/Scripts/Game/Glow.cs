@@ -6,21 +6,20 @@ public class Glow : MonoBehaviour
     public ParticleSystem ParticleSystem;
     public MeshRenderer ParentRenderer;
 
-    private static Dictionary<Hash128, Color> glowColors;
+    private static Dictionary<Texture, Color> glowColors;
 
     private void Start()
     {
         if (glowColors == null)
-            glowColors = new Dictionary<Hash128, Color>();
+            glowColors = new Dictionary<Texture, Color>();
 
         ParticleSystem.MainModule mainModule = ParticleSystem.main;
         Texture mainTexutre = ParentRenderer.material.mainTexture;
-        Hash128 textureHash = mainTexutre.imageContentsHash;
 
         Color glowColor = Color.black;
-        if (glowColors.ContainsKey(textureHash))
+        if (glowColors.ContainsKey(mainTexutre))
         {
-            glowColor = glowColors[textureHash];
+            glowColor = glowColors[mainTexutre];
         }
         else
         {
@@ -32,7 +31,7 @@ public class Glow : MonoBehaviour
             averageColor += texture2D.GetPixel((int)(texture2D.width * 0.25f), (int)(texture2D.height * 0.75f));
             averageColor = averageColor / 4;
 
-            glowColors.Add(textureHash, averageColor);
+            glowColors.Add(mainTexutre, averageColor);
             glowColor = averageColor;
         }
 
