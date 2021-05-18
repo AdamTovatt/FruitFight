@@ -30,12 +30,8 @@ public class WorldBuilder : MonoBehaviour
         prefabLookup = new Dictionary<string, GameObject>();
         BlockInfoLookup = new Dictionary<int, BlockInfo>();
 
-        blockInfoContainer = JsonUtility.FromJson<BlockInfoContainer>(LoadTextFile("Configuration/BlockInfoContainer"));
-
-        foreach (BlockInfo blockInfo in blockInfoContainer.Infos)
-        {
-            BlockInfoLookup.Add(blockInfo.Id, blockInfo);
-        }
+        blockInfoContainer = BlockInfoContainer.LoadFromConfiguration();
+        BlockInfoLookup = blockInfoContainer.CreateLookup();
     }
 
     public static BlockInfo GetBlockInfo(int infoId)
@@ -51,7 +47,7 @@ public class WorldBuilder : MonoBehaviour
 
     public void Build(string worldName)
     {
-        World world = World.FromJson(LoadTextFile(string.Format("Maps/{0}", worldName)));
+        World world = World.FromWorldName(worldName);
         LoadPrefabs(world);
         BuildWorld(world);
     }
@@ -92,11 +88,6 @@ public class WorldBuilder : MonoBehaviour
                 loadedBlocks.Add(block.Info.Id);
             }
         }
-    }
-
-    private string LoadTextFile(string path)
-    {
-        return Resources.Load<TextAsset>(path).text;
     }
 
     private void LoadPrefab(string name)

@@ -33,4 +33,21 @@ public class BlockInfoContainer
     {
         Infos = new List<BlockInfo>();
     }
+
+    public static BlockInfoContainer LoadFromConfiguration()
+    {
+        return JsonUtility.FromJson<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
+    }
+
+    public Dictionary<int, BlockInfo> CreateLookup()
+    {
+        Dictionary<int, BlockInfo> result = new Dictionary<int, BlockInfo>();
+
+        foreach (BlockInfo blockInfo in Infos)
+        {
+            result.Add(blockInfo.Id, blockInfo);
+        }
+
+        return result;
+    }
 }

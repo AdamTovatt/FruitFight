@@ -25,6 +25,11 @@ public class World
         return world;
     }
 
+    public static World FromWorldName(string worldName)
+    {
+        return World.FromJson(WorldUtilities.LoadTextFile(string.Format("Maps/{0}", worldName)));
+    }
+
     private void CalculateNeighborsA() //only blocks of same BlockType can be neighbors
     {
         for (int i = 0; i < Blocks.Count; i++)
