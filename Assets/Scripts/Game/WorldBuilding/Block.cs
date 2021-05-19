@@ -1,3 +1,4 @@
+using Lookups;
 using System;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class Block
 
     public Vector3 Position { get { return new Vector3(X, Y, Z); } }
 
-    public BlockInfo Info { get { if (_info == null) { _info = WorldBuilder.GetBlockInfo(BlockInfoId); } return _info; } }
+    public BlockInfo Info { get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; } }
     [NonSerialized]
     private BlockInfo _info;
 
@@ -29,7 +30,7 @@ public class Block
 
     public Block(int blockInfoId, int x, int y, int z)
     {
-        _info = WorldBuilder.GetBlockInfo(blockInfoId);
+        _info = BlockInfoLookup.Get(blockInfoId);
         X = x;
         Y = y;
         Z = z;
@@ -39,7 +40,7 @@ public class Block
     {
         if (_info == null)
         {
-            _info = WorldBuilder.GetBlockInfo(BlockInfoId);
+            _info = BlockInfoLookup.Get(BlockInfoId);
         }
     }
 }

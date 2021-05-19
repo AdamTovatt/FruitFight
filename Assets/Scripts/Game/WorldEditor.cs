@@ -10,7 +10,6 @@ public class WorldEditor : MonoBehaviour
     public void Awake()
     {
         World = new World();
-        
     }
 
     void Start()
