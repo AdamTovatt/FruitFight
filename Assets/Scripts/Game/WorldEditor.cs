@@ -24,18 +24,15 @@ public class WorldEditor : MonoBehaviour
 
     private void CreateGrid(int tileSize, int tiles, Vector3 centerPoint)
     {
-        for (int x = 0; x < tiles * 2; x++)
+        for (int x = -tiles; x < tiles + 1; x++)
         {
-            for (int z = 0; z < tiles * 2; z++)
+            for (int z = -tiles; z < tiles + 1; z++)
             {
-                int appliedX = tiles * 2 - x;
-                int appliedZ = tiles * 2 - z;
+                Vector3 currentPosition = new Vector3(centerPoint.x + x * tileSize, centerPoint.y, centerPoint.z + z * tileSize);
+                Vector3 nextPositionX = new Vector3(centerPoint.x + (x + 1) * tileSize, centerPoint.y, centerPoint.z + z * tileSize);
+                Vector3 nextPositionZ = new Vector3(centerPoint.x + x * tileSize, centerPoint.y, centerPoint.z + (z + 1) * tileSize);
 
-                Vector3 currentPosition = new Vector3(centerPoint.x + appliedX * tileSize, centerPoint.y, centerPoint.z + appliedZ * tileSize);
-                Vector3 nextPositionX = new Vector3(centerPoint.x + (appliedX + 1) * tileSize, centerPoint.y, centerPoint.z + appliedZ * tileSize);
-                Vector3 nextPositionZ = new Vector3(centerPoint.x + appliedX * tileSize, centerPoint.y, centerPoint.z + (appliedZ + 1) * tileSize);
-
-                if (appliedX + 1 <= tiles * tileSize)
+                if (x < tiles)
                 {
                     GameObject gridLineX = Instantiate(GridLinePrefab, transform);
                     gridLines.Add(gridLineX);
@@ -45,7 +42,7 @@ public class WorldEditor : MonoBehaviour
                     lineX.SetPosition(1, nextPositionX);
                 }
 
-                if (appliedZ <= tileSize * tileSize)
+                if (z < tiles)
                 {
                     GameObject gridLineZ = Instantiate(GridLinePrefab, transform);
                     gridLines.Add(gridLineZ);
