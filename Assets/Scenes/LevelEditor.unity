@@ -250,6 +250,10 @@ MonoBehaviour:
     type: 3}
   MainCameraPrefab: {fileID: 7183245211285268454, guid: d4dd153ae52d3204ab30608b01aa63be,
     type: 3}
+  MarkerPrefab: {fileID: 1221851224205197267, guid: ac839af67dad17f42b3ab92cc3a6711d,
+    type: 3}
+  MarkerMoveCooldown: 0.5
+  MarkerMoveSensitivity: 0.4
 --- !u!4 &1817805782
 Transform:
   m_ObjectHideFlags: 0

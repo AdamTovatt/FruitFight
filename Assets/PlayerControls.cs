@@ -327,6 +327,118 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""LevelEditor"",
+            ""id"": ""ddc4a653-cd29-4a56-a8cb-4e9538646645"",
+            ""actions"": [
+                {
+                    ""name"": ""MoveMarker"",
+                    ""type"": ""Value"",
+                    ""id"": ""983e2c4f-0ab1-4204-8acb-fb7cebe5863f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Place"",
+                    ""type"": ""Button"",
+                    ""id"": ""29a1a754-ea46-479c-9553-170de33cfe8c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b95674fa-4b2f-4069-8a5f-cdb0762ffa0e"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""e99e18c5-dc1d-45a6-ad70-abc026ec7a2a"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""eda424ca-ac81-4941-946d-55e70ba39d73"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""acdb5044-9e9d-4bf1-a087-df7d75cb6b59"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""8d98009b-ae43-4b81-8b04-a4a9563e8e7c"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""55dc45c4-64aa-4e43-8b91-1b9927a388b9"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MoveMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35bf67ee-cef7-4a7d-9ba2-e572ad4f16ef"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Place"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4abb6359-da9f-4893-b50d-b0671040353d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Place"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -365,6 +477,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Ui_Select = m_Ui.FindAction("Select", throwIfNotFound: true);
         m_Ui_Cancel = m_Ui.FindAction("Cancel", throwIfNotFound: true);
         m_Ui_Move = m_Ui.FindAction("Move", throwIfNotFound: true);
+        // LevelEditor
+        m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
+        m_LevelEditor_MoveMarker = m_LevelEditor.FindAction("MoveMarker", throwIfNotFound: true);
+        m_LevelEditor_Place = m_LevelEditor.FindAction("Place", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -516,6 +632,47 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public UiActions @Ui => new UiActions(this);
+
+    // LevelEditor
+    private readonly InputActionMap m_LevelEditor;
+    private ILevelEditorActions m_LevelEditorActionsCallbackInterface;
+    private readonly InputAction m_LevelEditor_MoveMarker;
+    private readonly InputAction m_LevelEditor_Place;
+    public struct LevelEditorActions
+    {
+        private @PlayerControls m_Wrapper;
+        public LevelEditorActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MoveMarker => m_Wrapper.m_LevelEditor_MoveMarker;
+        public InputAction @Place => m_Wrapper.m_LevelEditor_Place;
+        public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(LevelEditorActions set) { return set.Get(); }
+        public void SetCallbacks(ILevelEditorActions instance)
+        {
+            if (m_Wrapper.m_LevelEditorActionsCallbackInterface != null)
+            {
+                @MoveMarker.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveMarker;
+                @MoveMarker.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveMarker;
+                @MoveMarker.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveMarker;
+                @Place.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
+                @Place.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
+                @Place.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
+            }
+            m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @MoveMarker.started += instance.OnMoveMarker;
+                @MoveMarker.performed += instance.OnMoveMarker;
+                @MoveMarker.canceled += instance.OnMoveMarker;
+                @Place.started += instance.OnPlace;
+                @Place.performed += instance.OnPlace;
+                @Place.canceled += instance.OnPlace;
+            }
+        }
+    }
+    public LevelEditorActions @LevelEditor => new LevelEditorActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
@@ -546,5 +703,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface ILevelEditorActions
+    {
+        void OnMoveMarker(InputAction.CallbackContext context);
+        void OnPlace(InputAction.CallbackContext context);
     }
 }
