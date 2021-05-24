@@ -5,21 +5,26 @@ using UnityEngine;
 public class WorldEditor : MonoBehaviour
 {
     public GameObject GridLinePrefab;
+    public GameObject MainCameraPrefab;
 
     public WorldBuilder Builder { get; private set; }
     public World World { get; private set; }
 
     private List<GameObject> gridLines;
+    private MultipleTargetCamera mainCamera;
 
     public void Awake()
     {
         gridLines = new List<GameObject>();
         World = new World();
+
+        mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
     }
 
     void Start()
     {
         CreateGrid(2, 4, new Vector3(0, 0, 0));
+        FindObjectOfType<SkyboxCamera>().SetMainCamera(mainCamera.transform);
     }
 
     private void CreateGrid(int tileSize, int tiles, Vector3 centerPoint)

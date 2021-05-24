@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
 
         GameObject cameraObject = Instantiate(CameraPrefab, transform.position, transform.rotation);
         WorldBuilder.Instance.AddPreviousWorldObjects(cameraObject);
-        GameObject.FindObjectOfType<SkyboxCamera>().SetMainCamera(cameraObject.transform);
+        FindObjectOfType<SkyboxCamera>().SetMainCamera(cameraObject.transform);
         MultipleTargetCamera = cameraObject.GetComponent<MultipleTargetCamera>();
 
         PlayerSpawnpoint playerSpawnpoint = FindObjectOfType<PlayerSpawnpoint>();
