@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 1817805782}
   - component: {fileID: 1817805781}
   - component: {fileID: 1817805783}
+  - component: {fileID: 1817805784}
   m_Layer: 0
   m_Name: WorldManager
   m_TagString: Untagged
@@ -252,6 +253,7 @@ MonoBehaviour:
     type: 3}
   MarkerPrefab: {fileID: 1221851224205197267, guid: ac839af67dad17f42b3ab92cc3a6711d,
     type: 3}
+  CameraSmoothTime: 1
   MarkerMoveCooldown: 0.5
   MarkerMoveSensitivity: 0.4
 --- !u!4 &1817805782
@@ -284,3 +286,15 @@ MonoBehaviour:
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+--- !u!114 &1817805784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817805780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc79911b6c91a5a4b80ef31b5171a63d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

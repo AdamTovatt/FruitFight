@@ -14,9 +14,10 @@ public class WorldEditor : MonoBehaviour
     public float MarkerMoveSensitivity = 0.5f;
 
     public WorldBuilder Builder { get; private set; }
-    public World World { get; private set; }
+    public World CurrentWorld { get; private set; }
 
     public int GridSize { get; set; }
+    public int SelectedBlock { get; set; }
 
     private List<GameObject> gridLines;
     private MultipleTargetCamera mainCamera;
@@ -27,10 +28,12 @@ public class WorldEditor : MonoBehaviour
     public void Awake()
     {
         GridSize = 4;
+        SelectedBlock = 1;
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
 
         gridLines = new List<GameObject>();
-        World = new World();
+        CurrentWorld = new World();
+        Builder = gameObject.GetComponent<WorldBuilder>();
 
         mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
 
@@ -43,7 +46,11 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        Instantiate(PrefabLookup.GetPrefab(BlockInfoLookup.Get(1).Prefab), marker.position, marker.rotation);
+        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), marker.position);
+        CurrentWorld.Add(block);
+        CurrentWorld.CalculateNeighbors();
+
+        Builder.BuildWorld(CurrentWorld);
     }
 
     private void MoveMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -57,10 +64,8 @@ public class WorldEditor : MonoBehaviour
 
             if (x != 0 || y != 0)
             {
-                Debug.Log(input);
-                Debug.Log("x: " + x + "y: " + y);
-
                 marker.position = new Vector3(marker.position.x + (x * GridSize), marker.position.y, marker.position.z + (y * GridSize));
+                CreateGridFromMarker();
                 lastMarkerMoveTime = Time.time;
             }
         }
@@ -68,10 +73,15 @@ public class WorldEditor : MonoBehaviour
 
     void Start()
     {
-        CreateGrid(4, new Vector3(GridSize / 2, -GridSize, GridSize / 2));
-        FindObjectOfType<SkyboxCamera>().SetMainCamera(mainCamera.transform);
         marker = Instantiate(MarkerPrefab).transform;
+        CreateGridFromMarker();
 
+        GetComponent<Spawner>().OnObjectSpawned += (sender, spawnedObject) =>
+        {
+            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
+        };
+
+        mainCamera.Offset = mainCamera.Offset * 2;
         mainCamera.SmoothTime = CameraSmoothTime;
         mainCamera.Targets.Add(marker);
     }
@@ -81,8 +91,18 @@ public class WorldEditor : MonoBehaviour
         return new Vector3(Mathf.Round(position.x / GridSize) * GridSize, Mathf.Round(position.y / GridSize) * GridSize, Mathf.Round(position.z / GridSize) * GridSize);
     }
 
+    private void CreateGridFromMarker()
+    {
+        CreateGrid(4, new Vector3(marker.transform.position.x + GridSize / 2, marker.transform.position.y - GridSize, marker.transform.position.z + GridSize / 2));
+    }
+
     private void CreateGrid(int tiles, Vector3 centerPoint)
     {
+        foreach (GameObject grid in gridLines)
+        {
+            Destroy(grid);
+        }
+
         for (int x = -tiles; x < tiles + 1; x++)
         {
             for (int z = -tiles; z < tiles + 1; z++)

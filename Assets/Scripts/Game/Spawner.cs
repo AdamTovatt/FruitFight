@@ -9,6 +9,9 @@ public class Spawner : MonoBehaviour
     public bool SpawnAtInterval = false;
     public float SecondsBetweenSpawning = 5f;
 
+    public delegate void ObjectSpawnedHandler(object sender, GameObject spawnedObject);
+    public ObjectSpawnedHandler OnObjectSpawned;
+
     void Start()
     {
         if (SpawnAtStart)
@@ -33,6 +36,7 @@ public class Spawner : MonoBehaviour
         if (result.tag == "Player")
             GameManager.Instance.PlayerCharacters.Add(result.GetComponent<PlayerMovement>());
 
+        OnObjectSpawned?.Invoke(this, result);
         return result;
     }
 }

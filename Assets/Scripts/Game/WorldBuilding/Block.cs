@@ -20,6 +20,14 @@ public class Block
     public NeighborSet NeighborY { get; set; }
     public NeighborSet NeighborZ { get; set; }
 
+    public Block(BlockInfo info, Vector3 position)
+    {
+        _info = info;
+        X = (int)position.x;
+        Y = (int)position.y;
+        Z = (int)position.z;
+    }
+
     public Block(BlockInfo info, int x, int y, int z)
     {
         _info = info;

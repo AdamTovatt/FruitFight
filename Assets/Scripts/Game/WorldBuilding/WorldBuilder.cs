@@ -29,7 +29,7 @@ public class WorldBuilder : MonoBehaviour
         BuildWorld(world);
     }
 
-    private void BuildWorld(World world)
+    public void BuildWorld(World world)
     {
         foreach (GameObject gameObject in previousWorldObjects)
         {
@@ -38,36 +38,41 @@ public class WorldBuilder : MonoBehaviour
 
         foreach (Block block in world.Blocks)
         {
-            if (block.Info.BlockType == BlockType.Large || block.Info.BlockType == BlockType.Invisible)
+            PlaceBlock(block);
+        }
+    }
+
+    public void PlaceBlock(Block block)
+    {
+        if (block.Info.BlockType == BlockType.Large || block.Info.BlockType == BlockType.Invisible)
+        {
+            previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
+        }
+        else if (block.Info.BlockType == BlockType.Ocean)
+        {
+            int width = block.Info.Width;
+            for (int x = -5; x < 5; x++)
             {
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
-            }
-            else if (block.Info.BlockType == BlockType.Ocean)
-            {
-                int width = block.Info.Width;
-                for (int x = -5; x < 5; x++)
+                for (int y = -5; y < 5; y++)
                 {
-                    for (int y = -5; y < 5; y++)
-                    {
-                        previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab("Water"), new Vector3(x * width, -2f, y * width), Quaternion.identity, transform));
-                    }
+                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab("Water"), new Vector3(x * width, -2f, y * width), Quaternion.identity, transform));
                 }
             }
+        }
 
-            if (block.Info.BlockType == BlockType.Large)
-            {
-                System.Random random = new System.Random((int)(block.Position.x + block.Position.y + block.Position.z));
+        if (block.Info.BlockType == BlockType.Large)
+        {
+            System.Random random = new System.Random((int)(block.Position.x + block.Position.y + block.Position.z));
 
-                if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
-                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 90, 0), transform));
-                if (block.NeighborX.Negative == null)
-                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, -90, 0), transform));
+            if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 90, 0), transform));
+            if (block.NeighborX.Negative == null)
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, -90, 0), transform));
 
-                if (block.NeighborZ.Positive == null)
-                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 0, 0), transform));
-                if (block.NeighborZ.Negative == null)
-                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 180, 0), transform));
-            }
+            if (block.NeighborZ.Positive == null)
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 0, 0), transform));
+            if (block.NeighborZ.Negative == null)
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 180, 0), transform));
         }
     }
 
