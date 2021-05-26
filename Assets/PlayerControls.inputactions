@@ -159,14 +159,6 @@
             "id": "3b73d429-4ae4-47c2-93ee-6a3679c16568",
             "actions": [
                 {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "3f21f743-7568-4113-927a-b55a1d1b92cb",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Select",
                     "type": "Button",
                     "id": "66929086-cd38-4416-8980-02608048dbc2",
@@ -192,17 +184,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "e99b2003-5941-42e7-b44b-d8d81e5cade7",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "b39c8712-92c2-4623-8520-f9ba9768f32d",
@@ -334,6 +315,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "RaiseMarker",
+                    "type": "Button",
+                    "id": "f9a804ec-3160-4b50-b799-dd020fc34669",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LowerMarker",
+                    "type": "Button",
+                    "id": "44cd64f6-597d-4723-a436-820891dcabb2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -422,6 +419,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1179740a-3b3d-4d54-9200-b196e99f538b",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RaiseMarker",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "24f4d26b-7d31-4857-a688-214f2966c951",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "LowerMarker",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

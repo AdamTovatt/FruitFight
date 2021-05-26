@@ -18,6 +18,7 @@ public class WorldEditor : MonoBehaviour
 
     public int GridSize { get; set; }
     public int SelectedBlock { get; set; }
+    public Vector3Int MarkerPosition { get { return new Vector3Int(marker.position); } }
 
     private List<GameObject> gridLines;
     private MultipleTargetCamera mainCamera;
@@ -46,7 +47,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), marker.position);
+        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
 

@@ -1,6 +1,5 @@
 using Lookups;
 using System;
-using UnityEngine;
 
 [Serializable]
 public class Block
@@ -10,7 +9,7 @@ public class Block
     public int Y;
     public int Z;
 
-    public Vector3 Position { get { return new Vector3(X, Y, Z); } }
+    public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
 
     public BlockInfo Info { get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; } }
     [NonSerialized]
@@ -20,12 +19,12 @@ public class Block
     public NeighborSet NeighborY { get; set; }
     public NeighborSet NeighborZ { get; set; }
 
-    public Block(BlockInfo info, Vector3 position)
+    public Block(BlockInfo info, Vector3Int position)
     {
         _info = info;
-        X = (int)position.x;
-        Y = (int)position.y;
-        Z = (int)position.z;
+        X = position.X;
+        Y = position.Y;
+        Z = position.Z;
     }
 
     public Block(BlockInfo info, int x, int y, int z)

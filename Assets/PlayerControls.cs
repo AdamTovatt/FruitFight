@@ -172,14 +172,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ""id"": ""3b73d429-4ae4-47c2-93ee-6a3679c16568"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""3f21f743-7568-4113-927a-b55a1d1b92cb"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Select"",
                     ""type"": ""Button"",
                     ""id"": ""66929086-cd38-4416-8980-02608048dbc2"",
@@ -205,17 +197,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""e99b2003-5941-42e7-b44b-d8d81e5cade7"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""b39c8712-92c2-4623-8520-f9ba9768f32d"",
@@ -347,6 +328,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RaiseMarker"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9a804ec-3160-4b50-b799-dd020fc34669"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LowerMarker"",
+                    ""type"": ""Button"",
+                    ""id"": ""44cd64f6-597d-4723-a436-820891dcabb2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -437,6 +434,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Place"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1179740a-3b3d-4d54-9200-b196e99f538b"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RaiseMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""24f4d26b-7d31-4857-a688-214f2966c951"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""LowerMarker"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -473,7 +492,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
         // Ui
         m_Ui = asset.FindActionMap("Ui", throwIfNotFound: true);
-        m_Ui_Newaction = m_Ui.FindAction("New action", throwIfNotFound: true);
         m_Ui_Select = m_Ui.FindAction("Select", throwIfNotFound: true);
         m_Ui_Cancel = m_Ui.FindAction("Cancel", throwIfNotFound: true);
         m_Ui_Move = m_Ui.FindAction("Move", throwIfNotFound: true);
@@ -481,6 +499,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
         m_LevelEditor_MoveMarker = m_LevelEditor.FindAction("MoveMarker", throwIfNotFound: true);
         m_LevelEditor_Place = m_LevelEditor.FindAction("Place", throwIfNotFound: true);
+        m_LevelEditor_RaiseMarker = m_LevelEditor.FindAction("RaiseMarker", throwIfNotFound: true);
+        m_LevelEditor_LowerMarker = m_LevelEditor.FindAction("LowerMarker", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -579,7 +599,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     // Ui
     private readonly InputActionMap m_Ui;
     private IUiActions m_UiActionsCallbackInterface;
-    private readonly InputAction m_Ui_Newaction;
     private readonly InputAction m_Ui_Select;
     private readonly InputAction m_Ui_Cancel;
     private readonly InputAction m_Ui_Move;
@@ -587,7 +606,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         private @PlayerControls m_Wrapper;
         public UiActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Ui_Newaction;
         public InputAction @Select => m_Wrapper.m_Ui_Select;
         public InputAction @Cancel => m_Wrapper.m_Ui_Cancel;
         public InputAction @Move => m_Wrapper.m_Ui_Move;
@@ -600,9 +618,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UiActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_UiActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnNewaction;
                 @Select.started -= m_Wrapper.m_UiActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnSelect;
@@ -616,9 +631,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             m_Wrapper.m_UiActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
@@ -638,12 +650,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private ILevelEditorActions m_LevelEditorActionsCallbackInterface;
     private readonly InputAction m_LevelEditor_MoveMarker;
     private readonly InputAction m_LevelEditor_Place;
+    private readonly InputAction m_LevelEditor_RaiseMarker;
+    private readonly InputAction m_LevelEditor_LowerMarker;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
         public LevelEditorActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @MoveMarker => m_Wrapper.m_LevelEditor_MoveMarker;
         public InputAction @Place => m_Wrapper.m_LevelEditor_Place;
+        public InputAction @RaiseMarker => m_Wrapper.m_LevelEditor_RaiseMarker;
+        public InputAction @LowerMarker => m_Wrapper.m_LevelEditor_LowerMarker;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -659,6 +675,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Place.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
                 @Place.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
                 @Place.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPlace;
+                @RaiseMarker.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRaiseMarker;
+                @RaiseMarker.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRaiseMarker;
+                @RaiseMarker.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRaiseMarker;
+                @LowerMarker.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
+                @LowerMarker.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
+                @LowerMarker.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -669,6 +691,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Place.started += instance.OnPlace;
                 @Place.performed += instance.OnPlace;
                 @Place.canceled += instance.OnPlace;
+                @RaiseMarker.started += instance.OnRaiseMarker;
+                @RaiseMarker.performed += instance.OnRaiseMarker;
+                @RaiseMarker.canceled += instance.OnRaiseMarker;
+                @LowerMarker.started += instance.OnLowerMarker;
+                @LowerMarker.performed += instance.OnLowerMarker;
+                @LowerMarker.canceled += instance.OnLowerMarker;
             }
         }
     }
@@ -699,7 +727,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     }
     public interface IUiActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
@@ -708,5 +735,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnMoveMarker(InputAction.CallbackContext context);
         void OnPlace(InputAction.CallbackContext context);
+        void OnRaiseMarker(InputAction.CallbackContext context);
+        void OnLowerMarker(InputAction.CallbackContext context);
     }
 }
