@@ -31,4 +31,9 @@ public class Vector3Int
     {
         return new Vector3Int(input);
     }
+
+    public int GetSumOfComponents()
+    {
+        return X + Y + Z;
+    }
 }

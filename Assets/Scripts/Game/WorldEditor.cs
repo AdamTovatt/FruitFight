@@ -42,7 +42,13 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Enable();
         input.LevelEditor.Place.performed += Place;
         input.LevelEditor.MoveMarker.performed += MoveMarker;
+        input.LevelEditor.RaiseMarker.performed += RaiseMarker;
         input.LevelEditor.MoveMarker.canceled += (context) => { lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f; };
+    }
+
+    private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        Debug.Log(CurrentWorld.ToJson());
     }
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)

@@ -6,36 +6,44 @@ using UnityEngine;
 [Serializable]
 public class World
 {
-    public List<Block> Blocks;
+    public IReadOnlyList<Block> Blocks { get { return blocks; } }
+
+    [SerializeField]
+    private List<Block> blocks;
+
+    private WorldBlockLookup blockLookup;
 
     public World()
     {
-        Blocks = new List<Block>();
+        blockLookup = new WorldBlockLookup();
+        blocks = new List<Block>();
     }
 
     public void Add(Block block)
     {
-        Blocks.Add(block);
+        blocks.Add(block);
+        blockLookup.Add(block);
     }
 
     public static World FromJson(string json)
     {
         World world = JsonUtility.FromJson<World>(json);
         world.CalculateNeighbors();
+        world.blockLookup.Initialize(world.blocks);
         return world;
     }
 
     public static World FromWorldName(string worldName)
     {
-        return World.FromJson(WorldUtilities.LoadTextFile(string.Format("Maps/{0}", worldName)));
+        return FromJson(WorldUtilities.LoadTextFile(string.Format("Maps/{0}", worldName)));
     }
 
     public void CalculateNeighbors() //only blocks of same BlockType can be neighbors
     {
-        for (int i = 0; i < Blocks.Count; i++)
+        for (int i = 0; i < blocks.Count; i++)
         {
-            Block block = Blocks[i];
-            IEnumerable<Block> blocksOfSameType = Blocks.Where(x => x.Info.BlockType == block.Info.BlockType);
+            Block block = blocks[i];
+            IEnumerable<Block> blocksOfSameType = blocks.Where(x => x.Info.BlockType == block.Info.BlockType);
 
             NeighborSet x = new NeighborSet()
             {

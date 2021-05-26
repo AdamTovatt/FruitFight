@@ -62,7 +62,7 @@ public class WorldBuilder : MonoBehaviour
 
         if (block.Info.BlockType == BlockType.Large)
         {
-            System.Random random = new System.Random((int)(block.Position.x + block.Position.y + block.Position.z));
+            System.Random random = new System.Random(block.Position.GetSumOfComponents());
 
             if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 90, 0), transform));
