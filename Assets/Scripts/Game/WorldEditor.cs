@@ -9,6 +9,8 @@ public class WorldEditor : MonoBehaviour
     public GameObject MainCameraPrefab;
     public GameObject MarkerPrefab;
 
+    public WorldEditorUi Ui;
+
     public float CameraSmoothTime = 1f;
     public float MarkerMoveCooldown = 0.5f;
     public float MarkerMoveSensitivity = 0.5f;
@@ -23,6 +25,7 @@ public class WorldEditor : MonoBehaviour
     private List<GameObject> gridLines;
     private MultipleTargetCamera mainCamera;
     private Transform marker;
+    private bool controlsDisabled = false;
 
     private float lastMarkerMoveTime;
 
@@ -44,15 +47,28 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.performed += MoveMarker;
         input.LevelEditor.RaiseMarker.performed += RaiseMarker;
         input.LevelEditor.MoveMarker.canceled += (context) => { lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f; };
+        input.LevelEditor.Pause.performed += Pause;
+    }
+
+    private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        controlsDisabled = true;
+        Ui.OpenPauseMenu();
     }
 
     private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         Debug.Log(CurrentWorld.ToJson());
     }
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
@@ -62,6 +78,9 @@ public class WorldEditor : MonoBehaviour
 
     private void MoveMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         if (Time.time - lastMarkerMoveTime >= MarkerMoveCooldown)
         {
             Vector2 input = context.ReadValue<Vector2>();

@@ -344,6 +344,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""8b6bf0cc-2541-4301-a32b-7f029317dc2b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -456,6 +464,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""LowerMarker"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69e914b3-116a-4b2b-b699-dcc1fd2ce57d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""546070a1-71db-492b-a745-a60c8115dfb7"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -501,6 +531,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_Place = m_LevelEditor.FindAction("Place", throwIfNotFound: true);
         m_LevelEditor_RaiseMarker = m_LevelEditor.FindAction("RaiseMarker", throwIfNotFound: true);
         m_LevelEditor_LowerMarker = m_LevelEditor.FindAction("LowerMarker", throwIfNotFound: true);
+        m_LevelEditor_Pause = m_LevelEditor.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -652,6 +683,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_Place;
     private readonly InputAction m_LevelEditor_RaiseMarker;
     private readonly InputAction m_LevelEditor_LowerMarker;
+    private readonly InputAction m_LevelEditor_Pause;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -660,6 +692,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Place => m_Wrapper.m_LevelEditor_Place;
         public InputAction @RaiseMarker => m_Wrapper.m_LevelEditor_RaiseMarker;
         public InputAction @LowerMarker => m_Wrapper.m_LevelEditor_LowerMarker;
+        public InputAction @Pause => m_Wrapper.m_LevelEditor_Pause;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -681,6 +714,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LowerMarker.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
                 @LowerMarker.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
                 @LowerMarker.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnLowerMarker;
+                @Pause.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -697,6 +733,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LowerMarker.started += instance.OnLowerMarker;
                 @LowerMarker.performed += instance.OnLowerMarker;
                 @LowerMarker.canceled += instance.OnLowerMarker;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -737,5 +776,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnPlace(InputAction.CallbackContext context);
         void OnRaiseMarker(InputAction.CallbackContext context);
         void OnLowerMarker(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }
