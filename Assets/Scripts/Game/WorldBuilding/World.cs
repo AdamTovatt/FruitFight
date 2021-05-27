@@ -33,8 +33,8 @@ public class World
     public static World FromJson(string json)
     {
         World world = JsonUtility.FromJson<World>(json);
-        world.CalculateNeighbors();
         world.blockLookup.Initialize(world.blocks);
+        world.CalculateNeighbors();
         return world;
     }
 

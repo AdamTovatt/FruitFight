@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorldBlockLookup
 {
     private Dictionary<int, Dictionary<int, Dictionary<int, List<Block>>>> blockLookup;
+    private bool initialized = false;
 
     public WorldBlockLookup()
     {
@@ -17,6 +18,8 @@ public class WorldBlockLookup
         {
             Add(block);
         }
+
+        initialized = true;
     }
 
     public void Add(Block block)
@@ -41,6 +44,12 @@ public class WorldBlockLookup
 
     public List<Block> GetBlocksAtPosition(Vector3Int position)
     {
+        if(!initialized)
+        {
+            Debug.LogError("A WorldBlockLookup that hasn't been initialized was used. It has to be initialized first");
+            return null;
+        }
+
         if (!blockLookup.ContainsKey(position.Z))
             return new List<Block>();
 

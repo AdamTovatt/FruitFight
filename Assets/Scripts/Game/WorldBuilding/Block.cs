@@ -65,9 +65,9 @@ public class Block
     {
         int sideLength = 0;
         if (axis.Z > 0)
-            sideLength = _info.Height;
+            sideLength = Info.Height;
         else
-            sideLength = _info.Width;
+            sideLength = Info.Width;
 
         Vector3Int distance = axis * sideLength;
         Vector3Int positive = position + distance;
