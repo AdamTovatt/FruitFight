@@ -1,5 +1,7 @@
 using Lookups;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class Block
@@ -49,6 +51,36 @@ public class Block
         {
             _info = BlockInfoLookup.Get(BlockInfoId);
         }
+    }
+
+    public void CalculateNeighbors(World world)
+    {
+        Vector3Int position = Position;
+        NeighborX = CalculateNeighborSet(world, new Vector3Int(1, 0, 0), position);
+        NeighborY = CalculateNeighborSet(world, new Vector3Int(0, 1, 0), position);
+        NeighborZ = CalculateNeighborSet(world, new Vector3Int(0, 0, 1), position);
+    }
+
+    private NeighborSet CalculateNeighborSet(World world, Vector3Int axis, Vector3Int position)
+    {
+        int sideLength = 0;
+        if (axis.Z > 0)
+            sideLength = _info.Height;
+        else
+            sideLength = _info.Width;
+
+        Vector3Int distance = axis * sideLength;
+        Vector3Int positive = position + distance;
+        Vector3Int negative = position - distance;
+
+        List<Block> positiveBlocks = world.GetBlocksAtPosition(positive);
+        List<Block> negativeBlocks = world.GetBlocksAtPosition(negative);
+
+        return new NeighborSet()
+        {
+            Positive = positiveBlocks.Where(b => b.Info.BlockType == _info.BlockType).FirstOrDefault(),
+            Negative = negativeBlocks.Where(b => b.Info.BlockType == _info.BlockType).FirstOrDefault(),
+        };
     }
 }
 

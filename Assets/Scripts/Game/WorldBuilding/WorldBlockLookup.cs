@@ -42,17 +42,17 @@ public class WorldBlockLookup
     public List<Block> GetBlocksAtPosition(Vector3Int position)
     {
         if (!blockLookup.ContainsKey(position.Z))
-            return null;
+            return new List<Block>();
 
         Dictionary<int, Dictionary<int, List<Block>>> zLevel = blockLookup[position.Z];
 
         if (!zLevel.ContainsKey(position.X))
-            return null;
+            return new List<Block>();
 
         Dictionary<int, List<Block>> xLevel = zLevel[position.X];
 
         if (!xLevel.ContainsKey(position.Y))
-            return null;
+            return new List<Block>();
 
         return xLevel[position.Y];
     }

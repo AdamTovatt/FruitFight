@@ -36,4 +36,24 @@ public class Vector3Int
     {
         return X + Y + Z;
     }
+
+    public static Vector3Int operator *(Vector3Int vector, int i)
+    {
+        return new Vector3Int(vector.X * i, vector.Y * i, vector.Z * i);
+    }
+
+    public static Vector3Int operator *(int i, Vector3Int vector)
+    {
+        return new Vector3Int(vector.X * i, vector.Y * i, vector.Z * i);
+    }
+
+    public static Vector3Int operator +(Vector3Int vectorA, Vector3Int vectorB)
+    {
+        return new Vector3Int(vectorA.X + vectorB.X, vectorA.Y + vectorB.Y, vectorA.Z + vectorB.Z);
+    }
+
+    public static Vector3Int operator -(Vector3Int vectorA, Vector3Int vectorB)
+    {
+        return new Vector3Int(vectorA.X - vectorB.X, vectorA.Y - vectorB.Y, vectorA.Z - vectorB.Z);
+    }
 }
