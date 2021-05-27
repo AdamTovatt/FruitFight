@@ -40,6 +40,9 @@ public class WorldBlockLookup
         List<Block> blocksAtPosition = xLevel[block.Y];
 
         blocksAtPosition.Add(block);
+
+        if (!initialized)
+            initialized = true;
     }
 
     public List<Block> GetBlocksAtPosition(Vector3Int position)
