@@ -52,8 +52,16 @@ public class WorldEditor : MonoBehaviour
 
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        controlsDisabled = true;
-        Ui.OpenPauseMenu();
+        if (!controlsDisabled)
+        {
+            controlsDisabled = true;
+            Ui.OpenPauseMenu();
+        }
+        else
+        {
+            controlsDisabled = false;
+            Ui.ClosePauseMenu();
+        }
     }
 
     private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
