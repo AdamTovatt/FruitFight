@@ -1,10 +1,13 @@
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldEditor : MonoBehaviour
 {
+    public static WorldEditor Instance { get; private set; }
+
     public GameObject GridLinePrefab;
     public GameObject MainCameraPrefab;
     public GameObject MarkerPrefab;
@@ -31,6 +34,11 @@ public class WorldEditor : MonoBehaviour
 
     public void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+
         GridSize = 4;
         SelectedBlock = 1;
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
@@ -50,6 +58,16 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Pause.performed += Pause;
     }
 
+    public void TestLevel()
+    {
+        Debug.Log("World editor wants to test level");
+        if(CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
+        {
+            Alert alert = WorldEditorUi.Instance.AlertCreator.CreateAlert("No player start point exists in the level", new List<string>() { "Go back", "Continue anyway" });
+            alert.OnOptionWasChosen += (sender, optionIndex) => { Debug.Log("Selected option: " + optionIndex); WorldEditorUi.Instance.OpenPauseMenu(); };
+        }
+    }
+
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (!controlsDisabled)
@@ -62,6 +80,11 @@ public class WorldEditor : MonoBehaviour
             controlsDisabled = false;
             Ui.ClosePauseMenu();
         }
+    }
+
+    public void EnableControls()
+    {
+        controlsDisabled = false;
     }
 
     private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)

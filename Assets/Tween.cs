@@ -16,6 +16,13 @@ public class Tween : MonoBehaviour
     private void Start()
     {
         startSize = transform.localScale;
+        StartTween();
+    }
+
+    private void StartTween()
+    {
+        tweening = true;
+        lerpValue = 0;
         transform.localScale = startSize * StartScale;
     }
 
@@ -38,5 +45,10 @@ public class Tween : MonoBehaviour
                 tweening = false;
             }
         }
+    }
+
+    public void WasShown()
+    {
+        StartTween();
     }
 }

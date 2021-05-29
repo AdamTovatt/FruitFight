@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class UiSelectable : MonoBehaviour, ISelectHandler
 {
     public GameObject SelectedMarkerPrefab;
+    public Vector2 ContentSize = new Vector2(300, 50);
+    
     private GameObject selectedMarker = null;
 
     private void Start()
@@ -23,6 +25,6 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     {
         WorldEditorUi.Instance.SelectableWasSelected(this);
         selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
-        Debug.Log(eventData.selectedObject.transform.name);
+        selectedMarker.GetComponent<SelectedIndicatorHorizontal>().SetContentSize(ContentSize);
     }
 }

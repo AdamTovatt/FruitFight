@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AlertCreator))]
 public class WorldEditorUi : MonoBehaviour
 {
     public static WorldEditorUi Instance { get; private set; }
@@ -9,6 +10,8 @@ public class WorldEditorUi : MonoBehaviour
     public EditorPauseMenu PauseMenu;
 
     private List<UiSelectable> selectables;
+
+    public AlertCreator AlertCreator { get; set; }
 
     private void Awake()
     {
@@ -18,6 +21,7 @@ public class WorldEditorUi : MonoBehaviour
             Destroy(gameObject);
 
         selectables = new List<UiSelectable>();
+        AlertCreator = gameObject.GetComponent<AlertCreator>();
     }
 
     public void RegisterSelectable(UiSelectable selectable)
@@ -27,7 +31,7 @@ public class WorldEditorUi : MonoBehaviour
 
     public void SelectableWasSelected(UiSelectable selectedSelectable)
     {
-        foreach(UiSelectable selectable in selectables)
+        foreach (UiSelectable selectable in selectables)
         {
             if (selectable != selectedSelectable)
                 selectable.WasDeselected();
@@ -43,5 +47,6 @@ public class WorldEditorUi : MonoBehaviour
     public void ClosePauseMenu()
     {
         PauseMenu.gameObject.SetActive(false);
+        WorldEditor.Instance.EnableControls();
     }
 }
