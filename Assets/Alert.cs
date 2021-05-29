@@ -7,7 +7,6 @@ public class Alert : MonoBehaviour
 {
     public GameObject ButtonPrefab;
     public TextMeshProUGUI Text;
-    public int ButtonHeight = 50;
 
     public delegate void OptionWasChosenHandler(object sender, int buttonIndex);
     public event OptionWasChosenHandler OnOptionWasChosen;
@@ -18,19 +17,21 @@ public class Alert : MonoBehaviour
 
         List<UiButton> createdButtons = new List<UiButton>();
 
+        float buttonHeight = 0;
         if (buttons != null)
         {
             for (int i = 0; i < buttons.Count; i++)
             {
                 UiButton button = Instantiate(ButtonPrefab, transform).GetComponent<UiButton>();
-                button.transform.position = new Vector3(transform.position.x, transform.position.y - ButtonHeight * (i + 1) - 20, transform.position.z);
+                buttonHeight = button.GetComponent<RectTransform>().rect.height;
+                button.transform.position = new Vector3(transform.position.x, transform.position.y - buttonHeight * (i + 1) - 20, transform.position.z);
                 createdButtons.Add(button);
                 int index = i;
                 button.ButtonComponent.onClick.AddListener(() => { ButtonWasClicked(index); });
             }
 
             RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y + (buttons.Count) * ButtonHeight + (ButtonHeight * 1.4f));
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y + (buttons.Count) * buttonHeight + (buttonHeight * 1.4f));
         }
 
         for (int i = 0; i < createdButtons.Count; i++)

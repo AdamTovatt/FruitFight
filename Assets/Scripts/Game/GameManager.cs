@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -52,7 +53,8 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
-        WorldBuilder.Instance.Build("01");
+        WorldBuilder.IsInEditor = false;
+        WorldBuilder.Instance.BuildNext();
         navMeshSurface.BuildNavMesh();
 
         GameObject cameraObject = Instantiate(CameraPrefab, transform.position, transform.rotation);
@@ -62,22 +64,30 @@ public class GameManager : MonoBehaviour
 
         PlayerSpawnpoint playerSpawnpoint = FindObjectOfType<PlayerSpawnpoint>();
 
-        foreach (PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
+        if (playerSpawnpoint != null)
         {
-            playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
-            GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
-            PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
-            MultipleTargetCamera.Targets.Add(player.transform);
-
-            GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
-            if (hatPrefab != null)
+            foreach (PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
             {
-                GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
-                playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
-            }
+                playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
 
-            playerMovement.InitializePlayerInput(playerConfiguration);
-            PlayerCharacters.Add(playerMovement);
+                GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+                PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
+                MultipleTargetCamera.Targets.Add(player.transform);
+
+                GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
+                if (hatPrefab != null)
+                {
+                    GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
+                    playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
+                }
+
+                playerMovement.InitializePlayerInput(playerConfiguration);
+                PlayerCharacters.Add(playerMovement);
+            }
+        }
+        else
+        {
+            MultipleTargetCamera.Targets.Add(Instantiate(new GameObject(), new Vector3(0, 3, 0), Quaternion.identity, transform).transform);
         }
     }
 

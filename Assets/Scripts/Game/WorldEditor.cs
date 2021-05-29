@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WorldEditor : MonoBehaviour
 {
@@ -39,13 +40,17 @@ public class WorldEditor : MonoBehaviour
         else
             Destroy(gameObject);
 
+        DontDestroyOnLoad(this);
+
         GridSize = 4;
         SelectedBlock = 1;
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
 
         gridLines = new List<GameObject>();
         CurrentWorld = new World();
+        CurrentWorld.Add(new Block(BlockInfoLookup.Get(3), new Vector3Int(0, -3, 0)));
         Builder = gameObject.GetComponent<WorldBuilder>();
+        WorldBuilder.IsInEditor = true;
 
         mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
 
@@ -58,14 +63,33 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Pause.performed += Pause;
     }
 
-    public void TestLevel()
+    public void TestLevelButton()
     {
         Debug.Log("World editor wants to test level");
-        if(CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
+        if (CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
         {
             Alert alert = WorldEditorUi.Instance.AlertCreator.CreateAlert("No player start point exists in the level", new List<string>() { "Go back", "Continue anyway" });
-            alert.OnOptionWasChosen += (sender, optionIndex) => { Debug.Log("Selected option: " + optionIndex); WorldEditorUi.Instance.OpenPauseMenu(); };
+            alert.OnOptionWasChosen += (sender, optionIndex) =>
+            {
+                if (optionIndex == 0)
+                    WorldEditorUi.Instance.ClosePauseMenu();
+                else if (optionIndex == 1)
+                    StartLevelTest();
+            };
         }
+        else
+        {
+            StartLevelTest();
+        }
+    }
+
+    private void StartLevelTest()
+    {
+        WorldBuilder.NextLevel = CurrentWorld;
+        SceneManager.LoadScene("PlayerSetup");
+        SceneManager.sceneLoaded += (scene, loadSceneMode) => { GameManager.ShouldStartLevel = true; };
+        Destroy(mainCamera);
+        Destroy(gameObject);
     }
 
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)

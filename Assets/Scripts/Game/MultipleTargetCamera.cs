@@ -22,7 +22,6 @@ public class MultipleTargetCamera : MonoBehaviour
     private void Awake()
     {
         Targets = new List<Transform>();
-        DontDestroyOnLoad(this);
     }
 
     private void Start()

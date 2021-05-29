@@ -6,6 +6,10 @@ using UnityEngine;
 public class WorldBuilder : MonoBehaviour
 {
     public static WorldBuilder Instance;
+    public static World NextLevel;
+    public static bool IsInEditor = false;
+
+    public IReadOnlyList<GameObject> CurrentPlacedObjects { get { return previousWorldObjects; } }
 
     private List<GameObject> previousWorldObjects;
 
@@ -21,6 +25,14 @@ public class WorldBuilder : MonoBehaviour
         DontDestroyOnLoad(this);
 
         previousWorldObjects = new List<GameObject>();
+    }
+
+    public void BuildNext()
+    {
+        if (NextLevel == null)
+            NextLevel = World.FromWorldName("01");
+
+        BuildWorld(NextLevel);
     }
 
     public void Build(string worldName)
@@ -48,7 +60,7 @@ public class WorldBuilder : MonoBehaviour
         {
             previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
         }
-        else if (block.Info.BlockType == BlockType.Ocean)
+        else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor)
         {
             int width = block.Info.Width;
             for (int x = -5; x < 5; x++)

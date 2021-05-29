@@ -18,7 +18,7 @@ public class EditorPauseMenu : MonoBehaviour
         gameObject.SetActive(StartActive);
 
         ResumeButton.onClick.AddListener(() => { WorldEditorUi.Instance.ClosePauseMenu(); });
-        TestLevelButton.onClick.AddListener(() => { WorldEditor.Instance.TestLevel(); });
+        TestLevelButton.onClick.AddListener(() => { WorldEditor.Instance.TestLevelButton(); });
         SaveLevelButton.onClick.AddListener(() => { Debug.Log("save level"); });
         LoadLevelButton.onClick.AddListener(() => { Debug.Log("load level"); });
         OptionsButton.onClick.AddListener(() => { Debug.Log("optionsButton"); });
