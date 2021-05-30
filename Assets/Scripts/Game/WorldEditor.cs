@@ -59,6 +59,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Place.performed += Place;
         input.LevelEditor.MoveMarker.performed += MoveMarker;
         input.LevelEditor.RaiseMarker.performed += RaiseMarker;
+        input.LevelEditor.LowerMarker.performed += LowerMarker;
         input.LevelEditor.MoveMarker.canceled += (context) => { lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f; };
         input.LevelEditor.Pause.performed += Pause;
     }
@@ -94,6 +95,8 @@ public class WorldEditor : MonoBehaviour
 
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        Debug.Log(CurrentWorld.ToJson());
+
         if (!controlsDisabled)
         {
             controlsDisabled = true;
@@ -111,12 +114,24 @@ public class WorldEditor : MonoBehaviour
         controlsDisabled = false;
     }
 
+    private void LowerMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (controlsDisabled)
+            return;
+
+        marker.position = new Vector3(marker.position.x, marker.position.y - GridSize, marker.position.z);
+        CreateGridFromMarker();
+        lastMarkerMoveTime = Time.time;
+    }
+
     private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (controlsDisabled)
             return;
 
-        Debug.Log(CurrentWorld.ToJson());
+        marker.position = new Vector3(marker.position.x, marker.position.y + GridSize, marker.position.z);
+        CreateGridFromMarker();
+        lastMarkerMoveTime = Time.time;
     }
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
