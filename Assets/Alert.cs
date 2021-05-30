@@ -17,14 +17,15 @@ public class Alert : MonoBehaviour
 
         List<UiButton> createdButtons = new List<UiButton>();
 
-        float buttonHeight = 0;
+        float sizeMultiplier = gameObject.GetComponentInParent<Canvas>().transform.localScale.magnitude;
+
+        float buttonHeight = ButtonPrefab.GetComponent<RectTransform>().rect.height;
         if (buttons != null)
         {
             for (int i = 0; i < buttons.Count; i++)
             {
                 UiButton button = Instantiate(ButtonPrefab, transform).GetComponent<UiButton>();
-                buttonHeight = button.GetComponent<RectTransform>().rect.height;
-                button.transform.position = new Vector3(transform.position.x, transform.position.y - buttonHeight * (i + 1) - 20, transform.position.z);
+                button.transform.position = new Vector3(transform.position.x, transform.position.y - (buttonHeight * sizeMultiplier) * (i + 1) - (20 * sizeMultiplier), transform.position.z);
                 createdButtons.Add(button);
                 int index = i;
                 button.ButtonComponent.onClick.AddListener(() => { ButtonWasClicked(index); });
