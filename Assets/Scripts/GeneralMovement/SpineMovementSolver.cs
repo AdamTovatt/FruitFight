@@ -23,8 +23,15 @@ public class SpineMovementSolver : MonoBehaviour
 
     void Start()
     {
-        distanceToCharacterTransform = transform.position - Character.transform.position;
-        characterVelocity = Character.GetComponent<AverageVelocityKeeper>();
+        if (Character != null)
+        {
+            distanceToCharacterTransform = transform.position - Character.transform.position;
+            characterVelocity = Character.GetComponent<AverageVelocityKeeper>();
+        }
+        else
+        {
+            Debug.LogWarning("SpineSolver is missing character");
+        }
     }
 
     void Update()

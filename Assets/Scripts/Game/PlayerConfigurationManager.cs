@@ -9,6 +9,7 @@ public class PlayerConfigurationManager : MonoBehaviour
 {
     public int MaxPlayers = 2;
     public GameObject GameManagerPrefab;
+    public GameObject JoinInstructionsText;
 
     public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
@@ -62,6 +63,9 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     private void HandlePlayerJoin(PlayerInput playerInput)
     {
+        if (JoinInstructionsText != null)
+            Destroy(JoinInstructionsText);
+
         if(!PlayerConfigurations.Any(p => p.PlayerIndex == playerInput.playerIndex))
         {
             playerInput.transform.SetParent(transform);
