@@ -8,6 +8,7 @@ public class WorldEditorUi : MonoBehaviour
     public static WorldEditorUi Instance { get; private set; }
 
     public EditorPauseMenu PauseMenu;
+    public EditorBlockMenu BlockMenu;
 
     private List<UiSelectable> selectables;
 
@@ -22,6 +23,14 @@ public class WorldEditorUi : MonoBehaviour
 
         selectables = new List<UiSelectable>();
         AlertCreator = gameObject.GetComponent<AlertCreator>();
+    }
+
+    private void Start()
+    {
+        WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated += (sender, thumbnails) =>
+        {
+            BlockMenu.Open();
+        };
     }
 
     public void RegisterSelectable(UiSelectable selectable)

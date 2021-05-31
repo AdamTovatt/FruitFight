@@ -8,13 +8,16 @@ public class BlockThumbnailManager : MonoBehaviour
 {
     public GameObject BlockThumbnailScenePrefab;
 
-    public static Dictionary<string, RawImage> BlockThumbnails { get; private set; }
+    public static Dictionary<string, Texture2D> BlockThumbnails { get; private set; }
+
+    public delegate void ThumbnailsCreatedHandler(object sender, Dictionary<string, Texture2D> createdThumbnails);
+    public event ThumbnailsCreatedHandler OnThumbnailsCreated;
 
     private void Start()
     {
         if (BlockThumbnails == null)
         {
-            BlockThumbnails = new Dictionary<string, RawImage>();
+            BlockThumbnails = new Dictionary<string, Texture2D>();
             GenerateThumbnails();
         }
     }
@@ -25,12 +28,19 @@ public class BlockThumbnailManager : MonoBehaviour
 
         BlockInfoContainer blockInfoContainer = BlockInfoLookup.GetBlockInfoContainer();
 
-        List<GameObject> prefabs = new List<GameObject>();
+        Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
 
         foreach(BlockInfo info in blockInfoContainer.Infos)
         {
-            prefabs.Add(PrefabLookup.GetPrefab(info.Prefab));
+            prefabs.Add(info.Prefab, PrefabLookup.GetPrefab(info.Prefab));
         }
+
+        scene.OnThumbnailCreationCompleted += (sender, thumbnails) => 
+        { 
+            BlockThumbnails = thumbnails; 
+            Destroy(scene);
+            OnThumbnailsCreated?.Invoke(this, BlockThumbnails);
+        };
 
         scene.CreateThumbnails(prefabs);
     }

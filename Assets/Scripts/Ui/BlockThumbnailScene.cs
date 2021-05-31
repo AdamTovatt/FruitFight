@@ -8,20 +8,20 @@ public class BlockThumbnailScene : MonoBehaviour
 {
     public Camera ThumbnailCamera;
 
-    public delegate void ThumbnailCreationCompletedHandler(object sender, List<Texture2D> createdThumbnails);
+    public delegate void ThumbnailCreationCompletedHandler(object sender, Dictionary<string, Texture2D> createdThumbnails);
     public event ThumbnailCreationCompletedHandler OnThumbnailCreationCompleted;
 
-    private List<GameObject> actorQueue;
+    private Dictionary<string, GameObject> actorQueue;
 
     private GameObject currentActor;
     private int cyclesWithoutActors = 0;
 
-    private List<Texture2D> createdThumbnails;
+    private Dictionary<string, Texture2D> createdThumbnails;
 
     private void Awake()
     {
-        createdThumbnails = new List<Texture2D>();
-        actorQueue = new List<GameObject>();
+        createdThumbnails = new Dictionary<string, Texture2D>();
+        actorQueue = new Dictionary<string, GameObject>();
     }
 
     public void Update()
@@ -46,9 +46,13 @@ public class BlockThumbnailScene : MonoBehaviour
         }
     }
 
-    public void CreateThumbnails(List<GameObject> prefabs)
+    public void CreateThumbnails(Dictionary<string, GameObject> prefabs)
     {
-        actorQueue.AddRange(prefabs);
+        foreach (string key in prefabs.Keys)
+        {
+            if (!actorQueue.ContainsKey(key))
+                actorQueue.Add(key, prefabs[key]);
+        }
     }
 
     private IEnumerator CreateNextThumbnail()
@@ -59,20 +63,20 @@ public class BlockThumbnailScene : MonoBehaviour
             yield return null;
         }
 
-        GameObject prefab = actorQueue[0];
+        string prefabKey = actorQueue.Keys.First();
 
-        if (prefab != null)
+        if (actorQueue[prefabKey] != null)
         {
-            currentActor = Instantiate(prefab, transform.position, transform.rotation, transform);
+            currentActor = Instantiate(actorQueue[prefabKey], transform.position, transform.rotation, transform);
             currentActor.layer = 7;
 
-            foreach(Renderer child in currentActor.GetComponentsInChildren<Renderer>())
+            foreach (Renderer child in currentActor.GetComponentsInChildren<Renderer>())
             {
                 child.gameObject.layer = 7;
             }
         }
 
-        actorQueue = actorQueue.Where(x => x != prefab).ToList();
+        actorQueue.Remove(prefabKey);
 
         yield return new WaitForEndOfFrame();
 
@@ -82,11 +86,7 @@ public class BlockThumbnailScene : MonoBehaviour
         renderResult.ReadPixels(rect, 0, 0);
         renderResult.Apply();
 
-        byte[] bytes = renderResult.EncodeToPNG();
-        System.IO.File.WriteAllBytes(string.Format("C:\\users\\adam\\desktop\\test_{0}.png", createdThumbnails.Count), bytes);
-        Debug.Log("Screenshot");
-
-        createdThumbnails.Add(renderResult);
+        createdThumbnails.Add(prefabKey, renderResult);
 
         Destroy(currentActor);
     }

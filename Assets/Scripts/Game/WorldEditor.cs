@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(BlockThumbnailManager))]
 public class WorldEditor : MonoBehaviour
 {
     public static WorldEditor Instance { get; private set; }
@@ -22,6 +23,8 @@ public class WorldEditor : MonoBehaviour
 
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
+
+    public BlockThumbnailManager ThumbnailManager { get; private set; }
 
     public int GridSize { get; set; }
     public int SelectedBlock { get; set; }
@@ -42,6 +45,8 @@ public class WorldEditor : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(this);
+
+        ThumbnailManager = gameObject.GetComponent<BlockThumbnailManager>();
 
         GridSize = 4;
         SelectedBlock = 1;
