@@ -29,7 +29,9 @@ public class WorldEditorUi : MonoBehaviour
     {
         WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated += (sender, thumbnails) =>
         {
-            BlockMenu.Open();
+            BlockMenu.gameObject.SetActive(true);
+            BlockMenu.SetSize(200, 200);
+            gameObject.GetComponentInChildren<LoadingScreen>().Hide();
         };
     }
 
