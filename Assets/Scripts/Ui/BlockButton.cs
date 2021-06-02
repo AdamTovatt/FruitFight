@@ -15,4 +15,20 @@ public class BlockButton : MonoBehaviour
         Image.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
         Text.text = text;
     }
+
+    public void SetNavigation(Button up, Button down, Button left, Button right)
+    {
+        Navigation navigation = new Navigation();
+        navigation.selectOnUp = up;
+        navigation.selectOnDown = down;
+        navigation.selectOnLeft = left;
+        navigation.selectOnRight = right;
+        navigation.mode = Navigation.Mode.Explicit;
+        Button.navigation = navigation;
+    }
+
+    public override string ToString()
+    {
+        return Text == null ? "null" : Text.text;
+    }
 }
