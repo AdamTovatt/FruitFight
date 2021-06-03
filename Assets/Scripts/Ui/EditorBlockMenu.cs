@@ -23,6 +23,8 @@ public class EditorBlockMenu : MonoBehaviour
     private int selectedIndex;
     private BlockButton selectedButton;
 
+    public BlockInfo CurrentBuildingBlock { get { if (selectedButton == null) return null; return selectedButton.BlockInfo; } }
+
     public void ThumbnailsWereCreated()
     {
         currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos;
@@ -43,6 +45,7 @@ public class EditorBlockMenu : MonoBehaviour
     public void ButtonWasSelected(BlockButton button)
     {
         selectedButton = button;
+        WorldEditor.Instance.SelectedBlock = CurrentBuildingBlock.Id;
         Debug.Log(button.BlockInfo.Prefab + " was selected");
     }
 
@@ -83,7 +86,7 @@ public class EditorBlockMenu : MonoBehaviour
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
             }
         }
-        else if(moveVector.y == 1)
+        else if(moveVector.y == -1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnDown;
 
@@ -93,7 +96,7 @@ public class EditorBlockMenu : MonoBehaviour
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
             }
         }
-        else if(moveVector.y == -1)
+        else if(moveVector.y == 1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnUp;
 
@@ -146,6 +149,8 @@ public class EditorBlockMenu : MonoBehaviour
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
                 button.Initialize(BlockThumbnailManager.BlockThumbnails[currentBlockInfos[i].Prefab], currentBlockInfos[i].Prefab);
+                button.BlockInfo = currentBlockInfos[i];
+                button.MenuIndex = i;
                 blockButtons[x][y] = button;
                 currentButtons.Add(button);
 
