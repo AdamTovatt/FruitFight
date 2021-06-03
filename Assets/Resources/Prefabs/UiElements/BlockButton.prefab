@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 8340211441905174801}
   - component: {fileID: 8340211441905174830}
   - component: {fileID: 8340211441905174803}
+  - component: {fileID: 8741429540523600232}
   m_Layer: 5
   m_Name: BlockButton
   m_TagString: Untagged
@@ -348,3 +349,18 @@ MonoBehaviour:
   Image: {fileID: 8340211440985515380}
   Text: {fileID: 8340211441874491423}
   Button: {fileID: 8340211441905174830}
+--- !u!114 &8741429540523600232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8340211441905174828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be0765cabf3a0d4aa7a63da8a32b011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
+    type: 3}
+  ContentSize: {x: 160, y: 160}

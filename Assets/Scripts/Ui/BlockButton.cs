@@ -10,6 +10,9 @@ public class BlockButton : MonoBehaviour
     public TextMeshProUGUI Text;
     public Button Button;
 
+    public BlockInfo BlockInfo { get; set; }
+    public int MenuIndex { get; set; }
+
     public void Initialize(Texture2D image, string text)
     {
         Image.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));

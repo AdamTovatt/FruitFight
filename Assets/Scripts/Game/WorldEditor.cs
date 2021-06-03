@@ -68,6 +68,22 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.LowerMarker.performed += LowerMarker;
         input.LevelEditor.MoveMarker.canceled += (context) => { lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f; };
         input.LevelEditor.Pause.performed += Pause;
+        input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
+    }
+
+    void Start()
+    {
+        marker = Instantiate(MarkerPrefab).transform;
+        CreateGridFromMarker();
+
+        GetComponent<Spawner>().OnObjectSpawned += (sender, spawnedObject) =>
+        {
+            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
+        };
+
+        mainCamera.Offset = mainCamera.Offset * 2;
+        mainCamera.SmoothTime = CameraSmoothTime;
+        mainCamera.Targets.Add(marker);
     }
 
     public void TestLevelButton()
@@ -120,10 +136,34 @@ public class WorldEditor : MonoBehaviour
         controlsDisabled = false;
     }
 
+    private void MoveBlockSelection(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (!controlsDisabled)
+        {
+            Vector2 rawMoveValue = context.ReadValue<Vector2>();
+
+            int binaryX = Mathf.Abs(rawMoveValue.x) > 0 ? (Mathf.Abs(rawMoveValue.x) < 1 ? 0 : (int)rawMoveValue.x) : 0;
+            int binaryY = Mathf.Abs(rawMoveValue.y) > 0 ? (Mathf.Abs(rawMoveValue.y) < 1 ? 0 : (int)rawMoveValue.y) : 0;
+
+            if (!(Mathf.Abs(binaryY) < 1 && Mathf.Abs(binaryX) < 1))
+                Ui.BlockMenu.MoveBlockButtonSelection(new Vector2Int(binaryX, binaryY));
+        }
+    }
+
+    private void CloseBlockSelection()
+    {
+        if (Ui.BlockMenu.IsOpen)
+        {
+            Ui.BlockMenu.Close();
+        }
+    }
+
     private void LowerMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (controlsDisabled)
             return;
+
+        CloseBlockSelection();
 
         marker.position = new Vector3(marker.position.x, marker.position.y - GridSize, marker.position.z);
         CreateGridFromMarker();
@@ -135,6 +175,8 @@ public class WorldEditor : MonoBehaviour
         if (controlsDisabled)
             return;
 
+        CloseBlockSelection();
+
         marker.position = new Vector3(marker.position.x, marker.position.y + GridSize, marker.position.z);
         CreateGridFromMarker();
         lastMarkerMoveTime = Time.time;
@@ -144,6 +186,8 @@ public class WorldEditor : MonoBehaviour
     {
         if (controlsDisabled)
             return;
+
+        CloseBlockSelection();
 
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);
@@ -170,22 +214,9 @@ public class WorldEditor : MonoBehaviour
                 CreateGridFromMarker();
                 lastMarkerMoveTime = Time.time;
             }
+
+            CloseBlockSelection();
         }
-    }
-
-    void Start()
-    {
-        marker = Instantiate(MarkerPrefab).transform;
-        CreateGridFromMarker();
-
-        GetComponent<Spawner>().OnObjectSpawned += (sender, spawnedObject) =>
-        {
-            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
-        };
-
-        mainCamera.Offset = mainCamera.Offset * 2;
-        mainCamera.SmoothTime = CameraSmoothTime;
-        mainCamera.Targets.Add(marker);
     }
 
     private Vector3 SetOnGrid(Vector3 position)

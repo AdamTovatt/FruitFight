@@ -2,23 +2,111 @@ using Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EditorBlockMenu : MonoBehaviour
 {
     public float Margin = 30f;
+    public int DefaultColumns = 3;
+    public int DefaultRows = 3;
 
     public GameObject BlockButtonPrefab;
     public GameObject BlockButtonContainer;
 
-    private void Start()
-    {
+    public bool IsOpen { get; private set; }
+    public int CurrentOffset { get; set; }
 
+    private List<BlockButton> currentButtons = new List<BlockButton>();
+    private List<BlockInfo> currentBlockInfos = new List<BlockInfo>();
+    private BlockButton[][] currentBlockButtonArray;
+
+    private int selectedIndex;
+    private BlockButton selectedButton;
+
+    public void ThumbnailsWereCreated()
+    {
+        currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos;
+
+        Close();
+
+        if (currentBlockInfos != null)
+        {
+            selectedButton = currentButtons[0];
+            selectedIndex = selectedButton.MenuIndex;
+        }
+        else
+        {
+            Debug.LogError("CurrentBlockInfos is null");
+        }
+    }
+
+    public void ButtonWasSelected(BlockButton button)
+    {
+        selectedButton = button;
+        Debug.Log(button.BlockInfo.Prefab + " was selected");
+    }
+
+    public void Close()
+    {
+        SetSize(1, 1, 0);
+        IsOpen = false;
+    }
+
+    public void Open()
+    {
+        SetSize(DefaultRows, DefaultColumns, CurrentOffset);
+        IsOpen = true;
+    }
+
+    public void MoveBlockButtonSelection(Vector2Int moveVector)
+    {
+        if (!IsOpen)
+            Open();
+
+        if(moveVector.x == 1)
+        {
+            Selectable selectable = selectedButton.Button.navigation.selectOnRight;
+
+            if (selectable != null)
+            {
+                selectable.Select();
+                ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+            }
+        }
+        else if (moveVector.x == -1)
+        {
+            Selectable selectable = selectedButton.Button.navigation.selectOnLeft;
+
+            if (selectable != null)
+            {
+                selectable.Select();
+                ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+            }
+        }
+        else if(moveVector.y == 1)
+        {
+            Selectable selectable = selectedButton.Button.navigation.selectOnDown;
+
+            if (selectable != null)
+            {
+                selectable.Select();
+                ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+            }
+        }
+        else if(moveVector.y == -1)
+        {
+            Selectable selectable = selectedButton.Button.navigation.selectOnUp;
+
+            if (selectable != null)
+            {
+                selectable.Select();
+                ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+            }
+        }
     }
 
     public void SetSize(int columns, int rows, int offset)
     {
-        List<BlockInfo> blocks = BlockInfoLookup.GetBlockInfoContainer().Infos;
-
         float buttonSideLength = BlockButtonPrefab.GetComponent<RectTransform>().sizeDelta.x;
 
         RectTransform buttonContainer = BlockButtonContainer.GetComponent<RectTransform>();
@@ -35,7 +123,19 @@ public class EditorBlockMenu : MonoBehaviour
             blockButtons[i] = new BlockButton[rows];
         }
 
-        for (int i = 0; i < blocks.Count; i++)
+        currentBlockButtonArray = blockButtons;
+
+        if(currentButtons != null)
+        {
+            for (int i = 0; i < currentButtons.Count; i++)
+            {
+                Destroy(currentButtons[i].gameObject);
+            }
+
+            currentButtons.Clear();
+        }
+
+        for (int i = offset; i < currentBlockInfos.Count; i++)
         {
             int x = i % columns;
             int y = Mathf.FloorToInt(i / (float)columns);
@@ -45,8 +145,12 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
-                button.Initialize(BlockThumbnailManager.BlockThumbnails[blocks[i].Prefab], blocks[i].Prefab);
+                button.Initialize(BlockThumbnailManager.BlockThumbnails[currentBlockInfos[i].Prefab], currentBlockInfos[i].Prefab);
                 blockButtons[x][y] = button;
+                currentButtons.Add(button);
+
+                if (i == selectedIndex)
+                    selectedButton = button;
             }
         }
 
@@ -55,29 +159,50 @@ public class EditorBlockMenu : MonoBehaviour
             for (int y = 0; y < rows; y++)
             {
                 BlockButton button = blockButtons[x][y];
-                int upY = y - 1;
-                int downY = y + 1;
-                int rightX = x + 1;
-                int leftX = x - 1;
 
-                if(upY < 0)
+                if (button != null)
                 {
+                    int upY = y - 1;
+                    int downY = y + 1;
+                    int rightX = x + 1;
+                    int leftX = x - 1;
 
+                    Button up = null;
+                    Button down = null;
+                    Button right = null;
+                    Button left = null;
+
+                    if (upY >= 0)
+                    {
+                        BlockButton upButton = blockButtons[x][upY] == null ? blockButtons[0][upY] : blockButtons[x][upY];
+                        if (upButton != null)
+                            up = upButton.Button;
+                    }
+
+                    if (downY < rows)
+                    {
+                        BlockButton downButton = blockButtons[x][downY] == null ? blockButtons[0][downY] : blockButtons[x][downY];
+                        if (downButton != null)
+                            down = downButton.Button;
+                    }
+
+                    if (rightX < columns)
+                    {
+                        BlockButton rightButton = blockButtons[rightX][y] == null ? blockButtons[rightX][0] : blockButtons[rightX][y];
+                        if (rightButton != null)
+                            right = rightButton.Button;
+                    }
+
+                    if (leftX >= 0)
+                    {
+                        BlockButton leftButton = blockButtons[leftX][y] == null ? blockButtons[leftX][0] : blockButtons[leftX][y];
+                        if (leftButton != null)
+                            left = leftButton.Button;
+                    }
+
+                    button.SetNavigation(up, down, left, right);
                 }
-
-                BlockButton up = blockButtons[x][upY] == null ? blockButtons[0][upY] : blockButtons[x][upY];
-                BlockButton down = blockButtons[x][downY] == null ? blockButtons[0][downY] : blockButtons[x][downY];
-                BlockButton right = blockButtons[rightX][y] == null ? blockButtons[rightX][0] : blockButtons[rightX][y];
-                BlockButton left = blockButtons[leftX][y] == null ? blockButtons[leftX][0] : blockButtons[leftX][y];
-
-                button.SetNavigation(up.Button, down.Button, left.Button, right.Button);
             }
         }
-    }
-
-
-    public void Close()
-    {
-
     }
 }

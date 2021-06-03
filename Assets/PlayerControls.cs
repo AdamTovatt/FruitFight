@@ -352,6 +352,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveBlockSelection"",
+                    ""type"": ""Value"",
+                    ""id"": ""1a52df1a-a053-47a1-8656-30f19602498d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -508,6 +516,61 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""b20dfead-76e9-4364-a0e2-c054517aa1f5"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveBlockSelection"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""8c111860-fcf1-4eaf-8908-a8c863737ec2"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MoveBlockSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d9abd5ff-268f-410f-9ed4-3a899bd85cb4"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MoveBlockSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a92cc248-7a47-44b6-8742-90b269be30b4"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MoveBlockSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""2adbcacc-c4c1-428f-8af4-df40c7736606"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""MoveBlockSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -554,6 +617,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_RaiseMarker = m_LevelEditor.FindAction("RaiseMarker", throwIfNotFound: true);
         m_LevelEditor_LowerMarker = m_LevelEditor.FindAction("LowerMarker", throwIfNotFound: true);
         m_LevelEditor_Pause = m_LevelEditor.FindAction("Pause", throwIfNotFound: true);
+        m_LevelEditor_MoveBlockSelection = m_LevelEditor.FindAction("MoveBlockSelection", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -706,6 +770,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_RaiseMarker;
     private readonly InputAction m_LevelEditor_LowerMarker;
     private readonly InputAction m_LevelEditor_Pause;
+    private readonly InputAction m_LevelEditor_MoveBlockSelection;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -715,6 +780,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @RaiseMarker => m_Wrapper.m_LevelEditor_RaiseMarker;
         public InputAction @LowerMarker => m_Wrapper.m_LevelEditor_LowerMarker;
         public InputAction @Pause => m_Wrapper.m_LevelEditor_Pause;
+        public InputAction @MoveBlockSelection => m_Wrapper.m_LevelEditor_MoveBlockSelection;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -739,6 +805,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPause;
+                @MoveBlockSelection.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
+                @MoveBlockSelection.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
+                @MoveBlockSelection.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -758,6 +827,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @MoveBlockSelection.started += instance.OnMoveBlockSelection;
+                @MoveBlockSelection.performed += instance.OnMoveBlockSelection;
+                @MoveBlockSelection.canceled += instance.OnMoveBlockSelection;
             }
         }
     }
@@ -799,5 +871,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRaiseMarker(InputAction.CallbackContext context);
         void OnLowerMarker(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnMoveBlockSelection(InputAction.CallbackContext context);
     }
 }
