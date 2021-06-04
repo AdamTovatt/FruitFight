@@ -259,7 +259,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 210, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 250, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &27242626
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Margin: 30
+  DefaultColumns: 3
+  DefaultRows: 3
   BlockButtonPrefab: {fileID: 8340211441905174828, guid: b483883af27317d43b173d0cf6ad4013,
     type: 3}
   BlockButtonContainer: {fileID: 1753204722}
@@ -1077,7 +1082,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 210, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 240, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &687473679
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,7 +1760,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 205, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 230, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1786872824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2069,7 +2080,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 140, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 150, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1889351504
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,7 +2507,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 180, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 200, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1937398842
 GameObject:
   m_ObjectHideFlags: 0
@@ -2834,4 +2851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
-  ContentSize: {x: 180, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 200, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: 0.5, y: 0.5}
