@@ -5,6 +5,8 @@
       "BlockType": 0,
       "Width": 4,
       "Height": 4,
+      "ShowInEditor":  true,
+      "Name": "Large Block",
       "Prefab": "BuildingCubeGrass",
       "EdgePrefabs": [
         "RockPanel01",
@@ -18,24 +20,30 @@
       "BlockType": 1,
       "Width": 1,
       "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Player",
       "Prefab": "PlayerStart",
       "EdgePrefabs": []
     },
     {
-        "Id": 3,
-        "BlockType": 2,
-        "Width": 10,
-        "Height": 1,
-        "Prefab": "Water",
-        "EdgePrefabs": []
+      "Id": 3,
+      "BlockType": 2,
+      "Width": 10,
+      "Height": 1,
+      "ShowInEditor": false,
+      "Name": "Ocean",
+      "Prefab": "Water",
+      "EdgePrefabs": []
     },
     {
-        "Id": 4,
-        "BlockType": 1,
-        "Width": 1,
-        "Height": 1,
-        "Prefab": "JellyBeanSpawner",
-        "EdgePrefabs": []
+      "Id": 4,
+      "BlockType": 1,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Jelly Bean",
+      "Prefab": "JellyBeanSpawner",
+      "EdgePrefabs": []
     }
   ]
 }

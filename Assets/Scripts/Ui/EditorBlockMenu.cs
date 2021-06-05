@@ -1,6 +1,7 @@
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,7 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void ThumbnailsWereCreated()
     {
-        currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos;
+        currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos.Where(b => b.ShowInEditor).ToList();
 
         Close();
 
@@ -148,7 +149,7 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
-                button.Initialize(BlockThumbnailManager.BlockThumbnails[currentBlockInfos[i].Prefab], currentBlockInfos[i].Prefab);
+                button.Initialize(BlockThumbnailManager.BlockThumbnails[currentBlockInfos[i].Prefab], currentBlockInfos[i].Name);
                 button.BlockInfo = currentBlockInfos[i];
                 button.MenuIndex = i;
                 blockButtons[x][y] = button;

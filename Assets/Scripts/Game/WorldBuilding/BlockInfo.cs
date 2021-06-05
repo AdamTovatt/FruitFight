@@ -10,6 +10,8 @@ public class BlockInfo
     public BlockType BlockType;
     public int Width;
     public int Height;
+    public bool ShowInEditor;
+    public string Name;
     public string Prefab;
     public List<string> EdgePrefabs;
 

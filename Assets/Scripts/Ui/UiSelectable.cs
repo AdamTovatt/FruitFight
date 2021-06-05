@@ -12,7 +12,6 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public Vector2 Pivot = new Vector2(0.5f, 0.5f);
     
     private GameObject selectedMarker = null;
-    private float canvasScaleFactor = 1f;
 
     private void Start()
     {
@@ -28,9 +27,8 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public void OnSelect(BaseEventData eventData)
     {
         RectTransform rect = gameObject.GetComponent<RectTransform>();
-        canvasScaleFactor = WorldEditorUi.Instance.GetComponent<Canvas>().transform.localScale.magnitude;
         WorldEditorUi.Instance.SelectableWasSelected(this);
         selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
-        selectedMarker.GetComponent<SelectedIndicatorHorizontal>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
+        selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
     }
 }
