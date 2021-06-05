@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject Prefab;
+    public bool SpawnInEditor = true;
     public bool SpawnAtStart = true;
     public bool SpawnAtInterval = false;
     public float SecondsBetweenSpawning = 5f;
@@ -14,11 +15,14 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        if (SpawnAtStart)
-            SpawnObject();
+        if (!WorldBuilder.IsInEditor || SpawnInEditor)
+        {
+            if (SpawnAtStart)
+                SpawnObject();
 
-        if (SpawnAtInterval)
-            InvokeRepeating("SpawnOneInstance", SecondsBetweenSpawning, SecondsBetweenSpawning);
+            if (SpawnAtInterval)
+                InvokeRepeating("SpawnOneInstance", SecondsBetweenSpawning, SecondsBetweenSpawning);
+        }
     }
 
     public void SpawnOneInstance()

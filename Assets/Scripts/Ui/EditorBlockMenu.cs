@@ -15,7 +15,7 @@ public class EditorBlockMenu : MonoBehaviour
     public GameObject BlockButtonContainer;
 
     public bool IsOpen { get; private set; }
-    public int CurrentOffset { get; set; }
+    public int CurrentOffset { get { return selectedIndex; } }
 
     private List<BlockButton> currentButtons = new List<BlockButton>();
     private List<BlockInfo> currentBlockInfos = new List<BlockInfo>();
@@ -46,19 +46,22 @@ public class EditorBlockMenu : MonoBehaviour
     public void ButtonWasSelected(BlockButton button)
     {
         selectedButton = button;
+        selectedIndex = button.MenuIndex;
         WorldEditor.Instance.SelectedBlock = CurrentBuildingBlock.Id;
         Debug.Log(button.BlockInfo.Prefab + " was selected");
     }
 
     public void Close()
     {
-        SetSize(1, 1, 0);
+        SetSize(1, 1, CurrentOffset);
         IsOpen = false;
     }
 
     public void Open()
     {
-        SetSize(DefaultRows, DefaultColumns, CurrentOffset);
+        int items = (DefaultRows * DefaultColumns);
+        SetSize(DefaultRows, DefaultColumns, (CurrentOffset / items) * items);
+        Debug.Log("Set size with offset: " + (CurrentOffset / items) * items);
         IsOpen = true;
     }
 
@@ -66,6 +69,8 @@ public class EditorBlockMenu : MonoBehaviour
     {
         if (!IsOpen)
             Open();
+
+        bool moved = false;
 
         if(moveVector.x == 1)
         {
@@ -75,6 +80,7 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 selectable.Select();
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+                moved = true;
             }
         }
         else if (moveVector.x == -1)
@@ -85,6 +91,7 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 selectable.Select();
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+                moved = true;
             }
         }
         else if(moveVector.y == -1)
@@ -95,6 +102,7 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 selectable.Select();
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+                moved = true;
             }
         }
         else if(moveVector.y == 1)
@@ -105,7 +113,13 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 selectable.Select();
                 ButtonWasSelected(selectable.gameObject.GetComponent<BlockButton>());
+                moved = true;
             }
+        }
+
+        if(!moved)
+        {
+            selectedButton.GetComponent<Selectable>().Select();
         }
     }
 
@@ -139,7 +153,8 @@ public class EditorBlockMenu : MonoBehaviour
             currentButtons.Clear();
         }
 
-        for (int i = offset; i < currentBlockInfos.Count; i++)
+        List<BlockInfo> limitedList = currentBlockInfos.Skip(offset).ToList();
+        for (int i = 0; i < limitedList.Count; i++)
         {
             int x = i % columns;
             int y = Mathf.FloorToInt(i / (float)columns);
@@ -149,8 +164,8 @@ public class EditorBlockMenu : MonoBehaviour
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
-                button.Initialize(BlockThumbnailManager.BlockThumbnails[currentBlockInfos[i].Prefab], currentBlockInfos[i].Name);
-                button.BlockInfo = currentBlockInfos[i];
+                button.Initialize(BlockThumbnailManager.BlockThumbnails[limitedList[i].Prefab], limitedList[i].Name);
+                button.BlockInfo = limitedList[i];
                 button.MenuIndex = i;
                 blockButtons[x][y] = button;
                 currentButtons.Add(button);
