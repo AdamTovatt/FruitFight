@@ -17,6 +17,9 @@ public class Health : MonoBehaviour
     public bool DestroyOnDeath = true;
     public bool CanDie = true;
 
+    private bool IsPlayer { get { playerMovement = gameObject.GetComponent<PlayerMovement>(); return playerMovement != null; } }
+    private PlayerMovement playerMovement;
+
     private void Start()
     {
         _currentHealth = StartHealth;
@@ -31,7 +34,12 @@ public class Health : MonoBehaviour
                 OnDied?.Invoke(this);
 
                 if (DestroyOnDeath)
+                {
+                    if (IsPlayer)
+                        RemoveFromPlayerList();
+
                     Destroy(gameObject);
+                }
             }
         }
     }
@@ -44,10 +52,19 @@ public class Health : MonoBehaviour
             {
                 OnDied?.Invoke(this);
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
+
+                if (IsPlayer)
+                    RemoveFromPlayerList();
+
                 DestroyWithDelay destroyWithDelay = gameObject.AddComponent<DestroyWithDelay>();
                 destroyWithDelay.DelaySeconds = 0.2f;
-                //Destroy(gameObject);
             }
         }
+    }
+
+    private void RemoveFromPlayerList()
+    {
+        GameManager.Instance.PlayerCharacters.Remove(playerMovement);
+        GameManager.Instance.MultipleTargetCamera.Targets.Remove(playerMovement.transform);
     }
 }
