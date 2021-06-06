@@ -65,15 +65,27 @@ public class BlockThumbnailScene : MonoBehaviour
 
         string prefabKey = actorQueue.Keys.First();
 
+        List<Renderer> renderers = new List<Renderer>();
+
         if (actorQueue[prefabKey] != null)
         {
             currentActor = Instantiate(actorQueue[prefabKey], transform.position, transform.rotation, transform);
             currentActor.layer = 7;
 
+            Renderer renderer = currentActor.GetComponent<Renderer>();
+            if (renderer != null)
+                renderers.Add(renderer);
+
             foreach (Renderer child in currentActor.GetComponentsInChildren<Renderer>())
             {
+                renderers.Add(child);
                 child.gameObject.layer = 7;
             }
+        }
+
+        foreach(Renderer renderer in renderers)
+        {
+            
         }
 
         actorQueue.Remove(prefabKey);
