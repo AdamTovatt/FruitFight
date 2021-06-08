@@ -1882,7 +1882,7 @@ MonoBehaviour:
     type: 3}
   MainCameraPrefab: {fileID: 7183245211285268454, guid: d4dd153ae52d3204ab30608b01aa63be,
     type: 3}
-  MarkerPrefab: {fileID: 1221851224205197267, guid: ac839af67dad17f42b3ab92cc3a6711d,
+  MarkerPrefab: {fileID: 4096684427761597525, guid: ac839af67dad17f42b3ab92cc3a6711d,
     type: 3}
   Ui: {fileID: 27242631}
   CameraSmoothTime: 1
@@ -1915,6 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8968286937793633843, guid: 317bc864145390645bd726912d1b406e, type: 3}
+  SpawnInEditor: 1
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5

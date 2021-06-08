@@ -27,7 +27,9 @@ public class WorldEditor : MonoBehaviour
     public BlockThumbnailManager ThumbnailManager { get; private set; }
 
     public int GridSize { get; set; }
-    public int SelectedBlock { get; set; }
+    public int SelectedBlock { get { return selectedBlock; } set { SetSelectedBlock(value); } }
+    private int selectedBlock;
+
     public Vector3Int MarkerPosition { get { return new Vector3Int(marker.position); } }
 
     private List<GameObject> gridLines;
@@ -103,6 +105,24 @@ public class WorldEditor : MonoBehaviour
         else
         {
             StartLevelTest();
+        }
+    }
+
+    public void SetSelectedBlock(int newValue)
+    {
+        if (newValue == selectedBlock)
+            return;
+
+        BlockInfo block = BlockInfoLookup.Get(newValue);
+        GridSize = block.Width;
+        selectedBlock = newValue;
+
+        if (marker != null)
+        {
+            CreateGridFromMarker();
+            float scale = (float)GridSize / 4;
+            marker.GetComponentInChildren<SizeSine>().BaseScale = scale;
+            marker.position = SetOnGrid(MarkerPosition);
         }
     }
 
@@ -226,7 +246,7 @@ public class WorldEditor : MonoBehaviour
 
     private void CreateGridFromMarker()
     {
-        CreateGrid(4, new Vector3(marker.transform.position.x + GridSize / 2, marker.transform.position.y - GridSize, marker.transform.position.z + GridSize / 2));
+        CreateGrid(4, new Vector3(marker.transform.position.x, marker.transform.position.y - GridSize, marker.transform.position.z));
     }
 
     private void CreateGrid(int tiles, Vector3 centerPoint)

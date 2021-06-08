@@ -5,14 +5,29 @@
       "BlockType": 0,
       "Width": 4,
       "Height": 4,
-      "ShowInEditor":  true,
+      "ShowInEditor": true,
       "Name": "Large Block",
-      "Prefab": "BuildingCubeGrass",
+      "Prefab": "BuildingCubeGrass_4",
       "EdgePrefabs": [
-        "RockPanel01",
-        "RockPanel02",
-        "RockPanel03",
-        "RockPanel04"
+        "RockPanel01_4",
+        "RockPanel02_4",
+        "RockPanel03_4",
+        "RockPanel04_4"
+      ]
+    },
+    {
+      "Id": 5,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Small Block",
+      "Prefab": "BuildingCubeGrass_2",
+      "EdgePrefabs": [
+        "RockPanel01_2",
+        "RockPanel02_2",
+        "RockPanel03_2",
+        "RockPanel04_2"
       ]
     },
     {
