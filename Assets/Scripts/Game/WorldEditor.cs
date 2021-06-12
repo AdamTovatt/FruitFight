@@ -30,11 +30,11 @@ public class WorldEditor : MonoBehaviour
     public int SelectedBlock { get { return selectedBlock; } set { SetSelectedBlock(value); } }
     private int selectedBlock;
 
-    public Vector3Int MarkerPosition { get { return new Vector3Int(marker.position); } }
+    public Vector3Int MarkerPosition { get { return new Vector3Int(marker.transform.position); } }
 
     private List<GameObject> gridLines;
     private MultipleTargetCamera mainCamera;
-    private Transform marker;
+    private EditorMarker marker;
     private bool controlsDisabled = false;
 
     private float lastMarkerMoveTime;
@@ -75,7 +75,7 @@ public class WorldEditor : MonoBehaviour
 
     void Start()
     {
-        marker = Instantiate(MarkerPrefab).transform;
+        marker = Instantiate(MarkerPrefab).GetComponent<EditorMarker>();
         CreateGridFromMarker();
 
         GetComponent<Spawner>().OnObjectSpawned += (sender, spawnedObject) =>
@@ -85,7 +85,7 @@ public class WorldEditor : MonoBehaviour
 
         mainCamera.Offset = mainCamera.Offset * 2;
         mainCamera.SmoothTime = CameraSmoothTime;
-        mainCamera.Targets.Add(marker);
+        mainCamera.Targets.Add(marker.transform);
     }
 
     public void TestLevelButton()
@@ -122,7 +122,8 @@ public class WorldEditor : MonoBehaviour
             CreateGridFromMarker();
             float scale = (float)GridSize / 4;
             marker.GetComponentInChildren<SizeSine>().BaseScale = scale;
-            marker.position = SetOnGrid(MarkerPosition);
+            marker.transform.position = SetOnGrid(MarkerPosition);
+            marker.GetComponent<EditorMarker>().SetMarkerSize(new Vector2Int(block.Width, block.Width));
         }
     }
 
@@ -185,7 +186,7 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
-        marker.position = new Vector3(marker.position.x, marker.position.y - GridSize, marker.position.z);
+        marker.transform.position = new Vector3(marker.transform.position.x, marker.transform.position.y - GridSize, marker.transform.position.z);
         CreateGridFromMarker();
         lastMarkerMoveTime = Time.time;
     }
@@ -197,7 +198,7 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
-        marker.position = new Vector3(marker.position.x, marker.position.y + GridSize, marker.position.z);
+        marker.transform.position = new Vector3(marker.transform.position.x, marker.transform.position.y + GridSize, marker.transform.position.z);
         CreateGridFromMarker();
         lastMarkerMoveTime = Time.time;
     }
@@ -230,7 +231,7 @@ public class WorldEditor : MonoBehaviour
 
             if (x != 0 || y != 0)
             {
-                marker.position = new Vector3(marker.position.x + (x * GridSize), marker.position.y, marker.position.z + (y * GridSize));
+                marker.transform.position = new Vector3(marker.transform.position.x + (x * GridSize), marker.transform.position.y, marker.transform.position.z + (y * GridSize));
                 CreateGridFromMarker();
                 lastMarkerMoveTime = Time.time;
             }
