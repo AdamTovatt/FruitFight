@@ -76,15 +76,29 @@ public class WorldBuilder : MonoBehaviour
         {
             System.Random random = new System.Random(block.Position.GetSumOfComponents());
 
+            float halfSideLenght = (float)block.Info.Width / 2f;
+
             if (block.NeighborX.Positive == null) //if we don't have a neighbor we should create an edge
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 90, 0), transform));
+            {
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z - halfSideLenght);
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), transform));
+            }
             if (block.NeighborX.Negative == null)
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, -90, 0), transform));
+            {
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z - halfSideLenght);
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, -90, 0), transform));
+            }
 
             if (block.NeighborZ.Positive == null)
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 0, 0), transform));
+            {
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z - halfSideLenght);
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 0, 0), transform));
+            }
             if (block.NeighborZ.Negative == null)
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), block.Position, Quaternion.Euler(0, 180, 0), transform));
+            {
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z - halfSideLenght);
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), transform));
+            }
         }
     }
 
