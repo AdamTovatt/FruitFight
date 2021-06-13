@@ -30,7 +30,7 @@ public class WorldBlockLookup
             {
                 for (int y = 0; y < block.Info.Height; y++)
                 {
-                    Add(block, new Vector3Int(block.X + x, block.Y - y, block.Z - z));
+                    Add(block, new Vector3Int(block.X + x, block.Y - y, block.Z + z));
                 }
             }
         }

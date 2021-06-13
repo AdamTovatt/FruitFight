@@ -64,17 +64,34 @@ public class Block
     private NeighborSet CalculateNeighborSet(World world, Vector3Int axis, Vector3Int position)
     {
         int sideLength = 0;
-        if (axis.Z > 0)
+        if (axis.Y > 0)
             sideLength = Info.Height;
         else
             sideLength = Info.Width;
 
-        Vector3Int distance = axis * sideLength;
-        Vector3Int positive = position + distance;
-        Vector3Int negative = position - distance;
+        Vector3Int otherAxis = new Vector3Int(Math.Abs(axis.X - 1), 0, Math.Abs(axis.Z - 1));
 
-        List<Block> positiveBlocks = world.GetBlocksAtPosition(positive);
-        List<Block> negativeBlocks = world.GetBlocksAtPosition(negative);
+        Vector3Int distance = axis * sideLength;
+        Vector3Int positive = position + distance + axis;
+        Vector3Int negative = position - axis;
+
+        List<Block> positiveBlocks = new List<Block>();
+        List<Block> negativeBlocks = new List<Block>();
+
+        if (axis.Y == 0)
+        {
+            for (int i = 0; i < sideLength; i++)
+            {
+                Vector3Int checkPosition = positive + i * otherAxis;
+                positiveBlocks.AddRange(world.GetBlocksAtPosition(checkPosition));
+                negativeBlocks.AddRange(world.GetBlocksAtPosition(negative + i * otherAxis));
+            }
+        }
+        else
+        {
+            positiveBlocks.AddRange(world.GetBlocksAtPosition(positive));
+            negativeBlocks.AddRange(world.GetBlocksAtPosition(negative));
+        }
 
         return new NeighborSet()
         {
