@@ -43,6 +43,8 @@ public class WorldBuilder : MonoBehaviour
 
     public void BuildWorld(World world)
     {
+        debugCubes.Clear();
+
         foreach (GameObject gameObject in previousWorldObjects)
         {
             Destroy(gameObject);
@@ -54,6 +56,7 @@ public class WorldBuilder : MonoBehaviour
         }
     }
 
+    List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();
     public void PlaceBlock(Block block)
     {
         if (block.Info.BlockType == BlockType.Large || block.Info.BlockType == BlockType.Invisible)
@@ -83,6 +86,23 @@ public class WorldBuilder : MonoBehaviour
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), transform));
             }
+            else
+            {
+                foreach(Block neighbor in block.NeighborX.Positive)
+                {
+                    if (neighbor.Info.Width == block.Info.Width)
+                        continue;
+
+                    Vector3 neighborPosition = neighbor.Position;
+                    float positionZ = neighborPosition.z;
+                    debugCubes.Add(new PartialBlockIntersection()
+                    {
+                        CornerPosition = new Vector3(neighborPosition.x, neighborPosition.y, positionZ),
+                        Size = new Vector3(0.1f, neighbor.Info.Height, block.Info.Width - neighbor.Info.Width),
+                    });
+                }
+            }
+
             if (block.NeighborX.Negative == null || block.NeighborX.Negative.Count < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
@@ -99,6 +119,16 @@ public class WorldBuilder : MonoBehaviour
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), transform));
             }
+        }
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        
+        foreach(PartialBlockIntersection cube in debugCubes)
+        {
+            Gizmos.DrawCube(cube.CenterPoint, cube.Size);
         }
     }
 
