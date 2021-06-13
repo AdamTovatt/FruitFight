@@ -78,14 +78,19 @@ public class Block
 
         return new NeighborSet()
         {
-            Positive = positiveBlocks.Where(b => b.Info.BlockType == _info.BlockType).FirstOrDefault(),
-            Negative = negativeBlocks.Where(b => b.Info.BlockType == _info.BlockType).FirstOrDefault(),
+            Positive = positiveBlocks.Where(b => b.Info.BlockType == _info.BlockType).ToList(),
+            Negative = negativeBlocks.Where(b => b.Info.BlockType == _info.BlockType).ToList(),
         };
+    }
+
+    public override string ToString()
+    {
+        return _info.Prefab;
     }
 }
 
 public class NeighborSet
 {
-    public Block Positive { get; set; }
-    public Block Negative { get; set; }
+    public List<Block> Positive { get; set; }
+    public List<Block> Negative { get; set; }
 }

@@ -24,20 +24,34 @@ public class WorldBlockLookup
 
     public void Add(Block block)
     {
-        if (!blockLookup.ContainsKey(block.Z))
-            blockLookup.Add(block.Z, new Dictionary<int, Dictionary<int, List<Block>>>());
+        for (int x = 0; x < block.Info.Width; x++)
+        {
+            for (int z = 0; z < block.Info.Width; z++)
+            {
+                for (int y = 0; y < block.Info.Height; y++)
+                {
+                    Add(block, new Vector3Int(block.X + x, block.Y - y, block.Z - z));
+                }
+            }
+        }
+    }
 
-        Dictionary<int, Dictionary<int, List<Block>>> zLevel = blockLookup[block.Z];
+    private void Add(Block block, Vector3Int position)
+    {
+        if (!blockLookup.ContainsKey(position.Z))
+            blockLookup.Add(position.Z, new Dictionary<int, Dictionary<int, List<Block>>>());
 
-        if (!zLevel.ContainsKey(block.X))
-            zLevel.Add(block.X, new Dictionary<int, List<Block>>());
+        Dictionary<int, Dictionary<int, List<Block>>> zLevel = blockLookup[position.Z];
 
-        Dictionary<int, List<Block>> xLevel = zLevel[block.X];
+        if (!zLevel.ContainsKey(position.X))
+            zLevel.Add(position.X, new Dictionary<int, List<Block>>());
 
-        if (!xLevel.ContainsKey(block.Y))
-            xLevel.Add(block.Y, new List<Block>());
+        Dictionary<int, List<Block>> xLevel = zLevel[position.X];
 
-        List<Block> blocksAtPosition = xLevel[block.Y];
+        if (!xLevel.ContainsKey(position.Y))
+            xLevel.Add(position.Y, new List<Block>());
+
+        List<Block> blocksAtPosition = xLevel[position.Y];
 
         blocksAtPosition.Add(block);
 

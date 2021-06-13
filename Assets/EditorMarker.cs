@@ -8,6 +8,6 @@ public class EditorMarker : MonoBehaviour
 
     public void SetMarkerSize(Vector2Int size)
     {
-        MarkerGraphic.localPosition = new Vector3((float)size.x / 2f, 0, (float)size.y / -2f);
+        MarkerGraphic.localPosition = new Vector3((float)size.x / 2f, 0, (float)size.y / 2f);
     }
 }
