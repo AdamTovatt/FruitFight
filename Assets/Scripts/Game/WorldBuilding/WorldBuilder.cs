@@ -1,6 +1,7 @@
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldBuilder : MonoBehaviour
@@ -81,42 +82,26 @@ public class WorldBuilder : MonoBehaviour
 
             float halfSideLenght = (float)block.Info.Width / 2f;
 
-            if (block.NeighborX.Positive == null || block.NeighborX.Positive.Count < 1) //if we don't have a neighbor we should create an edge
+            if (block.NeighborX.Positive == null || block.NeighborX.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1) //if we don't have a neighbor we should create an edge
             {
-                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), transform));
             }
-            else
-            {
-                foreach(Block neighbor in block.NeighborX.Positive)
-                {
-                    if (neighbor.Info.Width == block.Info.Width)
-                        continue;
 
-                    Vector3 neighborPosition = neighbor.Position;
-                    float positionZ = neighborPosition.z;
-                    debugCubes.Add(new PartialBlockIntersection()
-                    {
-                        CornerPosition = new Vector3(neighborPosition.x, neighborPosition.y, positionZ),
-                        Size = new Vector3(0.1f, neighbor.Info.Height, block.Info.Width - neighbor.Info.Width),
-                    });
-                }
-            }
-
-            if (block.NeighborX.Negative == null || block.NeighborX.Negative.Count < 1)
+            if (block.NeighborX.Negative == null || block.NeighborX.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
-                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, -90, 0), transform));
             }
 
-            if (block.NeighborZ.Positive == null || block.NeighborZ.Positive.Count < 1)
+            if (block.NeighborZ.Positive == null || block.NeighborZ.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
-                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 0, 0), transform));
             }
-            if (block.NeighborZ.Negative == null || block.NeighborZ.Negative.Count < 1)
+            if (block.NeighborZ.Negative == null || block.NeighborZ.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
-                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y, block.Position.Z + halfSideLenght);
+                Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), transform));
             }
         }
