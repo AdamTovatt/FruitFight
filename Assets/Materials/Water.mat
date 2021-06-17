@@ -34,9 +34,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - FoamDistance: 0.25
+    - FoamDistance: 0.3
     - FoamSize: 6
-    - FoamSpeed: 0.4
+    - FoamSpeed: 0.8
     - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
