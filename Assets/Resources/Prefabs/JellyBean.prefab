@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1537503349088970120}
   - component: {fileID: 1322250711168655754}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 728964469066429983}
   - component: {fileID: 6446543141154332076}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JellyBean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5564474390647095868}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmRightLower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4644463943370010100}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegLeftUpper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8439184693190610003}
   - component: {fileID: 7425997323210651866}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 538664297286305611}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmLeftLower_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3462039660514208048}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegRightLower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 889654444430363879}
   - component: {fileID: 2229356106866580836}
   - component: {fileID: 7262662177295032809}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -493,7 +493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1964537722413471257}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegRightLower_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7997941747066438107}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegLeftLower_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4113908826171149161}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1247553223602460937}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegRightUpper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4116682585493200495}
   - component: {fileID: 4468249661761215350}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spine01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -670,7 +670,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720914909270439}
   - component: {fileID: 4768720914909270436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegTargetRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -724,7 +724,7 @@ GameObject:
   - component: {fileID: 4768720915174604153}
   - component: {fileID: 4768720915174604152}
   - component: {fileID: 4768720915174604158}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: StatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -906,7 +906,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720915383793639}
   - component: {fileID: 4768720915383793636}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmTargetRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -962,7 +962,7 @@ GameObject:
   - component: {fileID: 4768720915529816217}
   - component: {fileID: 4768720915529816222}
   - component: {fileID: 5065833842122769581}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JellyBean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1123,7 +1123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720915613935199}
   - component: {fileID: 4768720915613935196}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmMoverRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1181,7 +1181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720915721311776}
   - component: {fileID: 4768720915721311777}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegMoverLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1239,7 +1239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916007652170}
   - component: {fileID: 4768720916007652171}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegTargetLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1291,7 +1291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916267951750}
   - component: {fileID: 4768720916267951751}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,7 +1354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916269588284}
   - component: {fileID: 4768720916269588285}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmTargetLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1405,7 +1405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916535444695}
   - component: {fileID: 4768720916535444692}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1468,7 +1468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916770624636}
   - component: {fileID: 4768720916770624637}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegMoverRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1526,7 +1526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768720916849031775}
   - component: {fileID: 4768720916849031772}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmMoverLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1583,7 +1583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3591294187440023032}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmLeftUpper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1617,7 +1617,7 @@ GameObject:
   - component: {fileID: 4768720915696170210}
   - component: {fileID: 5687078456380948803}
   - component: {fileID: 5687078456380948802}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JellyBeanModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1728,7 +1728,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3200029775503239025}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LegLeftLower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1759,7 +1759,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9058978791612694452}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmLeftLower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1790,7 +1790,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1902201781669615027}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmRightUpper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1821,7 +1821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7483786320874659309}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArmRightLower_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
