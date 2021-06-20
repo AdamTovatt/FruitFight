@@ -14,6 +14,8 @@ public class WorldBuilder : MonoBehaviour
 
     private List<GameObject> previousWorldObjects;
 
+    public World CurrentWorld { get; set; }
+
     private void Awake()
     {
         if (Instance != null)
@@ -34,12 +36,14 @@ public class WorldBuilder : MonoBehaviour
             NextLevel = World.FromWorldName("01");
 
         BuildWorld(NextLevel);
+        CurrentWorld = NextLevel;
     }
 
     public void Build(string worldName)
     {
         World world = World.FromWorldName(worldName);
         BuildWorld(world);
+        CurrentWorld = world;
     }
 
     public void BuildWorld(World world)
@@ -53,8 +57,11 @@ public class WorldBuilder : MonoBehaviour
 
         foreach (Block block in world.Blocks)
         {
+            block.Instance = null;
             PlaceBlock(block);
         }
+
+        CurrentWorld = world;
     }
 
     List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();
@@ -62,7 +69,9 @@ public class WorldBuilder : MonoBehaviour
     {
         if (block.Info.BlockType == BlockType.Large || block.Info.BlockType == BlockType.Invisible)
         {
-            previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform));
+            GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform);
+            block.Instance = instantiatedObject;
+            previousWorldObjects.Add(instantiatedObject);
         }
         else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor)
         {

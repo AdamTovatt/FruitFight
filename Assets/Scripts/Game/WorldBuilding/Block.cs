@@ -2,6 +2,7 @@ using Lookups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 [Serializable]
 public class Block
@@ -20,6 +21,8 @@ public class Block
     public NeighborSet NeighborX { get; set; }
     public NeighborSet NeighborY { get; set; }
     public NeighborSet NeighborZ { get; set; }
+
+    public GameObject Instance { get; set; }
 
     public Block(BlockInfo info, Vector3Int position)
     {
