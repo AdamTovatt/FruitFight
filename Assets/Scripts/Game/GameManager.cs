@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public bool IsDebug = false;
     public GameObject CameraPrefab;
     public GameObject PlayerPrefab;
+    public int BlockSeeThroughRadius = 2;
 
     public MultipleTargetCamera MultipleTargetCamera { get; private set; }
 
@@ -99,5 +100,41 @@ public class GameManager : MonoBehaviour
         }
 
         oldIsDebug = IsDebug;
+
+        World currentWorld = WorldBuilder.Instance.CurrentWorld;
+        HashSet<Block> blocks = new HashSet<Block>();
+        foreach (PlayerMovement player in PlayerCharacters)
+        {
+            Ray ray = new Ray(MultipleTargetCamera.transform.position, (player.transform.position - MultipleTargetCamera.transform.position));
+            if(Physics.Raycast(ray, out RaycastHit hitInfo))
+            {
+                if (hitInfo.transform == player.transform)
+                    continue;
+            }
+
+            for (int x = 0; x < BlockSeeThroughRadius * 2; x++)
+            {
+                for (int y = 0; y < BlockSeeThroughRadius * 2; y++)
+                {
+                    for (int z = 0; z < BlockSeeThroughRadius * 2; z++)
+                    {
+                        Vector3Int searchPosition = ((Vector3Int)player.transform.position) + new Vector3Int(BlockSeeThroughRadius - x, BlockSeeThroughRadius - y, BlockSeeThroughRadius - z);
+
+                        foreach (Block block in currentWorld.GetBlocksAtPosition(searchPosition))
+                        {
+                            blocks.Add(block);
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (Block block in blocks)
+        {
+            if(block.SeeThroughBlock != null)
+            {
+                block.SeeThroughBlock.Enable();
+            }
+        }
     }
 }

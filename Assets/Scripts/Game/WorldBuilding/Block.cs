@@ -23,6 +23,7 @@ public class Block
     public NeighborSet NeighborZ { get; set; }
 
     public GameObject Instance { get; set; }
+    public SeeThroughBlock SeeThroughBlock { get; set; }
 
     public Block(BlockInfo info, Vector3Int position)
     {

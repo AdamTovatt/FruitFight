@@ -71,6 +71,7 @@ public class WorldBuilder : MonoBehaviour
         {
             GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform);
             block.Instance = instantiatedObject;
+            block.SeeThroughBlock = instantiatedObject.GetComponent<SeeThroughBlock>();
             previousWorldObjects.Add(instantiatedObject);
         }
         else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor)
