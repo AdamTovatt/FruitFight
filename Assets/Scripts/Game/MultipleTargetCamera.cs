@@ -19,6 +19,8 @@ public class MultipleTargetCamera : MonoBehaviour
     private Vector3 oldCenterPoint;
     private Camera _camera;
 
+    public float FieldOfView { get { return _camera.fieldOfView; } }
+
     private void Awake()
     {
         Targets = new List<Transform>();
