@@ -14,7 +14,11 @@ public class Block
 
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
 
-    public BlockInfo Info { get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; } }
+    public BlockInfo Info
+    { 
+        get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; }
+        set { BlockInfoId = value.Id; _info = value; }
+    }
     [NonSerialized]
     private BlockInfo _info;
 
@@ -28,6 +32,7 @@ public class Block
     public Block(BlockInfo info, Vector3Int position)
     {
         _info = info;
+        BlockInfoId = info.Id;
         X = position.X;
         Y = position.Y;
         Z = position.Z;
@@ -36,6 +41,7 @@ public class Block
     public Block(BlockInfo info, int x, int y, int z)
     {
         _info = info;
+        BlockInfoId = info.Id;
         X = x;
         Y = y;
         Z = z;
@@ -44,17 +50,10 @@ public class Block
     public Block(int blockInfoId, int x, int y, int z)
     {
         _info = BlockInfoLookup.Get(blockInfoId);
+        BlockInfoId = blockInfoId;
         X = x;
         Y = y;
         Z = z;
-    }
-
-    public void FetchBlockInfo()
-    {
-        if (_info == null)
-        {
-            _info = BlockInfoLookup.Get(BlockInfoId);
-        }
     }
 
     public void CalculateNeighbors(World world)
@@ -106,7 +105,7 @@ public class Block
 
     public override string ToString()
     {
-        return _info.Prefab;
+        return Info.Prefab;
     }
 }
 
