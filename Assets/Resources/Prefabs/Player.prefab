@@ -609,7 +609,7 @@ MonoBehaviour:
   RigidBody: {fileID: 2012823961798305032}
   PunchSphereTransform: {fileID: 4974615858160056374}
   Speed: 8
-  JumpStrength: 8
+  JumpStrength: 7
   DistanceToGround: 0.5
   MovementInputCutoff: 0.2
   PunchDistance: 0.5

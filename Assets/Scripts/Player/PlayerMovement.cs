@@ -42,6 +42,7 @@ public class PlayerMovement : MovingCharacter
         }
     }
     private bool? _isGrounded = null;
+    private float lastJumpTime;
 
     private void Awake()
     {
@@ -163,8 +164,11 @@ public class PlayerMovement : MovingCharacter
 
     private void Jump()
     {
-        if (IsGrounded)
-            RigidBody.AddForce(new Vector3(0, 50f * JumpStrength, 0));
+        if (Time.time - lastJumpTime > 0.2f && IsGrounded)
+        {
+            RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y + JumpStrength, RigidBody.velocity.z);
+            lastJumpTime = Time.time;
+        }
     }
 
     private void OnEnable()
