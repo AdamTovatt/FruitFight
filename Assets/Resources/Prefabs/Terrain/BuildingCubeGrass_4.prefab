@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 484366490126175692}
   - component: {fileID: 3537308491739677289}
   - component: {fileID: 1653942689744107171}
-  m_Layer: 9
+  m_Layer: 3
   m_Name: BlockSeeThroughEdge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5801531528710992333}
   - component: {fileID: -3203136596762121523}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BuildingCubeGrass_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
