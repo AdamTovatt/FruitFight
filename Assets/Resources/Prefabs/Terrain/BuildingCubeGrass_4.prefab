@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 484366490126175692}
   - component: {fileID: 3537308491739677289}
   - component: {fileID: 1653942689744107171}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: BlockSeeThroughEdge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
