@@ -10,17 +10,23 @@ public class Tween : MonoBehaviour
     public float EndScale = 1f;
 
     private Vector3 startSize;
+    private bool startSizeHasBeenSet = false;
     private float lerpValue = 0;
     private bool tweening = true;
 
     private void Start()
     {
-        startSize = transform.localScale;
         StartTween();
     }
 
     private void StartTween()
     {
+        if (!startSizeHasBeenSet)
+        {
+            startSize = transform.localScale;
+            startSizeHasBeenSet = true;
+        }
+
         tweening = true;
         lerpValue = 0;
         transform.localScale = startSize * StartScale;

@@ -9,8 +9,10 @@ public class WorldEditorUi : MonoBehaviour
 
     public EditorPauseMenu PauseMenu;
     public EditorBlockMenu BlockMenu;
+    public TestLevelPauseMenu TestLevelPauseMenu;
 
     private List<UiSelectable> selectables;
+    private LoadingScreen loadingScreen;
 
     public AlertCreator AlertCreator { get; set; }
 
@@ -21,8 +23,11 @@ public class WorldEditorUi : MonoBehaviour
         else
             Destroy(gameObject);
 
+        DontDestroyOnLoad(this);
+
         selectables = new List<UiSelectable>();
         AlertCreator = gameObject.GetComponent<AlertCreator>();
+        loadingScreen = gameObject.GetComponentInChildren<LoadingScreen>();
     }
 
     private void Start()
@@ -31,7 +36,7 @@ public class WorldEditorUi : MonoBehaviour
         {
             BlockMenu.gameObject.SetActive(true);
             BlockMenu.ThumbnailsWereCreated();
-            gameObject.GetComponentInChildren<LoadingScreen>().Hide();
+            HideLoadingScreen();
         };
     }
 
@@ -49,6 +54,20 @@ public class WorldEditorUi : MonoBehaviour
         }
     }
 
+    public void OpenLevelTestPauseMenu()
+    {
+        GameManager.Instance.DisablePlayerControls();
+        TestLevelPauseMenu.gameObject.SetActive(true);
+        TestLevelPauseMenu.WasShown();
+    }
+
+    public void CloseLevelTestPauseMenu()
+    {
+        GameManager.Instance.EnablePlayerControls();
+        TestLevelPauseMenu.gameObject.SetActive(false);
+        WorldEditor.Instance.EnableControls();
+    }
+
     public void OpenPauseMenu()
     {
         PauseMenu.gameObject.SetActive(true);
@@ -59,5 +78,25 @@ public class WorldEditorUi : MonoBehaviour
     {
         PauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
+    }
+
+    public void HideBlockSelection()
+    {
+        BlockMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowBlockSelection()
+    {
+        BlockMenu.gameObject.SetActive(true);
+    }
+
+    public void ShowLoadingScreen()
+    {
+        loadingScreen.Show();
+    }
+
+    public void HideLoadingScreen()
+    {
+        loadingScreen.Hide();
     }
 }

@@ -137,4 +137,22 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    private void SetPlayerControls(bool newValue)
+    {
+        foreach(PlayerMovement player in PlayerCharacters)
+        {
+            player.ControlsEnabled = newValue;
+        }
+    }
+
+    public void DisablePlayerControls()
+    {
+        SetPlayerControls(false);
+    }
+
+    public void EnablePlayerControls()
+    {
+        SetPlayerControls(true);
+    }
 }

@@ -14,6 +14,7 @@ public class WorldEditor : MonoBehaviour
     public GameObject GridLinePrefab;
     public GameObject MainCameraPrefab;
     public GameObject MarkerPrefab;
+    public GameObject EventSystem;
 
     public WorldEditorUi Ui;
 
@@ -36,6 +37,7 @@ public class WorldEditor : MonoBehaviour
     private MultipleTargetCamera mainCamera;
     private EditorMarker marker;
     private bool controlsDisabled = false;
+    private bool isTestingLevel = false;
 
     private float lastMarkerMoveTime;
 
@@ -47,6 +49,7 @@ public class WorldEditor : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(this);
+        DontDestroyOnLoad(EventSystem);
 
         ThumbnailManager = gameObject.GetComponent<BlockThumbnailManager>();
 
@@ -90,7 +93,6 @@ public class WorldEditor : MonoBehaviour
 
     public void TestLevelButton()
     {
-        Debug.Log("World editor wants to test level");
         if (CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
         {
             Alert alert = WorldEditorUi.Instance.AlertCreator.CreateAlert("No player start point exists in the level", new List<string>() { "Go back", "Continue anyway" });
@@ -129,26 +131,50 @@ public class WorldEditor : MonoBehaviour
 
     private void StartLevelTest()
     {
+        Ui.ShowLoadingScreen();
+        Ui.ClosePauseMenu();
+        Ui.HideBlockSelection();
         WorldBuilder.NextLevel = CurrentWorld;
         SceneManager.LoadScene("PlayerSetup");
-        SceneManager.sceneLoaded += (scene, loadSceneMode) => { GameManager.ShouldStartLevel = true; };
+        SceneManager.sceneLoaded += (scene, loadSceneMode) => { GameManager.ShouldStartLevel = true; Ui.HideLoadingScreen(); };
+        isTestingLevel = true;
+        controlsDisabled = false;
         Destroy(mainCamera);
         Destroy(gameObject);
     }
 
+    public void ExitLevelTest()
+    {
+        SceneManager.LoadScene("LevelEditor");
+    }
+
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        Debug.Log(CurrentWorld.ToJson());
-
-        if (!controlsDisabled)
+        if (!isTestingLevel)
         {
-            controlsDisabled = true;
-            Ui.OpenPauseMenu();
+            if (!controlsDisabled)
+            {
+                controlsDisabled = true;
+                Ui.OpenPauseMenu();
+            }
+            else
+            {
+                controlsDisabled = false;
+                Ui.ClosePauseMenu();
+            }
         }
         else
         {
-            controlsDisabled = false;
-            Ui.ClosePauseMenu();
+            if(!controlsDisabled)
+            {
+                controlsDisabled = true;
+                Ui.OpenLevelTestPauseMenu();
+            }
+            else
+            {
+                controlsDisabled = false;
+                Ui.CloseLevelTestPauseMenu();
+            }
         }
     }
 
@@ -159,7 +185,7 @@ public class WorldEditor : MonoBehaviour
 
     private void MoveBlockSelection(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (!controlsDisabled)
+        if (!controlsDisabled || isTestingLevel)
         {
             Vector2 rawMoveValue = context.ReadValue<Vector2>();
 
@@ -181,7 +207,7 @@ public class WorldEditor : MonoBehaviour
 
     private void LowerMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (controlsDisabled || isTestingLevel)
             return;
 
         CloseBlockSelection();
@@ -193,7 +219,7 @@ public class WorldEditor : MonoBehaviour
 
     private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (controlsDisabled || isTestingLevel)
             return;
 
         CloseBlockSelection();
@@ -205,7 +231,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (controlsDisabled || isTestingLevel)
             return;
 
         CloseBlockSelection();
@@ -219,7 +245,7 @@ public class WorldEditor : MonoBehaviour
 
     private void MoveMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (controlsDisabled || isTestingLevel)
             return;
 
         if (Time.time - lastMarkerMoveTime >= MarkerMoveCooldown)
