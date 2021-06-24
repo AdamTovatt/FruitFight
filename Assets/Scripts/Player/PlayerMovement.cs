@@ -111,7 +111,7 @@ public class PlayerMovement : MovingCharacter
 
         Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
-        Ray forwardRay = new Ray(transform.position, transform.forward);
+        Ray forwardRay = new Ray(transform.position + transform.up * PunchHeight, transform.forward);
         if (!Physics.SphereCast(forwardRay, 0.4f, 0.4f, ~3))
         {
             RigidBody.MovePosition(newPosition);
