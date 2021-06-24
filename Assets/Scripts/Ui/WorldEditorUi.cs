@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(AlertCreator))]
 public class WorldEditorUi : MonoBehaviour
@@ -11,8 +12,11 @@ public class WorldEditorUi : MonoBehaviour
     public EditorBlockMenu BlockMenu;
     public TestLevelPauseMenu TestLevelPauseMenu;
 
+    public GameObject EventSystem;
+
     private List<UiSelectable> selectables;
     private LoadingScreen loadingScreen;
+    private InputSystemUIInputModule uiInput;
 
     public AlertCreator AlertCreator { get; set; }
 
@@ -24,6 +28,7 @@ public class WorldEditorUi : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(this);
+        DontDestroyOnLoad(EventSystem);
 
         selectables = new List<UiSelectable>();
         AlertCreator = gameObject.GetComponent<AlertCreator>();
@@ -38,6 +43,8 @@ public class WorldEditorUi : MonoBehaviour
             BlockMenu.ThumbnailsWereCreated();
             HideLoadingScreen();
         };
+
+        uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
     }
 
     public void RegisterSelectable(UiSelectable selectable)
@@ -56,6 +63,7 @@ public class WorldEditorUi : MonoBehaviour
 
     public void OpenLevelTestPauseMenu()
     {
+        uiInput.enabled = true;
         GameManager.Instance.DisablePlayerControls();
         TestLevelPauseMenu.gameObject.SetActive(true);
         TestLevelPauseMenu.WasShown();
@@ -63,6 +71,7 @@ public class WorldEditorUi : MonoBehaviour
 
     public void CloseLevelTestPauseMenu()
     {
+        uiInput.enabled = false;
         GameManager.Instance.EnablePlayerControls();
         TestLevelPauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
@@ -70,23 +79,27 @@ public class WorldEditorUi : MonoBehaviour
 
     public void OpenPauseMenu()
     {
+        uiInput.enabled = true;
         PauseMenu.gameObject.SetActive(true);
         PauseMenu.WasShown();
     }
 
     public void ClosePauseMenu()
     {
+        uiInput.enabled = false;
         PauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
     }
 
     public void HideBlockSelection()
     {
+        uiInput.enabled = false;
         BlockMenu.gameObject.SetActive(false);
     }
 
     public void ShowBlockSelection()
     {
+        uiInput.enabled = true;
         BlockMenu.gameObject.SetActive(true);
     }
 
@@ -97,6 +110,7 @@ public class WorldEditorUi : MonoBehaviour
 
     public void HideLoadingScreen()
     {
+        uiInput.enabled = false;
         loadingScreen.Hide();
     }
 }

@@ -383,6 +383,7 @@ MonoBehaviour:
   PauseMenu: {fileID: 1937398846}
   BlockMenu: {fileID: 170067617}
   TestLevelPauseMenu: {fileID: 1565537481}
+  EventSystem: {fileID: 97385002}
 --- !u!114 &27242632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2502,7 +2503,6 @@ MonoBehaviour:
     type: 3}
   MarkerPrefab: {fileID: 4096684427761597525, guid: ac839af67dad17f42b3ab92cc3a6711d,
     type: 3}
-  EventSystem: {fileID: 97385002}
   Ui: {fileID: 27242631}
   CameraSmoothTime: 1
   MarkerMoveCooldown: 0.5

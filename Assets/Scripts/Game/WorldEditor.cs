@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,7 +15,6 @@ public class WorldEditor : MonoBehaviour
     public GameObject GridLinePrefab;
     public GameObject MainCameraPrefab;
     public GameObject MarkerPrefab;
-    public GameObject EventSystem;
 
     public WorldEditorUi Ui;
 
@@ -49,7 +49,6 @@ public class WorldEditor : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(this);
-        DontDestroyOnLoad(EventSystem);
 
         ThumbnailManager = gameObject.GetComponent<BlockThumbnailManager>();
 
@@ -136,7 +135,11 @@ public class WorldEditor : MonoBehaviour
         Ui.HideBlockSelection();
         WorldBuilder.NextLevel = CurrentWorld;
         SceneManager.LoadScene("PlayerSetup");
-        SceneManager.sceneLoaded += (scene, loadSceneMode) => { GameManager.ShouldStartLevel = true; Ui.HideLoadingScreen(); };
+        SceneManager.sceneLoaded += (scene, loadSceneMode) =>
+        {
+            GameManager.ShouldStartLevel = true;
+            Ui.HideLoadingScreen();
+        };
         isTestingLevel = true;
         controlsDisabled = false;
         Destroy(mainCamera);
@@ -165,7 +168,7 @@ public class WorldEditor : MonoBehaviour
         }
         else
         {
-            if(!controlsDisabled)
+            if (!controlsDisabled)
             {
                 controlsDisabled = true;
                 Ui.OpenLevelTestPauseMenu();
