@@ -20,6 +20,10 @@ public class BlockThumbnailManager : MonoBehaviour
             BlockThumbnails = new Dictionary<string, Texture2D>();
             GenerateThumbnails();
         }
+        else
+        {
+            OnThumbnailsCreated?.Invoke(this, BlockThumbnails);
+        }
     }
 
     private void GenerateThumbnails()

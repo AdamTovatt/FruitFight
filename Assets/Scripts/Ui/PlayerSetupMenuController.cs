@@ -98,7 +98,7 @@ public class PlayerSetupMenuController : MonoBehaviour
         if (!inputEnabled)
             return;
 
-        ReadyText.gameObject.SetActive(true);
+        if(ReadyText != null) ReadyText.gameObject.SetActive(true);
         ReadyInstructionsText.text = string.Format("Press {0} to unready", GetButtonName(playerControls.Ui.Cancel));
         PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex);
     }

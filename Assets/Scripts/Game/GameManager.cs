@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject PlayerPrefab;
     public int BlockSeeThroughRadius = 2;
 
-    public MultipleTargetCamera MultipleTargetCamera { get; private set; }
+    public MultipleTargetCamera MultipleTargetCamera { get; set; }
 
     public delegate void IsDebugChangedHandler(object sender, bool newState);
     public event IsDebugChangedHandler OnDebugStateChanged;

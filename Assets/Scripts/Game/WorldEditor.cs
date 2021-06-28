@@ -43,12 +43,7 @@ public class WorldEditor : MonoBehaviour
 
     public void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-
-        DontDestroyOnLoad(this);
+        Instance = this;
 
         ThumbnailManager = gameObject.GetComponent<BlockThumbnailManager>();
 
@@ -148,7 +143,23 @@ public class WorldEditor : MonoBehaviour
 
     public void ExitLevelTest()
     {
+        Ui.ShowLoadingScreen();
+        isTestingLevel = false;
+        controlsDisabled = true;
+
+        foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
+        {
+            Destroy(player.gameObject);
+        }
+        Destroy(GameManager.Instance.gameObject);
+        Destroy(PlayerConfigurationManager.Instance.gameObject);
+
         SceneManager.LoadScene("LevelEditor");
+        SceneManager.sceneLoaded += (scene, loadSceneMode) =>
+        {
+            WorldEditorUi.Instance.HideLoadingScreen();
+            WorldEditorUi.Instance.ShowBlockSelection();
+        };
     }
 
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)

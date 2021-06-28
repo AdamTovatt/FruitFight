@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,25 @@ public class PlayerConfigurationManager : MonoBehaviour
         PlayerConfigurations[index].Hat = hat;
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += SceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= SceneLoaded;
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
+    {
+        if (scene.name == "SampleScene")
+        {
+            Instantiate(GameManagerPrefab, transform.position, transform.rotation);
+            GameManager.ShouldStartLevel = true;
+        }
+    }
+
     public void ReadyPlayer(int index)
     {
         PlayerConfigurations[index].IsReady = true;
@@ -48,12 +68,6 @@ public class PlayerConfigurationManager : MonoBehaviour
         {
             SceneManager.LoadScene("SampleScene");
         }
-
-        SceneManager.sceneLoaded += (scene, loadMode) => 
-        {
-            Instantiate(GameManagerPrefab, transform.position, transform.rotation);
-            GameManager.ShouldStartLevel = true; 
-        };
     }
 
     public void UnReadyPlayer(int index)
