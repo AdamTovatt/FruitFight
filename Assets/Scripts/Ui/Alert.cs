@@ -51,6 +51,7 @@ public class Alert : MonoBehaviour
     private void ButtonWasClicked(int index)
     {
         OnOptionWasChosen?.Invoke(this, index);
+        OnOptionWasChosen = null;
         Destroy(gameObject);
     }
 }

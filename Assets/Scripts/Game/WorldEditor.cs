@@ -41,6 +41,8 @@ public class WorldEditor : MonoBehaviour
 
     private float lastMarkerMoveTime;
 
+    private PlayerControls input;
+
     public void Awake()
     {
         Instance = this;
@@ -59,30 +61,36 @@ public class WorldEditor : MonoBehaviour
 
         mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
 
-        PlayerControls input = new PlayerControls();
+        input = new PlayerControls();
         input.LevelEditor.Enable();
         input.LevelEditor.Place.performed += Place;
         input.LevelEditor.MoveMarker.performed += MoveMarker;
         input.LevelEditor.RaiseMarker.performed += RaiseMarker;
         input.LevelEditor.LowerMarker.performed += LowerMarker;
-        input.LevelEditor.MoveMarker.canceled += (context) => { lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f; };
+        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
         input.LevelEditor.Pause.performed += Pause;
         input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
     }
 
     void Start()
     {
+        Debug.Log("world editor start");
         marker = Instantiate(MarkerPrefab).GetComponent<EditorMarker>();
         CreateGridFromMarker();
 
-        GetComponent<Spawner>().OnObjectSpawned += (sender, spawnedObject) =>
-        {
-            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
-        };
+        GetComponent<Spawner>().OnObjectSpawned += SpawnerSpawnedObject;
 
         mainCamera.Offset = mainCamera.Offset * 2;
         mainCamera.SmoothTime = CameraSmoothTime;
         mainCamera.Targets.Add(marker.transform);
+
+        Ui = FindObjectOfType<WorldEditorUi>();
+    }
+
+    private void SpawnerSpawnedObject(object sender, GameObject spawnedObject)
+    {
+        spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
+        GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
     }
 
     public void TestLevelButton()
@@ -130,14 +138,31 @@ public class WorldEditor : MonoBehaviour
         Ui.HideBlockSelection();
         WorldBuilder.NextLevel = CurrentWorld;
         SceneManager.LoadScene("PlayerSetup");
-        SceneManager.sceneLoaded += (scene, loadSceneMode) =>
-        {
-            GameManager.ShouldStartLevel = true;
-            Ui.HideLoadingScreen();
-        };
+        SceneManager.sceneLoaded += LevelTestWasLoaded;
         isTestingLevel = true;
         controlsDisabled = false;
         Destroy(mainCamera);
+    }
+
+    private void LevelTestWasLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        GameManager.ShouldStartLevel = true;
+        Ui.HideLoadingScreen();
+        SceneManager.sceneLoaded -= LevelTestWasLoaded;
+    }
+
+    private void LevelEditorWasLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        WorldEditorUi.Instance.HideLoadingScreen();
+        WorldEditorUi.Instance.ShowBlockSelection();
+        SceneManager.sceneLoaded -= LevelEditorWasLoaded;
+        input.LevelEditor.Place.performed -= Place;
+        input.LevelEditor.MoveMarker.performed -= MoveMarker;
+        input.LevelEditor.RaiseMarker.performed -= RaiseMarker;
+        input.LevelEditor.LowerMarker.performed -= LowerMarker;
+        input.LevelEditor.MoveMarker.canceled -= MoveMarkerCanceled;
+        input.LevelEditor.Pause.performed -= Pause;
+        input.LevelEditor.MoveBlockSelection.performed -= MoveBlockSelection;
         Destroy(gameObject);
     }
 
@@ -151,15 +176,12 @@ public class WorldEditor : MonoBehaviour
         {
             Destroy(player.gameObject);
         }
+
         Destroy(GameManager.Instance.gameObject);
         Destroy(PlayerConfigurationManager.Instance.gameObject);
 
         SceneManager.LoadScene("LevelEditor");
-        SceneManager.sceneLoaded += (scene, loadSceneMode) =>
-        {
-            WorldEditorUi.Instance.HideLoadingScreen();
-            WorldEditorUi.Instance.ShowBlockSelection();
-        };
+        SceneManager.sceneLoaded += LevelEditorWasLoaded;
     }
 
     private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -257,8 +279,19 @@ public class WorldEditor : MonoBehaviour
         Builder.BuildWorld(CurrentWorld);
     }
 
+    private void MoveMarkerCanceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
+    }
+
     private void MoveMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (marker == null)
+        {
+            Destroy(this);
+            return;
+        }
+
         if (controlsDisabled || isTestingLevel)
             return;
 

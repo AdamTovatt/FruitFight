@@ -25,7 +25,7 @@ public class WorldBuilder : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
 
         previousWorldObjects = new List<GameObject>();
     }

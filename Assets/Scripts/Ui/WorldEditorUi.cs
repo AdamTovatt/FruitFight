@@ -30,9 +30,8 @@ public class WorldEditorUi : MonoBehaviour
         }
         else
         {
-            Destroy(Instance.gameObject);
-            Destroy(eventSystemInstance);
-            Instance = this;
+            Destroy();
+            return;
         }
 
         DontDestroyOnLoad(this);
@@ -45,14 +44,24 @@ public class WorldEditorUi : MonoBehaviour
 
     private void Start()
     {
-        WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated += (sender, thumbnails) =>
-        {
-            BlockMenu.gameObject.SetActive(true);
-            BlockMenu.ThumbnailsWereCreated();
-            HideLoadingScreen();
-        };
+        WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated += HandeThumbnailsCreated;
 
         uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
+    }
+
+    private void HandeThumbnailsCreated(object sender, Dictionary<string, Texture2D> thumbnails)
+    {
+        BlockMenu.gameObject.SetActive(true);
+        BlockMenu.ThumbnailsWereCreated();
+        HideLoadingScreen();
+    }
+
+    public void Destroy()
+    {
+        WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated -= HandeThumbnailsCreated;
+        Destroy(EventSystem);
+        Destroy(gameObject);
+        Destroy(this);
     }
 
     public void RegisterSelectable(UiSelectable selectable)
@@ -130,7 +139,7 @@ public class WorldEditorUi : MonoBehaviour
 
     public void HideLoadingScreen()
     {
-        if(uiInput != null)
+        if (uiInput != null)
             uiInput.enabled = false;
 
         loadingScreen.Hide();
