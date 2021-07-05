@@ -54,7 +54,7 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
-        if (scene.name == "SampleScene")
+        if (scene.name == "GamePlay")
         {
             Instantiate(GameManagerPrefab, transform.position, transform.rotation);
             GameManager.ShouldStartLevel = true;
@@ -66,7 +66,7 @@ public class PlayerConfigurationManager : MonoBehaviour
         PlayerConfigurations[index].IsReady = true;
         if(PlayerConfigurations.All(p => p.IsReady == true))
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("GamePlay");
         }
     }
 
