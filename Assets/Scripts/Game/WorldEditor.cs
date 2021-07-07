@@ -54,8 +54,13 @@ public class WorldEditor : MonoBehaviour
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
 
         gridLines = new List<GameObject>();
-        CurrentWorld = new World();
-        CurrentWorld.Add(new Block(BlockInfoLookup.Get(3), new Vector3Int(0, -3, 0)));
+
+        if (CurrentWorld == null)
+        {
+            CurrentWorld = new World();
+            CurrentWorld.Add(new Block(BlockInfoLookup.Get(3), new Vector3Int(0, -3, 0)));
+        }
+
         Builder = gameObject.GetComponent<WorldBuilder>();
         WorldBuilder.IsInEditor = true;
 
@@ -163,7 +168,9 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.canceled -= MoveMarkerCanceled;
         input.LevelEditor.Pause.performed -= Pause;
         input.LevelEditor.MoveBlockSelection.performed -= MoveBlockSelection;
-        Destroy(gameObject);
+
+        WorldBuilder.Instance.BuildWorld(CurrentWorld);
+        Instance.CurrentWorld = CurrentWorld;
     }
 
     public void ExitLevelTest()
