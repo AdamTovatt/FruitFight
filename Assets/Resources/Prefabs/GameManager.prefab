@@ -52,6 +52,8 @@ MonoBehaviour:
     type: 3}
   PlayerPrefab: {fileID: 2012823961798305035, guid: 7a8b9f89619f22843b473f64af50bf2b,
     type: 3}
+  BlockSeeThroughRadius: 2
+  TargetFrameRate: 71
 --- !u!114 &2800476988953670057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +82,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 3585011edd959104e8669aa6ea72c039, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!114 &2800476988953670056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8968286937793633843, guid: 317bc864145390645bd726912d1b406e, type: 3}
+  SpawnInEditor: 1
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5

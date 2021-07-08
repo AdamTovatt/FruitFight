@@ -43,6 +43,7 @@ public class PlayerMovement : MovingCharacter
     }
     private bool? _isGrounded = null;
     private float lastJumpTime;
+    private Collision lastCollision;
 
     private void Awake()
     {
@@ -112,17 +113,17 @@ public class PlayerMovement : MovingCharacter
         Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
         Ray forwardRay = new Ray(transform.position + transform.up * PunchHeight, transform.forward);
-        if (!Physics.SphereCast(forwardRay, 0.4f, 0.4f, ~3))
+        if (!Physics.SphereCast(forwardRay, 0.4f, 0.4f, ~3)) //needs to be cast in a way that it hits even small blocks if the player is in the air
         {
             RigidBody.MovePosition(newPosition);
         }
 
-        if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero)
+        if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
-        RigidBody.AddForce(-Vector3.up);
+        RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
     }
 
     private void Move(Vector2 moveValue)
