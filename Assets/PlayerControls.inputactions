@@ -347,6 +347,14 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Remove",
+                    "type": "Button",
+                    "id": "edc1528b-57f6-44c8-aaf1-9a84951c4492",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -613,6 +621,28 @@
                     "action": "MoveBlockSelection",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "5e5fc9ab-0cd6-40e3-abf2-606fe9ec2ec9",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Remove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b90a5893-2d1e-40c7-8010-569f1a64d7e1",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Remove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

@@ -11,6 +11,9 @@ public class Block
     public int X;
     public int Y;
     public int Z;
+    public int Id;
+
+    private static int lastId = 1;
 
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
 
@@ -36,6 +39,7 @@ public class Block
         X = position.X;
         Y = position.Y;
         Z = position.Z;
+        Id = GenerateId();
     }
 
     public Block(BlockInfo info, int x, int y, int z)
@@ -45,6 +49,7 @@ public class Block
         X = x;
         Y = y;
         Z = z;
+        Id = GenerateId();
     }
 
     public Block(int blockInfoId, int x, int y, int z)
@@ -54,6 +59,13 @@ public class Block
         X = x;
         Y = y;
         Z = z;
+        Id = GenerateId();
+    }
+
+    private int GenerateId()
+    {
+        lastId++;
+        return lastId;
     }
 
     public void CalculateNeighbors(World world)

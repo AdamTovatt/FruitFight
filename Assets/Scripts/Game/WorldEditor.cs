@@ -75,6 +75,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
         input.LevelEditor.Pause.performed += Pause;
         input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
+        input.LevelEditor.Remove.performed += Remove;
     }
 
     void Start()
@@ -168,6 +169,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.canceled -= MoveMarkerCanceled;
         input.LevelEditor.Pause.performed -= Pause;
         input.LevelEditor.MoveBlockSelection.performed -= MoveBlockSelection;
+        input.LevelEditor.Remove.performed -= Remove;
 
         WorldBuilder.Instance.BuildWorld(CurrentWorld);
         Instance.CurrentWorld = CurrentWorld;
@@ -270,6 +272,30 @@ public class WorldEditor : MonoBehaviour
         marker.transform.position = new Vector3(marker.transform.position.x, marker.transform.position.y + GridSize, marker.transform.position.z);
         CreateGridFromMarker();
         lastMarkerMoveTime = Time.time;
+    }
+
+    private void Remove(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (controlsDisabled || isTestingLevel)
+            return;
+
+        CloseBlockSelection();
+
+        List<Block> blocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition);
+        Block block = blocks.Where(x => x.Info.Id == selectedBlock).FirstOrDefault();
+
+        if(block != null)
+        {
+            CurrentWorld.Remove(block, MarkerPosition);
+        }
+        else
+        {
+            Debug.Log("No block of type " + BlockInfoLookup.Get(SelectedBlock).Name + " is placed here");
+        }
+
+        CurrentWorld.CalculateNeighbors();
+
+        Builder.BuildWorld(CurrentWorld);
     }
 
     private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)

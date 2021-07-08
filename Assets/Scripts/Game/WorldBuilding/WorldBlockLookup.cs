@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldBlockLookup
@@ -20,6 +21,21 @@ public class WorldBlockLookup
         }
 
         initialized = true;
+    }
+
+    public void Remove(Block block, Vector3Int position)
+    {
+        for (int x = 0; x < block.Info.Width; x++)
+        {
+            for (int z = 0; z < block.Info.Width; z++)
+            {
+                for (int y = 0; y < block.Info.Height; y++)
+                {
+                    List<Block> blocksAtPosition = blockLookup[position.Z + z][position.X + x][position.Y - y];
+                    blockLookup[position.Z + z][position.X + x][position.Y - y] = blocksAtPosition.Where(x => x.Id != block.Id).ToList();
+                }
+            }
+        }
     }
 
     public void Add(Block block)

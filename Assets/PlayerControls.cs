@@ -360,6 +360,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Remove"",
+                    ""type"": ""Button"",
+                    ""id"": ""edc1528b-57f6-44c8-aaf1-9a84951c4492"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -626,6 +634,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""MoveBlockSelection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5e5fc9ab-0cd6-40e3-abf2-606fe9ec2ec9"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Remove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b90a5893-2d1e-40c7-8010-569f1a64d7e1"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Remove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -673,6 +703,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_LowerMarker = m_LevelEditor.FindAction("LowerMarker", throwIfNotFound: true);
         m_LevelEditor_Pause = m_LevelEditor.FindAction("Pause", throwIfNotFound: true);
         m_LevelEditor_MoveBlockSelection = m_LevelEditor.FindAction("MoveBlockSelection", throwIfNotFound: true);
+        m_LevelEditor_Remove = m_LevelEditor.FindAction("Remove", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -826,6 +857,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_LowerMarker;
     private readonly InputAction m_LevelEditor_Pause;
     private readonly InputAction m_LevelEditor_MoveBlockSelection;
+    private readonly InputAction m_LevelEditor_Remove;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -836,6 +868,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @LowerMarker => m_Wrapper.m_LevelEditor_LowerMarker;
         public InputAction @Pause => m_Wrapper.m_LevelEditor_Pause;
         public InputAction @MoveBlockSelection => m_Wrapper.m_LevelEditor_MoveBlockSelection;
+        public InputAction @Remove => m_Wrapper.m_LevelEditor_Remove;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -863,6 +896,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveBlockSelection.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
                 @MoveBlockSelection.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
                 @MoveBlockSelection.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
+                @Remove.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
+                @Remove.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
+                @Remove.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -885,6 +921,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveBlockSelection.started += instance.OnMoveBlockSelection;
                 @MoveBlockSelection.performed += instance.OnMoveBlockSelection;
                 @MoveBlockSelection.canceled += instance.OnMoveBlockSelection;
+                @Remove.started += instance.OnRemove;
+                @Remove.performed += instance.OnRemove;
+                @Remove.canceled += instance.OnRemove;
             }
         }
     }
@@ -927,5 +966,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnLowerMarker(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnMoveBlockSelection(InputAction.CallbackContext context);
+        void OnRemove(InputAction.CallbackContext context);
     }
 }

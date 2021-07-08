@@ -25,6 +25,12 @@ public class World
         blockLookup.Add(block);
     }
 
+    public void Remove(Block block, Vector3Int position)
+    {
+        blocks = blocks.Where(x => x.Id != block.Id).ToList();
+        blockLookup.Remove(block, position);
+    }
+
     public List<Block> GetBlocksAtPosition(Vector3Int position)
     {
         return blockLookup.GetBlocksAtPosition(position);
