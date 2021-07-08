@@ -21,13 +21,28 @@
       "Width": 2,
       "Height": 2,
       "ShowInEditor": true,
-      "Name": "Small Block",
+      "Name": "Medium Block",
       "Prefab": "BuildingCubeGrass_2",
       "EdgePrefabs": [
         "RockPanel01_2",
         "RockPanel02_2",
         "RockPanel03_2",
         "RockPanel04_2"
+      ]
+    },
+    {
+      "Id": 6,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Small Block",
+      "Prefab": "BuildingCubeGrass_1",
+      "EdgePrefabs": [
+        "RockPanel01_1",
+        "RockPanel02_1",
+        "RockPanel03_1",
+        "RockPanel04_1"
       ]
     },
     {
