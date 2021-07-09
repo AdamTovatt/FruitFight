@@ -93,6 +93,8 @@ public class PlayerMovement : MovingCharacter
         }
     }
 
+    private List<Vector3> debugHits = new List<Vector3>();
+
     private void Update()
     {
         if (Camera == null)
@@ -110,21 +112,42 @@ public class PlayerMovement : MovingCharacter
         Vector3 movementX = (cameraRight * move.x * Speed) / 100f;
         Vector3 movementY = (cameraForward * move.y * Speed) / 100f;
 
-        Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
+        Vector3 movement = movementX + movementY;
 
         Ray forwardRay = new Ray(transform.position, transform.forward);
         RaycastHit[] hits = Physics.SphereCastAll(forwardRay, 0.4f, 0.4f, ~3);
+
+        debugHits.Clear();
+
+        foreach (RaycastHit hit in hits.Where(x => x.transform.position.y > transform.position.y + 0.3f))
+        {
+            debugHits.Add(hit.point);
+            Vector3 wallDirection = new Vector3(hit.normal.z, hit.normal.y, hit.normal.x * -1).normalized;
+            movement = Vector3.Dot(wallDirection, movement) * wallDirection;
+        }
+
+        Vector3 newPosition = RigidBody.transform.position + movement;
+
         if (!(hits.Where(x => x.transform.position.y > transform.position.y + 0.3f).Count() > 0)) //needs to be cast in a way that it hits even small blocks if the player is in the air
         {
             RigidBody.MovePosition(newPosition);
         }
 
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
-            RigidBody.MoveRotation(Quaternion.LookRotation(newPosition - transform.position, Vector3.up));
+            RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach(Vector3 pos in debugHits)
+        {
+            Gizmos.DrawSphere(pos, 0.2f);
+        }
     }
 
     private void Move(Vector2 moveValue)
