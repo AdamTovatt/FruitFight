@@ -112,8 +112,9 @@ public class PlayerMovement : MovingCharacter
 
         Vector3 newPosition = RigidBody.transform.position + movementX + movementY;
 
-        Ray forwardRay = new Ray(transform.position + transform.up * PunchHeight, transform.forward);
-        if (!Physics.SphereCast(forwardRay, 0.4f, 0.4f, ~3)) //needs to be cast in a way that it hits even small blocks if the player is in the air
+        Ray forwardRay = new Ray(transform.position, transform.forward);
+        RaycastHit[] hits = Physics.SphereCastAll(forwardRay, 0.4f, 0.4f, ~3);
+        if (!(hits.Where(x => x.transform.position.y > transform.position.y + 0.3f).Count() > 0)) //needs to be cast in a way that it hits even small blocks if the player is in the air
         {
             RigidBody.MovePosition(newPosition);
         }
