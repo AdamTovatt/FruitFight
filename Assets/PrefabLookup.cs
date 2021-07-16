@@ -63,6 +63,9 @@ namespace Lookups
 
         public static GameObject GetPrefab(List<string> nameVariations, System.Random random)
         {
+            if (nameVariations.Count == 0)
+                return null;
+
             return GetPrefab(nameVariations[random.Next(0, nameVariations.Count)]);
         }
     }

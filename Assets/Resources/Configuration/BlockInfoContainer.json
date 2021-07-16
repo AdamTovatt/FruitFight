@@ -74,6 +74,36 @@
       "Name": "Jelly Bean",
       "Prefab": "JellyBeanSpawner",
       "EdgePrefabs": []
+    },
+    {
+      "Id": 7,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Pillar Base",
+      "Prefab": "PillarBottom",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 8,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Pillar Middle",
+      "Prefab": "PillarMiddle",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 9,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Pillar Cap",
+      "Prefab": "PillarCap",
+      "EdgePrefabs": []
     }
   ]
 }

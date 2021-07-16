@@ -23,7 +23,7 @@ public class BlockInfo
 
 public enum BlockType
 {
-    Large, Invisible, Ocean
+    BuildingBlock, Invisible, Ocean, BuildingProp
 }
 
 [Serializable]
