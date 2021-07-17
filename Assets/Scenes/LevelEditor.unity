@@ -2501,7 +2501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridLinePrefab: {fileID: 7243768834077931742, guid: 927c6d46df610824286586cb9d3ff68d,
     type: 3}
-  MainCameraPrefab: {fileID: 7183245211285268454, guid: d4dd153ae52d3204ab30608b01aa63be,
+  MainCameraPrefab: {fileID: 7183245211285268454, guid: 00f4f74cba1b6f2469071b0fdf57250f,
     type: 3}
   MarkerPrefab: {fileID: 4096684427761597525, guid: ac839af67dad17f42b3ab92cc3a6711d,
     type: 3}

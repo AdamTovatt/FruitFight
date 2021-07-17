@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7183245211285268457}
   - component: {fileID: 7183245211285268452}
   m_Layer: 0
-  m_Name: MainCamera
+  m_Name: EditorCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,10 +129,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a57473e995b174f8ae171735c7dd7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Offset: {x: 0, y: 3, z: 0}
+  Offset: {x: 0, y: 5, z: -8}
   SmoothTime: 0.5
-  IsInEditor: 0
-  MoveSpeed: 10
+  IsInEditor: 1
+  MoveSpeed: 8
   SettleRadius: 9
   minZoom: 80
   maxZoom: 60

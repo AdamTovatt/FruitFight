@@ -65,6 +65,7 @@ public class WorldEditor : MonoBehaviour
         WorldBuilder.IsInEditor = true;
 
         mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
+        mainCamera.IsInEditor = true;
 
         input = new PlayerControls();
         input.LevelEditor.Enable();
