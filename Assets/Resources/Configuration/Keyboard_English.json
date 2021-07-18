@@ -151,6 +151,14 @@
           "Text": "SHIFT"
         }
       ]
+    },
+    {
+      "Buttons": [
+        {
+          "ButtonType": 0,
+          "Text": "                    "
+        }
+      ]
     }
   ]
 }

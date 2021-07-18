@@ -101,9 +101,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.990566, g: 0.97382, b: 0.7242346, a: 1}
+    m_PressedColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
+    m_SelectedColor: {r: 0.9921569, g: 0.9725491, b: 0.7254902, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -149,12 +149,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be0765cabf3a0d4aa7a63da8a32b011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedMarkerPrefab: {fileID: 529441567548029044, guid: bd8907f211b99df46b5a7d8ef9862849,
+  SelectedMarkerPrefab: {fileID: 1433374967141964429, guid: 505294e70bf28be41a4f01e209de570c,
     type: 3}
-  UseCustomContentSize: 0
-  ContentSize: {x: 300, y: 50}
+  UseCustomContentSize: 1
+  ContentSize: {x: 50, y: 50}
   UseCustomPivot: 1
-  Pivot: {x: 0, y: 0}
+  Pivot: {x: 0.6, y: 0.8}
 --- !u!1 &4293612439158847142
 GameObject:
   m_ObjectHideFlags: 0
