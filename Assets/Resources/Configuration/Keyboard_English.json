@@ -1,0 +1,156 @@
+{
+  "ButtonRows": [
+    {
+      "Buttons": [
+        {
+          "ButtonType": 3,
+          "Text": "ESC"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "q"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "w"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "e"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "r"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "t"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "y"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "u"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "i"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "o"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "p"
+        },
+        {
+          "ButtonType": 2,
+          "Text": "<--"
+        }
+      ]
+    },
+    {
+      "Buttons": [
+        {
+          "ButtonType": 4,
+          "Text": "CAPS"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "a"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "s"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "d"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "f"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "g"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "h"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "j"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "k"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "l"
+        },
+        {
+          "ButtonType": 1,
+          "Text": "ENTER"
+        }
+      ]
+    },
+    {
+      "Buttons": [
+        {
+          "ButtonType": 4,
+          "Text": "SHIFT"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "z"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "x"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "c"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "v"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "b"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "n"
+        },
+        {
+          "ButtonType": 0,
+          "Text": "m"
+        },
+        {
+          "ButtonType": 0,
+          "Text": ","
+        },
+        {
+          "ButtonType": 0,
+          "Text": "."
+        },
+        {
+          "ButtonType": 0,
+          "Text": "-"
+        },
+        {
+          "ButtonType": 4,
+          "Text": "SHIFT"
+        }
+      ]
+    }
+  ]
+}
