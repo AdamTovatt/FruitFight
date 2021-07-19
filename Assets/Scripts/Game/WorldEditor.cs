@@ -1,6 +1,7 @@
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
@@ -98,6 +99,83 @@ public class WorldEditor : MonoBehaviour
     {
         spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
         GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
+    }
+
+    public void SaveLevel()
+    {
+        Ui.AlertCreator.CreateAlert("Enter level name to save the level (will overwrite)").OnOptionWasChosen += (sender, optionIndex) =>
+        {
+            Ui.OnScreenKeyboard.OpenKeyboard();
+            Ui.OnScreenKeyboard.OnGotText += (sender, success, text) =>
+            {
+                if (success)
+                {
+                    if (CurrentWorld.Metadata == null)
+                        CurrentWorld.Metadata = new WorldMetadata(text);
+
+                    string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
+
+                    if (!Directory.Exists(mapDirectory))
+                        Directory.CreateDirectory(mapDirectory);
+
+                    string fileName = text.Replace(' ', '_');
+                    string levelPath = string.Format("{0}/{1}.map", mapDirectory, fileName);
+                    string metaPath = string.Format("{0}/{1}.meta", mapDirectory, fileName);
+
+                    File.WriteAllText(levelPath, CurrentWorld.ToJson());
+                    File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
+
+                    Debug.Log("Wrote map data to: " + levelPath);
+                }
+                else
+                {
+                    Ui.AlertCreator.CreateAlert("Level save was cancelled");
+                }
+
+                Ui.ClosePauseMenu();
+            };
+        };
+    }
+
+    public void LoadLevel()
+    {
+        Ui.AlertCreator.CreateAlert("Enter level name to load a level").OnOptionWasChosen += (sender, optionIndex) =>
+        {
+            Ui.OnScreenKeyboard.OpenKeyboard();
+            Ui.OnScreenKeyboard.OnGotText += (sender, success, text) =>
+            {
+                if (success)
+                {
+                    string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
+
+                    if (!Directory.Exists(mapDirectory))
+                        Directory.CreateDirectory(mapDirectory);
+
+                    string fileName = text.Replace(' ', '_');
+                    string levelPath = string.Format("{0}/{1}.map", mapDirectory, fileName);
+                    string metaPath = string.Format("{0}/{1}.meta", mapDirectory, fileName);
+
+                    if(File.Exists(levelPath) && File.Exists(metaPath))
+                    {
+                        CurrentWorld = World.FromJson(File.ReadAllText(levelPath));
+                        Builder.BuildWorld(CurrentWorld);
+                    }
+                    else
+                    {
+                        Ui.AlertCreator.CreateAlert(string.Format("No such level found:\n{0}\n{1}", levelPath, metaPath));
+                    }
+
+                    File.WriteAllText(levelPath, CurrentWorld.ToJson());
+                    File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
+                }
+                else
+                {
+                    Ui.AlertCreator.CreateAlert("Level load was cancelled");
+                }
+
+                Ui.ClosePauseMenu();
+            };
+        };
     }
 
     public void TestLevelButton()
@@ -285,7 +363,7 @@ public class WorldEditor : MonoBehaviour
         List<Block> blocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition);
         Block block = blocks.Where(x => x.Info.Id == selectedBlock).FirstOrDefault();
 
-        if(block != null)
+        if (block != null)
         {
             CurrentWorld.Remove(block, MarkerPosition);
         }

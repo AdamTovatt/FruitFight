@@ -20,7 +20,7 @@ public class WorldEditorUi : MonoBehaviour
     private InputSystemUIInputModule uiInput;
 
     public AlertCreator AlertCreator { get; set; }
-    public UiKeyboardInput UiKeyboardInput { get; set; }
+    public UiKeyboardInput OnScreenKeyboard { get; set; }
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class WorldEditorUi : MonoBehaviour
 
         selectables = new List<UiSelectable>();
         AlertCreator = gameObject.GetComponent<AlertCreator>();
-        UiKeyboardInput = gameObject.GetComponent<UiKeyboardInput>();
+        OnScreenKeyboard = gameObject.GetComponent<UiKeyboardInput>();
         loadingScreen = gameObject.GetComponentInChildren<LoadingScreen>();
     }
 
@@ -105,15 +105,8 @@ public class WorldEditorUi : MonoBehaviour
         if (uiInput != null)
             uiInput.enabled = true;
 
-        UiKeyboardInput.OpenKeyboard();
-        UiKeyboardInput.OnGotText += (sender, success, text) =>
-        {
-            if (success) Debug.Log("Text: " + text);
-            else Debug.Log("(keyboard was closed)");
-
-            PauseMenu.gameObject.SetActive(true);
-            PauseMenu.WasShown();
-        };
+        PauseMenu.gameObject.SetActive(true);
+        PauseMenu.WasShown();
     }
 
     public void ClosePauseMenu()

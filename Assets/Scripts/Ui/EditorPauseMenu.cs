@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +14,8 @@ public class EditorPauseMenu : MonoBehaviour
     {
         ResumeButton.onClick.AddListener(() => { WorldEditorUi.Instance.ClosePauseMenu(); });
         TestLevelButton.onClick.AddListener(() => { WorldEditor.Instance.TestLevelButton(); });
-        SaveLevelButton.onClick.AddListener(() => { Debug.Log("save level"); });
-        LoadLevelButton.onClick.AddListener(() => { Debug.Log("load level"); });
+        SaveLevelButton.onClick.AddListener(() => { WorldEditor.Instance.SaveLevel(); });
+        LoadLevelButton.onClick.AddListener(() => { WorldEditor.Instance.LoadLevel(); });
         OptionsButton.onClick.AddListener(() => { Debug.Log("optionsButton"); });
         ExitButton.onClick.AddListener(() => { Debug.Log("exit button"); });
     }

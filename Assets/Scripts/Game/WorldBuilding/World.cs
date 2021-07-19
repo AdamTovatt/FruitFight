@@ -13,6 +13,10 @@ public class World
 
     private WorldBlockLookup blockLookup;
 
+    public WorldMetadata Metadata;
+
+    public static int LastBlockId { get; set; }
+
     public World()
     {
         blockLookup = new WorldBlockLookup();
@@ -41,6 +45,10 @@ public class World
         World world = JsonUtility.FromJson<World>(json);
         world.blockLookup.Initialize(world.blocks);
         world.CalculateNeighbors();
+
+        if (world.blocks.Count > 0)
+            LastBlockId = world.blocks.OrderByDescending(b => b.Id).First().Id;
+
         return world;
     }
 

@@ -64,8 +64,8 @@ public class Block
 
     private int GenerateId()
     {
-        lastId++;
-        return lastId;
+        World.LastBlockId++;
+        return World.LastBlockId;
     }
 
     public void CalculateNeighbors(World world)
