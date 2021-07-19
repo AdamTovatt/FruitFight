@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +19,12 @@ public class Keyboard : MonoBehaviour
     private static KeyboardConfiguration keyboardConfiguration;
 
     private static StringBuilder currentText;
+
+    public delegate void TextSubmittedHandler(object sender, string text);
+    public event TextSubmittedHandler OnTextSubmitted;
+
+    public delegate void ClosedHandler(object sender);
+    public event ClosedHandler OnClosed;
 
     void Start()
     {
@@ -106,11 +110,13 @@ public class Keyboard : MonoBehaviour
                 currentText.Append(text);
                 break;
             case KeyboardButtonType.Enter:
+                Submit();
                 break;
             case KeyboardButtonType.Backspace:
                 currentText.Remove(currentText.Length - 1, 1);
                 break;
             case KeyboardButtonType.Escape:
+                Close();
                 break;
             case KeyboardButtonType.Shift:
                 break;
@@ -123,8 +129,13 @@ public class Keyboard : MonoBehaviour
         TextField.text = currentText.ToString();
     }
 
-    void Update()
+    private void Submit()
     {
+        OnTextSubmitted?.Invoke(this, currentText.ToString());
+    }
 
+    private void Close()
+    {
+        OnClosed?.Invoke(this);
     }
 }

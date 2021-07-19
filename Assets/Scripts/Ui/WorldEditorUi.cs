@@ -106,8 +106,14 @@ public class WorldEditorUi : MonoBehaviour
             uiInput.enabled = true;
 
         UiKeyboardInput.OpenKeyboard();
-        //PauseMenu.gameObject.SetActive(true);
-        //PauseMenu.WasShown();
+        UiKeyboardInput.OnGotText += (sender, success, text) =>
+        {
+            if (success) Debug.Log("Text: " + text);
+            else Debug.Log("(keyboard was closed)");
+
+            PauseMenu.gameObject.SetActive(true);
+            PauseMenu.WasShown();
+        };
     }
 
     public void ClosePauseMenu()
