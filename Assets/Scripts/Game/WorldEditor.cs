@@ -127,10 +127,6 @@ public class WorldEditor : MonoBehaviour
 
                     Debug.Log("Wrote map data to: " + levelPath);
                 }
-                else
-                {
-                    Ui.AlertCreator.CreateAlert("Level save was cancelled");
-                }
 
                 Ui.ClosePauseMenu();
             };
@@ -155,25 +151,18 @@ public class WorldEditor : MonoBehaviour
                     string levelPath = string.Format("{0}/{1}.map", mapDirectory, fileName);
                     string metaPath = string.Format("{0}/{1}.meta", mapDirectory, fileName);
 
-                    if(File.Exists(levelPath) && File.Exists(metaPath))
+                    if (File.Exists(levelPath) && File.Exists(metaPath))
                     {
                         CurrentWorld = World.FromJson(File.ReadAllText(levelPath));
                         Builder.BuildWorld(CurrentWorld);
+
+                        Ui.ClosePauseMenu();
                     }
                     else
                     {
-                        Ui.AlertCreator.CreateAlert(string.Format("No such level found:\n{0}\n{1}", levelPath, metaPath));
+                        Ui.AlertCreator.CreateAlert(string.Format("No such level found:\n{0}", text)).OnOptionWasChosen += (o, i) => { Ui.ClosePauseMenu(); };
                     }
-
-                    File.WriteAllText(levelPath, CurrentWorld.ToJson());
-                    File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
                 }
-                else
-                {
-                    Ui.AlertCreator.CreateAlert("Level load was cancelled");
-                }
-
-                Ui.ClosePauseMenu();
             };
         };
     }
