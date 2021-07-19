@@ -1,3 +1,4 @@
+using Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ public class BlockThumbnailScene : MonoBehaviour
     public delegate void ThumbnailCreationCompletedHandler(object sender, Dictionary<string, Texture2D> createdThumbnails);
     public event ThumbnailCreationCompletedHandler OnThumbnailCreationCompleted;
 
-    private Dictionary<string, GameObject> actorQueue;
+    private Dictionary<string, BlockInfo> actorQueue;
 
     private GameObject currentActor;
     private int cyclesWithoutActors = 0;
@@ -21,7 +22,7 @@ public class BlockThumbnailScene : MonoBehaviour
     private void Awake()
     {
         createdThumbnails = new Dictionary<string, Texture2D>();
-        actorQueue = new Dictionary<string, GameObject>();
+        actorQueue = new Dictionary<string, BlockInfo>();
     }
 
     public void Update()
@@ -46,7 +47,7 @@ public class BlockThumbnailScene : MonoBehaviour
         }
     }
 
-    public void CreateThumbnails(Dictionary<string, GameObject> prefabs)
+    public void CreateThumbnails(Dictionary<string, BlockInfo> prefabs)
     {
         foreach (string key in prefabs.Keys)
         {
@@ -69,7 +70,7 @@ public class BlockThumbnailScene : MonoBehaviour
 
         if (actorQueue[prefabKey] != null)
         {
-            currentActor = Instantiate(actorQueue[prefabKey], transform.position, transform.rotation, transform);
+            currentActor = Instantiate(PrefabLookup.GetPrefab(actorQueue[prefabKey].Prefab), transform.position, transform.rotation, transform);
             currentActor.layer = 7;
 
             Renderer renderer = currentActor.GetComponent<Renderer>();

@@ -32,11 +32,11 @@ public class BlockThumbnailManager : MonoBehaviour
 
         BlockInfoContainer blockInfoContainer = BlockInfoLookup.GetBlockInfoContainer();
 
-        Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+        Dictionary<string, BlockInfo> prefabs = new Dictionary<string, BlockInfo>();
 
         foreach(BlockInfo info in blockInfoContainer.Infos)
         {
-            prefabs.Add(info.Prefab, PrefabLookup.GetPrefab(info.Prefab));
+            prefabs.Add(info.Prefab, info);
         }
 
         scene.OnThumbnailCreationCompleted += (sender, thumbnails) => 
