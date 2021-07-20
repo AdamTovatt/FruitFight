@@ -41,6 +41,7 @@ public class WorldEditor : MonoBehaviour
     private bool isTestingLevel = false;
 
     private float lastMarkerMoveTime;
+    private float lastPageSwitchTime;
 
     private PlayerControls input;
 
@@ -77,6 +78,8 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
         input.LevelEditor.Pause.performed += Pause;
         input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
+        input.LevelEditor.NextPage.performed += NextPage;
+        input.LevelEditor.PreviousPage.performed += PreviousPage;
         input.LevelEditor.Remove.performed += Remove;
     }
 
@@ -237,6 +240,8 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveMarker.canceled -= MoveMarkerCanceled;
         input.LevelEditor.Pause.performed -= Pause;
         input.LevelEditor.MoveBlockSelection.performed -= MoveBlockSelection;
+        input.LevelEditor.NextPage.performed -= NextPage;
+        input.LevelEditor.PreviousPage.performed -= PreviousPage;
         input.LevelEditor.Remove.performed -= Remove;
 
         WorldBuilder.Instance.BuildWorld(CurrentWorld);
@@ -294,6 +299,34 @@ public class WorldEditor : MonoBehaviour
     public void EnableControls()
     {
         controlsDisabled = false;
+    }
+
+    private void NextPage(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (!controlsDisabled || isTestingLevel)
+        {
+            if (Time.time - lastPageSwitchTime > 0.2f)
+            {
+                if (Ui.BlockMenu.IsOpen)
+                    Ui.BlockMenu.NextPage();
+
+                lastPageSwitchTime = Time.time;
+            }
+        }
+    }
+
+    private void PreviousPage(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (!controlsDisabled || isTestingLevel)
+        {
+            if (Time.time - lastPageSwitchTime > 0.2f)
+            {
+                if (Ui.BlockMenu.IsOpen)
+                    Ui.BlockMenu.PreviousPage();
+
+                lastPageSwitchTime = Time.time;
+            }
+        }
     }
 
     private void MoveBlockSelection(UnityEngine.InputSystem.InputAction.CallbackContext context)

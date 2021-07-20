@@ -65,6 +65,20 @@ public class EditorBlockMenu : MonoBehaviour
         IsOpen = true;
     }
 
+    public void NextPage()
+    {
+        selectedIndex += 9;
+        Open();
+        ButtonWasSelected(currentButtons[0]);
+    }
+
+    public void PreviousPage()
+    {
+        selectedIndex -= 9;
+        Open();
+        ButtonWasSelected(currentButtons[0]);
+    }
+
     public void MoveBlockButtonSelection(Vector2Int moveVector)
     {
         if (!IsOpen)

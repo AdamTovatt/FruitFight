@@ -368,6 +368,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NextPage"",
+                    ""type"": ""Button"",
+                    ""id"": ""950f6777-e0bd-4882-9227-8aedeea3049b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PreviousPage"",
+                    ""type"": ""Button"",
+                    ""id"": ""243b6969-07e4-463f-a912-85e673bc3fc5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -656,6 +672,50 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Remove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ad7e55b-2e0e-4171-96d5-16ba9264a9f4"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NextPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5030773-07fc-40e6-93ff-df141b4701ea"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""NextPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ca38b7e-127c-463c-8dcd-a601806e3740"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PreviousPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""179683e4-5ce1-4ba2-8a09-f350059c3ace"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PreviousPage"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -704,6 +764,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_Pause = m_LevelEditor.FindAction("Pause", throwIfNotFound: true);
         m_LevelEditor_MoveBlockSelection = m_LevelEditor.FindAction("MoveBlockSelection", throwIfNotFound: true);
         m_LevelEditor_Remove = m_LevelEditor.FindAction("Remove", throwIfNotFound: true);
+        m_LevelEditor_NextPage = m_LevelEditor.FindAction("NextPage", throwIfNotFound: true);
+        m_LevelEditor_PreviousPage = m_LevelEditor.FindAction("PreviousPage", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -858,6 +920,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_Pause;
     private readonly InputAction m_LevelEditor_MoveBlockSelection;
     private readonly InputAction m_LevelEditor_Remove;
+    private readonly InputAction m_LevelEditor_NextPage;
+    private readonly InputAction m_LevelEditor_PreviousPage;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -869,6 +933,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Pause => m_Wrapper.m_LevelEditor_Pause;
         public InputAction @MoveBlockSelection => m_Wrapper.m_LevelEditor_MoveBlockSelection;
         public InputAction @Remove => m_Wrapper.m_LevelEditor_Remove;
+        public InputAction @NextPage => m_Wrapper.m_LevelEditor_NextPage;
+        public InputAction @PreviousPage => m_Wrapper.m_LevelEditor_PreviousPage;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -899,6 +965,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Remove.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
                 @Remove.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
                 @Remove.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
+                @NextPage.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
+                @NextPage.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
+                @NextPage.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
+                @PreviousPage.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
+                @PreviousPage.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
+                @PreviousPage.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -924,6 +996,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Remove.started += instance.OnRemove;
                 @Remove.performed += instance.OnRemove;
                 @Remove.canceled += instance.OnRemove;
+                @NextPage.started += instance.OnNextPage;
+                @NextPage.performed += instance.OnNextPage;
+                @NextPage.canceled += instance.OnNextPage;
+                @PreviousPage.started += instance.OnPreviousPage;
+                @PreviousPage.performed += instance.OnPreviousPage;
+                @PreviousPage.canceled += instance.OnPreviousPage;
             }
         }
     }
@@ -967,5 +1045,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnMoveBlockSelection(InputAction.CallbackContext context);
         void OnRemove(InputAction.CallbackContext context);
+        void OnNextPage(InputAction.CallbackContext context);
+        void OnPreviousPage(InputAction.CallbackContext context);
     }
 }
