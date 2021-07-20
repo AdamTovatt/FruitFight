@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class BlockThumbnailScene : MonoBehaviour
 {
     public Camera ThumbnailCamera;
+    public Light[] Lights;
 
     public delegate void ThumbnailCreationCompletedHandler(object sender, Dictionary<string, Texture2D> createdThumbnails);
     public event ThumbnailCreationCompletedHandler OnThumbnailCreationCompleted;
@@ -37,6 +38,9 @@ public class BlockThumbnailScene : MonoBehaviour
             }
             else
             {
+                foreach (Light light in Lights)
+                    light.enabled = false;
+
                 OnThumbnailCreationCompleted?.Invoke(this, createdThumbnails);
             }
         }
@@ -49,6 +53,9 @@ public class BlockThumbnailScene : MonoBehaviour
 
     public void CreateThumbnails(Dictionary<string, BlockInfo> prefabs)
     {
+        foreach (Light light in Lights)
+            light.enabled = true;
+
         foreach (string key in prefabs.Keys)
         {
             if (!actorQueue.ContainsKey(key))

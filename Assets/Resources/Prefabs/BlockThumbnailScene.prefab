@@ -233,6 +233,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ThumbnailCamera: {fileID: 8704163734269741282}
+  Lights:
+  - {fileID: 6216756154963144679}
+  - {fileID: 3242648184006017732}
 --- !u!1 &8704163734269741279
 GameObject:
   m_ObjectHideFlags: 0
