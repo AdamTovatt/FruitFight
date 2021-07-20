@@ -65,13 +65,33 @@ public class BlockThumbnailScene : MonoBehaviour
         }
 
         string prefabKey = actorQueue.Keys.First();
+        BlockInfo currentBlockInfo = actorQueue[prefabKey];
 
         List<Renderer> renderers = new List<Renderer>();
 
-        if (actorQueue[prefabKey] != null)
+        if (currentBlockInfo != null)
         {
-            currentActor = Instantiate(PrefabLookup.GetPrefab(actorQueue[prefabKey].Prefab), transform.position, transform.rotation, transform);
+            currentActor = Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.Prefab), transform.position, transform.rotation, transform);
             currentActor.layer = 7;
+
+            if (currentBlockInfo.BlockType == BlockType.BuildingBlock && currentBlockInfo.EdgePrefabs.Count > 0)
+            {
+                System.Random random = new System.Random(0);
+
+                float halfSideLenght = (float)currentBlockInfo.Width / 2f;
+
+                Vector3 edgePosition = new Vector3(transform.position.x + halfSideLenght, transform.position.y - 0.001f, transform.position.z + halfSideLenght);
+                Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), currentActor.transform);
+
+                Vector3 edgePosition1 = new Vector3(transform.position.x + halfSideLenght, transform.position.y - 0.001f, transform.position.z + halfSideLenght);
+                Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.EdgePrefabs, random), edgePosition1, Quaternion.Euler(0, -90, 0), currentActor.transform);
+
+                Vector3 edgePosition2 = new Vector3(transform.position.x + halfSideLenght, transform.position.y - 0.001f, transform.position.z + halfSideLenght);
+                Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.EdgePrefabs, random), edgePosition2, Quaternion.Euler(0, 0, 0), currentActor.transform);
+
+                Vector3 edgePosition3 = new Vector3(transform.position.x + halfSideLenght, transform.position.y - 0.001f, transform.position.z + halfSideLenght);
+                Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.EdgePrefabs, random), edgePosition3, Quaternion.Euler(0, 180, 0), currentActor.transform);
+            }
 
             Renderer renderer = currentActor.GetComponent<Renderer>();
             if (renderer != null)
@@ -84,12 +104,41 @@ public class BlockThumbnailScene : MonoBehaviour
             }
         }
 
-        foreach(Renderer renderer in renderers)
+        float maxX = 0;
+        float maxY = 0;
+        float maxZ = 0;
+
+        float centerX = 0;
+        float centerY = 0;
+        float centerZ = 0;
+
+        foreach (Renderer renderer in renderers)
         {
-            
+            Vector3 size = renderer.bounds.size;
+
+            if (size.x > maxX)
+            {
+                maxX = size.x;
+                centerX = renderer.bounds.center.x;
+            }
+            if (size.y > maxY)
+            {
+                maxY = size.y;
+                centerY = renderer.bounds.center.y;
+            }
+            if (size.z > maxZ)
+            {
+                maxZ = size.z;
+                centerZ = renderer.bounds.center.z;
+            }
         }
 
+        float maxBounds = new Vector3(maxX, maxY, maxZ).magnitude;
+
         actorQueue.Remove(prefabKey);
+
+        ThumbnailCamera.orthographicSize = maxBounds * 0.5f;
+        ThumbnailCamera.transform.LookAt(new Vector3(centerX, centerY, centerZ));
 
         yield return new WaitForEndOfFrame();
 
