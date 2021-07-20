@@ -104,6 +104,36 @@
       "Name": "Pillar Cap",
       "Prefab": "PillarCap",
       "EdgePrefabs": []
+    },
+    {
+      "Id": 10,
+      "BlockType": 0,
+      "Width": 4,
+      "Height": 4,
+      "ShowInEditor": true,
+      "Name": "Large Rock",
+      "Prefab": "Rock1_4",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 11,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Medium Rock",
+      "Prefab": "Rock2_2",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 12,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Medium Rock",
+      "Prefab": "Rock3_2",
+      "EdgePrefabs": []
     }
   ]
 }
