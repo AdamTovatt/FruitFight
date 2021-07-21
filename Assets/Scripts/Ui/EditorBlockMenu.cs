@@ -21,6 +21,7 @@ public class EditorBlockMenu : MonoBehaviour
     private List<BlockInfo> currentBlockInfos = new List<BlockInfo>();
     private BlockButton[][] currentBlockButtonArray;
 
+    private int currentPage;
     private int selectedIndex;
     private BlockButton selectedButton;
 
@@ -53,28 +54,27 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void Close()
     {
-        SetSize(1, 1, CurrentOffset);
+        SetSize(1, 1, currentPage);
         IsOpen = false;
     }
 
     public void Open()
     {
-        int items = (DefaultRows * DefaultColumns);
-        SetSize(DefaultRows, DefaultColumns, (CurrentOffset / items) * items);
-        Debug.Log("Set size with offset: " + (CurrentOffset / items) * items);
+        SetSize(DefaultRows, DefaultColumns, currentPage);
+        Debug.Log("Set size with page: " + currentPage);
         IsOpen = true;
     }
 
     public void NextPage()
     {
-        selectedIndex += 9;
+        currentPage++;
         Open();
         ButtonWasSelected(currentButtons[0]);
     }
 
     public void PreviousPage()
     {
-        selectedIndex -= 9;
+        currentPage--;
         Open();
         ButtonWasSelected(currentButtons[0]);
     }
@@ -137,7 +137,7 @@ public class EditorBlockMenu : MonoBehaviour
         }
     }
 
-    public void SetSize(int columns, int rows, int offset)
+    public void SetSize(int columns, int rows, int page)
     {
         float buttonSideLength = BlockButtonPrefab.GetComponent<RectTransform>().sizeDelta.x;
 
@@ -167,7 +167,7 @@ public class EditorBlockMenu : MonoBehaviour
             currentButtons.Clear();
         }
 
-        List<BlockInfo> limitedList = currentBlockInfos.Skip(offset).ToList();
+        List<BlockInfo> limitedList = currentBlockInfos.Skip(page * (columns * rows)).ToList();
         for (int i = 0; i < limitedList.Count; i++)
         {
             int x = i % columns;

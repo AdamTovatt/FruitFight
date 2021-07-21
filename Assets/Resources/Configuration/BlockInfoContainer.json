@@ -134,6 +134,126 @@
       "Name": "Medium Rock",
       "Prefab": "Rock3_2",
       "EdgePrefabs": []
+    },
+    {
+      "Id": 13,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Medium Tree",
+      "Prefab": "Tree1_2",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 14,
+      "BlockType": 0,
+      "Width": 4,
+      "Height": 4,
+      "ShowInEditor": true,
+      "Name": "Large Tree",
+      "Prefab": "Tree2_4",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 15,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Small Tree",
+      "Prefab": "Tree3_1",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 16,
+      "BlockType": 0,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Small Tree",
+      "Prefab": "Tree4_1",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 17,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Tree Stump",
+      "Prefab": "TreeStump",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 18,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Grass",
+      "Prefab": "Grass1",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 22,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Grass",
+      "Prefab": "Grass2",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 19,
+      "BlockType": 0,
+      "Width": 4,
+      "Height": 4,
+      "ShowInEditor": true,
+      "Name": "Leaves Large",
+      "Prefab": "FallingLeaves1_4",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 20,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Leaves Medium",
+      "Prefab": "FallingLeaves2_2",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 21,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Leaves Medium",
+      "Prefab": "FallingLeaves3_2",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 23,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Plant 1",
+      "Prefab": "Plant1_1",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 24,
+      "BlockType": 0,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Plant 2",
+      "Prefab": "Plant2_1",
+      "EdgePrefabs": []
     }
   ]
 }

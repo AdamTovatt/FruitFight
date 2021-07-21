@@ -78,6 +78,11 @@ public class BlockThumbnailScene : MonoBehaviour
 
         if (currentBlockInfo != null)
         {
+            GameObject prefab = PrefabLookup.GetPrefab(currentBlockInfo.Prefab);
+
+            if (prefab == null)
+                Debug.LogError("No prefab found: " + currentBlockInfo.Prefab);
+
             currentActor = Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.Prefab), transform.position, transform.rotation, transform);
             currentActor.layer = 7;
 

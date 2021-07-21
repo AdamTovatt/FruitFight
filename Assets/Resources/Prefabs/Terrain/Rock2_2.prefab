@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4071748179673836238}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rock2_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,12 +39,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 4071748179673836238}
     m_Modifications:
     - target: {fileID: 1184606070442680, guid: 36f44cac8007be1409809924416c906d, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184606070442680, guid: 36f44cac8007be1409809924416c906d, type: 3}
       propertyPath: m_TagString
       value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 1382784298272678, guid: 36f44cac8007be1409809924416c906d, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694364958870170, guid: 36f44cac8007be1409809924416c906d, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1712350897759260, guid: 36f44cac8007be1409809924416c906d, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1991033376784512, guid: 36f44cac8007be1409809924416c906d, type: 3}
       propertyPath: m_Name
       value: Rock_01_LOD
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991033376784512, guid: 36f44cac8007be1409809924416c906d, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4786892696941228, guid: 36f44cac8007be1409809924416c906d, type: 3}
       propertyPath: m_RootOrder
