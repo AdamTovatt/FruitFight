@@ -67,7 +67,7 @@ public class WorldBuilder : MonoBehaviour
     List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();
     public void PlaceBlock(Block block)
     {
-        if (block.Info.BlockType == BlockType.BuildingBlock || block.Info.BlockType == BlockType.Invisible)
+        if (block.Info.BlockType == BlockType.Block || block.Info.BlockType == BlockType.Invisible || block.Info.BlockType == BlockType.Prop || block.Info.BlockType == BlockType.Detail)
         {
             GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform);
             block.Instance = instantiatedObject;
@@ -86,7 +86,7 @@ public class WorldBuilder : MonoBehaviour
             }
         }
 
-        if (block.Info.BlockType == BlockType.BuildingBlock && block.Info.EdgePrefabs.Count > 0)
+        if (block.Info.BlockType == BlockType.Block && block.Info.EdgePrefabs.Count > 0)
         {
             System.Random random = new System.Random(block.Position.GetSumOfComponents());
 

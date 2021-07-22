@@ -29,7 +29,11 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void ThumbnailsWereCreated()
     {
-        currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos.Where(b => b.ShowInEditor).ToList();
+        currentBlockInfos = BlockInfoLookup.GetBlockInfoContainer().Infos
+            .Where(b => b.ShowInEditor)
+            .OrderBy(x => x.BlockType)
+            .ThenBy(x => x.Name)
+            .ToList();
 
         Close();
 

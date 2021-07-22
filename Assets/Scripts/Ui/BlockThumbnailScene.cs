@@ -86,7 +86,7 @@ public class BlockThumbnailScene : MonoBehaviour
             currentActor = Instantiate(PrefabLookup.GetPrefab(currentBlockInfo.Prefab), transform.position, transform.rotation, transform);
             currentActor.layer = 7;
 
-            if (currentBlockInfo.BlockType == BlockType.BuildingBlock && currentBlockInfo.EdgePrefabs.Count > 0)
+            if (currentBlockInfo.BlockType == BlockType.Block && currentBlockInfo.EdgePrefabs.Count > 0)
             {
                 System.Random random = new System.Random(0);
 
