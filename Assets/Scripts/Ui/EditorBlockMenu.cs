@@ -53,7 +53,6 @@ public class EditorBlockMenu : MonoBehaviour
         selectedButton = button;
         selectedIndex = button.MenuIndex;
         WorldEditor.Instance.SelectedBlock = CurrentBuildingBlock.Id;
-        Debug.Log(button.BlockInfo.Prefab + " was selected");
     }
 
     public void Close()
@@ -65,7 +64,6 @@ public class EditorBlockMenu : MonoBehaviour
     public void Open()
     {
         SetSize(DefaultRows, DefaultColumns, currentPage);
-        Debug.Log("Set size with page: " + currentPage);
         IsOpen = true;
     }
 
@@ -73,14 +71,34 @@ public class EditorBlockMenu : MonoBehaviour
     {
         currentPage++;
         Open();
-        ButtonWasSelected(currentButtons[0]);
+
+        if (currentButtons.Count - 1 >= selectedIndex)
+        {
+            ButtonWasSelected(currentButtons[selectedIndex]);
+        }
+        else
+        {
+            ButtonWasSelected(currentButtons[currentButtons.Count - 1]);
+        }
+
+        selectedButton.Button.Select();
     }
 
     public void PreviousPage()
     {
         currentPage--;
         Open();
-        ButtonWasSelected(currentButtons[0]);
+
+        if (currentButtons.Count - 1 >= selectedIndex)
+        {
+            ButtonWasSelected(currentButtons[selectedIndex]);
+        }
+        else
+        {
+            ButtonWasSelected(currentButtons[currentButtons.Count - 1]);
+        }
+
+        selectedButton.Button.Select();
     }
 
     public void MoveBlockButtonSelection(Vector2Int moveVector)
@@ -90,7 +108,7 @@ public class EditorBlockMenu : MonoBehaviour
 
         bool moved = false;
 
-        if(moveVector.x == 1)
+        if (moveVector.x == 1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnRight;
 
@@ -112,7 +130,7 @@ public class EditorBlockMenu : MonoBehaviour
                 moved = true;
             }
         }
-        else if(moveVector.y == -1)
+        else if (moveVector.y == -1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnDown;
 
@@ -123,7 +141,7 @@ public class EditorBlockMenu : MonoBehaviour
                 moved = true;
             }
         }
-        else if(moveVector.y == 1)
+        else if (moveVector.y == 1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnUp;
 
@@ -135,7 +153,7 @@ public class EditorBlockMenu : MonoBehaviour
             }
         }
 
-        if(!moved)
+        if (!moved)
         {
             selectedButton.GetComponent<Selectable>().Select();
         }
@@ -161,7 +179,7 @@ public class EditorBlockMenu : MonoBehaviour
 
         currentBlockButtonArray = blockButtons;
 
-        if(currentButtons != null)
+        if (currentButtons != null)
         {
             for (int i = 0; i < currentButtons.Count; i++)
             {
@@ -176,8 +194,8 @@ public class EditorBlockMenu : MonoBehaviour
         {
             int x = i % columns;
             int y = Mathf.FloorToInt(i / (float)columns);
-            float positionX =(x * buttonSideLength) + (buttonMarginX * (x + 1));
-            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y +1));
+            float positionX = (x * buttonSideLength) + (buttonMarginX * (x + 1));
+            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y + 1));
             if (!(positionX >= buttonContainer.sizeDelta.x) && !(positionY <= buttonContainer.sizeDelta.y * -1f))
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
