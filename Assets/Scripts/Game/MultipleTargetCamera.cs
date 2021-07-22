@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -30,6 +31,9 @@ public class MultipleTargetCamera : MonoBehaviour
 
     public float FieldOfView { get { return _camera.fieldOfView; } }
 
+    private CameraHint[] cameraHints;
+    private CameraHint[] intersectingCameraHints;
+
     private void Awake()
     {
         Targets = new List<Transform>();
@@ -45,10 +49,17 @@ public class MultipleTargetCamera : MonoBehaviour
         }
     }
 
+    public void SetCameraHints(CameraHint[] hints)
+    {
+        cameraHints = hints;
+    }
+
     private void Update()
     {
         if (Targets.Count == 0)
             return;
+
+        intersectingCameraHints = cameraHints.Where(x => (x.transform.position - transform.position).sqrMagnitude < x.RadiusSquared).ToArray();
 
         Vector3 centerPoint = GetCenterPoint();
 
@@ -93,7 +104,15 @@ public class MultipleTargetCamera : MonoBehaviour
     {
         float weight = (Mathf.Min(averageMovement.sqrMagnitude, 20) / 20f);
         Vector3 aboveCenter = new Vector3(centerPoint.x, (centerPoint + Offset).y, centerPoint.z);
-        Vector3 newPosition = Vector3.MoveTowards(transform.position, aboveCenter - (averageMovement * weight), Time.deltaTime * MoveSpeed * 200);
+
+        Vector3 targetPosition = aboveCenter - (averageMovement * weight);
+        foreach(CameraHint hint in intersectingCameraHints)
+        {
+            float hintWeight = (hint.transform.position - transform.position).sqrMagnitude / hint.RadiusSquared;
+            targetPosition += (hint.transform.position - transform.position) * hintWeight;
+        }
+
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * MoveSpeed * 200);
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref moveVelocity, SmoothTime);
     }
 
