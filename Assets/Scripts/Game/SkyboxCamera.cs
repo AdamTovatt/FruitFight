@@ -10,6 +10,7 @@ public class SkyboxCamera : MonoBehaviour
     private Transform mainCamera;
     private Camera _camera;
     private MultipleTargetCamera multipleTargetCamera;
+    private EditorCamera editorCamera;
 
     private float startTime = 0;
 
@@ -26,8 +27,10 @@ public class SkyboxCamera : MonoBehaviour
             transform.localPosition = mainCamera.position * Scale;
             transform.rotation = mainCamera.rotation;
 
-            if (multipleTargetCamera != null)
+            if (multipleTargetCamera != null && multipleTargetCamera.enabled)
                 _camera.fieldOfView = multipleTargetCamera.FieldOfView;
+            if(editorCamera != null && editorCamera.enabled)
+                _camera.fieldOfView = editorCamera.FieldOfView;
         }
         else
         {
@@ -42,5 +45,6 @@ public class SkyboxCamera : MonoBehaviour
     {
         this.mainCamera = mainCamera;
         multipleTargetCamera = mainCamera.gameObject.GetComponent<MultipleTargetCamera>();
+        editorCamera = mainCamera.gameObject.GetComponent<EditorCamera>();
     }
 }

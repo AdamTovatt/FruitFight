@@ -384,6 +384,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""c6886104-c59a-4d25-95a1-c60b4b8e005b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -716,6 +724,72 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""PreviousPage"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c46e1c09-3eae-48b6-97ae-76b43800d4a1"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""1d7c88dc-4f24-48dd-ad24-2ed15c36c34b"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""17e642f5-099c-4c7f-a396-1097f2929702"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""7da1bde6-b621-4b98-9bba-5cb10f8563b3"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""efd15635-ae64-4a35-9550-c90206753299"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""58c9558c-c4b4-4702-a77c-9ddde43a84c3"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -766,6 +840,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_Remove = m_LevelEditor.FindAction("Remove", throwIfNotFound: true);
         m_LevelEditor_NextPage = m_LevelEditor.FindAction("NextPage", throwIfNotFound: true);
         m_LevelEditor_PreviousPage = m_LevelEditor.FindAction("PreviousPage", throwIfNotFound: true);
+        m_LevelEditor_Rotate = m_LevelEditor.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -922,6 +997,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_Remove;
     private readonly InputAction m_LevelEditor_NextPage;
     private readonly InputAction m_LevelEditor_PreviousPage;
+    private readonly InputAction m_LevelEditor_Rotate;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -935,6 +1011,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Remove => m_Wrapper.m_LevelEditor_Remove;
         public InputAction @NextPage => m_Wrapper.m_LevelEditor_NextPage;
         public InputAction @PreviousPage => m_Wrapper.m_LevelEditor_PreviousPage;
+        public InputAction @Rotate => m_Wrapper.m_LevelEditor_Rotate;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -971,6 +1048,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @PreviousPage.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
                 @PreviousPage.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
                 @PreviousPage.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnPreviousPage;
+                @Rotate.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1002,6 +1082,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @PreviousPage.started += instance.OnPreviousPage;
                 @PreviousPage.performed += instance.OnPreviousPage;
                 @PreviousPage.canceled += instance.OnPreviousPage;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
             }
         }
     }
@@ -1047,5 +1130,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRemove(InputAction.CallbackContext context);
         void OnNextPage(InputAction.CallbackContext context);
         void OnPreviousPage(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }

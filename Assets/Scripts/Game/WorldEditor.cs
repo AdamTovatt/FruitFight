@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public class WorldEditor : MonoBehaviour
     public static WorldEditor Instance { get; private set; }
 
     public GameObject GridLinePrefab;
-    public GameObject MainCameraPrefab;
+    public GameObject CameraPrefab;
     public GameObject MarkerPrefab;
 
     public WorldEditorUi Ui;
@@ -35,7 +36,7 @@ public class WorldEditor : MonoBehaviour
     public Vector3Int MarkerPosition { get { return new Vector3Int(marker.transform.position); } }
 
     private List<GameObject> gridLines;
-    private MultipleTargetCamera mainCamera;
+    private EditorCamera editorCamera;
     private EditorMarker marker;
     private bool controlsDisabled = false;
     private bool isTestingLevel = false;
@@ -66,8 +67,7 @@ public class WorldEditor : MonoBehaviour
         Builder = gameObject.GetComponent<WorldBuilder>();
         WorldBuilder.IsInEditor = true;
 
-        mainCamera = Instantiate(MainCameraPrefab).GetComponent<MultipleTargetCamera>();
-        mainCamera.IsInEditor = true;
+        editorCamera = Instantiate(CameraPrefab).GetComponent<EditorCamera>();
 
         input = new PlayerControls();
         input.LevelEditor.Enable();
@@ -80,7 +80,11 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
         input.LevelEditor.NextPage.performed += NextPage;
         input.LevelEditor.PreviousPage.performed += PreviousPage;
+        input.LevelEditor.NextPage.canceled += CancelNextPage;
+        input.LevelEditor.PreviousPage.canceled += CancelPreviousPage;
         input.LevelEditor.Remove.performed += Remove;
+        input.LevelEditor.Rotate.performed += editorCamera.Rotate;
+        input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
     }
 
     void Start()
@@ -91,16 +95,14 @@ public class WorldEditor : MonoBehaviour
 
         GetComponent<Spawner>().OnObjectSpawned += SpawnerSpawnedObject;
 
-        mainCamera.Offset = mainCamera.Offset * 2;
-        mainCamera.SmoothTime = CameraSmoothTime;
-        mainCamera.Targets.Add(marker.transform);
+        editorCamera.Target = marker.transform;
 
         Ui = FindObjectOfType<WorldEditorUi>();
     }
 
     private void SpawnerSpawnedObject(object sender, GameObject spawnedObject)
     {
-        spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(mainCamera.transform);
+        spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(editorCamera.transform);
         GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
     }
 
@@ -218,7 +220,7 @@ public class WorldEditor : MonoBehaviour
         SceneManager.sceneLoaded += LevelTestWasLoaded;
         isTestingLevel = true;
         controlsDisabled = false;
-        Destroy(mainCamera);
+        Destroy(editorCamera);
     }
 
     private void LevelTestWasLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -242,7 +244,11 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MoveBlockSelection.performed -= MoveBlockSelection;
         input.LevelEditor.NextPage.performed -= NextPage;
         input.LevelEditor.PreviousPage.performed -= PreviousPage;
+        input.LevelEditor.NextPage.canceled -= CancelNextPage;
+        input.LevelEditor.PreviousPage.canceled -= CancelPreviousPage;
         input.LevelEditor.Remove.performed -= Remove;
+        input.LevelEditor.Rotate.performed -= editorCamera.Rotate;
+        input.LevelEditor.Rotate.canceled -= editorCamera.CancelRotate;
 
         WorldBuilder.Instance.BuildWorld(CurrentWorld);
         Instance.CurrentWorld = CurrentWorld;
@@ -266,7 +272,7 @@ public class WorldEditor : MonoBehaviour
         SceneManager.sceneLoaded += LevelEditorWasLoaded;
     }
 
-    private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void Pause(InputAction.CallbackContext context)
     {
         if (!isTestingLevel)
         {
@@ -301,35 +307,58 @@ public class WorldEditor : MonoBehaviour
         controlsDisabled = false;
     }
 
-    private void NextPage(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void CancelNextPage(InputAction.CallbackContext context)
+    {
+        editorCamera.EndZoomIn();
+    }
+
+    private void CancelPreviousPage(InputAction.CallbackContext context)
+    {
+        editorCamera.EndZoomOut();
+    }
+
+    private void NextPage(InputAction.CallbackContext context)
     {
         if (!controlsDisabled || isTestingLevel)
         {
-            if (Time.time - lastPageSwitchTime > 0.2f)
+            if (Ui.BlockMenu.IsOpen)
             {
-                if (Ui.BlockMenu.IsOpen)
+                if (Time.time - lastPageSwitchTime > 0.2f)
+                {
+
                     Ui.BlockMenu.NextPage();
 
-                lastPageSwitchTime = Time.time;
+                    lastPageSwitchTime = Time.time;
+                }
+            }
+            else
+            {
+                editorCamera.StartZoomIn();
             }
         }
     }
 
-    private void PreviousPage(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void PreviousPage(InputAction.CallbackContext context)
     {
         if (!controlsDisabled || isTestingLevel)
         {
-            if (Time.time - lastPageSwitchTime > 0.2f)
+            if (Ui.BlockMenu.IsOpen)
             {
-                if (Ui.BlockMenu.IsOpen)
+                if (Time.time - lastPageSwitchTime > 0.2f)
+                {
                     Ui.BlockMenu.PreviousPage();
 
-                lastPageSwitchTime = Time.time;
+                    lastPageSwitchTime = Time.time;
+                }
+            }
+            else
+            {
+                editorCamera.StartZoomOut();
             }
         }
     }
 
-    private void MoveBlockSelection(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void MoveBlockSelection(InputAction.CallbackContext context)
     {
         if (!controlsDisabled || isTestingLevel)
         {
@@ -351,7 +380,7 @@ public class WorldEditor : MonoBehaviour
         }
     }
 
-    private void LowerMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void LowerMarker(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
             return;
@@ -363,7 +392,7 @@ public class WorldEditor : MonoBehaviour
         lastMarkerMoveTime = Time.time;
     }
 
-    private void RaiseMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void RaiseMarker(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
             return;
@@ -375,7 +404,7 @@ public class WorldEditor : MonoBehaviour
         lastMarkerMoveTime = Time.time;
     }
 
-    private void Remove(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void Remove(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
             return;
@@ -399,7 +428,7 @@ public class WorldEditor : MonoBehaviour
         Builder.BuildWorld(CurrentWorld);
     }
 
-    private void Place(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void Place(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
             return;
@@ -413,12 +442,12 @@ public class WorldEditor : MonoBehaviour
         Builder.BuildWorld(CurrentWorld);
     }
 
-    private void MoveMarkerCanceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void MoveMarkerCanceled(InputAction.CallbackContext context)
     {
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
     }
 
-    private void MoveMarker(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    private void MoveMarker(InputAction.CallbackContext context)
     {
         if (marker == null)
         {
@@ -435,6 +464,33 @@ public class WorldEditor : MonoBehaviour
 
             int x = Mathf.Abs(input.x) > MarkerMoveSensitivity ? (input.x > 0 ? 1 : -1) : 0;
             int y = Mathf.Abs(input.y) > MarkerMoveSensitivity ? (input.y > 0 ? 1 : -1) : 0;
+            Vector3 right = editorCamera.transform.right;
+
+            Debug.Log(right);
+
+            if (Mathf.Abs(right.z) > Mathf.Abs(right.x))
+            {
+                int tempY = y;
+                y = x;
+                x = tempY;
+
+                if (right.z < 0) // (0, 0, -1)
+                {
+                    y = y * -1;
+                }
+                else // (0, 0, 1)
+                {
+                    x = x * -1;
+                }
+            }
+            else
+            {
+                if (right.x < 0) // (-1, 0, 0)
+                {
+                    x = x * -1;
+                    y = y * -1;
+                }
+            }
 
             if (x != 0 || y != 0)
             {
