@@ -59,7 +59,7 @@ public class MultipleTargetCamera : MonoBehaviour
         if (Targets.Count == 0)
             return;
 
-        intersectingCameraHints = cameraHints.Where(x => (x.transform.position - transform.position).sqrMagnitude < x.RadiusSquared).ToArray();
+        intersectingCameraHints = cameraHints.Where(x => (x.transform.position - lastCenterpoint).sqrMagnitude < x.RadiusSquared).ToArray();
 
         Vector3 centerPoint = GetCenterPoint();
 
@@ -108,7 +108,7 @@ public class MultipleTargetCamera : MonoBehaviour
         Vector3 targetPosition = aboveCenter - (averageMovement * weight);
         foreach(CameraHint hint in intersectingCameraHints)
         {
-            float hintWeight = (hint.transform.position - transform.position).sqrMagnitude / hint.RadiusSquared;
+            float hintWeight = (hint.transform.position - lastCenterpoint).sqrMagnitude / hint.RadiusSquared;
             targetPosition += (hint.transform.position - transform.position) * hintWeight;
         }
 
