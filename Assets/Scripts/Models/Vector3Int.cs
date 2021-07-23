@@ -56,4 +56,9 @@ public class Vector3Int
     {
         return new Vector3Int(vectorA.X - vectorB.X, vectorA.Y - vectorB.Y, vectorA.Z - vectorB.Z);
     }
+
+    public override string ToString()
+    {
+        return string.Format("({0}, {1}, {2})", X, Y, Z);
+    }
 }

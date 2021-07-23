@@ -113,7 +113,8 @@
       "ShowInEditor": true,
       "Name": "Rock Large",
       "Prefab": "Rock1",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 11,
@@ -123,7 +124,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock2",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 12,
@@ -133,7 +135,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock3",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 13,
@@ -143,7 +146,7 @@
       "ShowInEditor": true,
       "Name": "Tree Medium",
       "Prefab": "Tree1_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 14,
@@ -153,7 +156,7 @@
       "ShowInEditor": true,
       "Name": "Tree Large",
       "Prefab": "Tree2_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 15,
@@ -163,7 +166,7 @@
       "ShowInEditor": true,
       "Name": "Tree Small",
       "Prefab": "Tree3_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 16,
@@ -173,7 +176,7 @@
       "ShowInEditor": true,
       "Name": "Tree Small",
       "Prefab": "Tree4_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 17,
@@ -183,7 +186,7 @@
       "ShowInEditor": true,
       "Name": "Tree Stump",
       "Prefab": "TreeStump",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 18,
@@ -193,7 +196,7 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass1",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 22,
@@ -203,7 +206,7 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass2",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 19,
@@ -213,7 +216,7 @@
       "ShowInEditor": true,
       "Name": "Leaves Large",
       "Prefab": "FallingLeaves1_4",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 20,
@@ -223,7 +226,7 @@
       "ShowInEditor": true,
       "Name": "Leaves Medium",
       "Prefab": "FallingLeaves2_2",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 21,
@@ -233,7 +236,7 @@
       "ShowInEditor": true,
       "Name": "Leaves Medium",
       "Prefab": "FallingLeaves3_2",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 23,
@@ -243,7 +246,7 @@
       "ShowInEditor": true,
       "Name": "Plant 1",
       "Prefab": "Plant1_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 24,
@@ -253,7 +256,7 @@
       "ShowInEditor": true,
       "Name": "Plant 2 A",
       "Prefab": "Plant2_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 25,
@@ -263,7 +266,7 @@
       "ShowInEditor": true,
       "Name": "Plant 3",
       "Prefab": "Plant3_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 26,
@@ -273,7 +276,7 @@
       "ShowInEditor": true,
       "Name": "Plant 4",
       "Prefab": "Plant4_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 27,
@@ -283,7 +286,7 @@
       "ShowInEditor": true,
       "Name": "Bush 1 A",
       "Prefab": "Bush1_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 28,
@@ -293,7 +296,7 @@
       "ShowInEditor": true,
       "Name": "Bush 1 B",
       "Prefab": "Bush1_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 29,
@@ -303,7 +306,7 @@
       "ShowInEditor": true,
       "Name": "Bush 1 C",
       "Prefab": "Bush1_c",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 30,
@@ -313,7 +316,7 @@
       "ShowInEditor": true,
       "Name": "Bush 1 D",
       "Prefab": "Bush1_d",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 31,
@@ -323,7 +326,7 @@
       "ShowInEditor": true,
       "Name": "Bush 1 E",
       "Prefab": "Bush1_e",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 32,
@@ -333,7 +336,7 @@
       "ShowInEditor": true,
       "Name": "Bush 2",
       "Prefab": "Bush2_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 33,
@@ -343,7 +346,7 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass3",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 34,
@@ -353,7 +356,7 @@
       "ShowInEditor": true,
       "Name": "Plant 2 B",
       "Prefab": "Plant2_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 35,
@@ -363,7 +366,7 @@
       "ShowInEditor": true,
       "Name": "Flower 1 A",
       "Prefab": "Flower1_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 36,
@@ -373,7 +376,7 @@
       "ShowInEditor": true,
       "Name": "Flower 1 B",
       "Prefab": "Flower1_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 37,
@@ -383,7 +386,7 @@
       "ShowInEditor": true,
       "Name": "Flower 2 A",
       "Prefab": "Flower2_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 38,
@@ -393,7 +396,7 @@
       "ShowInEditor": true,
       "Name": "Flower 2 B",
       "Prefab": "Flower2_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 39,
@@ -403,7 +406,7 @@
       "ShowInEditor": true,
       "Name": "Flower 2 C",
       "Prefab": "Flower2_c",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 40,
@@ -413,7 +416,7 @@
       "ShowInEditor": true,
       "Name": "Flower 2 D",
       "Prefab": "Flower2_d",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 41,
@@ -423,7 +426,7 @@
       "ShowInEditor": true,
       "Name": "Flower 3 A",
       "Prefab": "Flower3_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 42,
@@ -433,7 +436,7 @@
       "ShowInEditor": true,
       "Name": "Flower 3 b",
       "Prefab": "Flower3_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 43,
@@ -443,7 +446,7 @@
       "ShowInEditor": true,
       "Name": "Flower 3 c",
       "Prefab": "Flower3_c",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 44,
@@ -453,7 +456,7 @@
       "ShowInEditor": true,
       "Name": "Flower 3 e",
       "Prefab": "Flower3_e",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 45,
@@ -463,7 +466,7 @@
       "ShowInEditor": true,
       "Name": "Flower 3 f",
       "Prefab": "Flower3_f",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 46,
@@ -473,7 +476,7 @@
       "ShowInEditor": true,
       "Name": "Flower 4 A",
       "Prefab": "Flower4_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 47,
@@ -483,7 +486,7 @@
       "ShowInEditor": true,
       "Name": "Flower 4 b",
       "Prefab": "Flower4_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 48,
@@ -493,7 +496,7 @@
       "ShowInEditor": true,
       "Name": "Flower 4 c",
       "Prefab": "Flower4_c",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 49,
@@ -503,7 +506,7 @@
       "ShowInEditor": true,
       "Name": "Flower 4 e",
       "Prefab": "Flower4_e",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 50,
@@ -513,7 +516,7 @@
       "ShowInEditor": true,
       "Name": "Flower 5 A",
       "Prefab": "Flower5_a",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 51,
@@ -523,7 +526,7 @@
       "ShowInEditor": true,
       "Name": "Flower 5 b",
       "Prefab": "Flower5_b",
-      "EdgePrefabs": []
+      "RotatableX": true
     },
     {
       "Id": 52,
@@ -533,7 +536,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock4",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 53,
@@ -543,7 +547,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock5",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 54,
@@ -553,7 +558,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock6",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 55,
@@ -563,7 +569,8 @@
       "ShowInEditor": true,
       "Name": "Rock Medium",
       "Prefab": "Rock7",
-      "EdgePrefabs": []
+      "RotatableX": true,
+      "RotatableY": true
     },
     {
       "Id": 56,

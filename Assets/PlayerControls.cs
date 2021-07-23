@@ -392,6 +392,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleObjectRotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""652ce3ee-ec59-4988-b5e1-46fa4a747886"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -790,6 +798,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a58b3b35-7c6d-4c18-a56f-14078143734e"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleObjectRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""40890860-42da-488a-83da-e91d41fd278b"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ToggleObjectRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -841,6 +871,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_NextPage = m_LevelEditor.FindAction("NextPage", throwIfNotFound: true);
         m_LevelEditor_PreviousPage = m_LevelEditor.FindAction("PreviousPage", throwIfNotFound: true);
         m_LevelEditor_Rotate = m_LevelEditor.FindAction("Rotate", throwIfNotFound: true);
+        m_LevelEditor_ToggleObjectRotation = m_LevelEditor.FindAction("ToggleObjectRotation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -998,6 +1029,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_NextPage;
     private readonly InputAction m_LevelEditor_PreviousPage;
     private readonly InputAction m_LevelEditor_Rotate;
+    private readonly InputAction m_LevelEditor_ToggleObjectRotation;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1012,6 +1044,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @NextPage => m_Wrapper.m_LevelEditor_NextPage;
         public InputAction @PreviousPage => m_Wrapper.m_LevelEditor_PreviousPage;
         public InputAction @Rotate => m_Wrapper.m_LevelEditor_Rotate;
+        public InputAction @ToggleObjectRotation => m_Wrapper.m_LevelEditor_ToggleObjectRotation;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1051,6 +1084,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRotate;
+                @ToggleObjectRotation.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
+                @ToggleObjectRotation.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
+                @ToggleObjectRotation.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1085,6 +1121,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @ToggleObjectRotation.started += instance.OnToggleObjectRotation;
+                @ToggleObjectRotation.performed += instance.OnToggleObjectRotation;
+                @ToggleObjectRotation.canceled += instance.OnToggleObjectRotation;
             }
         }
     }
@@ -1131,5 +1170,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnNextPage(InputAction.CallbackContext context);
         void OnPreviousPage(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnToggleObjectRotation(InputAction.CallbackContext context);
     }
 }

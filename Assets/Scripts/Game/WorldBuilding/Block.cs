@@ -11,11 +11,14 @@ public class Block
     public int X;
     public int Y;
     public int Z;
+    public Quaternion Rotation;
+    public Vector3 RotationOffset;
     public int Id;
 
     private static int lastId = 1;
 
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
+    public Vector3 CenterPoint { get { return Position + new Vector3(Info.Width / 2f, Info.Height / 2f, Info.Width / 2f); } }
 
     public BlockInfo Info
     { 

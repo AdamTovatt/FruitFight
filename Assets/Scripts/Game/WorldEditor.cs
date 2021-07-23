@@ -23,6 +23,7 @@ public class WorldEditor : MonoBehaviour
     public float CameraSmoothTime = 1f;
     public float MarkerMoveCooldown = 0.5f;
     public float MarkerMoveSensitivity = 0.5f;
+    public float ObjectRotationSpeed = 180f;
 
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
@@ -30,7 +31,7 @@ public class WorldEditor : MonoBehaviour
     public BlockThumbnailManager ThumbnailManager { get; private set; }
 
     public int GridSize { get; set; }
-    public int SelectedBlock { get { return selectedBlock; } set { SetSelectedBlock(value); } }
+    public int SelectedBlock { get { return selectedBlock; } set { SetSelectedBlock(value); } } //this is the selected block in the blockselection ui menu. Is the block info id
     private int selectedBlock;
 
     public Vector3Int MarkerPosition { get { return new Vector3Int(marker.transform.position); } }
@@ -40,6 +41,9 @@ public class WorldEditor : MonoBehaviour
     private EditorMarker marker;
     private bool controlsDisabled = false;
     private bool isTestingLevel = false;
+    private bool isRotatingObject = false;
+    private Vector2 currentLeftStickInput;
+    private Block selectedWorldObject; //this is the selected object in the world, the object which the marker is above
 
     private float lastMarkerMoveTime;
     private float lastPageSwitchTime;
@@ -73,6 +77,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Enable();
         input.LevelEditor.Place.performed += Place;
         input.LevelEditor.MoveMarker.performed += MoveMarker;
+        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
         input.LevelEditor.RaiseMarker.performed += RaiseMarker;
         input.LevelEditor.LowerMarker.performed += LowerMarker;
         input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
@@ -85,6 +90,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Remove.performed += Remove;
         input.LevelEditor.Rotate.performed += editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
+        input.LevelEditor.ToggleObjectRotation.performed += ToggleRotateObject;
     }
 
     void Start()
@@ -98,6 +104,16 @@ public class WorldEditor : MonoBehaviour
         editorCamera.Target = marker.transform;
 
         Ui = FindObjectOfType<WorldEditorUi>();
+    }
+
+    private void Update()
+    {
+        if (isRotatingObject)
+        {
+            float x = selectedWorldObject.Info.RotatableX ? currentLeftStickInput.x : 0;
+            float y = selectedWorldObject.Info.RotatableY ? currentLeftStickInput.y : 0;
+            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, x, 0), Time.deltaTime * ObjectRotationSpeed);
+        }
     }
 
     private void SpawnerSpawnedObject(object sender, GameObject spawnedObject)
@@ -249,6 +265,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Remove.performed -= Remove;
         input.LevelEditor.Rotate.performed -= editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled -= editorCamera.CancelRotate;
+        input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
 
         WorldBuilder.Instance.BuildWorld(CurrentWorld);
         Instance.CurrentWorld = CurrentWorld;
@@ -358,11 +375,32 @@ public class WorldEditor : MonoBehaviour
         }
     }
 
+    private void ToggleRotateObject(InputAction.CallbackContext context)
+    {
+        if (!isRotatingObject)
+        {
+            if (selectedWorldObject != null)
+            {
+                if (selectedWorldObject.Info.RotatableX || selectedWorldObject.Info.RotatableY)
+                {
+                    isRotatingObject = true;
+                }
+            }
+        }
+        else
+        {
+            selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
+            selectedWorldObject.RotationOffset = selectedWorldObject.Instance.transform.position - selectedWorldObject.Position;
+            isRotatingObject = false;
+        }
+    }
+
     private void MoveBlockSelection(InputAction.CallbackContext context)
     {
         if (!controlsDisabled || isTestingLevel)
         {
             Vector2 rawMoveValue = context.ReadValue<Vector2>();
+            currentLeftStickInput = rawMoveValue;
 
             int binaryX = Mathf.Abs(rawMoveValue.x) > 0 ? (Mathf.Abs(rawMoveValue.x) < 1 ? 0 : (int)rawMoveValue.x) : 0;
             int binaryY = Mathf.Abs(rawMoveValue.y) > 0 ? (Mathf.Abs(rawMoveValue.y) < 1 ? 0 : (int)rawMoveValue.y) : 0;
@@ -385,6 +423,9 @@ public class WorldEditor : MonoBehaviour
         if (controlsDisabled || isTestingLevel)
             return;
 
+        if (isRotatingObject)
+            return;
+
         CloseBlockSelection();
 
         marker.transform.position = new Vector3(marker.transform.position.x, marker.transform.position.y - GridSize, marker.transform.position.z);
@@ -395,6 +436,9 @@ public class WorldEditor : MonoBehaviour
     private void RaiseMarker(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
+            return;
+
+        if (isRotatingObject)
             return;
 
         CloseBlockSelection();
@@ -438,6 +482,7 @@ public class WorldEditor : MonoBehaviour
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
+        selectedWorldObject = block;
 
         Builder.BuildWorld(CurrentWorld);
     }
@@ -445,6 +490,7 @@ public class WorldEditor : MonoBehaviour
     private void MoveMarkerCanceled(InputAction.CallbackContext context)
     {
         lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
+        currentLeftStickInput = Vector2.zero;
     }
 
     private void MoveMarker(InputAction.CallbackContext context)
@@ -458,10 +504,14 @@ public class WorldEditor : MonoBehaviour
         if (controlsDisabled || isTestingLevel)
             return;
 
+        Vector2 input = context.ReadValue<Vector2>();
+        currentLeftStickInput = input;
+
+        if (isRotatingObject)
+            return;
+
         if (Time.time - lastMarkerMoveTime >= MarkerMoveCooldown)
         {
-            Vector2 input = context.ReadValue<Vector2>();
-
             int x = Mathf.Abs(input.x) > MarkerMoveSensitivity ? (input.x > 0 ? 1 : -1) : 0;
             int y = Mathf.Abs(input.y) > MarkerMoveSensitivity ? (input.y > 0 ? 1 : -1) : 0;
             Vector3 right = editorCamera.transform.right;
@@ -497,6 +547,7 @@ public class WorldEditor : MonoBehaviour
                 marker.transform.position = new Vector3(marker.transform.position.x + (x * GridSize), marker.transform.position.y, marker.transform.position.z + (y * GridSize));
                 CreateGridFromMarker();
                 lastMarkerMoveTime = Time.time;
+                selectedWorldObject = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).FirstOrDefault();
             }
 
             CloseBlockSelection();

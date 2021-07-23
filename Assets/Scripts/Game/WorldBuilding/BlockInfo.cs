@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +13,8 @@ public class BlockInfo
     public string Name;
     public string Prefab;
     public List<string> EdgePrefabs;
+    public bool RotatableX;
+    public bool RotatableY;
 
     public BlockInfo()
     {

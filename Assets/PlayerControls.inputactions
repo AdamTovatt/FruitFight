@@ -379,6 +379,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ToggleObjectRotation",
+                    "type": "Button",
+                    "id": "652ce3ee-ec59-4988-b5e1-46fa4a747886",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -777,6 +785,28 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a58b3b35-7c6d-4c18-a56f-14078143734e",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ToggleObjectRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40890860-42da-488a-83da-e91d41fd278b",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ToggleObjectRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

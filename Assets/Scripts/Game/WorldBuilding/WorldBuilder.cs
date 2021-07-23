@@ -69,10 +69,14 @@ public class WorldBuilder : MonoBehaviour
     {
         if (block.Info.BlockType == BlockType.Block || block.Info.BlockType == BlockType.Invisible || block.Info.BlockType == BlockType.Prop || block.Info.BlockType == BlockType.Detail)
         {
-            GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position, Quaternion.identity, transform);
+            GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position + block.RotationOffset, Quaternion.identity, transform);
             block.Instance = instantiatedObject;
             block.SeeThroughBlock = instantiatedObject.GetComponent<SeeThroughBlock>();
             previousWorldObjects.Add(instantiatedObject);
+            if(block.Info.RotatableX || block.Info.RotatableY)
+            {
+                block.Instance.transform.rotation = block.Rotation;
+            }
         }
         else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor)
         {
