@@ -110,9 +110,11 @@ public class WorldEditor : MonoBehaviour
     {
         if (isRotatingObject)
         {
+            Debug.Log(currentLeftStickInput);
             float x = selectedWorldObject.Info.RotatableX ? currentLeftStickInput.x : 0;
             float y = selectedWorldObject.Info.RotatableY ? currentLeftStickInput.y : 0;
-            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, x, 0), Time.deltaTime * ObjectRotationSpeed);
+            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
+            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(y));
         }
     }
 
@@ -389,10 +391,15 @@ public class WorldEditor : MonoBehaviour
         }
         else
         {
-            selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
-            selectedWorldObject.RotationOffset = selectedWorldObject.Instance.transform.position - selectedWorldObject.Position;
-            isRotatingObject = false;
+            ExitRotationMode();
         }
+    }
+
+    private void ExitRotationMode()
+    {
+        selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
+        selectedWorldObject.RotationOffset = selectedWorldObject.Instance.transform.position - selectedWorldObject.Position;
+        isRotatingObject = false;
     }
 
     private void MoveBlockSelection(InputAction.CallbackContext context)
@@ -476,6 +483,12 @@ public class WorldEditor : MonoBehaviour
     {
         if (controlsDisabled || isTestingLevel)
             return;
+
+        if(isRotatingObject)
+        {
+            ExitRotationMode();
+            return;
+        }
 
         CloseBlockSelection();
 
