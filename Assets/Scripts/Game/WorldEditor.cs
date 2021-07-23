@@ -492,6 +492,9 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
+        if (CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).Count() > 0)
+            return;
+
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
