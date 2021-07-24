@@ -9,6 +9,7 @@ public class PlayerMovement : MovingCharacter
     private Vector2 move;
     public Rigidbody RigidBody;
     private Transform Camera;
+    private MultipleTargetCamera multipleTargetCamera;
     private PlayerControls playerControls;
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
 
@@ -22,6 +23,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchWidth = 0.5f;
     public float PunchSphereRadius = 0.4f;
     public float PunchStrength = 5f;
+    public float RotateCameraSpeed = 5f;
 
     public bool ControlsEnabled { get; set; }
 
@@ -44,6 +46,7 @@ public class PlayerMovement : MovingCharacter
     private bool? _isGrounded = null;
     private float lastJumpTime;
     private Collision lastCollision;
+    private float rotateCamera;
 
     private void Awake()
     {
@@ -55,6 +58,8 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.Attack.id, PlayerInputAction.Attack);
         inputActions.Add(playerControls.Gameplay.Jump.id, PlayerInputAction.Jump);
         inputActions.Add(playerControls.Gameplay.Move.id, PlayerInputAction.Move);
+        inputActions.Add(playerControls.Gameplay.RotateCameraLeft.id, PlayerInputAction.RotateCameraLeft);
+        inputActions.Add(playerControls.Gameplay.RotateCameraRight.id, PlayerInputAction.RotateCameraRight);
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
@@ -87,6 +92,18 @@ public class PlayerMovement : MovingCharacter
                     else
                         Move(Vector2.zero);
                     break;
+                case PlayerInputAction.RotateCameraLeft:
+                    if (context.performed)
+                        rotateCamera = RotateCameraSpeed;
+                    else
+                        rotateCamera = 0;
+                    break;
+                case PlayerInputAction.RotateCameraRight:
+                    if (context.performed)
+                        rotateCamera = -RotateCameraSpeed;
+                    else
+                        rotateCamera = 0;
+                    break;
                 default:
                     throw new System.Exception("Unknown action: " + context.action.name);
             }
@@ -98,7 +115,13 @@ public class PlayerMovement : MovingCharacter
     private void Update()
     {
         if (Camera == null)
+        {
             Camera = GameManager.Instance.MultipleTargetCamera.transform;
+            multipleTargetCamera = Camera.gameObject.GetComponent<MultipleTargetCamera>();
+        }
+
+        if (multipleTargetCamera != null)
+            multipleTargetCamera.RotateCamera(rotateCamera);
 
         Vector3 cameraForward = Camera.forward;
         Vector3 cameraRight = Camera.right;
@@ -241,5 +264,5 @@ public class PlayerMovement : MovingCharacter
 
 public enum PlayerInputAction
 {
-    Attack, Jump, Move
+    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft
 }

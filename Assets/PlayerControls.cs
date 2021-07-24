@@ -41,6 +41,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RotateCameraRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""963e6dea-cf91-439d-9bc5-70f1046419bf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RotateCameraLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""0505abbe-c107-418b-beef-386bec8877cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -162,6 +178,50 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd24fc55-580b-4dd8-ae3d-f1c984e94dea"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RotateCameraRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e2700dc5-1327-496c-9938-42f5d1fa30d5"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RotateCameraRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1c4f773-8d43-4aae-905b-d5767b89c6e3"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RotateCameraLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""930e5a18-fc68-472d-a520-1c090f460efe"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RotateCameraLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -854,6 +914,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
+        m_Gameplay_RotateCameraRight = m_Gameplay.FindAction("RotateCameraRight", throwIfNotFound: true);
+        m_Gameplay_RotateCameraLeft = m_Gameplay.FindAction("RotateCameraLeft", throwIfNotFound: true);
         // Ui
         m_Ui = asset.FindActionMap("Ui", throwIfNotFound: true);
         m_Ui_Select = m_Ui.FindAction("Select", throwIfNotFound: true);
@@ -924,6 +986,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Attack;
+    private readonly InputAction m_Gameplay_RotateCameraRight;
+    private readonly InputAction m_Gameplay_RotateCameraLeft;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -931,6 +995,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
+        public InputAction @RotateCameraRight => m_Wrapper.m_Gameplay_RotateCameraRight;
+        public InputAction @RotateCameraLeft => m_Wrapper.m_Gameplay_RotateCameraLeft;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -949,6 +1015,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Attack.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
+                @RotateCameraRight.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraRight;
+                @RotateCameraRight.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraRight;
+                @RotateCameraRight.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraRight;
+                @RotateCameraLeft.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraLeft;
+                @RotateCameraLeft.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraLeft;
+                @RotateCameraLeft.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraLeft;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -962,6 +1034,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @RotateCameraRight.started += instance.OnRotateCameraRight;
+                @RotateCameraRight.performed += instance.OnRotateCameraRight;
+                @RotateCameraRight.canceled += instance.OnRotateCameraRight;
+                @RotateCameraLeft.started += instance.OnRotateCameraLeft;
+                @RotateCameraLeft.performed += instance.OnRotateCameraLeft;
+                @RotateCameraLeft.canceled += instance.OnRotateCameraLeft;
             }
         }
     }
@@ -1151,6 +1229,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnRotateCameraRight(InputAction.CallbackContext context);
+        void OnRotateCameraLeft(InputAction.CallbackContext context);
     }
     public interface IUiActions
     {

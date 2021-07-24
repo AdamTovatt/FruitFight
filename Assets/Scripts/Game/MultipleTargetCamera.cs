@@ -28,6 +28,7 @@ public class MultipleTargetCamera : MonoBehaviour
     private Vector3 lastCenterpoint = Vector3.zero;
     private Vector3 averageMovement = Vector3.zero;
     private int movementSamples = 100;
+    private float cameraRotation = 0;
 
     public float FieldOfView { get { return _camera.fieldOfView; } }
 
@@ -100,17 +101,32 @@ public class MultipleTargetCamera : MonoBehaviour
         oldCenterPoint = centerPoint;
     }
 
+    public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles)
+    {
+        Vector3 dir = point - pivot; // get point direction relative to pivot
+        dir = Quaternion.Euler(angles) * dir; // rotate it
+        point = dir + pivot; // calculate rotated point
+        return point; // return it
+    }
+
+    public void RotateCamera(float degrees)
+    {
+        cameraRotation = degrees;
+    }
+
     private void Move(Vector3 centerPoint)
     {
         float weight = (Mathf.Min(averageMovement.sqrMagnitude, 20) / 20f);
         Vector3 aboveCenter = new Vector3(centerPoint.x, (centerPoint + Offset).y, centerPoint.z);
 
         Vector3 targetPosition = aboveCenter - (averageMovement * weight);
-        foreach(CameraHint hint in intersectingCameraHints)
+        foreach (CameraHint hint in intersectingCameraHints)
         {
             float hintWeight = (hint.transform.position - lastCenterpoint).sqrMagnitude / hint.RadiusSquared;
             targetPosition += (hint.transform.position - transform.position) * hintWeight;
         }
+
+        targetPosition += transform.right * cameraRotation; //RotatePointAroundPivot(targetPosition, centerPoint, new Vector3(0, cameraRotation * Time.deltaTime, 0));
 
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * MoveSpeed * 200);
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref moveVelocity, SmoothTime);
