@@ -67,4 +67,9 @@ public class Health : MonoBehaviour
         GameManager.Instance.PlayerCharacters.Remove(playerMovement);
         GameManager.Instance.MultipleTargetCamera.Targets.Remove(playerMovement.transform);
     }
+
+    public void TakeDamage(float amount)
+    {
+        CurrentHealth -= amount;
+    }
 }

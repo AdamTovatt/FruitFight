@@ -945,7 +945,7 @@ MonoBehaviour:
   RightArm: 1
   ArmDistanceToBody: 0.3
   ArmHeight: 0.34
-  ArmSwingSpeed: 1.2
+  ArmSwingSpeed: 12
   ArmForward: 0.05
 --- !u!1 &4768720915529816196
 GameObject:
@@ -1035,6 +1035,8 @@ MonoBehaviour:
   PersonalBoundaryDistance: 0.62
   DiscoveryRadius: 3
   DistanceToGround: 0.3
+  AttackInitialWaitTime: 0.4
+  AttackCooldown: 1
   JellyBeanModel: {fileID: 728964469066429983}
   CoatingTextures:
   - {fileID: 2800000, guid: 7f8f719ff37741d41a4aa5267db39563, type: 3}
@@ -1393,7 +1395,7 @@ MonoBehaviour:
   RightArm: 0
   ArmDistanceToBody: 0.3
   ArmHeight: 0.34
-  ArmSwingSpeed: 1.2
+  ArmSwingSpeed: 12
   ArmForward: 0.05
 --- !u!1 &4768720916535444694
 GameObject:

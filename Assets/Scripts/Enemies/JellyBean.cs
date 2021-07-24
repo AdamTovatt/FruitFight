@@ -16,6 +16,9 @@ public class JellyBean : MovingCharacter
     public float PersonalBoundaryDistance = 0.1f;
     public float DiscoveryRadius = 4f;
     public float DistanceToGround = 0.1f;
+    public float AttackInitialWaitTime = 0.4f;
+    public float AttackCooldown = 1f;
+    public float PunchDamage = 10f;
 
     public Transform JellyBeanModel;
     public List<Texture2D> CoatingTextures;
@@ -69,6 +72,25 @@ public class JellyBean : MovingCharacter
 
     public override bool StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
 
+    private Health targetHealth
+    { 
+        get 
+        { 
+            if (target == _targetHealthTarget && hasGottenTargetHealth) 
+                return _targetHealth;
+
+            _targetHealthTarget = target;
+            _targetHealth = _targetHealthTarget.gameObject.GetComponent<Health>();
+            hasGottenTargetHealth = true;
+
+            return _targetHealth;
+        }
+    }
+
+    private Health _targetHealth; //the health component of the target
+    private Transform _targetHealthTarget; //the last target that the health component was fetched for
+    private bool hasGottenTargetHealth; //if the target health has been fetched
+
     private Vector3 targetPosition;
     private Transform target;
     private Vector3 targetLastSeenPosition;
@@ -77,6 +99,12 @@ public class JellyBean : MovingCharacter
 
     private bool knockBack = false;
     private float knockBackTime = 0;
+
+    private bool inRangeForAttack;
+    private bool hasAttacked;
+    private float lastAttackTime;
+
+    private float personalBoundaryDistanceSquared;
 
     void Start()
     {
@@ -93,6 +121,8 @@ public class JellyBean : MovingCharacter
         OnAttack += (sender, attackPosition, attackSide) => { };
 
         _rigidbody.isKinematic = true;
+
+        personalBoundaryDistanceSquared = PersonalBoundaryDistance * PersonalBoundaryDistance;
     }
 
     void Update()
@@ -120,6 +150,10 @@ public class JellyBean : MovingCharacter
             if (closestPlayer != null)
             {
                 target = closestPlayer.transform;
+
+                if (targetHealth != null)
+                    targetHealth.OnDied += TargetDied;
+
                 State = JellyBeanState.Chasing;
             }
         }
@@ -133,10 +167,11 @@ public class JellyBean : MovingCharacter
             else //target was lost
             {
                 targetLastSeenPosition = target.position;
-                target = null;
-                targetPosition = transform.position;
-                searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
-                State = JellyBeanState.Confused;
+
+                if (targetHealth != null)
+                    targetHealth.OnDied -= TargetDied;
+
+                TargetLost();
             }
         }
 
@@ -180,9 +215,28 @@ public class JellyBean : MovingCharacter
                     }
                     break;
                 case JellyBeanState.Chasing:
-                    if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
+                    if ((targetPosition - transform.position).sqrMagnitude < personalBoundaryDistanceSquared)
                     {
                         targetPosition = transform.position;
+                        
+                        if(!inRangeForAttack)
+                        {
+                            lastAttackTime = Time.time;
+                            inRangeForAttack = true;
+                        }
+                        else
+                        {
+                            float timeRequirement = hasAttacked ? AttackCooldown : AttackInitialWaitTime;
+                            if(Time.time - lastAttackTime > timeRequirement)
+                            {
+                                Attack();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        hasAttacked = false;
+                        inRangeForAttack = false;
                     }
 
                     navMeshAgent.SetDestination(targetPosition);
@@ -196,7 +250,7 @@ public class JellyBean : MovingCharacter
                     }
                     break;
                 case JellyBeanState.Searching:
-                    if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
+                    if ((targetPosition - transform.position).sqrMagnitude < personalBoundaryDistanceSquared)
                     {
                         if (searchTargetReachedCount < 5 + Random.Range(0, 1)) //if we haven't reached our search target to many times we want to search again
                         {
@@ -238,6 +292,32 @@ public class JellyBean : MovingCharacter
 
         if (!knockBack)
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
+    }
+
+    private void TargetLost()
+    {
+        target = null;
+        targetPosition = transform.position;
+        searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
+        State = JellyBeanState.Confused;
+    }
+
+    private void TargetDied(Health health)
+    {
+        TargetLost();
+    }
+
+    private void Attack()
+    {
+        AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
+        Vector3 punchPosition = transform.position + transform.forward * 0.2f + transform.up * 0.5f;
+        punchPosition += transform.right * 0.1f * (side == AttackSide.Right ? 1f : -1f);
+        OnAttack?.Invoke(this, punchPosition, side);
+
+        targetHealth.TakeDamage(PunchDamage);
+
+        hasAttacked = true;
+        lastAttackTime = Time.time;
     }
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
@@ -303,15 +383,6 @@ public class JellyBean : MovingCharacter
         }
 
         return false;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (targetPosition != Vector3.zero)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(targetPosition, 0.08f);
-        }
     }
 
     public void JellyBeanStateWasChanged(JellyBeanState newState)
