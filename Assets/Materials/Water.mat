@@ -34,19 +34,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - FoamDistance: 0.3
+    - FoamDistance: 0.2
     - FoamSize: 6
-    - FoamSpeed: 0.8
+    - FoamSpeed: 0.6
     - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
     - Tiling: 0.2
     - WaterDepth: 0.5
-    - WaveHeight: 0.3
-    - WaveSize: 5
-    - WaveSpeed: 0.1
+    - WaveHeight: 0.45
+    - WaveSize: 0.5
+    - WaveSpeed: 1
     m_Colors:
-    - BaseColor: {r: 0.13501248, g: 0.47923034, b: 0.7735849, a: 0}
+    - BaseColor: {r: 0.14402476, g: 0.4476445, b: 0.942, a: 1}
     - RippleColor: {r: 0.3477808, g: 1.005721, b: 1.798281, a: 0}
     - _Offset: {r: 0, g: -0.92, b: 0, a: 0}
   m_BuildTextureStacks: []
