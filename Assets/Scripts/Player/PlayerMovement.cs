@@ -204,7 +204,7 @@ public class PlayerMovement : MovingCharacter
                     Health health = hit.transform.GetComponent<Health>();
 
                     if (health != null)
-                        health.CurrentHealth -= PunchStrength;
+                        health.TakeDamage(PunchStrength);
 
                     JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
                     if (jellyBean != null)
