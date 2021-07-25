@@ -507,6 +507,15 @@ public class WorldEditor : MonoBehaviour
         selectedWorldObject = block;
 
         Builder.BuildWorld(CurrentWorld);
+
+        if (selectedWorldObject.Info.RotatableX) //rotate objects that can be rotated on y axis to a random rotation when placing them
+        {
+            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, 1, 0), Random.Range(0f, 360f));
+            selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
+            selectedWorldObject.RotationOffset = selectedWorldObject.Instance.transform.position - selectedWorldObject.Position;
+            block.Rotation = selectedWorldObject.Rotation;
+            block.RotationOffset = selectedWorldObject.RotationOffset;
+        }
     }
 
     private void MoveMarkerCanceled(InputAction.CallbackContext context)
