@@ -406,6 +406,9 @@ public class WorldEditor : MonoBehaviour
     {
         if (!controlsDisabled || isTestingLevel)
         {
+            if (isRotatingObject)
+                ExitRotationMode();
+
             Vector2 rawMoveValue = context.ReadValue<Vector2>();
             currentLeftStickInput = rawMoveValue;
 
@@ -459,6 +462,9 @@ public class WorldEditor : MonoBehaviour
     {
         if (controlsDisabled || isTestingLevel)
             return;
+
+        if (isRotatingObject)
+            ExitRotationMode();
 
         CloseBlockSelection();
 

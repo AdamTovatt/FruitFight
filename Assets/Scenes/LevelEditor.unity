@@ -2524,6 +2524,7 @@ MonoBehaviour:
   CameraSmoothTime: 1
   MarkerMoveCooldown: 0.5
   MarkerMoveSensitivity: 0.4
+  ObjectRotationSpeed: 180
 --- !u!4 &1817805782
 Transform:
   m_ObjectHideFlags: 0
