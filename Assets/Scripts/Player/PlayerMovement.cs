@@ -94,13 +94,13 @@ public class PlayerMovement : MovingCharacter
                     break;
                 case PlayerInputAction.RotateCameraLeft:
                     if (context.performed)
-                        rotateCamera = RotateCameraSpeed;
+                        rotateCamera = -RotateCameraSpeed;
                     else
                         rotateCamera = 0;
                     break;
                 case PlayerInputAction.RotateCameraRight:
                     if (context.performed)
-                        rotateCamera = -RotateCameraSpeed;
+                        rotateCamera = RotateCameraSpeed;
                     else
                         rotateCamera = 0;
                     break;
