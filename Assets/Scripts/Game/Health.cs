@@ -12,6 +12,9 @@ public class Health : MonoBehaviour
     public delegate void OnDiedHandler(Health sender);
     public event OnDiedHandler OnDied;
 
+    public delegate void OnHealthUpdatedHandler();
+    public event OnHealthUpdatedHandler OnHealthUpdated;
+
     public GameObject WaterSplash;
 
     public bool DestroyOnDeath = true;
@@ -72,6 +75,8 @@ public class Health : MonoBehaviour
                 }
             }
         }
+
+        OnHealthUpdated?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)

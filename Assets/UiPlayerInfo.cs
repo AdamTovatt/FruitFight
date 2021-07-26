@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class UiPlayerInfo : MonoBehaviour
 {
+    const int healthDivider = 20;
+
     public Image PlayerPortraitBackground;
     public Image PlayerPortrait;
     public GameObject UiHeartPrefab;
@@ -13,7 +15,7 @@ public class UiPlayerInfo : MonoBehaviour
     public float MarginX = 50f;
 
     private RectTransform rectTransform;
-    private List<UiHeart> hearts;
+    private List<UiHeart> heartSprites;
 
     private PlayerInformation playerInformation;
     bool isLeft;
@@ -25,7 +27,7 @@ public class UiPlayerInfo : MonoBehaviour
         this.playerInformation = playerInformation;
         this.isLeft = isLeft;
 
-        int hearts = ((int)playerInformation.Health.StartHealth / 10) / 2;
+        int hearts = (int)(playerInformation.Health.StartHealth / healthDivider);
 
         rectTransform.anchorMin = new Vector2(xPivot, 1);
         rectTransform.anchorMax = new Vector2(xPivot, 1);
@@ -37,6 +39,9 @@ public class UiPlayerInfo : MonoBehaviour
         PlayerPortraitBackground.rectTransform.pivot = new Vector2(xPivot, 1);
         PlayerPortraitBackground.rectTransform.localPosition = Vector3.zero;
 
+        Texture2D image = playerInformation.Configuration.Portrait;
+        PlayerPortrait.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
+
         for (int i = 0; i < hearts; i++)
         {
             UiHeart heart = Instantiate(UiHeartPrefab, transform).GetComponent<UiHeart>();
@@ -46,16 +51,36 @@ public class UiPlayerInfo : MonoBehaviour
             heartTransform.anchorMax = new Vector2(xPivot, 1);
             heartTransform.pivot = new Vector2(xPivot, 1);
             heartTransform.anchoredPosition = new Vector3((PlayerPortraitBackground.rectTransform.sizeDelta.x + i * HeartSpacing + (HeartSpacing / 3)) * (isLeft ? 1 : -1), -20, 0);
+            heartSprites.Add(heart);
         }
+
+        playerInformation.Health.OnHealthUpdated += UpdateHearts;
+    }
+
+    private void UpdateHearts()
+    {
+        float heartValue = playerInformation.Health.CurrentHealth / healthDivider;
+
+        for (int i = 0; i < heartSprites.Count; i++)
+        {
+            heartSprites[i].SetSpriteFromValue(Mathf.Clamp(heartValue, 0, 1));
+            heartValue -= 1;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        playerInformation.Health.OnHealthUpdated -= UpdateHearts;
     }
 
     private void Awake()
     {
-        hearts = new List<UiHeart>();
+        heartSprites = new List<UiHeart>();
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
 
     private void Start()
     {
+        UpdateHearts();
     }
 }

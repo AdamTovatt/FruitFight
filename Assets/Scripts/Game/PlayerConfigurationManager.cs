@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerConfigurationManager : MonoBehaviour
 {
@@ -61,9 +62,10 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
-    public void ReadyPlayer(int index)
+    public void ReadyPlayer(int index, Texture2D playerPortrait)
     {
         PlayerConfigurations[index].IsReady = true;
+        PlayerConfigurations[index].Portrait = playerPortrait;
         if(PlayerConfigurations.All(p => p.IsReady == true))
         {
             SceneManager.LoadScene("GamePlay");

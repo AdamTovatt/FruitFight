@@ -100,7 +100,9 @@ public class PlayerSetupMenuController : MonoBehaviour
 
         if(ReadyText != null) ReadyText.gameObject.SetActive(true);
         ReadyInstructionsText.text = string.Format("Press {0} to unready", GetButtonName(playerControls.Ui.Cancel));
-        PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex);
+
+        UiModelDisplay.OnImageGenerated += (Texture2D image) => { PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex, image); };
+        StartCoroutine(UiModelDisplay.GenerateImage());
     }
 
     public void UnReadyPlayer()

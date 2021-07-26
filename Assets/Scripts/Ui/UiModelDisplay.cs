@@ -13,6 +13,9 @@ public class UiModelDisplay : MonoBehaviour
     private RawImage rawImage;
     private UiModelCamera modelCamera;
 
+    public delegate void OnImageGeneratedHandler(Texture2D image);
+    public event OnImageGeneratedHandler OnImageGenerated;
+
     void Start()
     {
         rawImage = gameObject.GetComponent<RawImage>();
@@ -22,6 +25,23 @@ public class UiModelDisplay : MonoBehaviour
 
         if (modelCamera.Texture != null)
             rawImage.texture = modelCamera.Texture;
+    }
+
+    public IEnumerator GenerateImage()
+    {
+        UiBananaMan uiBananaMan = Model.GetComponent<UiBananaMan>();
+        if(uiBananaMan == null)
+            throw new System.Exception("Only UiBananaMan can generate image as of right now");
+
+        Quaternion originalRotation = uiBananaMan.Rotate.transform.rotation;
+        uiBananaMan.Rotate.SetRotation(Quaternion.identity * Quaternion.Euler(0, 180, 0));
+
+        yield return new WaitForEndOfFrame();
+
+        OnImageGenerated?.Invoke(modelCamera.GetImage());
+        OnImageGenerated = null;
+
+        uiBananaMan.Rotate.SetRotation(originalRotation);
     }
 
     public void SetRawImageTexture(RenderTexture texture)

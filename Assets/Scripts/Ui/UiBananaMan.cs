@@ -8,10 +8,14 @@ public class UiBananaMan : MonoBehaviour
     private Transform hatPoint;
     private Transform bananaManTransform;
 
+    public Rotate Rotate { get { return rotate; } }
+    private Rotate rotate;
+
     void Start()
     {
         hatPoint = gameObject.GetComponentInChildren<HatPoint>().transform;
-        bananaManTransform = gameObject.GetComponentInChildren<Rotate>().transform;
+        rotate = gameObject.GetComponentInChildren<Rotate>();
+        bananaManTransform = rotate.transform;
     }
 
     public void SetHat(Prefab? prefab)

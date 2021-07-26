@@ -10,4 +10,9 @@ public class Rotate : MonoBehaviour
     {
         transform.Rotate(0, Speed * Time.deltaTime, 0, Space.World);
     }
+
+    public void SetRotation(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+    }
 }

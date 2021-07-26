@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerConfiguration
 {
@@ -10,6 +11,7 @@ public class PlayerConfiguration
     public int PlayerIndex { get; set; }
     public bool IsReady { get; set; }
     public int Hat { get; set; }
+    public Texture2D Portrait { get; set; }
 
     public PlayerConfiguration(PlayerInput playerInput)
     {

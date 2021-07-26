@@ -24,4 +24,14 @@ public class UiModelCamera : MonoBehaviour
     {
         modelDisplay = display;
     }
+
+    public Texture2D GetImage()
+    {
+        RenderTexture.active = _camera.targetTexture;
+        Texture2D renderResult = new Texture2D(_camera.targetTexture.width, _camera.targetTexture.height, TextureFormat.ARGB32, false);
+        Rect rect = new Rect(0, 0, _camera.targetTexture.width, _camera.targetTexture.height);
+        renderResult.ReadPixels(rect, 0, 0);
+        renderResult.Apply();
+        return renderResult;
+    }
 }
