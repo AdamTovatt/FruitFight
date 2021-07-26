@@ -335,6 +335,7 @@ public class JellyBean : MovingCharacter
 
     public void Die()
     {
+        Debug.Log("jelly bean died");
         GameObject deadJellyBean = Instantiate(DeadPrefab, transform.position + new Vector3(0, 0.7f, 0), transform.rotation);
         SetMaterialSettings(deadJellyBean.GetComponentInChildren<Renderer>(), MaterialSettings);
         Destroy(gameObject);

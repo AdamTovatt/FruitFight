@@ -28,7 +28,7 @@ public class MultipleTargetCamera : MonoBehaviour
     private Vector3 lastCenterpoint = Vector3.zero;
     private Vector3 averageMovement = Vector3.zero;
     private int movementSamples = 100;
-    private float cameraRotation = 0;
+    private List<float> cameraRotations;
 
     public float FieldOfView { get { return _camera.fieldOfView; } }
 
@@ -37,6 +37,7 @@ public class MultipleTargetCamera : MonoBehaviour
 
     private void Awake()
     {
+        cameraRotations = new List<float>();
         Targets = new List<Transform>();
     }
 
@@ -111,7 +112,7 @@ public class MultipleTargetCamera : MonoBehaviour
 
     public void RotateCamera(float degrees)
     {
-        cameraRotation = degrees;
+        cameraRotations.Add(degrees);
     }
 
     private void Move(Vector3 centerPoint)
@@ -125,8 +126,9 @@ public class MultipleTargetCamera : MonoBehaviour
             float hintWeight = (hint.transform.position - lastCenterpoint).sqrMagnitude / hint.RadiusSquared;
             targetPosition += (hint.transform.position - transform.position) * hintWeight;
         }
-
-        targetPosition += transform.right * cameraRotation; //RotatePointAroundPivot(targetPosition, centerPoint, new Vector3(0, cameraRotation * Time.deltaTime, 0));
+        
+        targetPosition += transform.right * cameraRotations.Sum(); //RotatePointAroundPivot(targetPosition, centerPoint, new Vector3(0, cameraRotation * Time.deltaTime, 0));
+        cameraRotations.Clear();
 
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * MoveSpeed * 200);
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref moveVelocity, SmoothTime);
