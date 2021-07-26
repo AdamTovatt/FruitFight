@@ -11,25 +11,27 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static bool ShouldStartLevel;
 
-    public List<PlayerConfiguration> Users;
     public List<PlayerMovement> PlayerCharacters;
     public bool IsDebug = false;
     public GameObject CameraPrefab;
     public GameObject PlayerPrefab;
     public int BlockSeeThroughRadius = 2;
 
+    public bool Paused { get; private set; }
     public MultipleTargetCamera MultipleTargetCamera { get; set; }
+    public List<PlayerInformation> Players { get; set; }
 
     public delegate void IsDebugChangedHandler(object sender, bool newState);
     public event IsDebugChangedHandler OnDebugStateChanged;
 
     private bool oldIsDebug = false;
     private PlayerInputManager playerInputManager;
+    private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
 
     public void Awake()
     {
-        Users = new List<PlayerConfiguration>();
+        Players = new List<PlayerInformation>();
         PlayerCharacters = new List<PlayerMovement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
     }
@@ -50,6 +52,17 @@ public class GameManager : MonoBehaviour
 
         if (ShouldStartLevel)
             StartLevel();
+
+        PlayerControls playerControls = new PlayerControls();
+        playerControls.Gameplay.Pause.performed += Pause;
+    }
+
+    private void OnDestroy()
+    {
+        if (playerControls != null)
+        {
+            playerControls.Gameplay.Pause.performed -= Pause;
+        }
     }
 
     public void StartLevel()
@@ -85,11 +98,18 @@ public class GameManager : MonoBehaviour
 
                 playerMovement.InitializePlayerInput(playerConfiguration);
                 PlayerCharacters.Add(playerMovement);
+
+                Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
             }
         }
         else
         {
             MultipleTargetCamera.Targets.Add(Instantiate(new GameObject(), new Vector3(0, 3, 0), Quaternion.identity, transform).transform);
+        }
+
+        foreach (PlayerInformation player in Players)
+        {
+            GameUi.Instance.CreatePlayerInfoUi(player);
         }
     }
 
@@ -107,7 +127,7 @@ public class GameManager : MonoBehaviour
         foreach (PlayerMovement player in PlayerCharacters)
         {
             Ray ray = new Ray(MultipleTargetCamera.transform.position, (player.transform.position - MultipleTargetCamera.transform.position));
-            if(Physics.Raycast(ray, out RaycastHit hitInfo))
+            if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
                 if (hitInfo.transform == player.transform)
                     continue;
@@ -132,16 +152,33 @@ public class GameManager : MonoBehaviour
 
         foreach (Block block in blocks)
         {
-            if(block.SeeThroughBlock != null)
+            if (block.SeeThroughBlock != null)
             {
                 block.SeeThroughBlock.Enable();
             }
         }
     }
 
+    public void Pause(InputAction.CallbackContext context)
+    {
+        if (WorldEditorUi.Instance == null) //if we come from the world editor we will let the world editor handle the ui
+        {
+            if (!Paused)
+            {
+                DisablePlayerControls();
+                Paused = true;
+            }
+            else
+            {
+                EnablePlayerControls();
+                Paused = false;
+            }
+        }
+    }
+
     private void SetPlayerControls(bool newValue)
     {
-        foreach(PlayerMovement player in PlayerCharacters)
+        foreach (PlayerMovement player in PlayerCharacters)
         {
             player.ControlsEnabled = newValue;
         }

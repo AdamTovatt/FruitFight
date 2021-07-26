@@ -25,12 +25,14 @@ public class Health : MonoBehaviour
     private bool emissionIsOn;
     private float emissionOnTime;
 
-    private void Start()
+    private void Awake()
     {
         meshRenderers = new List<Renderer>();
-        
         _currentHealth = StartHealth;
+    }
 
+    private void Start()
+    {
         Renderer meshRenderer = gameObject.GetComponent<Renderer>();
         if (meshRenderer != null)
             meshRenderers.Add(meshRenderer);

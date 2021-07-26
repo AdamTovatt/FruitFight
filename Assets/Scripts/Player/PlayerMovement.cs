@@ -60,6 +60,7 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.Move.id, PlayerInputAction.Move);
         inputActions.Add(playerControls.Gameplay.RotateCameraLeft.id, PlayerInputAction.RotateCameraLeft);
         inputActions.Add(playerControls.Gameplay.RotateCameraRight.id, PlayerInputAction.RotateCameraRight);
+        inputActions.Add(playerControls.Gameplay.Pause.id, PlayerInputAction.Pause);
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
@@ -103,6 +104,9 @@ public class PlayerMovement : MovingCharacter
                         rotateCamera = RotateCameraSpeed;
                     else
                         rotateCamera = 0;
+                    break;
+                case PlayerInputAction.Pause:
+                    //don't do anything, this is handled in the GameManager
                     break;
                 default:
                     throw new System.Exception("Unknown action: " + context.action.name);
@@ -264,5 +268,5 @@ public class PlayerMovement : MovingCharacter
 
 public enum PlayerInputAction
 {
-    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft
+    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause
 }

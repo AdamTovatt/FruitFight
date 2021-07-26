@@ -35,6 +35,7 @@ public class WorldEditor : MonoBehaviour
     private int selectedBlock;
 
     public Vector3Int MarkerPosition { get { return new Vector3Int(marker.transform.position); } }
+    public bool IsTestingLevel { get { return isTestingLevel; } }
 
     private List<GameObject> gridLines;
     private EditorCamera editorCamera;
