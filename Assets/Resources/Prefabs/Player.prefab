@@ -608,6 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RigidBody: {fileID: 2012823961798305032}
   PunchSphereTransform: {fileID: 4974615858160056374}
+  SpineTransform: {fileID: 6981282915230941826}
   Speed: 8
   JumpStrength: 7
   DistanceToGround: 0.5
@@ -617,6 +618,7 @@ MonoBehaviour:
   PunchWidth: 0.15
   PunchSphereRadius: 0.4
   PunchStrength: 5
+  RotateCameraSpeed: 5
 --- !u!54 &2012823961798305032
 Rigidbody:
   m_ObjectHideFlags: 0

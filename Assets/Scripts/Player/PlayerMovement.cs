@@ -14,6 +14,7 @@ public class PlayerMovement : MovingCharacter
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
 
     public Transform PunchSphereTransform;
+    public Transform SpineTransform;
     public float Speed = 5f;
     public float JumpStrength = 5f;
     public float DistanceToGround = 0.25f;
@@ -25,11 +26,19 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
 
+    public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get; set; }
+    public Holdable HeldItem { get; set; }
 
     public int JellyBeans { get; set; }
 
     public override event AttackHandler OnAttack;
+
+    public delegate void OnPickedUpItemHandler(Holdable holdableItem);
+    public event OnPickedUpItemHandler OnPickedUpItem;
+
+    public delegate void OnDroppedItemHandler();
+    public event OnDroppedItemHandler OnDroppedItem;
 
     public override bool StopFootSetDefault { get { return false; } }
     public override bool StandingStill { get { return move == Vector2.zero; } }
@@ -54,6 +63,8 @@ public class PlayerMovement : MovingCharacter
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
         playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
+        
+        CurrentRunSpeed = Speed;
 
         inputActions.Add(playerControls.Gameplay.Attack.id, PlayerInputAction.Attack);
         inputActions.Add(playerControls.Gameplay.Jump.id, PlayerInputAction.Jump);
@@ -81,7 +92,7 @@ public class PlayerMovement : MovingCharacter
             {
                 case PlayerInputAction.Attack:
                     if (context.performed)
-                        Punch();
+                        Interact();
                     break;
                 case PlayerInputAction.Jump:
                     if (context.performed)
@@ -136,8 +147,8 @@ public class PlayerMovement : MovingCharacter
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 movementX = (cameraRight * move.x * Speed) / 100f;
-        Vector3 movementY = (cameraForward * move.y * Speed) / 100f;
+        Vector3 movementX = (cameraRight * move.x * CurrentRunSpeed) / 100f;
+        Vector3 movementY = (cameraForward * move.y * CurrentRunSpeed) / 100f;
 
         Vector3 movement = movementX + movementY;
 
@@ -183,6 +194,45 @@ public class PlayerMovement : MovingCharacter
             move = moveValue;
         else
             move = Vector2.zero;
+    }
+
+    private void Interact()
+    {
+        bool shouldPunch = true;
+
+        if (HeldItem == null)
+        {
+            Ray ray = new Ray(transform.position + transform.up * DistanceToGround, transform.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit)) //this is to check if there is something to pick up
+            {
+                if (hit.distance <= PunchDistance * 1.2f) //we can pick up things at 1.2 times the punch distance, I just picked 1.2 because it seems to work fine
+                {
+                    if (hit.transform.tag == "Interactable")
+                    {
+                        Holdable holdable = hit.transform.GetComponent<Holdable>();
+                        if (holdable != null)
+                        {
+                            shouldPunch = false;
+                            holdable.WasPickedUp(SpineTransform, transform.position + transform.up * PunchHeight + transform.forward * PunchDistance * 1.1f); //1.1 is the multiplier for how far forward we should hold the item
+                            HeldItem = holdable;
+                            CurrentRunSpeed = Speed * 0.8f;
+                            OnPickedUpItem?.Invoke(holdable);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            HeldItem.WasDropped();
+            HeldItem = null;
+            CurrentRunSpeed = Speed;
+            OnDroppedItem?.Invoke();
+            shouldPunch = false;
+        }
+
+        if (shouldPunch)
+            Punch();
     }
 
     private void Punch()

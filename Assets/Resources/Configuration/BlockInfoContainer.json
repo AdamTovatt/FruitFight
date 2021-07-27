@@ -581,6 +581,16 @@
       "Name": "Camera Hint",
       "Prefab": "CameraHint",
       "EdgePrefabs": []
+    },
+    {
+      "Id": 57,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Sphere Key",
+      "Prefab": "SphereKeySpawner",
+      "EdgePrefabs": []
     }
   ]
 }

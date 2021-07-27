@@ -24,49 +24,66 @@ public class IkArmSolver : MonoBehaviour
     private Vector3 punchEndPosition;
     private Vector3 characterPositionAtStartPunch;
 
+    private bool holdingItem = false;
+    private Holdable heldItem = null;
+
     void Start()
     {
         CharacterMovement.OnAttack += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
+
+        if (CharacterMovement.GetType() == typeof(PlayerMovement))
+        {
+            ((PlayerMovement)CharacterMovement).OnPickedUpItem += PickUpItem;
+            ((PlayerMovement)CharacterMovement).OnDroppedItem += DropItem;
+        }
+
         if (Trail != null)
             Trail.enabled = false;
     }
 
     void Update()
     {
-        Vector3 swingPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
-        swingPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
-        swingPosition += CharacterMovement.transform.forward * ArmForward;
-        swingPosition += CharacterMovement.transform.up * ArmHeight;
-
-        if (!punching)
+        if (!holdingItem)
         {
-            CurrentPosition = swingPosition;
-            transform.position = CurrentPosition;
-        }
-        else
-        {
-            Vector3 characterOffsetSincePunchStart = CharacterMovement.transform.position - characterPositionAtStartPunch;
-            punchEndPosition += characterOffsetSincePunchStart;
+            Vector3 swingPosition = CharacterMovement.transform.position + (IkFootSolver.OtherFoot.CurrentPosition - CharacterMovement.transform.position);
+            swingPosition += CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody);
+            swingPosition += CharacterMovement.transform.forward * ArmForward;
+            swingPosition += CharacterMovement.transform.up * ArmHeight;
 
-            if (lerp < 3)
+            if (!punching)
             {
-                if (lerp < 1)
-                    CurrentPosition = Vector3.Lerp(punchStartPosition, punchEndPosition, lerp);
-                else if (lerp > 1 && lerp < 2)
-                    CurrentPosition = punchEndPosition;
-                else
-                    CurrentPosition = Vector3.Lerp(punchEndPosition, swingPosition, lerp - 2);
-
+                CurrentPosition = swingPosition;
                 transform.position = CurrentPosition;
-
-                lerp += Time.deltaTime * ArmSwingSpeed;
             }
             else
             {
-                if (Trail != null)
-                    Trail.enabled = false;
-                punching = false;
+                Vector3 characterOffsetSincePunchStart = CharacterMovement.transform.position - characterPositionAtStartPunch;
+                punchEndPosition += characterOffsetSincePunchStart;
+
+                if (lerp < 3)
+                {
+                    if (lerp < 1)
+                        CurrentPosition = Vector3.Lerp(punchStartPosition, punchEndPosition, lerp);
+                    else if (lerp > 1 && lerp < 2)
+                        CurrentPosition = punchEndPosition;
+                    else
+                        CurrentPosition = Vector3.Lerp(punchEndPosition, swingPosition, lerp - 2);
+
+                    transform.position = CurrentPosition;
+
+                    lerp += Time.deltaTime * ArmSwingSpeed;
+                }
+                else
+                {
+                    if (Trail != null)
+                        Trail.enabled = false;
+                    punching = false;
+                }
             }
+        }
+        else
+        {
+            transform.position = heldItem.transform.position + CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody) * heldItem.Radius;
         }
     }
 
@@ -86,6 +103,18 @@ public class IkArmSolver : MonoBehaviour
             Trail.enabled = true;
 
         punching = true;
+    }
+
+    private void PickUpItem(Holdable holdable)
+    {
+        holdingItem = true;
+        heldItem = holdable;
+    }
+
+    private void DropItem()
+    {
+        holdingItem = false;
+        heldItem = null;
     }
 
     private void OnDrawGizmos()
