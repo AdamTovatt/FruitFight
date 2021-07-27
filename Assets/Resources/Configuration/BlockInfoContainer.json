@@ -585,8 +585,18 @@
     {
       "Id": 57,
       "BlockType": 3,
-      "Width": 2,
-      "Height": 2,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Sphere Holder",
+      "Prefab": "SphereHolder",
+      "EdgePrefabs": []
+    },
+    {
+      "Id": 58,
+      "BlockType": 3,
+      "Width": 1,
+      "Height": 1,
       "ShowInEditor": true,
       "Name": "Sphere Key",
       "Prefab": "SphereKeySpawner",
