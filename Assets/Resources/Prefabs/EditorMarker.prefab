@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 846547915845838703}
   - component: {fileID: 3196286425683612581}
   - component: {fileID: 8488423992836782685}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EditorMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1787496707992508241}
   - component: {fileID: -5450891517594047977}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EditorMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
