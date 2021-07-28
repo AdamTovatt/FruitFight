@@ -13,6 +13,20 @@ public class Spawner : MonoBehaviour
     public delegate void ObjectSpawnedHandler(object sender, GameObject spawnedObject);
     public ObjectSpawnedHandler OnObjectSpawned;
 
+    private DetailColorController detailColor;
+
+    private void Awake()
+    {
+        detailColor = gameObject.GetComponent<DetailColorController>();
+        if (detailColor == null)
+        {
+            if (transform.parent != null)
+            {
+                detailColor = transform.parent.GetComponent<DetailColorController>();
+            }
+        }
+    }
+
     void Start()
     {
         if (!WorldBuilder.IsInEditor || SpawnInEditor)
@@ -39,6 +53,18 @@ public class Spawner : MonoBehaviour
 
         if (result.tag == "Player")
             GameManager.Instance.PlayerCharacters.Add(result.GetComponent<PlayerMovement>());
+
+        if (detailColor != null)
+        {
+            DetailColorController createdDetailColor = result.GetComponent<DetailColorController>();
+            if (createdDetailColor != null)
+            {
+                createdDetailColor.SetEmission(detailColor.CurrentEmission);
+                createdDetailColor.Color = detailColor.Color;
+                createdDetailColor.StartWithEmission = detailColor.StartWithEmission;
+                createdDetailColor.SetTextureFromColor();
+            }
+        }
 
         OnObjectSpawned?.Invoke(this, result);
         return result;

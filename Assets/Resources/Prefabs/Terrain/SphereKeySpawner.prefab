@@ -178,6 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6228190220964466987}
+  - component: {fileID: 8431949387896828465}
   m_Layer: 0
   m_Name: SphereKeySpawner
   m_TagString: Untagged
@@ -200,6 +201,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8431949387896828465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4103602778051516786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b281c9d9a3848104aa0d7a655ae07f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DetailRenderers:
+  - {fileID: 5441003584018048395}
+  - {fileID: 966720439466414751}
+  Color: 1
+  Colors:
+  - Color: 0
+    Texture: {fileID: 2800000, guid: c2a3b2e2c0ab4824596068198b70926e, type: 3}
+  - Color: 1
+    Texture: {fileID: 2800000, guid: 87f251745816c6c449281d87f816b216, type: 3}
+  - Color: 2
+    Texture: {fileID: 2800000, guid: f97e4e7c4b93f9e41937f28e2cacd4c9, type: 3}
+  - Color: 3
+    Texture: {fileID: 2800000, guid: e1449087779fbd54181c12694dd7006f, type: 3}
+  - Color: 4
+    Texture: {fileID: 2800000, guid: 5fc4de3f30755cf45a1b47d0672bc00e, type: 3}
+  - Color: 5
+    Texture: {fileID: 2800000, guid: c80bb82a4a436154dbd90b52c9dce6dc, type: 3}
+  StartWithEmission: 1
 --- !u!1 &8095104071092845559
 GameObject:
   m_ObjectHideFlags: 0

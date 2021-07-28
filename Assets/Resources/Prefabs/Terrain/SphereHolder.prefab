@@ -4998,6 +4998,7 @@ GameObject:
   - component: {fileID: 8962296803270355157}
   - component: {fileID: 1461987651002689756}
   - component: {fileID: 1790161477491647883}
+  - component: {fileID: 8589905771897056413}
   m_Layer: 0
   m_Name: SphereHolder
   m_TagString: Untagged
@@ -5044,10 +5045,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e8e00b6b9a4f844800abc2164c9864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Color: 0
   Smoke: {fileID: 2438744520671805653}
-  SphereHolderRenderer: {fileID: 7755740432702222640}
   SmokeAlpha: 0.7
+--- !u!114 &8589905771897056413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8962296803270355154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b281c9d9a3848104aa0d7a655ae07f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DetailRenderers:
+  - {fileID: 7755740432702222640}
+  Color: 1
   Colors:
   - Color: 0
     Texture: {fileID: 2800000, guid: 0bc9a56a72c39b840a65ed11fa57ce45, type: 3}
@@ -5061,6 +5075,7 @@ MonoBehaviour:
     Texture: {fileID: 2800000, guid: 62e09c31fa27ad1478b15b6b23d5de81, type: 3}
   - Color: 5
     Texture: {fileID: 2800000, guid: f888003201a22574995b7741f204795f, type: 3}
+  StartWithEmission: 0
 --- !u!1 &9147864928324483630
 GameObject:
   m_ObjectHideFlags: 0
