@@ -10,8 +10,6 @@ namespace Assets.Scripts.Models
     [Serializable]
     public abstract class BehaviourPropertyCollection
     {
-        public abstract Type AssociatedType { get; }
-
         public abstract void ApplyValues(MonoBehaviour behaviour);
     }
 }

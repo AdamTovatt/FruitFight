@@ -9,6 +9,7 @@ namespace Assets.Scripts.Models
     public class BehaviourPropertyContainer
     {
         public DetailColorPropertyCollection DetailColorPropertyCollection;
+        public MovePropertyCollection MovePropertyCollection;
 
         private Dictionary<Type, BehaviourPropertyCollection> properties;
 

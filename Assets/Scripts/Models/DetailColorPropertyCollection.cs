@@ -10,11 +10,7 @@ namespace Assets.Scripts.Models
     [Serializable]
     public class DetailColorPropertyCollection : BehaviourPropertyCollection
     {
-        private Type associatedType = typeof(DetailColorController);
-
         public DetailColor Color;
-
-        public override Type AssociatedType { get { return associatedType; } }
 
         public override void ApplyValues(MonoBehaviour behaviour)
         {

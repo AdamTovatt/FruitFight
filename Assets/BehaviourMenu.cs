@@ -13,6 +13,7 @@ public class BehaviourMenu : MonoBehaviour
     public TextMeshProUGUI DetailColorButtonText;
 
     public DetailColorMenu DetailColorMenu;
+    public MoveMenu MoveMenu;
 
     private Block currentBlock;
     private DetailColorController currentDetailColor;
@@ -49,7 +50,25 @@ public class BehaviourMenu : MonoBehaviour
 
     private void Move()
     {
+        if (!currentBlock.HasPropertyExposer)
+            currentBlock.BehaviourProperties = new BehaviourPropertyContainer();
 
+        currentBlock.HasPropertyExposer = true;
+
+        if (currentBlock.BehaviourProperties.MovePropertyCollection == null || !currentBlock.BehaviourProperties.MovePropertyCollection.HasValues)
+            currentBlock.BehaviourProperties.MovePropertyCollection = new MovePropertyCollection();
+
+        MoveMenu.gameObject.SetActive(true);
+        MoveMenu.Show(currentBlock);
+
+        MoveMenu.OnClosed += () =>
+        {
+            MoveMenu.gameObject.SetActive(false);
+            MoveButton.Select();
+        };
+
+        Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.ActivatorBlockId);
+        Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition);
     }
 
     public void Show(Block block)

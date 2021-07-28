@@ -15,6 +15,8 @@ public class WorldBuilder : MonoBehaviour
 
     private List<GameObject> previousWorldObjects;
 
+    private World upcommingWorld;
+    private List<MoveOnTrigger> moveOnTriggerObjectsToBind = new List<MoveOnTrigger>();
     public World CurrentWorld { get; set; }
 
     private void Awake()
@@ -36,18 +38,18 @@ public class WorldBuilder : MonoBehaviour
             NextLevel = World.FromWorldName("01");
 
         BuildWorld(NextLevel);
-        CurrentWorld = NextLevel;
     }
 
     public void Build(string worldName)
     {
         World world = World.FromWorldName(worldName);
         BuildWorld(world);
-        CurrentWorld = world;
     }
 
     public void BuildWorld(World world)
     {
+        upcommingWorld = world;
+
         debugCubes.Clear();
 
         foreach (GameObject gameObject in previousWorldObjects)
@@ -60,6 +62,8 @@ public class WorldBuilder : MonoBehaviour
             block.Instance = null;
             PlaceBlock(block);
         }
+
+        BindMoveOnTriggerObjects();
 
         CurrentWorld = world;
     }
@@ -134,6 +138,7 @@ public class WorldBuilder : MonoBehaviour
 
             if (block.BehaviourProperties == null)
             {
+                Debug.Log("BEHAVIOUR PROPERTIES WAS ACTUALLY NULL");
                 block.BehaviourProperties = new BehaviourPropertyContainer();
 
                 DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
@@ -143,11 +148,27 @@ public class WorldBuilder : MonoBehaviour
                 }
             }
 
+            if(block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)
+            {
+                MoveOnTrigger moveOnTrigger = block.Instance.GetComponent<MoveOnTrigger>();
+                if (moveOnTrigger == null)
+                    moveOnTrigger = block.Instance.AddComponent<MoveOnTrigger>();
+
+                moveOnTrigger.Init(block, upcommingWorld.Blocks.Where(b => b.Id == block.BehaviourProperties.MovePropertyCollection.ActivatorBlockId).FirstOrDefault());
+                moveOnTriggerObjectsToBind.Add(moveOnTrigger);
+
+                propertyExposer.Behaviours.Add(moveOnTrigger);
+            }
+
             propertyExposer.WasLoaded(block.BehaviourProperties);
         }
-        else
+    }
+
+    private void BindMoveOnTriggerObjects()
+    {
+        foreach(MoveOnTrigger move in moveOnTriggerObjectsToBind)
         {
-            block.BehaviourProperties = null;
+            move.BindStateSwitcher();
         }
     }
 
