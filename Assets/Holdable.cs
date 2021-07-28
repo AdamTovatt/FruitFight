@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Holdable : MonoBehaviour
 {
+    public float Radius = 0.2f;
+    public string Id;
+    public bool Held { get; private set; }
+
     private Collider _collider;
     private Rigidbody _rigidbody;
 
-    public float Radius = 0.2f;
+    public delegate void WasPickedUpHandler(Transform pickingTransform);
+    public event WasPickedUpHandler OnWasPickedUp;
 
     private void Start()
     {
@@ -15,21 +20,38 @@ public class Holdable : MonoBehaviour
         _rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
-    public void WasPickedUp(Transform pickingTransform, Vector3 holdPoint)
+    public void PlacedInHolder(Transform newParent)
+    {
+        _rigidbody.isKinematic = true;
+        transform.parent = newParent;
+        transform.localPosition = Vector3.zero;
+        Held = true;
+    }
+
+    public void WasPickedUp(Transform pickingTransform, Vector3 holdPoint, bool setLayer = true)
     {
         _rigidbody.isKinematic = true;
         _collider.enabled = false;
         transform.position = holdPoint;
         transform.parent = pickingTransform;
-        SetLayer(8);
+        Held = true;
+
+        OnWasPickedUp?.Invoke(pickingTransform);
+        OnWasPickedUp = null;
+
+        if (setLayer)
+            SetLayer(8);
     }
 
-    public void WasDropped()
+    public void WasDropped(bool setLayer = true)
     {
         _rigidbody.isKinematic = false;
         _collider.enabled = true;
         transform.parent = null;
-        SetLayer(0);
+        Held = false;
+
+        if (setLayer)
+            SetLayer(0);
     }
 
     private void SetLayer(int layerIndex)
