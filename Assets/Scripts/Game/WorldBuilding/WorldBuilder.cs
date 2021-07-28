@@ -139,11 +139,15 @@ public class WorldBuilder : MonoBehaviour
                 DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
                 if(detailColor != null)
                 {
-                    block.BehaviourProperties.Properties.Add(BehaviourPropertyContainer.GetBehaviourProperty(detailColor));
+                    block.BehaviourProperties.DetailColorPropertyCollection = new DetailColorPropertyCollection();
                 }
             }
 
             propertyExposer.WasLoaded(block.BehaviourProperties);
+        }
+        else
+        {
+            block.BehaviourProperties = null;
         }
     }
 

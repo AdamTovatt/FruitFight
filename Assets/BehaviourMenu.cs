@@ -39,7 +39,7 @@ public class BehaviourMenu : MonoBehaviour
         DetailColorMenu.Show(currentBlock);
         DetailColorMenu.OnClosed += (DetailColor color) => 
         {
-            DetailColorPropertyCollection detailColorCollection = ((DetailColorPropertyCollection)currentBlock.BehaviourProperties.GetProperties(currentDetailColor));
+            DetailColorPropertyCollection detailColorCollection = ((DetailColorPropertyCollection)currentBlock.BehaviourProperties.GetProperties(typeof(DetailColorController)));
             detailColorCollection.Color = color;
             detailColorCollection.ApplyValues(currentDetailColor);
             DetailColorMenu.gameObject.SetActive(false);

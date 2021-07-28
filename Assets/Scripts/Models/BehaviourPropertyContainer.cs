@@ -8,13 +8,18 @@ namespace Assets.Scripts.Models
     [Serializable]
     public class BehaviourPropertyContainer
     {
-        public List<BehaviourPropertyCollection> Properties = new List<BehaviourPropertyCollection>();
+        public DetailColorPropertyCollection DetailColorPropertyCollection;
 
         private Dictionary<Type, BehaviourPropertyCollection> properties;
 
-        public BehaviourPropertyCollection GetProperties(MonoBehaviour behaviour)
+        public BehaviourPropertyCollection GetProperties(Type behaviour)
         {
-            return Properties.Where(x => x.AssociatedType == behaviour.GetType()).FirstOrDefault();
+            if (behaviour == typeof(DetailColorController))
+            {
+                return DetailColorPropertyCollection;
+            }
+            else
+                throw new Exception("Unsupported behaviour type");
         }
 
         public static BehaviourPropertyCollection GetBehaviourProperty(MonoBehaviour behaviour)

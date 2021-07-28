@@ -52,7 +52,7 @@ public class DetailColorMenu : MonoBehaviour
 
     public void Show(Block block)
     {
-        DetailColorPropertyCollection detailColor = (DetailColorPropertyCollection)block.BehaviourProperties.GetProperties(block.Instance.GetComponent<DetailColorController>());
+        DetailColorPropertyCollection detailColor = (DetailColorPropertyCollection)block.BehaviourProperties.GetProperties(typeof(DetailColorController));
         currentColor = Array.IndexOf(colors, detailColor.Color);
 
         DisplayColorText();
