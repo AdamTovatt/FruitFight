@@ -15,6 +15,7 @@ public class BlockInfo
     public List<string> EdgePrefabs;
     public bool RotatableX;
     public bool RotatableY;
+    public bool StartWithPropertyExposer;
 
     public BlockInfo()
     {

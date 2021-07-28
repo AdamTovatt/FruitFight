@@ -1,3 +1,4 @@
+using Assets.Scripts.Models;
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ public class WorldBuilder : MonoBehaviour
             block.Instance = instantiatedObject;
             block.SeeThroughBlock = instantiatedObject.GetComponent<SeeThroughBlock>();
             previousWorldObjects.Add(instantiatedObject);
-            if(block.Info.RotatableX || block.Info.RotatableY)
+            if (block.Info.RotatableX || block.Info.RotatableY)
             {
                 block.Instance.transform.rotation = block.Rotation;
             }
@@ -118,13 +119,39 @@ public class WorldBuilder : MonoBehaviour
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), transform));
             }
         }
+
+        if (!block.HasPropertyExposer && block.Info.StartWithPropertyExposer)
+            block.HasPropertyExposer = true;
+
+        if (block.HasPropertyExposer)
+        {
+            PropertyExposer propertyExposer = block.Instance.GetComponent<PropertyExposer>();
+
+            if (propertyExposer == null)
+            {
+                propertyExposer = block.Instance.AddComponent<PropertyExposer>();
+            }
+
+            if (block.BehaviourProperties == null)
+            {
+                block.BehaviourProperties = new BehaviourPropertyContainer();
+
+                DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
+                if(detailColor != null)
+                {
+                    block.BehaviourProperties.Properties.Add(BehaviourPropertyContainer.GetBehaviourProperty(detailColor));
+                }
+            }
+
+            propertyExposer.WasLoaded(block.BehaviourProperties);
+        }
     }
 
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        
-        foreach(PartialBlockIntersection cube in debugCubes)
+
+        foreach (PartialBlockIntersection cube in debugCubes)
         {
             Gizmos.DrawCube(cube.CenterPoint, cube.Size);
         }

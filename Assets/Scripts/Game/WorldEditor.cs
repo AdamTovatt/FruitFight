@@ -499,8 +499,14 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
-        if (CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).Count() > 0)
-            return;
+        List<Block> sameBlocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList();
+        if (sameBlocks.Count() > 0)
+        {
+            Block selectedBlock = sameBlocks.First();
+            Debug.Log("selected block: " + selectedBlock.ToString());
+            Debug.Log(selectedBlock.HasPropertyExposer);
+            Debug.Log(selectedBlock.BehaviourProperties.Properties.Count());
+        }
 
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);

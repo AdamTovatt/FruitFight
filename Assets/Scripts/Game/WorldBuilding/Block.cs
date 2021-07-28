@@ -1,3 +1,4 @@
+using Assets.Scripts.Models;
 using Lookups;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ public class Block
     public Quaternion Rotation;
     public Vector3 RotationOffset;
     public int Id;
+    public bool HasPropertyExposer;
+    public BehaviourPropertyContainer BehaviourProperties;
 
     private static int lastId = 1;
 
