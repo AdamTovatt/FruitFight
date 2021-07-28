@@ -12,6 +12,7 @@ public class WorldEditorUi : MonoBehaviour
     public EditorPauseMenu PauseMenu;
     public EditorBlockMenu BlockMenu;
     public TestLevelPauseMenu TestLevelPauseMenu;
+    public BehaviourMenu BehaviourMenu;
 
     public GameObject EventSystem;
 
@@ -97,6 +98,24 @@ public class WorldEditorUi : MonoBehaviour
 
         GameManager.Instance.EnablePlayerControls();
         TestLevelPauseMenu.gameObject.SetActive(false);
+        WorldEditor.Instance.EnableControls();
+    }
+
+    public void OpenBehaviourMenu(Block block)
+    {
+        if (uiInput != null)
+            uiInput.enabled = true;
+
+        BehaviourMenu.gameObject.SetActive(true);
+        BehaviourMenu.Show(block);
+    }
+
+    public void CloseBehaviourMenu()
+    {
+        if (uiInput != null)
+            uiInput.enabled = false;
+
+        BehaviourMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
     }
 

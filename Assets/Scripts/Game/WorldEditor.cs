@@ -505,7 +505,8 @@ public class WorldEditor : MonoBehaviour
             Block selectedBlock = sameBlocks.First();
             Debug.Log("selected block: " + selectedBlock.ToString());
             Debug.Log(selectedBlock.HasPropertyExposer);
-            Debug.Log(selectedBlock.BehaviourProperties.Properties.Count());
+            controlsDisabled = true;
+            WorldEditorUi.Instance.OpenBehaviourMenu(selectedBlock);
         }
 
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);

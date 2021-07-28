@@ -14,7 +14,7 @@ namespace Assets.Scripts.Models
 
         public BehaviourPropertyCollection GetProperties(MonoBehaviour behaviour)
         {
-            return Properties.Where(x => x.AssociatedType == typeof(Behaviour)).FirstOrDefault();
+            return Properties.Where(x => x.AssociatedType == behaviour.GetType()).FirstOrDefault();
         }
 
         public static BehaviourPropertyCollection GetBehaviourProperty(MonoBehaviour behaviour)
