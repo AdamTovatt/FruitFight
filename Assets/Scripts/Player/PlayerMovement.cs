@@ -28,7 +28,9 @@ public class PlayerMovement : MovingCharacter
 
     public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get; set; }
-    public Holdable HeldItem { get; set; }
+    public Holdable HeldItem { get; private set; }
+
+    public Collider Collider { get; set; }
 
     public int JellyBeans { get; set; }
 
@@ -63,7 +65,8 @@ public class PlayerMovement : MovingCharacter
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
         playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
-        
+        Collider = gameObject.GetComponent<Collider>();
+
         CurrentRunSpeed = Speed;
 
         inputActions.Add(playerControls.Gameplay.Attack.id, PlayerInputAction.Attack);

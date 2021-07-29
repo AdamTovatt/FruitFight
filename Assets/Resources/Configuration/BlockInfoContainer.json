@@ -602,7 +602,18 @@
       "Name": "Sphere Key",
       "Prefab": "SphereKeySpawner",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer":  true
+      "StartWithPropertyExposer": true
+    },
+    {
+      "Id": 59,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Rock Large",
+      "Prefab": "Rock8",
+      "RotatableX": true,
+      "RotatableY": true
     }
   ]
 }

@@ -131,6 +131,9 @@ public class GameManager : MonoBehaviour
             {
                 if (hitInfo.transform == player.transform)
                     continue;
+
+                if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude)
+                    continue;
             }
 
             for (int x = 0; x < BlockSeeThroughRadius * 2; x++)
