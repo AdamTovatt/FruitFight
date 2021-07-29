@@ -26,12 +26,23 @@ public class KeyCollectionArea : MonoBehaviour
             {
                 if(holdable.Id == KeyId)
                 {
-                    holdable.PlacedInHolder(HoldPoint);
-                    StateSwitcher.Activate();
-                    holdable.OnWasPickedUp += KeyRemoved;
+                    if (ColorCheck(holdable))
+                    {
+                        holdable.PlacedInHolder(HoldPoint);
+                        StateSwitcher.Activate();
+                        holdable.OnWasPickedUp += KeyRemoved;
+                    }
                 }
             }
         }
+    }
+
+    private bool ColorCheck(Holdable holdable)
+    {
+        if (!holdable.HasDetailColor || !StateSwitcher.HasDetailColor)
+            return true;
+
+        return holdable.DetailColor == StateSwitcher.DetailColor;
     }
 
     private void KeyRemoved(Transform removingTransform)

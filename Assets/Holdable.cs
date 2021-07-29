@@ -7,6 +7,8 @@ public class Holdable : MonoBehaviour
     public float Radius = 0.2f;
     public string Id;
     public bool Held { get; private set; }
+    public bool HasDetailColor { get; private set; }
+    public DetailColor DetailColor { get; private set; }
 
     private Collider _collider;
     private Rigidbody _rigidbody;
@@ -18,6 +20,10 @@ public class Holdable : MonoBehaviour
     {
         _collider = gameObject.GetComponent<Collider>();
         _rigidbody = gameObject.GetComponent<Rigidbody>();
+
+        HasDetailColor = gameObject.GetComponent<DetailColorController>() != null;
+        if (HasDetailColor)
+            DetailColor = gameObject.GetComponent<DetailColorController>().Color;
     }
 
     public void PlacedInHolder(Transform newParent)
