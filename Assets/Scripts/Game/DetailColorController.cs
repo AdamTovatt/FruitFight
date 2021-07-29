@@ -31,6 +31,8 @@ public class DetailColorController : MonoBehaviour
     {
         foreach (Renderer _renderer in DetailRenderers)
             _renderer.material.mainTexture = detailColors[Color];
+
+        SetEmission(CurrentEmission);
     }
 
     public void SetEmission(float emission)

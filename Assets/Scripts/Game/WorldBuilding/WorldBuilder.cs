@@ -1,3 +1,4 @@
+using Assets.Scripts.Models;
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ public class WorldBuilder : MonoBehaviour
 
     private List<GameObject> previousWorldObjects;
 
+    private World upcommingWorld;
+    private List<MoveOnTrigger> moveOnTriggerObjectsToBind = new List<MoveOnTrigger>();
     public World CurrentWorld { get; set; }
 
     private void Awake()
@@ -35,18 +38,18 @@ public class WorldBuilder : MonoBehaviour
             NextLevel = World.FromWorldName("01");
 
         BuildWorld(NextLevel);
-        CurrentWorld = NextLevel;
     }
 
     public void Build(string worldName)
     {
         World world = World.FromWorldName(worldName);
         BuildWorld(world);
-        CurrentWorld = world;
     }
 
     public void BuildWorld(World world)
     {
+        upcommingWorld = world;
+
         debugCubes.Clear();
 
         foreach (GameObject gameObject in previousWorldObjects)
@@ -60,6 +63,8 @@ public class WorldBuilder : MonoBehaviour
             PlaceBlock(block);
         }
 
+        BindMoveOnTriggerObjects();
+
         CurrentWorld = world;
     }
 
@@ -72,7 +77,7 @@ public class WorldBuilder : MonoBehaviour
             block.Instance = instantiatedObject;
             block.SeeThroughBlock = instantiatedObject.GetComponent<SeeThroughBlock>();
             previousWorldObjects.Add(instantiatedObject);
-            if(block.Info.RotatableX || block.Info.RotatableY)
+            if (block.Info.RotatableX || block.Info.RotatableY)
             {
                 block.Instance.transform.rotation = block.Rotation;
             }
@@ -98,33 +103,79 @@ public class WorldBuilder : MonoBehaviour
             if (block.NeighborX.Positive == null || block.NeighborX.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1) //if we don't have a neighbor we should create an edge
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), transform));
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), block.Instance.transform));
             }
 
             if (block.NeighborX.Negative == null || block.NeighborX.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, -90, 0), transform));
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, -90, 0), block.Instance.transform));
             }
 
             if (block.NeighborZ.Positive == null || block.NeighborZ.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 0, 0), transform));
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 0, 0), block.Instance.transform));
             }
             if (block.NeighborZ.Negative == null || block.NeighborZ.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
-                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), transform));
+                previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), block.Instance.transform));
             }
+        }
+
+        if (!block.HasPropertyExposer && block.Info.StartWithPropertyExposer)
+            block.HasPropertyExposer = true;
+
+        if (block.HasPropertyExposer)
+        {
+            PropertyExposer propertyExposer = block.Instance.GetComponent<PropertyExposer>();
+
+            if (propertyExposer == null)
+            {
+                propertyExposer = block.Instance.AddComponent<PropertyExposer>();
+            }
+
+            if (block.BehaviourProperties == null)
+            {
+                block.BehaviourProperties = new BehaviourPropertyContainer();
+
+                DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
+                if(detailColor != null)
+                {
+                    block.BehaviourProperties.DetailColorPropertyCollection = new DetailColorPropertyCollection();
+                }
+            }
+
+            if(block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)
+            {
+                MoveOnTrigger moveOnTrigger = block.Instance.GetComponent<MoveOnTrigger>();
+                if (moveOnTrigger == null)
+                    moveOnTrigger = block.Instance.AddComponent<MoveOnTrigger>();
+
+                moveOnTrigger.Init(block, upcommingWorld.Blocks.Where(b => b.Id == block.BehaviourProperties.MovePropertyCollection.ActivatorBlockId).FirstOrDefault());
+                moveOnTriggerObjectsToBind.Add(moveOnTrigger);
+
+                propertyExposer.Behaviours.Add(moveOnTrigger);
+            }
+
+            propertyExposer.WasLoaded(block.BehaviourProperties);
+        }
+    }
+
+    private void BindMoveOnTriggerObjects()
+    {
+        foreach(MoveOnTrigger move in moveOnTriggerObjectsToBind)
+        {
+            move.BindStateSwitcher();
         }
     }
 
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        
-        foreach(PartialBlockIntersection cube in debugCubes)
+
+        foreach (PartialBlockIntersection cube in debugCubes)
         {
             Gizmos.DrawCube(cube.CenterPoint, cube.Size);
         }

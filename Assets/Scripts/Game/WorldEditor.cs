@@ -43,8 +43,11 @@ public class WorldEditor : MonoBehaviour
     private bool controlsDisabled = false;
     private bool isTestingLevel = false;
     private bool isRotatingObject = false;
+    private bool isPickingActivator = false;
+    private bool isPickingFinalPosition = false;
     private Vector2 currentLeftStickInput;
     private Block selectedWorldObject; //this is the selected object in the world, the object which the marker is above
+    private MoveMenu moveMenu;
 
     private float lastMarkerMoveTime;
     private float lastPageSwitchTime;
@@ -123,6 +126,47 @@ public class WorldEditor : MonoBehaviour
     {
         spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(editorCamera.transform);
         GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
+    }
+
+    public void PickMoveFinalPosition(MoveMenu menu, Block block)
+    {
+        menu.gameObject.SetActive(false);
+        moveMenu = menu;
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
+        WorldEditorUi.Instance.DisableUiInput();
+        EnableControls();
+        isPickingFinalPosition = true;
+        SetSelectedBlock(block.BlockInfoId);
+    }
+
+    public void PickedMoveFinalPosition(Vector3Int position)
+    {
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
+        WorldEditorUi.Instance.EnableUiInput();
+        controlsDisabled = true;
+        isPickingFinalPosition = false;
+        moveMenu.gameObject.SetActive(true);
+        moveMenu.FinalPositionWasSet(position);
+    }
+
+    public void PickActivator(MoveMenu menu)
+    {
+        menu.gameObject.SetActive(false);
+        moveMenu = menu;
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
+        WorldEditorUi.Instance.DisableUiInput();
+        EnableControls();
+        isPickingActivator = true;
+    }
+
+    private void PickedActivator(Block selectedStateSwitcher)
+    {
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
+        WorldEditorUi.Instance.EnableUiInput();
+        controlsDisabled = true;
+        isPickingActivator = false;
+        moveMenu.gameObject.SetActive(true);
+        moveMenu.ActivatorWasSet(selectedStateSwitcher);
     }
 
     public void SaveLevel()
@@ -405,19 +449,22 @@ public class WorldEditor : MonoBehaviour
 
     private void MoveBlockSelection(InputAction.CallbackContext context)
     {
-        if (!controlsDisabled || isTestingLevel)
+        if (!isPickingFinalPosition)
         {
-            if (isRotatingObject)
-                ExitRotationMode();
+            if (!controlsDisabled || isTestingLevel)
+            {
+                if (isRotatingObject)
+                    ExitRotationMode();
 
-            Vector2 rawMoveValue = context.ReadValue<Vector2>();
-            currentLeftStickInput = rawMoveValue;
+                Vector2 rawMoveValue = context.ReadValue<Vector2>();
+                currentLeftStickInput = rawMoveValue;
 
-            int binaryX = Mathf.Abs(rawMoveValue.x) > 0 ? (Mathf.Abs(rawMoveValue.x) < 1 ? 0 : (int)rawMoveValue.x) : 0;
-            int binaryY = Mathf.Abs(rawMoveValue.y) > 0 ? (Mathf.Abs(rawMoveValue.y) < 1 ? 0 : (int)rawMoveValue.y) : 0;
+                int binaryX = Mathf.Abs(rawMoveValue.x) > 0 ? (Mathf.Abs(rawMoveValue.x) < 1 ? 0 : (int)rawMoveValue.x) : 0;
+                int binaryY = Mathf.Abs(rawMoveValue.y) > 0 ? (Mathf.Abs(rawMoveValue.y) < 1 ? 0 : (int)rawMoveValue.y) : 0;
 
-            if (!(Mathf.Abs(binaryY) < 1 && Mathf.Abs(binaryX) < 1))
-                Ui.BlockMenu.MoveBlockButtonSelection(new Vector2Int(binaryX, binaryY));
+                if (!(Mathf.Abs(binaryY) < 1 && Mathf.Abs(binaryX) < 1))
+                    Ui.BlockMenu.MoveBlockButtonSelection(new Vector2Int(binaryX, binaryY));
+            }
         }
     }
 
@@ -491,7 +538,7 @@ public class WorldEditor : MonoBehaviour
         if (controlsDisabled || isTestingLevel)
             return;
 
-        if(isRotatingObject)
+        if (isRotatingObject)
         {
             ExitRotationMode();
             return;
@@ -499,8 +546,29 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
-        if (CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).Count() > 0)
+        if(isPickingActivator)
+        {
+            List<Block> stateSwitchers = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.Instance.GetComponent<StateSwitcher>() != null).ToList();
+            PickedActivator(stateSwitchers.FirstOrDefault());
             return;
+        }
+
+        if(isPickingFinalPosition)
+        {
+            PickedMoveFinalPosition(MarkerPosition);
+            return;
+        }
+
+        List<Block> sameBlocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList();
+        if (sameBlocks.Count() > 0)
+        {
+            Block selectedBlock = sameBlocks.First();
+            Debug.Log("selected block: " + selectedBlock.ToString());
+            Debug.Log(selectedBlock.HasPropertyExposer);
+            controlsDisabled = true;
+            WorldEditorUi.Instance.OpenBehaviourMenu(selectedBlock);
+            return;
+        }
 
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
         CurrentWorld.Add(block);

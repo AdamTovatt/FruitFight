@@ -590,7 +590,8 @@
       "ShowInEditor": true,
       "Name": "Sphere Holder",
       "Prefab": "SphereHolder",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "StartWithPropertyExposer": true
     },
     {
       "Id": 58,
@@ -600,7 +601,8 @@
       "ShowInEditor": true,
       "Name": "Sphere Key",
       "Prefab": "SphereKeySpawner",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "StartWithPropertyExposer":  true
     }
   ]
 }
