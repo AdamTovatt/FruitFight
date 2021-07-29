@@ -41,7 +41,7 @@ public class MoveOnTrigger : MonoBehaviour
         if (Time.time - initTime < 1.5f)
         {
             lerpValue = 1;
-            transform.position = FinalPosition;
+            transform.position = FinalPosition + block.RotationOffset;
             lerping = false;
         }
     }
@@ -50,7 +50,7 @@ public class MoveOnTrigger : MonoBehaviour
     {
         active = false;
         lerping = true;
-        transform.position = block.Position;
+        transform.position = block.Position + block.RotationOffset;
     }
 
     private void Update()
@@ -64,14 +64,14 @@ public class MoveOnTrigger : MonoBehaviour
                 else
                     lerpValue -= Time.deltaTime * moveSpeed * Mathf.Clamp(lerpValue, 0.1f, 1f);
 
-                transform.position = Vector3.Lerp(block.Position, FinalPosition, lerpValue);
+                transform.position = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
             }
             else
             {
                 if (lerpValue > 1)
-                    transform.position = FinalPosition;
+                    transform.position = FinalPosition + block.RotationOffset;
                 else if (lerpValue < 0)
-                    transform.position = block.Position;
+                    transform.position = block.Position + block.RotationOffset;
 
                 lerpValue = Mathf.Clamp(lerpValue, 0, 1);
                 lerping = false;
