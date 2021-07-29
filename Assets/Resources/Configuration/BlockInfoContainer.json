@@ -614,6 +614,24 @@
       "Prefab": "Rock8",
       "RotatableX": true,
       "RotatableY": true
+    },
+    {
+      "Id": 60,
+      "BlockType": 3,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Crystal Dark",
+      "Prefab": "CrystalDark"
+    },
+    {
+      "Id": 61,
+      "BlockType": 3,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "CrystalLight",
+      "Prefab": "CrystalLight"
     }
   ]
 }
