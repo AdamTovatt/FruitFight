@@ -1029,14 +1029,15 @@ MonoBehaviour:
   DeadPrefab: {fileID: 6685402637311709369, guid: 10adf5ca9b835cc4fab62d42d267d53e,
     type: 3}
   RoamSpeed: 0.8
-  RoamNewTargetRange: 5
+  RoamNewTargetRange: 7
   ChaseSpeed: 3
   SearchSpeed: 2
   PersonalBoundaryDistance: 0.62
-  DiscoveryRadius: 3
+  DiscoveryRadius: 6
   DistanceToGround: 0.3
-  AttackInitialWaitTime: 0.4
+  AttackInitialWaitTime: 0.3
   AttackCooldown: 1
+  PunchDamage: 10
   JellyBeanModel: {fileID: 728964469066429983}
   CoatingTextures:
   - {fileID: 2800000, guid: 7f8f719ff37741d41a4aa5267db39563, type: 3}
