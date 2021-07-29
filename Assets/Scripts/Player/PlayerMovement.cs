@@ -12,6 +12,7 @@ public class PlayerMovement : MovingCharacter
     private MultipleTargetCamera multipleTargetCamera;
     private PlayerControls playerControls;
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
+    private Health health;
 
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -59,6 +60,8 @@ public class PlayerMovement : MovingCharacter
     private Collision lastCollision;
     private float rotateCamera;
 
+    private Vector3 lastGroundedPosition;
+
     private void Awake()
     {
         ControlsEnabled = true;
@@ -66,6 +69,7 @@ public class PlayerMovement : MovingCharacter
         playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
         Collider = gameObject.GetComponent<Collider>();
+        health = gameObject.GetComponent<Health>();
 
         CurrentRunSpeed = Speed;
 
@@ -75,6 +79,21 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.RotateCameraLeft.id, PlayerInputAction.RotateCameraLeft);
         inputActions.Add(playerControls.Gameplay.RotateCameraRight.id, PlayerInputAction.RotateCameraRight);
         inputActions.Add(playerControls.Gameplay.Pause.id, PlayerInputAction.Pause);
+    }
+
+    private void Start()
+    {
+        health.OnDied += OnDied;
+    }
+
+    private void OnDestroy()
+    {
+        health.OnDied -= OnDied;
+    }
+
+    private void OnDied(Health sender)
+    {
+        transform.position = lastGroundedPosition;
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
@@ -176,6 +195,9 @@ public class PlayerMovement : MovingCharacter
 
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
+
+        if (IsGrounded)
+            lastGroundedPosition = transform.position;
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 

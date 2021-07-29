@@ -85,14 +85,14 @@ public class Health : MonoBehaviour
         {
             if (CanDie)
             {
-                OnDied?.Invoke(this);
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
+                OnDied?.Invoke(this);
 
-                if (IsPlayer)
-                    RemoveFromPlayerList();
+                //if (IsPlayer)
+                //    RemoveFromPlayerList();
 
-                DestroyWithDelay destroyWithDelay = gameObject.AddComponent<DestroyWithDelay>();
-                destroyWithDelay.DelaySeconds = 0.2f;
+                //DestroyWithDelay destroyWithDelay = gameObject.AddComponent<DestroyWithDelay>();
+                //destroyWithDelay.DelaySeconds = 0.2f;
             }
         }
     }
