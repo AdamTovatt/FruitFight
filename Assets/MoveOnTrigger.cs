@@ -12,8 +12,16 @@ public class MoveOnTrigger : MonoBehaviour
 
     private StateSwitcher stateSwitcher;
 
+    private bool active = false;
+    private bool lerping = false;
+    private float lerpValue = 0f;
+    private float moveSpeed = 0.5f;
+
+    private float initTime;
+
     public void Init(Block thisBlock, Block activatorBlock)
     {
+        initTime = Time.time;
         block = thisBlock;
         activatorObject = activatorBlock;
     }
@@ -27,12 +35,48 @@ public class MoveOnTrigger : MonoBehaviour
 
     public void Activated()
     {
-        transform.position = FinalPosition;
+        active = true;
+        lerping = true;
+
+        if (Time.time - initTime < 1.5f)
+        {
+            lerpValue = 1;
+            transform.position = FinalPosition;
+            lerping = false;
+        }
     }
 
     public void Deactivated()
     {
+        active = false;
+        lerping = true;
         transform.position = block.Position;
+    }
+
+    private void Update()
+    {
+        if (lerping)
+        {
+            if (lerpValue <= 1 && lerpValue >= 0)
+            {
+                if (active)
+                    lerpValue += Time.deltaTime * moveSpeed * Mathf.Clamp((1 - lerpValue), 0.1f, 1f);
+                else
+                    lerpValue -= Time.deltaTime * moveSpeed * Mathf.Clamp(lerpValue, 0.1f, 1f);
+
+                transform.position = Vector3.Lerp(block.Position, FinalPosition, lerpValue);
+            }
+            else
+            {
+                if (lerpValue > 1)
+                    transform.position = FinalPosition;
+                else if (lerpValue < 0)
+                    transform.position = block.Position;
+
+                lerpValue = Mathf.Clamp(lerpValue, 0, 1);
+                lerping = false;
+            }
+        }
     }
 
     private void OnDestroy()
