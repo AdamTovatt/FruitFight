@@ -19,6 +19,10 @@ namespace Assets.Scripts.Models
             {
                 return DetailColorPropertyCollection;
             }
+            else if(behaviour == typeof(MoveOnTrigger))
+            {
+                return MovePropertyCollection;
+            }
             else
                 throw new Exception("Unsupported behaviour type");
         }

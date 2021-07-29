@@ -67,6 +67,7 @@ public class BehaviourMenu : MonoBehaviour
             MoveButton.Select();
         };
 
+
         Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.ActivatorBlockId);
         Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition);
     }

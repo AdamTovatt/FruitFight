@@ -25,14 +25,38 @@ public class MoveMenu : MonoBehaviour
         CloseButton.onClick.AddListener(Close);
     }
 
+    public void ActivatorWasSet(Block activatorBlock)
+    {
+        SetActivatorButton.Select();
+
+        if (activatorBlock != null)
+        {
+            currentBlock.BehaviourProperties.MovePropertyCollection.ActivatorBlockId = activatorBlock.Id;
+            CurrentActivatorText.text = currentBlock.BehaviourProperties.MovePropertyCollection.ActivatorBlockId.ToString();
+            currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
+        }
+        else
+        {
+            WorldEditorUi.Instance.AlertCreator.CreateAlert("That object can not act as an activator").OnOptionWasChosen += (object sender, int optionIndex) => { SetActivatorButton.Select(); };
+        }
+    }
+
     private void SetActivator()
     {
-        Debug.Log("set activator");
+        WorldEditor.Instance.PickActivator(this);
+    }
+
+    public void FinalPositionWasSet(Vector3Int position)
+    {
+        currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition = position;
+        currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
+        FinalPositionText.text = position.ToString();
+        SetActivatorButton.Select();
     }
 
     private void SetFinalPosition()
     {
-        Debug.Log("set final position");
+        WorldEditor.Instance.PickMoveFinalPosition(this, currentBlock);
     }
 
     private void Close()

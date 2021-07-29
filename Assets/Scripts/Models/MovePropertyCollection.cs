@@ -17,7 +17,7 @@ namespace Assets.Scripts.Models
         public override void ApplyValues(MonoBehaviour behaviour)
         {
             if (behaviour.GetType() != typeof(MoveOnTrigger))
-                throw new Exception("Only DetailColorController can be controlled by this behaviour property keeper");
+                throw new Exception("Only MoveOnTrigger can be controlled by this behaviour property keeper");
 
             if (HasValues)
             {

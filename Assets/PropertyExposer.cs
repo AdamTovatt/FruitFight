@@ -6,14 +6,20 @@ using UnityEngine;
 
 public class PropertyExposer : MonoBehaviour
 {
-    public List<MonoBehaviour> Behaviours;
+    public List<MonoBehaviour> Behaviours = new List<MonoBehaviour>();
     private BehaviourPropertyContainer PropertyContainer;
 
     private void ApplyValues()
     {
-        foreach(MonoBehaviour behaviour in Behaviours)
+        if (Behaviours != null)
         {
-            PropertyContainer.GetProperties(behaviour.GetType()).ApplyValues(behaviour);
+            foreach (MonoBehaviour behaviour in Behaviours)
+            {
+                BehaviourPropertyCollection behaviourPropertyCollection = PropertyContainer.GetProperties(behaviour.GetType());
+
+                if (behaviourPropertyCollection != null)
+                    behaviourPropertyCollection.ApplyValues(behaviour);
+            }
         }
     }
 

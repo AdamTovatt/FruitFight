@@ -165,4 +165,16 @@ public class WorldEditorUi : MonoBehaviour
 
         loadingScreen.Hide();
     }
+
+    public void EnableUiInput()
+    {
+        if (uiInput != null)
+            uiInput.enabled = true;
+    }
+
+    public void DisableUiInput()
+    {
+        if (uiInput != null)
+            uiInput.enabled = false;
+    }
 }
