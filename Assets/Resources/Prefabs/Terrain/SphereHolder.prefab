@@ -4903,7 +4903,7 @@ GameObject:
   - component: {fileID: 8115786303346708708}
   m_Layer: 0
   m_Name: SphereHolder
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5000,6 +5000,7 @@ GameObject:
   - component: {fileID: 1790161477491647883}
   - component: {fileID: 8589905771897056413}
   - component: {fileID: 3419581084718283417}
+  - component: {fileID: 8077996500768765640}
   m_Layer: 0
   m_Name: SphereHolder
   m_TagString: Untagged
@@ -5091,6 +5092,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Behaviours:
   - {fileID: 8589905771897056413}
+--- !u!114 &8077996500768765640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8962296803270355154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c2a4bf4cdffc0408db7bdf6964d562, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ContainedHoldable: {fileID: 0}
 --- !u!1 &9147864928324483630
 GameObject:
   m_ObjectHideFlags: 0

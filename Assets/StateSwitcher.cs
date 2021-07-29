@@ -13,6 +13,13 @@ public class StateSwitcher : MonoBehaviour
     public delegate void OnDeactivatedHandler();
     public event OnDeactivatedHandler OnDeactivated;
 
+    private HoldableDelegate holdableDelegate;
+
+    private void Awake()
+    {
+        holdableDelegate = gameObject.GetComponent<HoldableDelegate>();
+    }
+
     private void Start()
     {
         HasDetailColor = gameObject.GetComponent<DetailColorController>() != null;
@@ -20,15 +27,19 @@ public class StateSwitcher : MonoBehaviour
             DetailColor = gameObject.GetComponent<DetailColorController>().Color;
     }
 
-    public void Activate()
+    public void Activate(Holdable holdable)
     {
-        Debug.Log("State switcher was activated");
+        if (holdableDelegate != null)
+            holdableDelegate.SetContainedHoldable(holdable);
+
         OnActivated?.Invoke();
     }
 
     public void Deactivate()
     {
-        Debug.Log("State switcher was deactivated");
+        if (holdableDelegate != null)
+            holdableDelegate.RemoveContainedHoldable();
+
         OnDeactivated?.Invoke();
     }
 }

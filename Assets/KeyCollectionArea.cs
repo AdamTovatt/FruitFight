@@ -16,7 +16,6 @@ public class KeyCollectionArea : MonoBehaviour
             int instanceId = other.GetInstanceID();
             if (!holdableItems.ContainsKey(other.GetInstanceID()))
             {
-                Debug.Log("Did holdable lookup");
                 holdableItems.Add(instanceId, other.GetComponent<Holdable>());
             }
 
@@ -29,7 +28,7 @@ public class KeyCollectionArea : MonoBehaviour
                     if (ColorCheck(holdable))
                     {
                         holdable.PlacedInHolder(HoldPoint);
-                        StateSwitcher.Activate();
+                        StateSwitcher.Activate(holdable);
                         holdable.OnWasPickedUp += KeyRemoved;
                     }
                 }

@@ -213,6 +213,14 @@ public class PlayerMovement : MovingCharacter
                     if (hit.transform.tag == "Interactable")
                     {
                         Holdable holdable = hit.transform.GetComponent<Holdable>();
+
+                        if(holdable == null)
+                        {
+                            HoldableDelegate holdableDelegate = hit.transform.GetComponentInParent<HoldableDelegate>();
+                            if (holdableDelegate != null)
+                                holdable = holdableDelegate.ContainedHoldable;
+                        }
+
                         if (holdable != null)
                         {
                             shouldPunch = false;
