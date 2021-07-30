@@ -6,6 +6,7 @@ public class MoveOnTrigger : MonoBehaviour
 {
     public Vector3 FinalPosition { get; set; }
     public int ActivatorBlockId { get; set; }
+    public float MoveSpeed { get; set; } = 0.5f;
 
     private Block activatorObject;
     private Block block;
@@ -15,7 +16,6 @@ public class MoveOnTrigger : MonoBehaviour
     private bool active = false;
     private bool lerping = false;
     private float lerpValue = 0f;
-    private float moveSpeed = 0.5f;
 
     private float initTime;
 
@@ -60,9 +60,9 @@ public class MoveOnTrigger : MonoBehaviour
             if (lerpValue <= 1 && lerpValue >= 0)
             {
                 if (active)
-                    lerpValue += Time.deltaTime * moveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue *2)-1), 2))) + 1, 0.1f, 1f);
+                    lerpValue += Time.deltaTime * MoveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f);
                 else
-                    lerpValue -= Time.deltaTime * moveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue *2)-1), 2))) + 1, 0.1f, 1f);
+                    lerpValue -= Time.deltaTime * MoveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f);
 
                 transform.position = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
             }

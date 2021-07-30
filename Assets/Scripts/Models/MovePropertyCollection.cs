@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models
         public bool HasValues;
         public int ActivatorBlockId;
         public Vector3 FinalPosition;
+        public float MoveSpeed = 0.5f;
 
         public override void ApplyValues(MonoBehaviour behaviour)
         {
@@ -24,6 +25,7 @@ namespace Assets.Scripts.Models
                 MoveOnTrigger move = (MoveOnTrigger)behaviour;
                 move.FinalPosition = FinalPosition;
                 move.ActivatorBlockId = ActivatorBlockId;
+                move.MoveSpeed = MoveSpeed;
             }
             else
             {

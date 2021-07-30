@@ -9,9 +9,12 @@ public class MoveMenu : MonoBehaviour
     public Button SetActivatorButton;
     public Button SetFinalPositionButton;
     public Button CloseButton;
+    public Button IncreaseMoveSpeedButton;
+    public Button DecreaseMoveSpeedButton;
 
     public TextMeshProUGUI CurrentActivatorText;
     public TextMeshProUGUI FinalPositionText;
+    public TextMeshProUGUI MoveSpeedText;
 
     public delegate void OnClosedHandler();
     public event OnClosedHandler OnClosed;
@@ -23,6 +26,8 @@ public class MoveMenu : MonoBehaviour
         SetActivatorButton.onClick.AddListener(SetActivator);
         SetFinalPositionButton.onClick.AddListener(SetFinalPosition);
         CloseButton.onClick.AddListener(Close);
+        IncreaseMoveSpeedButton.onClick.AddListener(IncreaseMoveSpeed);
+        DecreaseMoveSpeedButton.onClick.AddListener(DecreaseMoveSpeed);
     }
 
     public void ActivatorWasSet(Block activatorBlock)
@@ -39,6 +44,24 @@ public class MoveMenu : MonoBehaviour
         {
             WorldEditorUi.Instance.AlertCreator.CreateAlert("That object can not act as an activator").OnOptionWasChosen += (object sender, int optionIndex) => { SetActivatorButton.Select(); };
         }
+    }
+
+    private void IncreaseMoveSpeed()
+    {
+        float moveSpeed = currentBlock.BehaviourProperties.MovePropertyCollection.MoveSpeed;
+        moveSpeed = Mathf.Clamp(moveSpeed + 0.1f, 0.1f, 10);
+        currentBlock.BehaviourProperties.MovePropertyCollection.MoveSpeed = moveSpeed;
+        currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
+        MoveSpeedText.text = moveSpeed.ToString("0.0");
+    }
+
+    private void DecreaseMoveSpeed()
+    {
+        float moveSpeed = currentBlock.BehaviourProperties.MovePropertyCollection.MoveSpeed;
+        moveSpeed = Mathf.Clamp(moveSpeed - 0.1f, 0.1f, 10);
+        currentBlock.BehaviourProperties.MovePropertyCollection.MoveSpeed = moveSpeed;
+        currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
+        MoveSpeedText.text = moveSpeed.ToString("0.0");
     }
 
     private void SetActivator()
@@ -73,6 +96,7 @@ public class MoveMenu : MonoBehaviour
         {
             CurrentActivatorText.text = block.BehaviourProperties.MovePropertyCollection.ActivatorBlockId.ToString();
             FinalPositionText.text = block.BehaviourProperties.MovePropertyCollection.FinalPosition.ToString();
+            MoveSpeedText.text = block.BehaviourProperties.MovePropertyCollection.MoveSpeed.ToString("0.0");
         }
         else
         {
