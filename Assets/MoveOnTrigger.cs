@@ -60,9 +60,9 @@ public class MoveOnTrigger : MonoBehaviour
             if (lerpValue <= 1 && lerpValue >= 0)
             {
                 if (active)
-                    lerpValue += Time.deltaTime * moveSpeed * Mathf.Clamp((1 - lerpValue), 0.1f, 1f);
+                    lerpValue += Time.deltaTime * moveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue *2)-1), 2))) + 1, 0.1f, 1f);
                 else
-                    lerpValue -= Time.deltaTime * moveSpeed * Mathf.Clamp(lerpValue, 0.1f, 1f);
+                    lerpValue -= Time.deltaTime * moveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue *2)-1), 2))) + 1, 0.1f, 1f);
 
                 transform.position = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
             }
