@@ -110,9 +110,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - BaseColor: {r: 0.07929869, g: 0.509434, b: 0.47489756, a: 1}
-    - BottomColor: {r: 0.62584877, g: 2.418826, b: 3.8560371, a: 1}
-    - TopColor: {r: 0.36037594, g: 3.441591, b: 1.9723414, a: 1}
+    - BaseColor: {r: 1.7752404, g: 0.2731139, b: 0.58719486, a: 1}
+    - BottomColor: {r: 4.5412054, g: 0.2139835, b: 1.2363491, a: 1}
+    - TopColor: {r: 5.2164745, g: 2.2312434, b: 0.573539, a: 1}
     - _BaseColor: {r: 0.70592, g: 0.34433955, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.0013791203, g: 0, b: 0.0036776538, a: 1}
