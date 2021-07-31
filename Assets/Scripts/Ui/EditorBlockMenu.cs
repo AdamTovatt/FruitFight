@@ -2,6 +2,7 @@ using Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +11,13 @@ public class EditorBlockMenu : MonoBehaviour
     public float Margin = 30f;
     public int DefaultColumns = 3;
     public int DefaultRows = 3;
+    public float ExtraMarginBottom = 50f;
 
     public GameObject BlockButtonPrefab;
     public GameObject BlockButtonContainer;
+    public TextMeshProUGUI PageText;
+    public TextMeshProUGUI NextPageInstuctionLabel;
+    public TextMeshProUGUI PreviousPageInstuctionLabel;
 
     public bool IsOpen { get; private set; }
     public int CurrentOffset { get { return selectedIndex; } }
@@ -59,16 +64,27 @@ public class EditorBlockMenu : MonoBehaviour
     {
         SetSize(1, 1, currentPage);
         IsOpen = false;
+        PageText.gameObject.SetActive(false);
+        NextPageInstuctionLabel.gameObject.SetActive(false);
+        PreviousPageInstuctionLabel.gameObject.SetActive(false);
     }
 
     public void Open()
     {
+        PageText.gameObject.SetActive(true);
+        NextPageInstuctionLabel.gameObject.SetActive(true);
+        PreviousPageInstuctionLabel.gameObject.SetActive(true);
         SetSize(DefaultRows, DefaultColumns, currentPage);
         IsOpen = true;
+        SetPageText();
     }
+
 
     public void NextPage()
     {
+        if (currentPage >= Mathf.FloorToInt(currentBlockInfos.Count / (DefaultColumns * DefaultRows)))
+            return;
+
         currentPage++;
         Open();
 
@@ -82,10 +98,14 @@ public class EditorBlockMenu : MonoBehaviour
         }
 
         selectedButton.Button.Select();
+        SetPageText();
     }
 
     public void PreviousPage()
     {
+        if (currentPage == 0)
+            return;
+
         currentPage--;
         Open();
 
@@ -99,6 +119,12 @@ public class EditorBlockMenu : MonoBehaviour
         }
 
         selectedButton.Button.Select();
+        SetPageText();
+    }
+
+    private void SetPageText()
+    {
+        PageText.text = string.Format("Page {0}/{1}", (currentPage + 1).ToString(), Mathf.FloorToInt(currentBlockInfos.Count / (DefaultColumns * DefaultRows)) + 1);
     }
 
     public void MoveBlockButtonSelection(Vector2Int moveVector)
@@ -161,10 +187,14 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void SetSize(int columns, int rows, int page)
     {
+        float appliedExtraMargin = ExtraMarginBottom;
+        if (columns == 1 && rows == 1)
+            appliedExtraMargin = 0;
+
         float buttonSideLength = BlockButtonPrefab.GetComponent<RectTransform>().sizeDelta.x;
 
         RectTransform buttonContainer = BlockButtonContainer.GetComponent<RectTransform>();
-        buttonContainer.sizeDelta = new Vector2(columns * buttonSideLength + (columns + 1) * Margin, rows * buttonSideLength + (rows + 1) * Margin);
+        buttonContainer.sizeDelta = new Vector2(columns * buttonSideLength + (columns + 1) * Margin, rows * buttonSideLength + (rows + 1) * Margin + appliedExtraMargin);
 
         float spaceLeftOverX = buttonContainer.sizeDelta.x - (buttonSideLength * columns);
         float buttonMarginX = spaceLeftOverX / (columns + 1);
@@ -189,13 +219,17 @@ public class EditorBlockMenu : MonoBehaviour
             currentButtons.Clear();
         }
 
-        List<BlockInfo> limitedList = currentBlockInfos.Skip(page * (columns * rows)).ToList();
+        List<BlockInfo> limitedList = currentBlockInfos.Skip(page * (DefaultColumns * DefaultRows)).Take(DefaultRows * DefaultColumns).ToList();
+
+        if (columns == 1 && rows == 1)
+            limitedList = limitedList.Skip(selectedIndex).Take(1).ToList();
+
         for (int i = 0; i < limitedList.Count; i++)
         {
             int x = i % columns;
             int y = Mathf.FloorToInt(i / (float)columns);
             float positionX = (x * buttonSideLength) + (buttonMarginX * (x + 1));
-            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y + 1));
+            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y + 1)) + appliedExtraMargin / 4;
             if (!(positionX >= buttonContainer.sizeDelta.x) && !(positionY <= buttonContainer.sizeDelta.y * -1f))
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
