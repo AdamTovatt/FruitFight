@@ -20,12 +20,15 @@ public class BehaviourMenu : MonoBehaviour
 
     private Color enabledColor;
 
-    private void Start()
+    private void Awake()
     {
         enabledColor = DetailColorButtonText.color;
+    }
 
-        MoveButton.onClick.AddListener(() => { Debug.Log("move"); Move(); });
-        DetailColorButton.onClick.AddListener(() => { Debug.Log("detailcolor"); DetailColor(); });
+    private void Start()
+    {
+        MoveButton.onClick.AddListener(() => { Move(); });
+        DetailColorButton.onClick.AddListener(() => { DetailColor(); });
         CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
     }
 

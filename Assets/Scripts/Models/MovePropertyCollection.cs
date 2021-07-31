@@ -14,6 +14,9 @@ namespace Assets.Scripts.Models
         public int ActivatorBlockId;
         public Vector3 FinalPosition;
         public float MoveSpeed = 0.5f;
+        public float EndpointDelay;
+        public bool LinearMovement;
+        public bool PingPong;
 
         public override void ApplyValues(MonoBehaviour behaviour)
         {
@@ -26,6 +29,9 @@ namespace Assets.Scripts.Models
                 move.FinalPosition = FinalPosition;
                 move.ActivatorBlockId = ActivatorBlockId;
                 move.MoveSpeed = MoveSpeed;
+                move.EndpointDelay = EndpointDelay;
+                move.PingPong = PingPong;
+                move.LinearMovement = LinearMovement;
             }
             else
             {

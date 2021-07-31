@@ -7,6 +7,9 @@ public class MoveOnTrigger : MonoBehaviour
     public Vector3 FinalPosition { get; set; }
     public int ActivatorBlockId { get; set; }
     public float MoveSpeed { get; set; } = 0.5f;
+    public float EndpointDelay { get; set; }
+    public bool PingPong { get; set; }
+    public bool LinearMovement { get; set; }
 
     private Block activatorObject;
     private Block block;
@@ -28,29 +31,74 @@ public class MoveOnTrigger : MonoBehaviour
 
     public void BindStateSwitcher()
     {
-        stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
-        stateSwitcher.OnActivated += Activated;
-        stateSwitcher.OnDeactivated += Deactivated;
+        if (PingPong)
+        {
+            Activated();
+            return; //can't both ping pong and be activated
+        }
+
+        if (activatorObject != null && activatorObject.Instance != null)
+        {
+            stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
+            stateSwitcher.OnActivated += Activated;
+            stateSwitcher.OnDeactivated += Deactivated;
+        }
     }
 
     public void Activated()
     {
-        active = true;
-        lerping = true;
-
-        if (Time.time - initTime < 1.5f)
+        if(EndpointDelay > 0)
         {
-            lerpValue = 1;
-            transform.position = FinalPosition + block.RotationOffset;
-            lerping = false;
+            StartCoroutine(ActivateInSeconds());
+        }
+        else
+        {
+            DoActivate();
         }
     }
 
     public void Deactivated()
     {
+        if(EndpointDelay > 0)
+        {
+            StartCoroutine(DeActivateInSeconds());
+        }
+        else
+        {
+            DoDeActivate();
+        }
+    }
+
+    private IEnumerator DeActivateInSeconds()
+    {
+        yield return new WaitForSeconds(EndpointDelay);
+        DoDeActivate();
+    }
+
+    private IEnumerator ActivateInSeconds()
+    {
+        yield return new WaitForSeconds(EndpointDelay);
+        DoActivate();
+    }
+
+    private void DoDeActivate()
+    {
         active = false;
         lerping = true;
         transform.position = block.Position + block.RotationOffset;
+    }
+
+    private void DoActivate()
+    {
+        active = true;
+        lerping = true;
+
+        if (!PingPong && Time.time - initTime < 1.5f)
+        {
+            lerpValue = 1;
+            transform.position = FinalPosition + block.RotationOffset;
+            lerping = false;
+        }
     }
 
     private void Update()
@@ -60,9 +108,9 @@ public class MoveOnTrigger : MonoBehaviour
             if (lerpValue <= 1 && lerpValue >= 0)
             {
                 if (active)
-                    lerpValue += Time.deltaTime * MoveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f);
+                    lerpValue += Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
                 else
-                    lerpValue -= Time.deltaTime * MoveSpeed * Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f);
+                    lerpValue -= Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
 
                 transform.position = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
             }
@@ -75,6 +123,14 @@ public class MoveOnTrigger : MonoBehaviour
 
                 lerpValue = Mathf.Clamp(lerpValue, 0, 1);
                 lerping = false;
+
+                if (PingPong)
+                {
+                    if (active == false)
+                        Activated();
+                    else
+                        Deactivated();
+                }
             }
         }
     }
