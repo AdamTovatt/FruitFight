@@ -63,7 +63,8 @@ public class WorldBuilder : MonoBehaviour
             PlaceBlock(block);
         }
 
-        BindMoveOnTriggerObjects();
+        if (!IsInEditor)
+            BindMoveOnTriggerObjects();
 
         CurrentWorld = world;
     }
@@ -141,13 +142,13 @@ public class WorldBuilder : MonoBehaviour
                 block.BehaviourProperties = new BehaviourPropertyContainer();
 
                 DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
-                if(detailColor != null)
+                if (detailColor != null)
                 {
                     block.BehaviourProperties.DetailColorPropertyCollection = new DetailColorPropertyCollection();
                 }
             }
 
-            if(block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)
+            if (block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)
             {
                 MoveOnTrigger moveOnTrigger = block.Instance.GetComponent<MoveOnTrigger>();
                 if (moveOnTrigger == null)
@@ -165,7 +166,7 @@ public class WorldBuilder : MonoBehaviour
 
     private void BindMoveOnTriggerObjects()
     {
-        foreach(MoveOnTrigger move in moveOnTriggerObjectsToBind)
+        foreach (MoveOnTrigger move in moveOnTriggerObjectsToBind)
         {
             move.BindStateSwitcher();
         }

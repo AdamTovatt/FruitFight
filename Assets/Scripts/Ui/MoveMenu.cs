@@ -89,7 +89,7 @@ public class MoveMenu : MonoBehaviour
     private void IncreaseEndpointDelay()
     {
         float endpointDelay = currentBlock.BehaviourProperties.MovePropertyCollection.EndpointDelay;
-        endpointDelay = Mathf.Clamp(endpointDelay + 0.1f, 0.1f, 60);
+        endpointDelay = Mathf.Clamp(endpointDelay + 0.1f, 0.0f, 60);
         currentBlock.BehaviourProperties.MovePropertyCollection.EndpointDelay = endpointDelay;
         currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
         EndpointDelayText.text = endpointDelay.ToString(stringFormat);
@@ -98,7 +98,7 @@ public class MoveMenu : MonoBehaviour
     private void DecreaseEndpointDelay()
     {
         float endpointDelay = currentBlock.BehaviourProperties.MovePropertyCollection.EndpointDelay;
-        endpointDelay = Mathf.Clamp(endpointDelay - 0.1f, 0.1f, 60);
+        endpointDelay = Mathf.Clamp(endpointDelay - 0.1f, 0.0f, 60);
         currentBlock.BehaviourProperties.MovePropertyCollection.EndpointDelay = endpointDelay;
         currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
         EndpointDelayText.text = endpointDelay.ToString(stringFormat);
@@ -144,10 +144,13 @@ public class MoveMenu : MonoBehaviour
     {
         OnClosed?.Invoke();
         OnClosed = null;
+        currentBlock = null;
     }
 
     public void Show(Block block)
     {
+        currentBlock = block;
+
         SetActivatorButton.Select();
 
         if(block.BehaviourProperties.MovePropertyCollection.HasValues)
@@ -165,7 +168,5 @@ public class MoveMenu : MonoBehaviour
         EndpointDelayText.text = block.BehaviourProperties.MovePropertyCollection.EndpointDelay.ToString(stringFormat);
         PingPongToggle.isOn = block.BehaviourProperties.MovePropertyCollection.PingPong;
         LinearMovementToggle.isOn = block.BehaviourProperties.MovePropertyCollection.LinearMovement;
-
-        currentBlock = block;
     }
 }

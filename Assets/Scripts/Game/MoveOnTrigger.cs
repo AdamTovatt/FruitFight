@@ -22,6 +22,8 @@ public class MoveOnTrigger : MonoBehaviour
 
     private float initTime;
 
+    Coroutine coroutine;
+
     public void Init(Block thisBlock, Block activatorBlock)
     {
         initTime = Time.time;
@@ -47,9 +49,9 @@ public class MoveOnTrigger : MonoBehaviour
 
     public void Activated()
     {
-        if(EndpointDelay > 0)
+        if (EndpointDelay > 0)
         {
-            StartCoroutine(ActivateInSeconds());
+            coroutine = StartCoroutine(ActivateInSeconds());
         }
         else
         {
@@ -59,9 +61,9 @@ public class MoveOnTrigger : MonoBehaviour
 
     public void Deactivated()
     {
-        if(EndpointDelay > 0)
+        if (EndpointDelay > 0)
         {
-            StartCoroutine(DeActivateInSeconds());
+            coroutine = StartCoroutine(DeActivateInSeconds());
         }
         else
         {
@@ -72,12 +74,14 @@ public class MoveOnTrigger : MonoBehaviour
     private IEnumerator DeActivateInSeconds()
     {
         yield return new WaitForSeconds(EndpointDelay);
+        coroutine = null;
         DoDeActivate();
     }
 
     private IEnumerator ActivateInSeconds()
     {
         yield return new WaitForSeconds(EndpointDelay);
+        coroutine = null;
         DoActivate();
     }
 
@@ -85,7 +89,6 @@ public class MoveOnTrigger : MonoBehaviour
     {
         active = false;
         lerping = true;
-        transform.position = block.Position + block.RotationOffset;
     }
 
     private void DoActivate()
@@ -137,6 +140,9 @@ public class MoveOnTrigger : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
+
         if (stateSwitcher != null)
         {
             stateSwitcher.OnActivated -= Activated;
