@@ -5,10 +5,12 @@ using UnityEngine.AI;
 
 public class AverageVelocityKeeper : MonoBehaviour
 {
-    public int TimeSamples = 25;
-    public float TimeResolution = 0.05f;
+    public int TimeSamples = 10;
+    public float TimeResolution = 0.02f;
 
-    public float Velocity { get { return float.IsNaN(_velocity) ? 0 : _velocity; } }
+    public AverageVelocityKeeper Parent { get; set; }
+
+    public float Velocity { get { return float.IsNaN(_velocity) ? 0 : (Parent == null ? _velocity : _velocity - Parent.Velocity); } }
     private float _velocity = 0;
 
     private List<PointAndTime> points = new List<PointAndTime>();

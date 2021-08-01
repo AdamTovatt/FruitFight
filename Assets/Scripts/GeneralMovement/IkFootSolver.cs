@@ -32,11 +32,18 @@ public class IkFootSolver : MonoBehaviour
     public delegate void PositionUpdatedEventHandler(object sender, Vector3 newPosition);
     public event PositionUpdatedEventHandler PositionUpdated;
 
+    private MoveOnTrigger parent;
+
     void Start()
     {
         characterVelocity = CharacterMovement.gameObject.GetComponent<AverageVelocityKeeper>();
         character = CharacterMovement.transform;
         appliedFootSpacing = FootSpacing * (RightFoot ? 1f : -1f);
+
+        if (CharacterMovement.GetType() == typeof(PlayerMovement))
+        {
+            ((PlayerMovement)CharacterMovement).OnParentUpdated += ParentUpdated;
+        }
 
         CurrentPosition = GetGroundPosition(0);
         lerp = 1;
@@ -44,7 +51,8 @@ public class IkFootSolver : MonoBehaviour
 
     void Update()
     {
-        transform.position = CurrentPosition;
+        Debug.Log(parent?.CurrentMovement);
+        transform.position = CurrentPosition += (parent == null ? Vector3.zero : -parent.CurrentMovement);
 
         float appliedStepDistance = Mathf.Max(characterVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
 
@@ -94,6 +102,11 @@ public class IkFootSolver : MonoBehaviour
             if (!CharacterMovement.StopFootSetDefault)
                 inDefaultPosition = false;
         }
+    }
+
+    private void ParentUpdated(MoveOnTrigger newParent)
+    {
+        parent = newParent;
     }
 
     public void SetDefaultPosition()

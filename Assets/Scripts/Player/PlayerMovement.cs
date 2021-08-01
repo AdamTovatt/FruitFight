@@ -13,6 +13,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerControls playerControls;
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
     private Health health;
+    private AverageVelocityKeeper averageVelocityKeeper;
 
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -43,6 +44,9 @@ public class PlayerMovement : MovingCharacter
     public delegate void OnDroppedItemHandler();
     public event OnDroppedItemHandler OnDroppedItem;
 
+    public delegate void OnParentUpdatedHandler(MoveOnTrigger moveOnTriggerParent);
+    public event OnParentUpdatedHandler OnParentUpdated;
+
     public override bool StopFootSetDefault { get { return false; } }
     public override bool StandingStill { get { return move == Vector2.zero; } }
 
@@ -56,6 +60,10 @@ public class PlayerMovement : MovingCharacter
         }
     }
     private bool? _isGrounded = null;
+
+    private Transform groundTransform;
+    private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
+
     private float lastJumpTime;
     private Collision lastCollision;
     private float rotateCamera;
@@ -70,6 +78,7 @@ public class PlayerMovement : MovingCharacter
         RigidBody = gameObject.GetComponent<Rigidbody>();
         Collider = gameObject.GetComponent<Collider>();
         health = gameObject.GetComponent<Health>();
+        averageVelocityKeeper = gameObject.GetComponent<AverageVelocityKeeper>();
 
         CurrentRunSpeed = Speed;
 
@@ -188,16 +197,44 @@ public class PlayerMovement : MovingCharacter
 
         Vector3 newPosition = RigidBody.transform.position + movement;
 
+        if (IsGrounded)
+        {
+            Debug.Log(groundTransform.name);
+            if (!moveOnTriggerLookup.ContainsKey(groundTransform))
+                moveOnTriggerLookup.Add(groundTransform, groundTransform.GetComponentInParent<MoveOnTrigger>());
+
+            MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundTransform];
+
+            if (moveOnTrigger != null)
+            {
+                if (transform.parent != moveOnTrigger.transform)
+                    OnParentUpdated?.Invoke(moveOnTrigger);
+
+                transform.SetParent(moveOnTrigger.transform);
+                averageVelocityKeeper.Parent = moveOnTrigger.AverageVelocityKeeper;
+            }
+            else
+            {
+                transform.parent = null;
+                lastGroundedPosition = transform.position;
+                averageVelocityKeeper.Parent = null;
+            }
+        }
+        else
+        {
+            transform.parent = null;
+        }
+
         if (!(hits.Where(x => x.transform.position.y > transform.position.y + 0.3f).Count() > 0)) //needs to be cast in a way that it hits even small blocks if the player is in the air
         {
             RigidBody.MovePosition(newPosition);
+
+            if (transform.parent != null) //if we are on a moveOnTrigger
+                transform.position += movement * CurrentRunSpeed * 6 * Time.deltaTime; //we should move with transform.position since rigidbody movement doesn't work
         }
 
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
-
-        if (IsGrounded)
-            lastGroundedPosition = transform.position;
 
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
@@ -207,7 +244,7 @@ public class PlayerMovement : MovingCharacter
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        foreach(Vector3 pos in debugHits)
+        foreach (Vector3 pos in debugHits)
         {
             Gizmos.DrawSphere(pos, 0.2f);
         }
@@ -236,7 +273,7 @@ public class PlayerMovement : MovingCharacter
                     {
                         Holdable holdable = hit.transform.GetComponent<Holdable>();
 
-                        if(holdable == null)
+                        if (holdable == null)
                         {
                             HoldableDelegate holdableDelegate = hit.transform.GetComponentInParent<HoldableDelegate>();
                             if (holdableDelegate != null)
@@ -325,8 +362,15 @@ public class PlayerMovement : MovingCharacter
         Ray ray = new Ray(transform.position + Vector3.up * 0.4f, -Vector3.up);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
-            return hit.transform.tag == "Ground" && hit.distance <= DistanceToGround;
+        {
+            if (hit.transform.tag == "Ground" && hit.distance <= DistanceToGround)
+            {
+                groundTransform = hit.transform;
+                return true;
+            }
+        }
 
+        groundTransform = null;
         return false;
     }
 

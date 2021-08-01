@@ -11,6 +11,9 @@ public class MoveOnTrigger : MonoBehaviour
     public bool PingPong { get; set; }
     public bool LinearMovement { get; set; }
 
+    public Vector3 CurrentMovement { get; private set; }
+    public AverageVelocityKeeper AverageVelocityKeeper { get; set; }
+
     private Block activatorObject;
     private Block block;
 
@@ -19,6 +22,7 @@ public class MoveOnTrigger : MonoBehaviour
     private bool active = false;
     private bool lerping = false;
     private float lerpValue = 0f;
+    private Vector3 lastPosition;
 
     private float initTime;
 
@@ -26,9 +30,14 @@ public class MoveOnTrigger : MonoBehaviour
 
     public void Init(Block thisBlock, Block activatorBlock)
     {
+        if (gameObject.GetComponent<AverageVelocityKeeper>() == null)
+        {
+            AverageVelocityKeeper = gameObject.AddComponent<AverageVelocityKeeper>();
+        }
         initTime = Time.time;
         block = thisBlock;
         activatorObject = activatorBlock;
+        lastPosition = transform.position;
     }
 
     public void BindStateSwitcher()
@@ -100,6 +109,7 @@ public class MoveOnTrigger : MonoBehaviour
         {
             lerpValue = 1;
             transform.position = FinalPosition + block.RotationOffset;
+            lastPosition = transform.position;
             lerping = false;
         }
     }
@@ -110,12 +120,22 @@ public class MoveOnTrigger : MonoBehaviour
         {
             if (lerpValue <= 1 && lerpValue >= 0)
             {
-                if (active)
-                    lerpValue += Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
-                else
-                    lerpValue -= Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+                float lerpDelta = 0;
 
-                transform.position = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
+                if (active)
+                    lerpDelta = Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+                else
+                    lerpDelta = -Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+
+                lerpValue += lerpDelta;
+
+                Vector3 newPosition = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
+                CurrentMovement = newPosition - lastPosition;
+                transform.position = newPosition;
+                lastPosition = transform.position;
+                
+                Vector3 positionDifference = (block.Position + block.RotationOffset) - (FinalPosition + block.RotationOffset);
+                CurrentMovement = positionDifference * lerpDelta;
             }
             else
             {
