@@ -314,6 +314,8 @@ public class JellyBean : MovingCharacter
         punchPosition += transform.right * 0.1f * (side == AttackSide.Right ? 1f : -1f);
         OnAttack?.Invoke(this, punchPosition, side);
 
+        Instantiate(PunchSoundEffectPrefab, punchPosition, Quaternion.identity);
+
         targetHealth.TakeDamage(PunchDamage);
 
         hasAttacked = true;
@@ -435,6 +437,12 @@ public class JellyBean : MovingCharacter
         }
 
         return false;
+    }
+
+    public override void StepWasTaken(Vector3 stepPosition)
+    {
+        if (StepSoundEffectPrefab != null)
+            Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
     }
 }
 

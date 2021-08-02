@@ -1025,6 +1025,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12364517872520a42a6185118b8380c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StepSoundEffectPrefab: {fileID: 0}
+  PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 1d5724034b3fc65499230cc1c37e4f88,
+    type: 3}
   StatusText: {fileID: 4768720915174604152}
   DeadPrefab: {fileID: 6685402637311709369, guid: 10adf5ca9b835cc4fab62d42d267d53e,
     type: 3}

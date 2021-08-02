@@ -73,6 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 109007309912499201}
   - component: {fileID: 109007309912499200}
+  - component: {fileID: -1774623287683588509}
   m_Layer: 0
   m_Name: CrystalLight
   m_TagString: Untagged
@@ -103,11 +104,23 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109007309912499207}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.3148899, y: 0.7030449, z: 0.30740392}
   m_Center: {x: -0.0051371753, y: 0.903376, z: 0.003451407}
+--- !u!114 &-1774623287683588509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109007309912499207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eec6ef932a195314090877767c42f920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &109007310902528598
 GameObject:
   m_ObjectHideFlags: 0

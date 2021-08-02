@@ -29,7 +29,7 @@ public class IkFootSolver : MonoBehaviour
 
     AverageVelocityKeeper characterVelocity;
 
-    public delegate void PositionUpdatedEventHandler(object sender, Vector3 newPosition);
+    public delegate void PositionUpdatedEventHandler(Vector3 newPosition);
     public event PositionUpdatedEventHandler PositionUpdated;
 
     private MoveOnTrigger parent;
@@ -45,13 +45,14 @@ public class IkFootSolver : MonoBehaviour
             ((PlayerMovement)CharacterMovement).OnParentUpdated += ParentUpdated;
         }
 
+        CharacterMovement.RegisterFoot(this);
+
         CurrentPosition = GetGroundPosition(0);
         lerp = 1;
     }
 
     void Update()
     {
-        Debug.Log(parent?.CurrentMovement);
         transform.position = CurrentPosition += (parent == null ? Vector3.zero : -parent.CurrentMovement);
 
         float appliedStepDistance = Mathf.Max(characterVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
@@ -69,7 +70,7 @@ public class IkFootSolver : MonoBehaviour
                     lerp = 0;
                     OldPosition = CurrentPosition;
                     NewPosition = searchPosition;
-                    PositionUpdated?.Invoke(this, NewPosition);
+                    PositionUpdated?.Invoke(NewPosition);
                 }
             }
             else //character is not moving

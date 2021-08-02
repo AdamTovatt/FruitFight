@@ -114,7 +114,6 @@ public class WorldEditor : MonoBehaviour
     {
         if (isRotatingObject)
         {
-            Debug.Log(currentLeftStickInput);
             float x = selectedWorldObject.Info.RotatableX ? currentLeftStickInput.x : 0;
             float y = selectedWorldObject.Info.RotatableY ? currentLeftStickInput.y : 0;
             selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
@@ -546,14 +545,14 @@ public class WorldEditor : MonoBehaviour
 
         CloseBlockSelection();
 
-        if(isPickingActivator)
+        if (isPickingActivator)
         {
             List<Block> stateSwitchers = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.Instance.GetComponent<StateSwitcher>() != null).ToList();
             PickedActivator(stateSwitchers.FirstOrDefault());
             return;
         }
 
-        if(isPickingFinalPosition)
+        if (isPickingFinalPosition)
         {
             PickedMoveFinalPosition(MarkerPosition);
             return;
@@ -576,6 +575,8 @@ public class WorldEditor : MonoBehaviour
         selectedWorldObject = block;
 
         Builder.BuildWorld(CurrentWorld);
+
+        AudioManager.Instance.Play("place", ((block.Info.Width / 1.5f) / -4f) + 0.5f);
 
         if (selectedWorldObject.Info.RotatableX) //rotate objects that can be rotated on y axis to a random rotation when placing them
         {

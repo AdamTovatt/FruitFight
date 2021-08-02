@@ -30,5 +30,6 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
         WorldEditorUi.Instance.SelectableWasSelected(this);
         selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
         selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
+        AudioManager.Instance.Play("select");
     }
 }

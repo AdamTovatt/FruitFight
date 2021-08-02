@@ -60,6 +60,7 @@ public class PlayerMovement : MovingCharacter
         }
     }
     private bool? _isGrounded = null;
+    private bool previousGrounded = false;
 
     private Transform groundTransform;
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
@@ -236,6 +237,7 @@ public class PlayerMovement : MovingCharacter
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
 
+        previousGrounded = IsGrounded;
         _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
@@ -312,6 +314,8 @@ public class PlayerMovement : MovingCharacter
         punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
         OnAttack?.Invoke(this, punchPosition, side);
 
+        Instantiate(PunchSoundEffectPrefab, punchPosition, Quaternion.identity);
+
         List<Transform> hits = new List<Transform>();
         CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f).ForEach(x => hits.Add(x.transform));
         Physics.OverlapSphere(PunchSphereTransform.position, PunchSphereRadius).ToList().ForEach(x => hits.Add(x.transform));
@@ -319,7 +323,7 @@ public class PlayerMovement : MovingCharacter
         List<Transform> checkedTransforms = new List<Transform>();
         foreach (Transform hit in hits)
         {
-            if (hit != this.transform)
+            if (hit != transform)
             {
                 if (!checkedTransforms.Contains(hit.transform))
                 {
@@ -344,6 +348,9 @@ public class PlayerMovement : MovingCharacter
         {
             RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y + JumpStrength, RigidBody.velocity.z);
             lastJumpTime = Time.time;
+
+            StepWasTaken(transform.position); //two sounds effects because two feet
+            StepWasTaken(transform.position);
         }
     }
 
@@ -366,6 +373,10 @@ public class PlayerMovement : MovingCharacter
             if (hit.transform.tag == "Ground" && hit.distance <= DistanceToGround)
             {
                 groundTransform = hit.transform;
+
+                if (!previousGrounded)
+                    JustLanded();
+
                 return true;
             }
         }
@@ -390,6 +401,18 @@ public class PlayerMovement : MovingCharacter
             default:
                 break;
         }
+    }
+
+    private void JustLanded()
+    {
+        Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity); //there are two feet
+        Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
+    }
+
+    public override void StepWasTaken(Vector3 stepPosition)
+    {
+        if (StepSoundEffectPrefab != null)
+            Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
     }
 }
 

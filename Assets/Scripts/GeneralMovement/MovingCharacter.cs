@@ -9,6 +9,9 @@ public abstract class MovingCharacter : MonoBehaviour
         Right, Left, Both
     }
 
+    public GameObject StepSoundEffectPrefab;
+    public GameObject PunchSoundEffectPrefab;
+
     public abstract bool StopFootSetDefault { get; }
     public abstract bool IsGrounded { get; }
     public abstract bool StandingStill { get; }
@@ -17,4 +20,10 @@ public abstract class MovingCharacter : MonoBehaviour
     public abstract event AttackHandler OnAttack;
 
     public abstract void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength);
+    public abstract void StepWasTaken(Vector3 stepPosition);
+
+    public void RegisterFoot(IkFootSolver foot)
+    {
+        foot.PositionUpdated += StepWasTaken;
+    }
 }

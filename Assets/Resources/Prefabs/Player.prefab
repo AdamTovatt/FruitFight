@@ -606,6 +606,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98aae03b41a6b5419a60163ab31ef95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StepSoundEffectPrefab: {fileID: 9053844485018190056, guid: 50ba052b5d48ef1418e9d1d84593ab5e,
+    type: 3}
+  PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
+    type: 3}
   RigidBody: {fileID: 2012823961798305032}
   PunchSphereTransform: {fileID: 4974615858160056374}
   SpineTransform: {fileID: 6981282915230941826}
