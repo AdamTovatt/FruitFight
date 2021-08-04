@@ -9,6 +9,7 @@ public class AlertCreator : MonoBehaviour
     {
         Alert alert = Instantiate(AlertPrefab, transform).GetComponent<Alert>();
         alert.Initialize(text, buttons);
+        AudioManager.Instance.Play("windowOpen");
         return alert;
     }
 
