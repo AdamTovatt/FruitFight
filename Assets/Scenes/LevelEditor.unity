@@ -8738,6 +8738,12 @@ MonoBehaviour:
     Volume: 1
     Pitch: 1
     PitchVariation: 0.1
+  - Name: windowOpen
+    Clips:
+    - {fileID: 8300000, guid: ef39bc9c2aeebe84d9178657f428853d, type: 3}
+    Volume: 0.2
+    Pitch: 1
+    PitchVariation: 0
 --- !u!4 &1740232439
 Transform:
   m_ObjectHideFlags: 0
