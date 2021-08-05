@@ -9,7 +9,6 @@ public abstract class MovingCharacter : MonoBehaviour
         Right, Left, Both
     }
 
-    public GameObject StepSoundEffectPrefab;
     public GameObject PunchSoundEffectPrefab;
 
     public abstract bool StopFootSetDefault { get; }

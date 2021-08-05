@@ -67,7 +67,6 @@ public class AudioManager : MonoBehaviour
         if (sound.Clips.Length > 0)
             sound.SetRandomClip();
 
-        sound.Source.pitch = sound.Pitch + (Random.Range(0, sound.PitchVariation) * (Random.Range(0, 100) > 50 ? 1 : -1)) + pitchShift;
-        sound.Source.Play();
+        sound.Play(pitchShift);
     }
 }

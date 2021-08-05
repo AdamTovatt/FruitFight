@@ -30,4 +30,10 @@ public class Sound
     {
         Source.clip = Clips[Random.Range(0, Clips.Length - 1)];
     }
+
+    public void Play(float pitchShift)
+    {
+        Source.pitch = Pitch + (Random.Range(0, PitchVariation) * (Random.Range(0, 100) > 50 ? 1 : -1)) + pitchShift;
+        Source.Play();
+    }
 }

@@ -14,6 +14,7 @@ public class PlayerMovement : MovingCharacter
     private Dictionary<System.Guid, PlayerInputAction> inputActions;
     private Health health;
     private AverageVelocityKeeper averageVelocityKeeper;
+    private FootStepAudioSource footStepAudioSource;
 
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -80,6 +81,7 @@ public class PlayerMovement : MovingCharacter
         Collider = gameObject.GetComponent<Collider>();
         health = gameObject.GetComponent<Health>();
         averageVelocityKeeper = gameObject.GetComponent<AverageVelocityKeeper>();
+        footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
 
         CurrentRunSpeed = Speed;
 
@@ -405,14 +407,13 @@ public class PlayerMovement : MovingCharacter
 
     private void JustLanded()
     {
-        Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity); //there are two feet
-        Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
+        footStepAudioSource.PlayNext(); //there are two feet
+        footStepAudioSource.PlayNext();
     }
 
     public override void StepWasTaken(Vector3 stepPosition)
     {
-        if (StepSoundEffectPrefab != null)
-            Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
+        footStepAudioSource.PlayNext();
     }
 }
 

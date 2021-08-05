@@ -571,6 +571,7 @@ GameObject:
   - component: {fileID: 3348936503559169664}
   - component: {fileID: -9148304447794050845}
   - component: {fileID: -1100488477938289283}
+  - component: {fileID: 6360796239342531682}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -606,8 +607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98aae03b41a6b5419a60163ab31ef95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StepSoundEffectPrefab: {fileID: 9053844485018190056, guid: 50ba052b5d48ef1418e9d1d84593ab5e,
-    type: 3}
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
   RigidBody: {fileID: 2012823961798305032}
@@ -754,6 +753,78 @@ MonoBehaviour:
     type: 3}
   DestroyOnDeath: 0
   CanDie: 1
+--- !u!114 &6360796239342531682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ad025e1bfea61468b1813e578bb64c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority: 200
+  Volume: 1
+  AudioSourceRange: 50
+  GlobalPitchShift: -0.05
+  SoundCountMultiplier: 3
+  Sounds:
+  - Name: step01
+    Clips:
+    - {fileID: 8300000, guid: f24c820001727d343ba1b276bc0116df, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step02
+    Clips:
+    - {fileID: 8300000, guid: 398ddbe98d1f08a49907776a59875d98, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step03
+    Clips:
+    - {fileID: 8300000, guid: d3243f15c11b1f241943a351bf0d14ff, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step04
+    Clips:
+    - {fileID: 8300000, guid: 6ab5542721bbdcd4d9a2e875a63072ac, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step05
+    Clips:
+    - {fileID: 8300000, guid: a38a1d0e4bacf9a459ce734d72117fce, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step06
+    Clips:
+    - {fileID: 8300000, guid: a235f54ca3577b6418b9627f110ae7f7, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step07
+    Clips:
+    - {fileID: 8300000, guid: 84b3575beeb953046a77f79ad9b66eeb, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step08
+    Clips:
+    - {fileID: 8300000, guid: f9e666b54a442474da3a32dfe77d8237, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
+  - Name: step09
+    Clips:
+    - {fileID: 8300000, guid: 382a29044e679234f92e6b41b6ee3e9a, type: 3}
+    Volume: 1
+    Pitch: 0.95
+    PitchVariation: 0.1
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

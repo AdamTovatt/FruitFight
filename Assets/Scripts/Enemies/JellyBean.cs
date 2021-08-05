@@ -49,6 +49,7 @@ public class JellyBean : MovingCharacter
     private NavMeshAgent navMeshAgent;
     private Rigidbody _rigidbody;
     private Renderer _renderer;
+    private FootStepAudioSource footStepAudioSource;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -105,6 +106,11 @@ public class JellyBean : MovingCharacter
     private float lastAttackTime;
 
     private float personalBoundaryDistanceSquared;
+
+    private void Awake()
+    {
+        footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
+    }
 
     void Start()
     {
@@ -441,8 +447,7 @@ public class JellyBean : MovingCharacter
 
     public override void StepWasTaken(Vector3 stepPosition)
     {
-        if (StepSoundEffectPrefab != null)
-            Instantiate(StepSoundEffectPrefab, transform.position, Quaternion.identity);
+        footStepAudioSource.PlayNext();
     }
 }
 
