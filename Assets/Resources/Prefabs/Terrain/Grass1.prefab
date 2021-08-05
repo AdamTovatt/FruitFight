@@ -53,7 +53,7 @@ MonoBehaviour:
   AudioSource: {fileID: -8484290212210510604}
   MinChaining: 1
   MaxChaining: 5
-  ProbabilityPerSecond: 0.8
+  ProbabilityPerSecond: 0.1
 --- !u!82 &-8484290212210510604
 AudioSource:
   m_ObjectHideFlags: 0
