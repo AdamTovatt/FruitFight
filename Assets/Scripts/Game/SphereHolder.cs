@@ -9,13 +9,17 @@ public class SphereHolder : MonoBehaviour
     private StateSwitcher switcher;
     private DetailColorController detailColor;
 
+    private AudioSource audioSource;
+
     private void Awake()
     {
         detailColor = gameObject.GetComponent<DetailColorController>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     private void Start()
     {
+        audioSource.time = Random.Range(0f, 1f);
         switcher = gameObject.GetComponent<StateSwitcher>();
         switcher.OnActivated += Activated;
         switcher.OnDeactivated += Deactvated;
@@ -29,12 +33,14 @@ public class SphereHolder : MonoBehaviour
     {
         Smoke.Play();
         detailColor.SetEmission(1);
+        audioSource.Play();
     }
 
     private void Deactvated()
     {
         Smoke.Stop();
         detailColor.SetEmission(0);
+        audioSource.Stop();
     }
 
     private void OnDestroy()
