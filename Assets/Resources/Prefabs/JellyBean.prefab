@@ -962,7 +962,8 @@ GameObject:
   - component: {fileID: 4768720915529816217}
   - component: {fileID: 4768720915529816222}
   - component: {fileID: 5065833842122769581}
-  - component: {fileID: 8691835696417614888}
+  - component: {fileID: 8783279518762641839}
+  - component: {fileID: 1835230469316931128}
   m_Layer: 8
   m_Name: JellyBean
   m_TagString: Untagged
@@ -1119,7 +1120,20 @@ MonoBehaviour:
     type: 3}
   DestroyOnDeath: 0
   CanDie: 1
---- !u!114 &8691835696417614888
+--- !u!114 &8783279518762641839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768720915529816196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1bffeeb8abbd847902c25b3be3e8ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: jellyBean
+--- !u!114 &1835230469316931128
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1131,11 +1145,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ad025e1bfea61468b1813e578bb64c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Priority: 215
-  Volume: 1
-  AudioSourceRange: 10
-  GlobalPitchShift: 0.5
-  SoundCountMultiplier: 1
+  Priority: 210
+  Volume: 0.86
+  AudioSourceRange: 40
+  GlobalPitchShift: 0.16
+  SoundCountMultiplier: 3
   Sounds:
   - Name: step01
     Clips:

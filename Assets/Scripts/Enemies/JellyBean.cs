@@ -49,7 +49,6 @@ public class JellyBean : MovingCharacter
     private NavMeshAgent navMeshAgent;
     private Rigidbody _rigidbody;
     private Renderer _renderer;
-    private FootStepAudioSource footStepAudioSource;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -74,10 +73,10 @@ public class JellyBean : MovingCharacter
     public override bool StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
 
     private Health targetHealth
-    { 
-        get 
-        { 
-            if (target == _targetHealthTarget && hasGottenTargetHealth) 
+    {
+        get
+        {
+            if (target == _targetHealthTarget && hasGottenTargetHealth)
                 return _targetHealth;
 
             _targetHealthTarget = target;
@@ -91,6 +90,9 @@ public class JellyBean : MovingCharacter
     private Health _targetHealth; //the health component of the target
     private Transform _targetHealthTarget; //the last target that the health component was fetched for
     private bool hasGottenTargetHealth; //if the target health has been fetched
+
+    private UniqueSoundSource uniqueSoundSource;
+    private FootStepAudioSource footStepAudioSource;
 
     private Vector3 targetPosition;
     private Transform target;
@@ -109,6 +111,7 @@ public class JellyBean : MovingCharacter
 
     private void Awake()
     {
+        uniqueSoundSource = gameObject.GetComponent<UniqueSoundSource>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
     }
 
@@ -133,6 +136,9 @@ public class JellyBean : MovingCharacter
 
     void Update()
     {
+        //if (Time.time - lastFootstep > 0.2f)
+        //    audioSource.Stop();
+
         StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.MultipleTargetCamera.transform.position);
 
         if (target == null)
@@ -224,8 +230,8 @@ public class JellyBean : MovingCharacter
                     if ((targetPosition - transform.position).sqrMagnitude < personalBoundaryDistanceSquared)
                     {
                         targetPosition = transform.position;
-                        
-                        if(!inRangeForAttack)
+
+                        if (!inRangeForAttack)
                         {
                             lastAttackTime = Time.time;
                             inRangeForAttack = true;
@@ -233,7 +239,7 @@ public class JellyBean : MovingCharacter
                         else
                         {
                             float timeRequirement = hasAttacked ? AttackCooldown : AttackInitialWaitTime;
-                            if(Time.time - lastAttackTime > timeRequirement)
+                            if (Time.time - lastAttackTime > timeRequirement)
                             {
                                 Attack();
                             }
@@ -447,7 +453,10 @@ public class JellyBean : MovingCharacter
 
     public override void StepWasTaken(Vector3 stepPosition)
     {
-        footStepAudioSource.PlayNext();
+        if (uniqueSoundSource.Active)
+        {
+            footStepAudioSource.PlayNext();
+        }
     }
 }
 
