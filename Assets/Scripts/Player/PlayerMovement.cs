@@ -15,6 +15,7 @@ public class PlayerMovement : MovingCharacter
     private Health health;
     private AverageVelocityKeeper averageVelocityKeeper;
     private FootStepAudioSource footStepAudioSource;
+    private SoundSource soundSource;
 
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -82,6 +83,7 @@ public class PlayerMovement : MovingCharacter
         health = gameObject.GetComponent<Health>();
         averageVelocityKeeper = gameObject.GetComponent<AverageVelocityKeeper>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
+        soundSource = gameObject.GetComponent<SoundSource>();
 
         CurrentRunSpeed = Speed;
 
@@ -321,6 +323,7 @@ public class PlayerMovement : MovingCharacter
         CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f).ForEach(x => hits.Add(x.transform));
         Physics.OverlapSphere(PunchSphereTransform.position, PunchSphereRadius).ToList().ForEach(x => hits.Add(x.transform));
 
+        bool didHit = false;
         List<Transform> checkedTransforms = new List<Transform>();
         foreach (Transform hit in hits)
         {
@@ -333,13 +336,21 @@ public class PlayerMovement : MovingCharacter
                     Health health = hit.transform.GetComponent<Health>();
 
                     if (health != null)
+                    {
                         health.TakeDamage(PunchStrength);
+                        didHit = true;
+                    }
 
                     JellyBean jellyBean = hit.transform.GetComponent<JellyBean>();
                     if (jellyBean != null)
                         jellyBean.WasAttacked(transform.position, transform, PunchStrength);
                 }
             }
+        }
+
+        if(didHit)
+        {
+            soundSource.Play("punchHit");
         }
     }
 

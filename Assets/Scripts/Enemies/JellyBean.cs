@@ -49,6 +49,7 @@ public class JellyBean : MovingCharacter
     private NavMeshAgent navMeshAgent;
     private Rigidbody _rigidbody;
     private Renderer _renderer;
+    private SoundSource soundSource;
 
     private float lastStateChange;
     private float randomTimeAddition;
@@ -113,6 +114,7 @@ public class JellyBean : MovingCharacter
     {
         uniqueSoundSource = gameObject.GetComponent<UniqueSoundSource>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
+        soundSource = gameObject.GetComponent<SoundSource>();
     }
 
     void Start()
@@ -339,6 +341,8 @@ public class JellyBean : MovingCharacter
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
+        soundSource.Play("hurt");
+
         if (!knockBack)
         {
             _rigidbody.isKinematic = false;

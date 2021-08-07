@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AbsorbableItem : MonoBehaviour
 {
+    public GameObject SpawnOnAbsorbedPrefab;
     public AbsorbableItemType Type;
     public float AbsorbDelay = 0f;
 
@@ -13,6 +14,10 @@ public class AbsorbableItem : MonoBehaviour
         if (player != null && absorbingPlayer == null)
         {
             absorbingPlayer = player;
+
+            if (SpawnOnAbsorbedPrefab != null)
+                Instantiate(SpawnOnAbsorbedPrefab, transform.position, Quaternion.identity);
+
             this.CallWithDelay(Absorb, AbsorbDelay);
         }
     }

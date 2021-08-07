@@ -28,7 +28,17 @@ public class Sound
 
     public void SetRandomClip()
     {
-        Source.clip = Clips[Random.Range(0, Clips.Length - 1)];
+        Source.clip = GetRandomClip();
+    }
+
+    public AudioClip GetRandomClip()
+    {
+        return Clips[Random.Range(0, Clips.Length - 1)];
+    }
+
+    public void Play()
+    {
+        Play(0);
     }
 
     public void Play(float pitchShift)

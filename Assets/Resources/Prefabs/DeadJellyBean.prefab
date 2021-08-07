@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714, type: 3}
+  SpawnInEditor: 1
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
@@ -91,6 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e76320166152408285d23c6bad6e9b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnOnAbsorbedPrefab: {fileID: 715575899294543152, guid: dd377f763dfc1ae4eb771a041f8e47e8,
+    type: 3}
   Type: 0
   AbsorbDelay: 0.14
 --- !u!1 &6685402638136929823

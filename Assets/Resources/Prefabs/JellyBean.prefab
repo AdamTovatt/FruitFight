@@ -964,6 +964,7 @@ GameObject:
   - component: {fileID: 5065833842122769581}
   - component: {fileID: 8783279518762641839}
   - component: {fileID: 1835230469316931128}
+  - component: {fileID: 1015030271920181849}
   m_Layer: 8
   m_Name: JellyBean
   m_TagString: Untagged
@@ -1146,9 +1147,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 210
-  Volume: 0.86
-  AudioSourceRange: 40
-  GlobalPitchShift: 0.16
+  Volume: 1.05
+  AudioSourceRange: 50
+  GlobalPitchShift: 0.08
   SoundCountMultiplier: 3
   Sounds:
   - Name: step01
@@ -1205,6 +1206,28 @@ MonoBehaviour:
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+--- !u!114 &1015030271920181849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768720915529816196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547931f80bbfadc40a70cc9845e21f56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sounds:
+  - Name: hurt
+    Clips:
+    - {fileID: 8300000, guid: e6121309a281b454daab33fdf0cb4e33, type: 3}
+    - {fileID: 8300000, guid: 6d195962b6910ac49b6364cea3906cf7, type: 3}
+    - {fileID: 8300000, guid: b5233bfadb79c324b8bc38ca9e04d56a, type: 3}
+    Volume: 0
+    Pitch: 0
+    PitchVariation: 0
+  PlayOnAwake: 0
 --- !u!1 &4768720915613935198
 GameObject:
   m_ObjectHideFlags: 0
