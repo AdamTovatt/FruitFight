@@ -308,10 +308,13 @@ public class JellyBean : MovingCharacter
 
     private void TargetLost()
     {
-        target = null;
-        targetPosition = transform.position;
-        searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
-        State = JellyBeanState.Confused;
+        if (this != null)
+        {
+            target = null;
+            targetPosition = transform.position;
+            searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
+            State = JellyBeanState.Confused;
+        }
     }
 
     private void TargetDied(Health health)
@@ -407,32 +410,35 @@ public class JellyBean : MovingCharacter
 
         StatusText.text = newState.ToString();
 
-        switch (newState)
+        if (navMeshAgent.isOnNavMesh)
         {
-            case JellyBeanState.Roaming:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = RoamSpeed;
-                targetPosition = GetNewTargetPosition(RoamNewTargetRange);
-                break;
-            case JellyBeanState.Idle:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.SetDestination(transform.position);
-                break;
-            case JellyBeanState.Chasing:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = ChaseSpeed;
-                break;
-            case JellyBeanState.Confused:
-                navMeshAgent.isStopped = false;
-                break;
-            case JellyBeanState.Searching:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = SearchSpeed;
-                targetPosition = targetLastSeenPosition;
-                navMeshAgent.SetDestination(targetPosition);
-                break;
-            default:
-                throw new System.Exception("No such state for: " + ToString());
+            switch (newState)
+            {
+                case JellyBeanState.Roaming:
+                    navMeshAgent.isStopped = false;
+                    navMeshAgent.speed = RoamSpeed;
+                    targetPosition = GetNewTargetPosition(RoamNewTargetRange);
+                    break;
+                case JellyBeanState.Idle:
+                    navMeshAgent.isStopped = false;
+                    navMeshAgent.SetDestination(transform.position);
+                    break;
+                case JellyBeanState.Chasing:
+                    navMeshAgent.isStopped = false;
+                    navMeshAgent.speed = ChaseSpeed;
+                    break;
+                case JellyBeanState.Confused:
+                    navMeshAgent.isStopped = false;
+                    break;
+                case JellyBeanState.Searching:
+                    navMeshAgent.isStopped = false;
+                    navMeshAgent.speed = SearchSpeed;
+                    targetPosition = targetLastSeenPosition;
+                    navMeshAgent.SetDestination(targetPosition);
+                    break;
+                default:
+                    throw new System.Exception("No such state for: " + ToString());
+            }
         }
     }
 

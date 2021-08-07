@@ -202,13 +202,12 @@ public class PlayerMovement : MovingCharacter
 
         if (IsGrounded)
         {
-            Debug.Log(groundTransform.name);
             if (!moveOnTriggerLookup.ContainsKey(groundTransform))
                 moveOnTriggerLookup.Add(groundTransform, groundTransform.GetComponentInParent<MoveOnTrigger>());
 
             MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundTransform];
 
-            if (moveOnTrigger != null)
+            if (moveOnTrigger != null && moveOnTrigger.Moving)
             {
                 if (transform.parent != moveOnTrigger.transform)
                     OnParentUpdated?.Invoke(moveOnTrigger);
@@ -268,10 +267,10 @@ public class PlayerMovement : MovingCharacter
 
         if (HeldItem == null)
         {
-            Ray ray = new Ray(transform.position + transform.up * DistanceToGround, transform.forward);
+            Ray ray = new Ray(transform.position + transform.up * 0.5f, transform.forward);
             if (Physics.Raycast(ray, out RaycastHit hit)) //this is to check if there is something to pick up
             {
-                if (hit.distance <= PunchDistance * 1.2f) //we can pick up things at 1.2 times the punch distance, I just picked 1.2 because it seems to work fine
+                if (hit.distance <= PunchDistance * 1.4f) //we can pick up things at 1.4 times the punch distance, I just picked 1.4 because it seems to work fine
                 {
                     if (hit.transform.tag == "Interactable")
                     {

@@ -11,6 +11,8 @@ public class MoveOnTrigger : MonoBehaviour
     public bool PingPong { get; set; }
     public bool LinearMovement { get; set; }
 
+    public bool Moving { get { return lerping; } }
+
     public Vector3 CurrentMovement { get; private set; }
     public AverageVelocityKeeper AverageVelocityKeeper { get; set; }
 

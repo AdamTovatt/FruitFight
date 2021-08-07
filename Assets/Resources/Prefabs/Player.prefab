@@ -614,7 +614,7 @@ MonoBehaviour:
   SpineTransform: {fileID: 6981282915230941826}
   Speed: 8
   JumpStrength: 7
-  DistanceToGround: 0.5
+  DistanceToGround: 0.8
   MovementInputCutoff: 0.2
   PunchDistance: 0.5
   PunchHeight: 0.9

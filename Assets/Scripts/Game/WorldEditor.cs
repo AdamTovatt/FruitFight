@@ -617,8 +617,6 @@ public class WorldEditor : MonoBehaviour
             int y = Mathf.Abs(input.y) > MarkerMoveSensitivity ? (input.y > 0 ? 1 : -1) : 0;
             Vector3 right = editorCamera.transform.right;
 
-            Debug.Log(right);
-
             if (Mathf.Abs(right.z) > Mathf.Abs(right.x))
             {
                 int tempY = y;
