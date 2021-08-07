@@ -9,7 +9,7 @@ public class Health : MonoBehaviour
     public float CurrentHealth { get { return _currentHealth; } private set { _currentHealth = value; HealthWasUpdated(); } }
     private float _currentHealth;
 
-    public delegate void OnDiedHandler(Health sender);
+    public delegate void OnDiedHandler(Health sender, CauseOfDeath causeOfDeath);
     public event OnDiedHandler OnDied;
 
     public delegate void OnHealthUpdatedHandler();
@@ -64,7 +64,7 @@ public class Health : MonoBehaviour
         {
             if (CanDie)
             {
-                OnDied?.Invoke(this);
+                OnDied?.Invoke(this, CauseOfDeath.Damage);
 
                 if (DestroyOnDeath)
                 {
@@ -86,7 +86,7 @@ public class Health : MonoBehaviour
             if (CanDie)
             {
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
-                OnDied?.Invoke(this);
+                OnDied?.Invoke(this, CauseOfDeath.Water);
 
                 //if (IsPlayer)
                 //    RemoveFromPlayerList();
@@ -131,4 +131,9 @@ public class Health : MonoBehaviour
 
         material.SetColor("_EmissionColor", finalColor);
     }
+}
+
+public enum CauseOfDeath
+{
+    Damage, Water
 }

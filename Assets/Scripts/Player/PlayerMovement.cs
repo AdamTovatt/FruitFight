@@ -105,7 +105,7 @@ public class PlayerMovement : MovingCharacter
         health.OnDied -= OnDied;
     }
 
-    private void OnDied(Health sender)
+    private void OnDied(Health sender, CauseOfDeath causeOfDeath)
     {
         transform.position = lastGroundedPosition;
     }

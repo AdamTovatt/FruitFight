@@ -115,6 +115,12 @@ public class JellyBean : MovingCharacter
         uniqueSoundSource = gameObject.GetComponent<UniqueSoundSource>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
         soundSource = gameObject.GetComponent<SoundSource>();
+        Health.OnDied += Died;
+    }
+
+    private void OnDestroy()
+    {
+        Health.OnDied -= Died;
     }
 
     void Start()
@@ -138,9 +144,6 @@ public class JellyBean : MovingCharacter
 
     void Update()
     {
-        //if (Time.time - lastFootstep > 0.2f)
-        //    audioSource.Stop();
-
         StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.MultipleTargetCamera.transform.position);
 
         if (target == null)
@@ -196,7 +199,8 @@ public class JellyBean : MovingCharacter
                 case JellyBeanState.Roaming:
                     if (TimeInCurrentState < 5f + randomTimeAddition)
                     {
-                        navMeshAgent.SetDestination(targetPosition);
+                        if (navMeshAgent.isOnNavMesh)
+                            navMeshAgent.SetDestination(targetPosition);
 
                         if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
                         {
@@ -253,10 +257,12 @@ public class JellyBean : MovingCharacter
                         inRangeForAttack = false;
                     }
 
-                    navMeshAgent.SetDestination(targetPosition);
+                    if (navMeshAgent.isOnNavMesh)
+                        navMeshAgent.SetDestination(targetPosition);
                     break;
                 case JellyBeanState.Confused:
-                    navMeshAgent.SetDestination(targetPosition);
+                    if (navMeshAgent.isOnNavMesh)
+                        navMeshAgent.SetDestination(targetPosition);
 
                     if (TimeInCurrentState > 1f + randomTimeAddition)
                     {
@@ -308,6 +314,12 @@ public class JellyBean : MovingCharacter
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
     }
 
+    private void Died(Health sender, CauseOfDeath causeOfDeath)
+    {
+        if (causeOfDeath == CauseOfDeath.Water) //if cause of death is not water we will handle it ourselves in the update method, this is so the jelly bean will die only after finishing sliding
+            Die();
+    }
+
     private void TargetLost()
     {
         if (this != null)
@@ -319,7 +331,7 @@ public class JellyBean : MovingCharacter
         }
     }
 
-    private void TargetDied(Health health)
+    private void TargetDied(Health health, CauseOfDeath causeOfDeath)
     {
         TargetLost();
     }
