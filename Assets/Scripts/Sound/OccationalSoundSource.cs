@@ -7,9 +7,6 @@ public class OccationalSoundSource : MonoBehaviour
     public AudioClip[] Clips;
     public AudioSource AudioSource;
 
-    public int MinChaining = 1;
-    public int MaxChaining = 5;
-
     [Range(0, 100)]
     public float ProbabilityPerSecond = 0;
 

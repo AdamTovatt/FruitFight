@@ -2,23 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class SoundSource : MonoBehaviour
 {
+    public AudioSource AudioSourceSettings;
     public List<Sound> Sounds;
     public bool PlayOnAwake = false;
 
     private Dictionary<string, Sound> soundDictionary;
-    private AudioSource audioSource;
 
     private void Awake()
     {
         soundDictionary = new Dictionary<string, Sound>();
-        audioSource = gameObject.GetComponent<AudioSource>();
 
         foreach (Sound sound in Sounds)
         {
-            sound.SetSource(gameObject.AddComponent<AudioSource>());
+            sound.SetSource(gameObject.AddComponent<AudioSource>(), AudioSourceSettings);
             soundDictionary.Add(sound.Name, sound);
         }
     }
@@ -26,20 +24,22 @@ public class SoundSource : MonoBehaviour
     public void StartPlaying(string soundName)
     {
         Sound sound = soundDictionary[soundName];
-        audioSource.clip = sound.GetRandomClip();
-        audioSource.loop = true;
-        audioSource.Play();
+        sound.Source.clip = sound.GetRandomClip();
+        sound.Source.loop = true;
+        sound.Play();
     }
 
     public void StopPlaying(string soundName)
     {
-        audioSource.loop = false;
-        audioSource.Stop();
+        Sound sound = soundDictionary[soundName];
+        sound.Source.loop = false;
+        sound.Source.Stop();
     }
 
     public void Play(string soundName)
     {
         Sound sound = soundDictionary[soundName];
-        audioSource.PlayOneShot(sound.GetRandomClip());
+        sound.SetRandomClip();
+        sound.Play();
     }
 }

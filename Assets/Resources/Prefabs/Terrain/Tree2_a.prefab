@@ -45,7 +45,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.135
+  m_Volume: 0.06
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -144,8 +144,6 @@ MonoBehaviour:
   Clips:
   - {fileID: 8300000, guid: 1b26a5508043c6c4db6cf5750ee2143a, type: 3}
   AudioSource: {fileID: 3252904301212345479}
-  MinChaining: 1
-  MaxChaining: 5
   ProbabilityPerSecond: 4.6
 --- !u!1001 &2823897403516075727
 PrefabInstance:

@@ -768,7 +768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 200
-  Volume: 1
+  Volume: 1.25
   AudioSourceRange: 50
   GlobalPitchShift: -0.05
   SoundCountMultiplier: 3
@@ -779,54 +779,63 @@ MonoBehaviour:
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step02
     Clips:
     - {fileID: 8300000, guid: 398ddbe98d1f08a49907776a59875d98, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step03
     Clips:
     - {fileID: 8300000, guid: d3243f15c11b1f241943a351bf0d14ff, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step04
     Clips:
     - {fileID: 8300000, guid: 6ab5542721bbdcd4d9a2e875a63072ac, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step05
     Clips:
     - {fileID: 8300000, guid: a38a1d0e4bacf9a459ce734d72117fce, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step06
     Clips:
     - {fileID: 8300000, guid: a235f54ca3577b6418b9627f110ae7f7, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step07
     Clips:
     - {fileID: 8300000, guid: 84b3575beeb953046a77f79ad9b66eeb, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step08
     Clips:
     - {fileID: 8300000, guid: f9e666b54a442474da3a32dfe77d8237, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step09
     Clips:
     - {fileID: 8300000, guid: 382a29044e679234f92e6b41b6ee3e9a, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
 --- !u!82 &-4623705056529213083
 AudioSource:
   m_ObjectHideFlags: 0
@@ -839,7 +848,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.884
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -935,13 +944,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547931f80bbfadc40a70cc9845e21f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSourceSettings: {fileID: -4623705056529213083}
   Sounds:
   - Name: punchHit
     Clips:
     - {fileID: 8300000, guid: 32ffbcd8dd807f945bd03e66d00cc7d8, type: 3}
-    Volume: 0
-    Pitch: 0
-    PitchVariation: 0
+    Volume: 0.24
+    Pitch: 1
+    PitchVariation: 0.2
+    Delay: 0.1
   PlayOnAwake: 0
 --- !u!1 &2012823961827835532
 GameObject:

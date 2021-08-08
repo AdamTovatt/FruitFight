@@ -965,6 +965,7 @@ GameObject:
   - component: {fileID: 8783279518762641839}
   - component: {fileID: 1835230469316931128}
   - component: {fileID: 1015030271920181849}
+  - component: {fileID: 2418385293123236190}
   m_Layer: 8
   m_Name: JellyBean
   m_TagString: Untagged
@@ -1147,7 +1148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 210
-  Volume: 1.05
+  Volume: 1.45
   AudioSourceRange: 50
   GlobalPitchShift: 0.08
   SoundCountMultiplier: 3
@@ -1158,54 +1159,63 @@ MonoBehaviour:
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step02
     Clips:
     - {fileID: 8300000, guid: 398ddbe98d1f08a49907776a59875d98, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step03
     Clips:
     - {fileID: 8300000, guid: d3243f15c11b1f241943a351bf0d14ff, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step04
     Clips:
     - {fileID: 8300000, guid: 6ab5542721bbdcd4d9a2e875a63072ac, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step05
     Clips:
     - {fileID: 8300000, guid: a38a1d0e4bacf9a459ce734d72117fce, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step06
     Clips:
     - {fileID: 8300000, guid: a235f54ca3577b6418b9627f110ae7f7, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step07
     Clips:
     - {fileID: 8300000, guid: 84b3575beeb953046a77f79ad9b66eeb, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step08
     Clips:
     - {fileID: 8300000, guid: f9e666b54a442474da3a32dfe77d8237, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
   - Name: step09
     Clips:
     - {fileID: 8300000, guid: 382a29044e679234f92e6b41b6ee3e9a, type: 3}
     Volume: 1
     Pitch: 0.95
     PitchVariation: 0.1
+    Delay: 0
 --- !u!114 &1015030271920181849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1218,16 +1228,114 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547931f80bbfadc40a70cc9845e21f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSourceSettings: {fileID: 2418385293123236190}
   Sounds:
   - Name: hurt
     Clips:
     - {fileID: 8300000, guid: e6121309a281b454daab33fdf0cb4e33, type: 3}
     - {fileID: 8300000, guid: 6d195962b6910ac49b6364cea3906cf7, type: 3}
     - {fileID: 8300000, guid: b5233bfadb79c324b8bc38ca9e04d56a, type: 3}
-    Volume: 0
-    Pitch: 0
-    PitchVariation: 0
+    Volume: 0.18
+    Pitch: 1
+    PitchVariation: 0.1
+    Delay: 0
   PlayOnAwake: 0
+--- !u!82 &2418385293123236190
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768720915529816196}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 20
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4768720915613935198
 GameObject:
   m_ObjectHideFlags: 0

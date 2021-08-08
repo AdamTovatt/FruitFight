@@ -14,14 +14,24 @@ public class Sound
     public float Pitch = 1;
     [Range(0f, 0.3f)]
     public float PitchVariation = 0;
+    public float Delay = 0;
 
     public AudioSource Source { get; private set; }
 
-    public void SetSource(AudioSource source)
+    public void SetSource(AudioSource source, AudioSource settings = null)
     {
         source.clip = Clips[0];
         source.volume = Volume;
         source.pitch = Pitch;
+
+        if(settings != null)
+        {
+            source.minDistance = settings.minDistance;
+            source.maxDistance = settings.maxDistance;
+            source.spatialBlend = settings.spatialBlend;
+            source.spread = settings.spread;
+            source.rolloffMode = settings.rolloffMode;
+        }
 
         Source = source;
     }
@@ -38,12 +48,12 @@ public class Sound
 
     public void Play()
     {
-        Play(0);
+        Play(0, Delay);
     }
 
-    public void Play(float pitchShift)
+    public void Play(float pitchShift, float delay = 0)
     {
         Source.pitch = Pitch + (Random.Range(0, PitchVariation) * (Random.Range(0, 100) > 50 ? 1 : -1)) + pitchShift;
-        Source.Play();
+        Source.PlayDelayed(delay);
     }
 }
