@@ -71,10 +71,15 @@ public class PlayerMovement : MovingCharacter
     private Collision lastCollision;
     private float rotateCamera;
 
-    private Vector3 lastGroundedPosition;
+    private Dictionary<Transform, GroundedPositionInformation> previousGroundedPositions;
+    private GroundedPositionInformation lastGroundedPosition;
+
+    private List<float> previousDeathTimes;
 
     private void Awake()
     {
+        previousDeathTimes = new List<float>();
+        previousGroundedPositions = new Dictionary<Transform, GroundedPositionInformation>();
         ControlsEnabled = true;
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
         playerControls = new PlayerControls();
@@ -107,7 +112,27 @@ public class PlayerMovement : MovingCharacter
 
     private void OnDied(Health sender, CauseOfDeath causeOfDeath)
     {
-        transform.position = lastGroundedPosition;
+        if (causeOfDeath == CauseOfDeath.Water)
+        {
+            previousDeathTimes.Add(Time.time);
+            if (previousDeathTimes.Count > 5)
+                previousDeathTimes.RemoveAt(0);
+
+            if (previousDeathTimes.Count >= 5 && previousDeathTimes.Max() - previousDeathTimes.Min() < 10) //if we have died 5 times within 10 seconds
+            {
+                if (previousGroundedPositions.Keys.Count > 1)
+                {
+                    previousGroundedPositions.Remove(previousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
+                    previousDeathTimes.Clear();
+                }
+
+                transform.position = previousGroundedPositions[previousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
+            }
+            else
+            {
+                transform.position = lastGroundedPosition.Position;
+            }
+        }
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
@@ -209,18 +234,18 @@ public class PlayerMovement : MovingCharacter
 
             MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundTransform];
 
-            if (moveOnTrigger != null && moveOnTrigger.Moving)
-            {
+            if (moveOnTrigger != null && moveOnTrigger.Moving) //if we are on a moving platform
+            { //we want to use special movement on moving platforms
                 if (transform.parent != moveOnTrigger.transform)
                     OnParentUpdated?.Invoke(moveOnTrigger);
 
                 transform.SetParent(moveOnTrigger.transform);
                 averageVelocityKeeper.Parent = moveOnTrigger.AverageVelocityKeeper;
             }
-            else
+            else //we are on normal ground
             {
                 transform.parent = null;
-                lastGroundedPosition = transform.position;
+                UpdateGroundedPosition();
                 averageVelocityKeeper.Parent = null;
             }
         }
@@ -348,7 +373,7 @@ public class PlayerMovement : MovingCharacter
             }
         }
 
-        if(didHit)
+        if (didHit)
         {
             soundSource.Play("punchHit");
         }
@@ -424,6 +449,49 @@ public class PlayerMovement : MovingCharacter
     public override void StepWasTaken(Vector3 stepPosition)
     {
         footStepAudioSource.PlayNext();
+    }
+
+    private void UpdateGroundedPosition()
+    {
+        if (lastGroundedPosition == null)
+        {
+            lastGroundedPosition = new GroundedPositionInformation(groundTransform, Time.time, transform.position);
+            return;
+        }
+
+        if (groundTransform == lastGroundedPosition.Transform) //if the current ground position is on the same transform we will just update the lastGroundedPosition
+        {
+            lastGroundedPosition.UpdatePosition(transform.position);
+        }
+        else //if we are now on another transform we should store the previous in the dictionary for previous ground positions so we can go back to it later
+        {
+            GroundedPositionInformation position = null;
+            if (!previousGroundedPositions.ContainsKey(lastGroundedPosition.Transform))
+            { //create entry if it doesn't exist
+                position = new GroundedPositionInformation(lastGroundedPosition.Transform, Time.time, transform.position);
+                previousGroundedPositions.Add(position.Transform, position);
+
+                if (previousGroundedPositions.Keys.Count > 10)
+                {
+                    previousGroundedPositions.Remove(previousGroundedPositions.OrderBy(x => x.Value.Time).First().Key);
+                }
+            }
+            else
+            { //update entry if it does exist
+                position = previousGroundedPositions[lastGroundedPosition.Transform];
+                position.UpdatePosition(transform.position);
+            }
+
+            if (previousGroundedPositions.ContainsKey(groundTransform))
+            {
+                lastGroundedPosition = previousGroundedPositions[groundTransform]; //if we already have this in our list of previous groundpositions we should get that entry
+                lastGroundedPosition.UpdatePosition(transform.position);
+            }
+            else
+            {
+                lastGroundedPosition = new GroundedPositionInformation(groundTransform, Time.time, transform.position); //since we don't have this already we will create a new
+            }
+        }
     }
 }
 
