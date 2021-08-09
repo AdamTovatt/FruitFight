@@ -22,6 +22,8 @@ public class WorldEditor : MonoBehaviour
 
     public float CameraSmoothTime = 1f;
     public float MarkerMoveCooldown = 0.5f;
+    public float TimeToMaxMarkerSpeed = 2f;
+    public float MarkerMaxSpeed = 0.8f;
     public float MarkerMoveSensitivity = 0.5f;
     public float ObjectRotationSpeed = 180f;
 
@@ -46,6 +48,7 @@ public class WorldEditor : MonoBehaviour
     private bool isPickingActivator = false;
     private bool isPickingFinalPosition = false;
     private Vector2 currentLeftStickInput;
+    private float moveMarkerStartTime = 0;
     private Block selectedWorldObject; //this is the selected object in the world, the object which the marker is above
     private MoveMenu moveMenu;
 
@@ -80,7 +83,7 @@ public class WorldEditor : MonoBehaviour
         input = new PlayerControls();
         input.LevelEditor.Enable();
         input.LevelEditor.Place.performed += Place;
-        input.LevelEditor.MoveMarker.performed += MoveMarker;
+        input.LevelEditor.MoveMarker.performed += MoveMarkerPerformed;
         input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
         input.LevelEditor.RaiseMarker.performed += RaiseMarker;
         input.LevelEditor.LowerMarker.performed += LowerMarker;
@@ -118,6 +121,10 @@ public class WorldEditor : MonoBehaviour
             float y = selectedWorldObject.Info.RotatableY ? currentLeftStickInput.y : 0;
             selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
             selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(y));
+        }
+        else
+        {
+            MoveMarker();
         }
     }
 
@@ -264,10 +271,10 @@ public class WorldEditor : MonoBehaviour
 
         if (marker != null)
         {
-            CreateGridFromMarker();
             float scale = (float)GridSize / 4;
             marker.GetComponentInChildren<SizeSine>().BaseScale = scale;
             marker.transform.position = SetOnGrid(MarkerPosition);
+            CreateGridFromMarker();
             marker.GetComponent<EditorMarker>().SetMarkerSize(new Vector2Int(block.Width, block.Width));
         }
     }
@@ -298,7 +305,7 @@ public class WorldEditor : MonoBehaviour
         WorldEditorUi.Instance.ShowBlockSelection();
         SceneManager.sceneLoaded -= LevelEditorWasLoaded;
         input.LevelEditor.Place.performed -= Place;
-        input.LevelEditor.MoveMarker.performed -= MoveMarker;
+        input.LevelEditor.MoveMarker.performed -= MoveMarkerPerformed;
         input.LevelEditor.RaiseMarker.performed -= RaiseMarker;
         input.LevelEditor.LowerMarker.performed -= LowerMarker;
         input.LevelEditor.MoveMarker.canceled -= MoveMarkerCanceled;
@@ -456,7 +463,6 @@ public class WorldEditor : MonoBehaviour
                     ExitRotationMode();
 
                 Vector2 rawMoveValue = context.ReadValue<Vector2>();
-                currentLeftStickInput = rawMoveValue;
 
                 int binaryX = Mathf.Abs(rawMoveValue.x) > 0 ? (Mathf.Abs(rawMoveValue.x) < 1 ? 0 : (int)rawMoveValue.x) : 0;
                 int binaryY = Mathf.Abs(rawMoveValue.y) > 0 ? (Mathf.Abs(rawMoveValue.y) < 1 ? 0 : (int)rawMoveValue.y) : 0;
@@ -588,33 +594,16 @@ public class WorldEditor : MonoBehaviour
         }
     }
 
-    private void MoveMarkerCanceled(InputAction.CallbackContext context)
+    private void MoveMarker()
     {
-        lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
-        currentLeftStickInput = Vector2.zero;
-    }
-
-    private void MoveMarker(InputAction.CallbackContext context)
-    {
-        if (marker == null)
-        {
-            Destroy(this);
-            return;
-        }
-
-        if (controlsDisabled || isTestingLevel)
-            return;
-
-        Vector2 input = context.ReadValue<Vector2>();
-        currentLeftStickInput = input;
-
         if (isRotatingObject)
             return;
 
-        if (Time.time - lastMarkerMoveTime >= MarkerMoveCooldown)
+        float appliedMarkerCooldown = MarkerMoveCooldown - Mathf.Clamp((Time.time - moveMarkerStartTime) / TimeToMaxMarkerSpeed, 0, MarkerMoveCooldown * MarkerMaxSpeed);
+        if (Time.time - lastMarkerMoveTime >= appliedMarkerCooldown)
         {
-            int x = Mathf.Abs(input.x) > MarkerMoveSensitivity ? (input.x > 0 ? 1 : -1) : 0;
-            int y = Mathf.Abs(input.y) > MarkerMoveSensitivity ? (input.y > 0 ? 1 : -1) : 0;
+            int x = Mathf.Abs(currentLeftStickInput.x) > MarkerMoveSensitivity ? (currentLeftStickInput.x > 0 ? 1 : -1) : 0;
+            int y = Mathf.Abs(currentLeftStickInput.y) > MarkerMoveSensitivity ? (currentLeftStickInput.y > 0 ? 1 : -1) : 0;
             Vector3 right = editorCamera.transform.right;
 
             if (Mathf.Abs(right.z) > Mathf.Abs(right.x))
@@ -651,6 +640,28 @@ public class WorldEditor : MonoBehaviour
 
             CloseBlockSelection();
         }
+    }
+
+    private void MoveMarkerCanceled(InputAction.CallbackContext context)
+    {
+        lastMarkerMoveTime = Time.time - MarkerMoveCooldown * 1.2f;
+        currentLeftStickInput = Vector2.zero;
+    }
+
+    private void MoveMarkerPerformed(InputAction.CallbackContext context)
+    {
+        if (marker == null)
+        {
+            Destroy(this);
+            return;
+        }
+
+        if (controlsDisabled || isTestingLevel)
+            return;
+
+        Vector2 input = context.ReadValue<Vector2>();
+        currentLeftStickInput = input;
+        moveMarkerStartTime = Time.time;
     }
 
     private Vector3 SetOnGrid(Vector3 position)

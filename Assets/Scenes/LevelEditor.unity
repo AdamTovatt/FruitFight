@@ -8721,6 +8721,7 @@ MonoBehaviour:
     Volume: 1
     Pitch: 1
     PitchVariation: 0.2
+    Delay: 0
   - Name: place
     Clips:
     - {fileID: 8300000, guid: 9d7dffe5aed72bd4f870c6bfdde9bc2e, type: 3}
@@ -8731,6 +8732,7 @@ MonoBehaviour:
     Volume: 1
     Pitch: 1
     PitchVariation: 0.1
+    Delay: 0
   - Name: swoosh
     Clips:
     - {fileID: 8300000, guid: a2e7c0e6857c6ef4baee1b8bb4c048a8, type: 3}
@@ -8738,12 +8740,14 @@ MonoBehaviour:
     Volume: 1
     Pitch: 1
     PitchVariation: 0.1
+    Delay: 0
   - Name: windowOpen
     Clips:
     - {fileID: 8300000, guid: ef39bc9c2aeebe84d9178657f428853d, type: 3}
     Volume: 0.2
     Pitch: 1
     PitchVariation: 0
+    Delay: 0
 --- !u!4 &1740232439
 Transform:
   m_ObjectHideFlags: 0
@@ -9261,7 +9265,7 @@ MonoBehaviour:
     type: 3}
   Ui: {fileID: 27242631}
   CameraSmoothTime: 1
-  MarkerMoveCooldown: 0.5
+  MarkerMoveCooldown: 0.3
   MarkerMoveSensitivity: 0.4
   ObjectRotationSpeed: 180
 --- !u!4 &1817805782
