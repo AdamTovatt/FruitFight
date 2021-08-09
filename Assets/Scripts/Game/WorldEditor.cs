@@ -45,7 +45,12 @@ public class WorldEditor : MonoBehaviour
     private bool controlsDisabled = false;
     private bool isTestingLevel = false;
     private bool isRotatingObject = false;
+
     private bool isPickingActivator = false;
+    private List<Block> currentlyAvailableActivators;
+    private int currentActivatorIndex;
+    private Block currentMovePropertiesBlock;
+
     private bool isPickingFinalPosition = false;
     private Vector2 currentLeftStickInput;
     private float moveMarkerStartTime = 0;
@@ -124,7 +129,8 @@ public class WorldEditor : MonoBehaviour
         }
         else
         {
-            MoveMarker();
+            if (currentLeftStickInput != Vector2.zero)
+                MoveMarker();
         }
     }
 
@@ -143,6 +149,8 @@ public class WorldEditor : MonoBehaviour
         EnableControls();
         isPickingFinalPosition = true;
         SetSelectedBlock(block.BlockInfoId);
+        SetMarkerPositionToBlock(block);
+        currentMovePropertiesBlock = block;
     }
 
     public void PickedMoveFinalPosition(Vector3Int position)
@@ -153,16 +161,32 @@ public class WorldEditor : MonoBehaviour
         isPickingFinalPosition = false;
         moveMenu.gameObject.SetActive(true);
         moveMenu.FinalPositionWasSet(position);
+        SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
-    public void PickActivator(MoveMenu menu)
+    public void PickActivator(MoveMenu menu, Block block)
     {
+        currentlyAvailableActivators = new List<Block>();
+        foreach (StateSwitcher stateSwitcher in FindObjectsOfType<StateSwitcher>())
+        {
+            currentlyAvailableActivators.Add(CurrentWorld.Blocks.Where(x => x.Instance == stateSwitcher.gameObject).FirstOrDefault());
+        }
+
+        currentlyAvailableActivators = currentlyAvailableActivators.OrderBy(x => ((Vector3)(x.Position - MarkerPosition)).sqrMagnitude).ToList();
+
+        if (currentlyAvailableActivators.Count == 0)
+        {
+            return;
+        }
+
+        currentActivatorIndex = -1;
         menu.gameObject.SetActive(false);
         moveMenu = menu;
         WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
         WorldEditorUi.Instance.DisableUiInput();
         EnableControls();
         isPickingActivator = true;
+        currentMovePropertiesBlock = block;
     }
 
     private void PickedActivator(Block selectedStateSwitcher)
@@ -173,6 +197,10 @@ public class WorldEditor : MonoBehaviour
         isPickingActivator = false;
         moveMenu.gameObject.SetActive(true);
         moveMenu.ActivatorWasSet(selectedStateSwitcher);
+
+        currentlyAvailableActivators = null;
+
+        SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
     public void SaveLevel()
@@ -271,8 +299,6 @@ public class WorldEditor : MonoBehaviour
 
         if (marker != null)
         {
-            float scale = (float)GridSize / 4;
-            marker.GetComponentInChildren<SizeSine>().BaseScale = scale;
             marker.transform.position = SetOnGrid(MarkerPosition);
             CreateGridFromMarker();
             marker.GetComponent<EditorMarker>().SetMarkerSize(new Vector2Int(block.Width, block.Width));
@@ -632,7 +658,23 @@ public class WorldEditor : MonoBehaviour
 
             if (x != 0 || y != 0)
             {
-                marker.transform.position = new Vector3(marker.transform.position.x + (x * GridSize), marker.transform.position.y, marker.transform.position.z + (y * GridSize));
+                if (!isPickingActivator)
+                {
+                    marker.transform.position = new Vector3(marker.transform.position.x + (x * GridSize), marker.transform.position.y, marker.transform.position.z + (y * GridSize));
+                }
+                else
+                {
+                    currentActivatorIndex += x + y;
+
+                    if (currentActivatorIndex < 0)
+                        currentActivatorIndex = currentlyAvailableActivators.Count - 1;
+                    if (currentActivatorIndex >= currentlyAvailableActivators.Count)
+                        currentActivatorIndex = 0;
+
+                    Block currentActivator = currentlyAvailableActivators[currentActivatorIndex];
+                    SetMarkerPositionToBlock(currentActivator);
+                }
+
                 CreateGridFromMarker();
                 lastMarkerMoveTime = Time.time;
                 selectedWorldObject = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).FirstOrDefault();
@@ -662,6 +704,13 @@ public class WorldEditor : MonoBehaviour
         Vector2 input = context.ReadValue<Vector2>();
         currentLeftStickInput = input;
         moveMarkerStartTime = Time.time;
+    }
+
+    private void SetMarkerPositionToBlock(Block block)
+    {
+        marker.transform.position = block.Position;
+        GridSize = block.Info.Width;
+        marker.GetComponent<EditorMarker>().SetMarkerSize(new Vector2Int(block.Info.Width, block.Info.Width));
     }
 
     private Vector3 SetOnGrid(Vector3 position)

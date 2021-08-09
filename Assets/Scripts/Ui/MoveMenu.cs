@@ -124,7 +124,7 @@ public class MoveMenu : MonoBehaviour
 
     private void SetActivator()
     {
-        WorldEditor.Instance.PickActivator(this);
+        WorldEditor.Instance.PickActivator(this, currentBlock);
     }
 
     public void FinalPositionWasSet(Vector3Int position)
