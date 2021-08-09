@@ -324,7 +324,7 @@ public class PlayerMovement : MovingCharacter
         }
         else
         {
-            HeldItem.WasDropped();
+            HeldItem.WasDropped(RigidBody, averageVelocityKeeper.Velocity);
             HeldItem = null;
             CurrentRunSpeed = Speed;
             OnDroppedItem?.Invoke();

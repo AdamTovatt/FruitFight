@@ -16,10 +16,14 @@ public class Holdable : MonoBehaviour
     public delegate void WasPickedUpHandler(Transform pickingTransform);
     public event WasPickedUpHandler OnWasPickedUp;
 
+    private SoundSource soundSource;
+    private Vector3 lastCollisionPoint;
+
     private void Start()
     {
         _collider = gameObject.GetComponent<Collider>();
         _rigidbody = gameObject.GetComponent<Rigidbody>();
+        soundSource = gameObject.GetComponent<SoundSource>();
 
         HasDetailColor = gameObject.GetComponent<DetailColorController>() != null;
         if (HasDetailColor)
@@ -36,6 +40,7 @@ public class Holdable : MonoBehaviour
 
     public void WasPickedUp(Transform pickingTransform, Vector3 holdPoint, bool setLayer = true)
     {
+        lastCollisionPoint = Vector3.zero;
         _rigidbody.isKinematic = true;
         _collider.enabled = false;
         transform.position = holdPoint;
@@ -49,9 +54,11 @@ public class Holdable : MonoBehaviour
             SetLayer(8);
     }
 
-    public void WasDropped(bool setLayer = true)
+    public void WasDropped(Rigidbody holdingBody, float holdingBodyMovingVelocity, bool setLayer = true)
     {
         _rigidbody.isKinematic = false;
+        _rigidbody.velocity = holdingBody.velocity;
+        _rigidbody.AddForce(holdingBody.transform.forward * holdingBodyMovingVelocity, ForceMode.Impulse);
         _collider.enabled = true;
         transform.parent = null;
         Held = false;
@@ -68,6 +75,21 @@ public class Holdable : MonoBehaviour
         foreach (GameObject member in family)
         {
             member.layer = layerIndex;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (soundSource != null)
+        {
+            if (collision.transform.tag != "Player")
+            {
+                if (lastCollisionPoint == Vector3.zero || Mathf.Abs(collision.transform.position.y - lastCollisionPoint.y) > 0.2f)
+                {
+                    soundSource.Play("groundHit");
+                    lastCollisionPoint = collision.transform.position;
+                }
+            }
         }
     }
 }
