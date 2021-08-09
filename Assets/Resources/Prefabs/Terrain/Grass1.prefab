@@ -51,9 +51,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 807727aff75a2d545ad40352c4f2381f, type: 3}
   - {fileID: 8300000, guid: 807727aff75a2d545ad40352c4f2381f, type: 3}
   AudioSource: {fileID: -8484290212210510604}
-  MinChaining: 1
-  MaxChaining: 5
-  ProbabilityPerSecond: 0.1
+  ProbabilityPerSecond: 0.05
 --- !u!82 &-8484290212210510604
 AudioSource:
   m_ObjectHideFlags: 0
@@ -66,7 +64,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.14
+  m_Volume: 0.09
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -75,7 +73,7 @@ AudioSource:
   Priority: 210
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 40
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
