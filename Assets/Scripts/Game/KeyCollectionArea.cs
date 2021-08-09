@@ -27,6 +27,10 @@ public class KeyCollectionArea : MonoBehaviour
                 {
                     if (ColorCheck(holdable))
                     {
+                        RespawnAtLastSetPosition respawnAtLastSetPosition = holdable.GetComponent<RespawnAtLastSetPosition>();
+                        if (respawnAtLastSetPosition != null)
+                            respawnAtLastSetPosition.SetLastPosition();
+
                         holdable.PlacedInHolder(HoldPoint);
                         StateSwitcher.Activate(holdable);
                         holdable.OnWasPickedUp += KeyRemoved;
