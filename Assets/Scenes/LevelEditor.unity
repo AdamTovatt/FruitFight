@@ -9266,6 +9266,8 @@ MonoBehaviour:
   Ui: {fileID: 27242631}
   CameraSmoothTime: 1
   MarkerMoveCooldown: 0.3
+  TimeToMaxMarkerSpeed: 2
+  MarkerMaxSpeed: 0.8
   MarkerMoveSensitivity: 0.4
   ObjectRotationSpeed: 180
 --- !u!4 &1817805782

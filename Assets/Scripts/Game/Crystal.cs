@@ -4,33 +4,13 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour
 {
-    private bool consumed = false;
-    private bool hidden = false;
-    private float positionAdder = 1;
+    public GameObject Confetti;
+    public Transform ConfettiSpawnPoint;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (consumed)
-            return;
-
-        consumed = true;
+        Instantiate(Confetti, ConfettiSpawnPoint.transform.position + Vector3.up * 0.5f, Quaternion.identity);
         GameManager.Instance.LevelFinished();
-    }
-
-    private void Update()
-    {
-        if(consumed && !hidden)
-        {
-            if (positionAdder < 100)
-            {
-                positionAdder += positionAdder * Time.deltaTime;
-                transform.position = new Vector3(transform.position.x, transform.position.y + positionAdder, transform.position.z);
-            }
-            else
-            {
-                hidden = true;
-                gameObject.SetActive(false);
-            }
-        }
+        gameObject.SetActive(false);
     }
 }

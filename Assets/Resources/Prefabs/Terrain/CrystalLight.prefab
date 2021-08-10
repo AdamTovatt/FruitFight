@@ -108,7 +108,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.3148899, y: 0.7030449, z: 0.30740392}
-  m_Center: {x: -0.0051371753, y: 0.903376, z: 0.003451407}
+  m_Center: {x: 0.5, y: 0.87, z: 0.5}
 --- !u!114 &-1774623287683588509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec6ef932a195314090877767c42f920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confetti: {fileID: 1256432773296630219, guid: b7031ed767590a046b7ac151650d7ee0,
+    type: 3}
+  ConfettiSpawnPoint: {fileID: 109007309713789008}
 --- !u!1 &109007310902528598
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +243,7 @@ GameObject:
   - component: {fileID: 435156943169135155}
   - component: {fileID: 3577590360763477398}
   - component: {fileID: 1604073337028073820}
+  - component: {fileID: 5345922807228545835}
   m_Layer: 0
   m_Name: Crystal
   m_TagString: Untagged
@@ -311,6 +315,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &5345922807228545835
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955374740209694857}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &109007310956342230
 PrefabInstance:
   m_ObjectHideFlags: 0
