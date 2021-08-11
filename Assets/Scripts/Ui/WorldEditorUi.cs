@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(AlertCreator))]
-public class WorldEditorUi : MonoBehaviour
+public class WorldEditorUi : UiManager
 {
     public static WorldEditorUi Instance { get; private set; }
     private static GameObject eventSystemInstance;
@@ -16,7 +16,6 @@ public class WorldEditorUi : MonoBehaviour
 
     public GameObject EventSystem;
 
-    private List<UiSelectable> selectables;
     private LoadingScreen loadingScreen;
     private InputSystemUIInputModule uiInput;
 
@@ -39,7 +38,6 @@ public class WorldEditorUi : MonoBehaviour
         DontDestroyOnLoad(this);
         DontDestroyOnLoad(EventSystem);
 
-        selectables = new List<UiSelectable>();
         AlertCreator = gameObject.GetComponent<AlertCreator>();
         OnScreenKeyboard = gameObject.GetComponent<UiKeyboardInput>();
         loadingScreen = gameObject.GetComponentInChildren<LoadingScreen>();
@@ -65,20 +63,6 @@ public class WorldEditorUi : MonoBehaviour
         Destroy(EventSystem);
         Destroy(gameObject);
         Destroy(this);
-    }
-
-    public void RegisterSelectable(UiSelectable selectable)
-    {
-        selectables.Add(selectable);
-    }
-
-    public void SelectableWasSelected(UiSelectable selectedSelectable)
-    {
-        foreach (UiSelectable selectable in selectables)
-        {
-            if (selectable != selectedSelectable)
-                selectable.WasDeselected();
-        }
     }
 
     public void OpenLevelTestPauseMenu()

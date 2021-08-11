@@ -10,12 +10,19 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public Vector2 ContentSize = new Vector2(300, 50);
     public bool UseCustomPivot = false;
     public Vector2 Pivot = new Vector2(0.5f, 0.5f);
-    
+
     private GameObject selectedMarker = null;
+    private UiManager manager { get { if (_manager == null) SetupManager(); return _manager; } set { _manager = value; } }
+    private UiManager _manager;
 
     private void Start()
     {
-        WorldEditorUi.Instance.RegisterSelectable(this);
+        SetupManager();
+    }
+
+    private void Awake()
+    {
+        SetupManager(true);
     }
 
     public void WasDeselected()
@@ -27,9 +34,28 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public void OnSelect(BaseEventData eventData)
     {
         RectTransform rect = gameObject.GetComponent<RectTransform>();
-        WorldEditorUi.Instance.SelectableWasSelected(this);
+        manager.SelectableWasSelected(this);
         selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
         selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
         AudioManager.Instance.Play("select");
+    }
+
+    private void SetupManager(bool ignoreErrors = false)
+    {
+        if (WorldEditorUi.Instance != null)
+        {
+            WorldEditorUi.Instance.RegisterSelectable(this);
+            manager = WorldEditorUi.Instance;
+        }
+        else if (MainMenuUi.Instance != null)
+        {
+            MainMenuUi.Instance.RegisterSelectable(this);
+            manager = MainMenuUi.Instance;
+        }
+        else
+        {
+            if (!ignoreErrors)
+                Debug.LogError("Can't find ui manager for " + transform.name);
+        }
     }
 }
