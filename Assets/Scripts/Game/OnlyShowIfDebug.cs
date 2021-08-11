@@ -8,10 +8,11 @@ public class OnlyShowIfDebug : MonoBehaviour
     {
         objectRenderer = gameObject.GetComponent<Renderer>();
         objectRenderer.enabled = false;
-        
-        if (GameManager.Instance.IsDebug)
+
+        if (GameManager.Instance != null && GameManager.Instance.IsDebug)
             objectRenderer.enabled = true;
 
-        GameManager.Instance.OnDebugStateChanged += (gameManager, newState) => { objectRenderer.enabled = newState; };
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnDebugStateChanged += (gameManager, newState) => { objectRenderer.enabled = newState; };
     }
 }

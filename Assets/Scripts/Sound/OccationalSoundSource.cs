@@ -12,8 +12,16 @@ public class OccationalSoundSource : MonoBehaviour
 
     private void Start()
     {
+        BindAudioManagerSecondTick();
+    }
+
+    public void BindAudioManagerSecondTick()
+    {
         if (!WorldBuilder.IsInEditor)
-            AudioManager.Instance.OnSecondHasPassed += SecondPassed;
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.OnSecondHasPassed += SecondPassed;
+        }
     }
 
     private void SecondPassed()

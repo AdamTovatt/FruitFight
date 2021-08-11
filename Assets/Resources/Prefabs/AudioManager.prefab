@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7766911551963362748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7766911551963362750}
+  - component: {fileID: 7766911551963362751}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7766911551963362750
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766911551963362748}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7766911551963362751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766911551963362748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa0cfa6535bf384e9c4b90c2fdfe2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Sounds:
+  - Name: select
+    Clips:
+    - {fileID: 8300000, guid: adde32de005e5a241909967873b5d3a4, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.2
+    Delay: 0
+  - Name: place
+    Clips:
+    - {fileID: 8300000, guid: 9d7dffe5aed72bd4f870c6bfdde9bc2e, type: 3}
+    - {fileID: 8300000, guid: c9c4dabd7bd0a1d4e94be4646bd8ff31, type: 3}
+    - {fileID: 8300000, guid: 32723e79b32292146a3a8690c6eedae3, type: 3}
+    - {fileID: 8300000, guid: b9b67fc02c8469943ad4d4a4e27aa8a1, type: 3}
+    - {fileID: 8300000, guid: ae588f652e2ba9f498e2601bcb128545, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: swoosh
+    Clips:
+    - {fileID: 8300000, guid: a2e7c0e6857c6ef4baee1b8bb4c048a8, type: 3}
+    - {fileID: 8300000, guid: fdcd9dc777f07d348961aea53e57a75e, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: windowOpen
+    Clips:
+    - {fileID: 8300000, guid: ef39bc9c2aeebe84d9178657f428853d, type: 3}
+    Volume: 0.2
+    Pitch: 1
+    PitchVariation: 0
+    Delay: 0

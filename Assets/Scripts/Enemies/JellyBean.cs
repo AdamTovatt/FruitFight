@@ -144,9 +144,10 @@ public class JellyBean : MovingCharacter
 
     void Update()
     {
-        StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.MultipleTargetCamera.transform.position);
+        if (GameManager.Instance != null)
+            StatusText.transform.rotation = Quaternion.LookRotation(StatusText.transform.position - GameManager.Instance.MultipleTargetCamera.transform.position);
 
-        if (target == null)
+        if (target == null && GameManager.Instance != null)
         {
             PlayerMovement closestPlayer = null;
             float closestPlayerDistance = 100000;

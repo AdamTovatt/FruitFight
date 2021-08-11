@@ -32,6 +32,11 @@ public class AudioManager : MonoBehaviour
             sound.SetSource(gameObject.AddComponent<AudioSource>());
             soundDictionary.Add(sound.Name, sound);
         }
+
+        foreach(OccationalSoundSource soundSource in FindObjectsOfType<OccationalSoundSource>())
+        {
+            soundSource.BindAudioManagerSecondTick();
+        }
     }
 
     private void Start()
