@@ -311,6 +311,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""c06dc04f-7341-49f4-88fe-eaf2bf59a47c"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""54962aa7-bf56-485d-9c17-3b690b937d8c"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
@@ -490,6 +501,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseRotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""d1895843-a260-4861-b56b-12d20ccff023"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseWheel"",
+                    ""type"": ""Button"",
+                    ""id"": ""d87c2934-438f-4940-bffc-358a8a45eec9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -577,6 +604,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
+                    ""action"": ""Place"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9cc6d925-d3f8-400f-8262-214790fa7212"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Place"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -848,7 +886,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""17e642f5-099c-4c7f-a396-1097f2929702"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -859,7 +897,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""7da1bde6-b621-4b98-9bba-5cb10f8563b3"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -870,7 +908,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""efd15635-ae64-4a35-9550-c90206753299"",
-                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -881,7 +919,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""58c9558c-c4b4-4702-a77c-9ddde43a84c3"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -908,6 +946,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""ToggleObjectRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5efa48ce-5266-4c8b-82e0-ba8bd7921a10"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MouseRotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""337a4cea-34f5-4123-a6e2-22dd72fe19a3"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MouseWheel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -965,6 +1025,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_PreviousPage = m_LevelEditor.FindAction("PreviousPage", throwIfNotFound: true);
         m_LevelEditor_Rotate = m_LevelEditor.FindAction("Rotate", throwIfNotFound: true);
         m_LevelEditor_ToggleObjectRotation = m_LevelEditor.FindAction("ToggleObjectRotation", throwIfNotFound: true);
+        m_LevelEditor_MouseRotate = m_LevelEditor.FindAction("MouseRotate", throwIfNotFound: true);
+        m_LevelEditor_MouseWheel = m_LevelEditor.FindAction("MouseWheel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1147,6 +1209,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_PreviousPage;
     private readonly InputAction m_LevelEditor_Rotate;
     private readonly InputAction m_LevelEditor_ToggleObjectRotation;
+    private readonly InputAction m_LevelEditor_MouseRotate;
+    private readonly InputAction m_LevelEditor_MouseWheel;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1162,6 +1226,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @PreviousPage => m_Wrapper.m_LevelEditor_PreviousPage;
         public InputAction @Rotate => m_Wrapper.m_LevelEditor_Rotate;
         public InputAction @ToggleObjectRotation => m_Wrapper.m_LevelEditor_ToggleObjectRotation;
+        public InputAction @MouseRotate => m_Wrapper.m_LevelEditor_MouseRotate;
+        public InputAction @MouseWheel => m_Wrapper.m_LevelEditor_MouseWheel;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1204,6 +1270,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleObjectRotation.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
                 @ToggleObjectRotation.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
                 @ToggleObjectRotation.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnToggleObjectRotation;
+                @MouseRotate.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseRotate;
+                @MouseRotate.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseRotate;
+                @MouseRotate.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseRotate;
+                @MouseWheel.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
+                @MouseWheel.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
+                @MouseWheel.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1241,6 +1313,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleObjectRotation.started += instance.OnToggleObjectRotation;
                 @ToggleObjectRotation.performed += instance.OnToggleObjectRotation;
                 @ToggleObjectRotation.canceled += instance.OnToggleObjectRotation;
+                @MouseRotate.started += instance.OnMouseRotate;
+                @MouseRotate.performed += instance.OnMouseRotate;
+                @MouseRotate.canceled += instance.OnMouseRotate;
+                @MouseWheel.started += instance.OnMouseWheel;
+                @MouseWheel.performed += instance.OnMouseWheel;
+                @MouseWheel.canceled += instance.OnMouseWheel;
             }
         }
     }
@@ -1291,5 +1369,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnPreviousPage(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnToggleObjectRotation(InputAction.CallbackContext context);
+        void OnMouseRotate(InputAction.CallbackContext context);
+        void OnMouseWheel(InputAction.CallbackContext context);
     }
 }

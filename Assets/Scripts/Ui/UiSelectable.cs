@@ -17,6 +17,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
 
     private void Start()
     {
+        Physics.queriesHitTriggers = true;
         SetupManager();
     }
 

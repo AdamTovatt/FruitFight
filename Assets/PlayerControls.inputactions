@@ -298,6 +298,17 @@
                 },
                 {
                     "name": "",
+                    "id": "c06dc04f-7341-49f4-88fe-eaf2bf59a47c",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "54962aa7-bf56-485d-9c17-3b690b937d8c",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -477,6 +488,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "MouseRotate",
+                    "type": "Value",
+                    "id": "d1895843-a260-4861-b56b-12d20ccff023",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MouseWheel",
+                    "type": "Button",
+                    "id": "d87c2934-438f-4940-bffc-358a8a45eec9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -564,6 +591,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9cc6d925-d3f8-400f-8262-214790fa7212",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Place",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -835,7 +873,7 @@
                 {
                     "name": "up",
                     "id": "17e642f5-099c-4c7f-a396-1097f2929702",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -846,7 +884,7 @@
                 {
                     "name": "down",
                     "id": "7da1bde6-b621-4b98-9bba-5cb10f8563b3",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -857,7 +895,7 @@
                 {
                     "name": "left",
                     "id": "efd15635-ae64-4a35-9550-c90206753299",
-                    "path": "<Keyboard>/leftArrow",
+                    "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -868,7 +906,7 @@
                 {
                     "name": "right",
                     "id": "58c9558c-c4b4-4702-a77c-9ddde43a84c3",
-                    "path": "<Keyboard>/rightArrow",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -895,6 +933,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "ToggleObjectRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5efa48ce-5266-4c8b-82e0-ba8bd7921a10",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MouseRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "337a4cea-34f5-4123-a6e2-22dd72fe19a3",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MouseWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

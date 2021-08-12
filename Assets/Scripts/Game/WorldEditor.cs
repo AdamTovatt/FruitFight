@@ -103,6 +103,10 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Rotate.performed += editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
         input.LevelEditor.ToggleObjectRotation.performed += ToggleRotateObject;
+        input.LevelEditor.MouseRotate.performed += editorCamera.MouseRotate;
+        input.LevelEditor.MouseRotate.canceled += editorCamera.CancelMouseRotate;
+        input.LevelEditor.MouseWheel.performed += editorCamera.ScrollWheelDown;
+        input.LevelEditor.MouseWheel.canceled += editorCamera.ScrollWheelUp;
     }
 
     void Start()
@@ -359,6 +363,10 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Remove.performed -= Remove;
         input.LevelEditor.Rotate.performed -= editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled -= editorCamera.CancelRotate;
+        input.LevelEditor.MouseRotate.performed -= editorCamera.MouseRotate;
+        input.LevelEditor.MouseRotate.canceled -= editorCamera.CancelMouseRotate;
+        input.LevelEditor.MouseWheel.performed -= editorCamera.ScrollWheelDown;
+        input.LevelEditor.MouseWheel.canceled -= editorCamera.ScrollWheelUp;
         input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
     }
 

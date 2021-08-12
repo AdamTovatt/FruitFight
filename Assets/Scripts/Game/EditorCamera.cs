@@ -26,9 +26,35 @@ public class EditorCamera : MonoBehaviour
     private Vector2 moveVector;
     private float zoom = 0;
 
+    private bool scrollWheelIsPressed = false;
+
     void Start()
     {
         _camera = gameObject.GetComponent<Camera>();
+    }
+
+    public void ScrollWheelDown(InputAction.CallbackContext context)
+    {
+        Debug.Log("Down");
+        scrollWheelIsPressed = true;
+    }
+
+    public void ScrollWheelUp(InputAction.CallbackContext context)
+    {
+        Debug.Log("Up");
+        scrollWheelIsPressed = false;
+    }
+
+    public void MouseRotate(InputAction.CallbackContext context)
+    {
+        Debug.Log("Mouser rotate");
+        if (scrollWheelIsPressed)
+            moveVector = context.ReadValue<Vector2>();
+    }
+
+    public void CancelMouseRotate(InputAction.CallbackContext context)
+    {
+        moveVector = Vector2.zero;
     }
 
     public void Rotate(InputAction.CallbackContext context)
