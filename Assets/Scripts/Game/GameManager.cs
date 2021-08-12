@@ -28,12 +28,16 @@ public class GameManager : MonoBehaviour
     private PlayerInputManager playerInputManager;
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
+    private Spawner skyboxSpawner;
 
     public void Awake()
     {
         Players = new List<PlayerInformation>();
         PlayerCharacters = new List<PlayerMovement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
+        skyboxSpawner = GetComponent<Spawner>();
+
+        skyboxSpawner.OnObjectSpawned += SkyboxWasCreated;
     }
 
     public void Start()
@@ -63,6 +67,14 @@ public class GameManager : MonoBehaviour
         {
             playerControls.Gameplay.Pause.performed -= Pause;
         }
+
+        skyboxSpawner.OnObjectSpawned -= SkyboxWasCreated;
+    }
+
+    private void SkyboxWasCreated(object sender, GameObject spawnedObject)
+    {
+        if (MultipleTargetCamera != null)
+            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(MultipleTargetCamera.transform);
     }
 
     public void StartLevel()
@@ -73,7 +85,6 @@ public class GameManager : MonoBehaviour
 
         GameObject cameraObject = Instantiate(CameraPrefab, transform.position, transform.rotation);
         WorldBuilder.Instance.AddPreviousWorldObjects(cameraObject);
-        FindObjectOfType<SkyboxCamera>().SetMainCamera(cameraObject.transform);
         MultipleTargetCamera = cameraObject.GetComponent<MultipleTargetCamera>();
         MultipleTargetCamera.SetCameraHints(FindObjectsOfType<CameraHint>());
 

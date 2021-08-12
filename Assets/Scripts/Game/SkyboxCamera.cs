@@ -29,11 +29,17 @@ public class SkyboxCamera : MonoBehaviour
 
             if (multipleTargetCamera != null && multipleTargetCamera.enabled)
                 _camera.fieldOfView = multipleTargetCamera.FieldOfView;
-            if(editorCamera != null && editorCamera.enabled)
+            if (editorCamera != null && editorCamera.enabled)
                 _camera.fieldOfView = editorCamera.FieldOfView;
         }
         else
         {
+            if (GameManager.Instance != null)
+            {
+                if (GameManager.Instance.MultipleTargetCamera != null)
+                    mainCamera = GameManager.Instance.MultipleTargetCamera.transform;
+            }
+
             if (Time.time - startTime > 1f)
             {
                 Debug.LogError("SkyboxCamera is missing MainCamera reference");
