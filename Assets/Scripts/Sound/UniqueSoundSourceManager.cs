@@ -40,7 +40,7 @@ public class UniqueSoundSourceManager : MonoBehaviour
                         }
                     }
 
-                    foreach(UniqueSoundSource source in sources[key])
+                    foreach (UniqueSoundSource source in sources[key])
                     {
                         source.Deactivate();
                     }
@@ -61,6 +61,7 @@ public class UniqueSoundSourceManager : MonoBehaviour
 
     public void RemoveSoundSource(UniqueSoundSource uniqueSoundSource)
     {
-        sources[uniqueSoundSource.Id].Remove(uniqueSoundSource);
+        if (sources.ContainsKey(uniqueSoundSource.Id))
+            sources[uniqueSoundSource.Id].Remove(uniqueSoundSource);
     }
 }

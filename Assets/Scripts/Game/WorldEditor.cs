@@ -134,6 +134,13 @@ public class WorldEditor : MonoBehaviour
         }
     }
 
+    public void ExitButtonWasPressed()
+    {
+        RemoveInputEventListeners();
+        WorldEditorUi.Instance.Destroy();
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
     private void SpawnerSpawnedObject(object sender, GameObject spawnedObject)
     {
         spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(editorCamera.transform);
@@ -329,6 +336,14 @@ public class WorldEditor : MonoBehaviour
     {
         WorldEditorUi.Instance.HideLoadingScreen();
         WorldEditorUi.Instance.ShowBlockSelection();
+        RemoveInputEventListeners();
+
+        WorldBuilder.Instance.BuildWorld(CurrentWorld);
+        Instance.CurrentWorld = CurrentWorld;
+    }
+
+    public void RemoveInputEventListeners()
+    {
         SceneManager.sceneLoaded -= LevelEditorWasLoaded;
         input.LevelEditor.Place.performed -= Place;
         input.LevelEditor.MoveMarker.performed -= MoveMarkerPerformed;
@@ -345,9 +360,6 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.Rotate.performed -= editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled -= editorCamera.CancelRotate;
         input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
-
-        WorldBuilder.Instance.BuildWorld(CurrentWorld);
-        Instance.CurrentWorld = CurrentWorld;
     }
 
     public void ExitLevelTest()

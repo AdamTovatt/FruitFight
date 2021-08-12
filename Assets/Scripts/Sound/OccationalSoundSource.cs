@@ -25,7 +25,13 @@ public class OccationalSoundSource : MonoBehaviour
     }
 
     private void SecondPassed()
-    {
+    { 
+        if(AudioSource == null)
+        {
+            OnDestroy();
+            return;
+        }
+
         if (!AudioSource.isPlaying)
         {
             if (Random.Range(0, 1000) < ProbabilityPerSecond * 10)

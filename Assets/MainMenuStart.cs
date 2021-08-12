@@ -11,8 +11,11 @@ public class MainMenuStart : MonoBehaviour
     public Button OptionsButton;
     public Button ExitButton;
 
-    private void OnBecameVisible()
+    public MainMenuUi Ui;
+
+    private void Start()
     {
-        Debug.Log("vI");
+        PlayButton.onClick.AddListener(Ui.PlayButtonWasPressed);
+        LevelEditorButton.onClick.AddListener(Ui.LevelEditorButtonWasPressed);
     }
 }

@@ -17,7 +17,7 @@ public class EditorPauseMenu : MonoBehaviour
         SaveLevelButton.onClick.AddListener(() => { WorldEditor.Instance.SaveLevel(); });
         LoadLevelButton.onClick.AddListener(() => { WorldEditor.Instance.LoadLevel(); });
         OptionsButton.onClick.AddListener(() => { Debug.Log("optionsButton"); });
-        ExitButton.onClick.AddListener(() => { Debug.Log("exit button"); });
+        ExitButton.onClick.AddListener(() => { WorldEditor.Instance.ExitButtonWasPressed(); });
     }
 
     public void WasShown()

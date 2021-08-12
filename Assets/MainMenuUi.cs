@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuUi : UiManager
 {
@@ -25,5 +26,17 @@ public class MainMenuUi : UiManager
         StartMenu.gameObject.SetActive(true);
         LoadingScreen.Hide();
         StartMenu.PlayButton.Select();
+    }
+
+    public void LevelEditorButtonWasPressed()
+    {
+        LoadingScreen.Show();
+        SceneManager.LoadScene("LevelEditor");
+        Instance = null;
+    }
+
+    public void PlayButtonWasPressed()
+    {
+
     }
 }
