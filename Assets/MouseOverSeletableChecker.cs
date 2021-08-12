@@ -40,7 +40,10 @@ public class MouseOverSeletableChecker : MonoBehaviour
 
     public void Disable()
     {
-        input.Ui.MouseMove.performed -= MouseMoved;
-        input.Ui.Disable();
+        if (input != null)
+        {
+            input.Ui.MouseMove.performed -= MouseMoved;
+            input.Ui.Disable();
+        }
     }
 }
