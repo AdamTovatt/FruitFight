@@ -37,6 +37,8 @@ public class MainMenuUi : UiManager
 
     public void PlayButtonWasPressed()
     {
-
+        LoadingScreen.Show();
+        SceneManager.LoadScene("GamePlay");
+        Instance = null;
     }
 }
