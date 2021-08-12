@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,8 +15,6 @@ public class EditorCamera : MonoBehaviour
     private float currentX = 0;
     private float currentY = 0;
 
-    private PlayerControls input;
-
     public float FieldOfView { get { return _camera.fieldOfView; } }
 
     private Vector3 moveVelocity;
@@ -35,19 +31,16 @@ public class EditorCamera : MonoBehaviour
 
     public void ScrollWheelDown(InputAction.CallbackContext context)
     {
-        Debug.Log("Down");
         scrollWheelIsPressed = true;
     }
 
     public void ScrollWheelUp(InputAction.CallbackContext context)
     {
-        Debug.Log("Up");
         scrollWheelIsPressed = false;
     }
 
     public void MouseRotate(InputAction.CallbackContext context)
     {
-        Debug.Log("Mouser rotate");
         if (scrollWheelIsPressed)
             moveVector = context.ReadValue<Vector2>();
     }
