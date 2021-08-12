@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class MouseOverSeletableChecker : MonoBehaviour
+public class MouseOverSelectableChecker : MonoBehaviour
 {
     public GraphicRaycaster graphicRaycaster;
     public EventSystem eventSystem;
