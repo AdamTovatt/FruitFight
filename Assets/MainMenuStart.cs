@@ -17,5 +17,6 @@ public class MainMenuStart : MonoBehaviour
     {
         PlayButton.onClick.AddListener(Ui.PlayButtonWasPressed);
         LevelEditorButton.onClick.AddListener(Ui.LevelEditorButtonWasPressed);
+        ExitButton.onClick.AddListener(Application.Quit);
     }
 }
