@@ -949,9 +949,10 @@ MonoBehaviour:
   - Name: punchHit
     Clips:
     - {fileID: 8300000, guid: 32ffbcd8dd807f945bd03e66d00cc7d8, type: 3}
+    - {fileID: 8300000, guid: 53d477f0c120e5a4f94cafb7d9cdb4c5, type: 3}
     Volume: 0.24
-    Pitch: 1
-    PitchVariation: 0.2
+    Pitch: 0.85
+    PitchVariation: 0.1
     Delay: 0.1
   PlayOnAwake: 0
 --- !u!1 &2012823961827835532
