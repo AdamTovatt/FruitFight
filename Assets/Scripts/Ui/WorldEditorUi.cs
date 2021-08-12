@@ -48,6 +48,8 @@ public class WorldEditorUi : UiManager
         WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated += HandeThumbnailsCreated;
 
         uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
+
+        MouseOverSeletableChecker.Enable();
     }
 
     private void HandeThumbnailsCreated(object sender, Dictionary<string, Texture2D> thumbnails)
@@ -59,6 +61,7 @@ public class WorldEditorUi : UiManager
 
     public void Destroy()
     {
+        MouseOverSeletableChecker.Disable();
         WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated -= HandeThumbnailsCreated;
         Destroy(EventSystem);
         Destroy(gameObject);

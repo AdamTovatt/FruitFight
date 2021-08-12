@@ -1731,6 +1731,7 @@ GameObject:
   - component: {fileID: 204757839}
   - component: {fileID: 204757843}
   - component: {fileID: 204757844}
+  - component: {fileID: 204757845}
   m_Layer: 5
   m_Name: MainMenuUi
   m_TagString: Untagged
@@ -1832,6 +1833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f4e56135e3dad40a148ddc46ff55b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MouseOverSeletableChecker: {fileID: 204757845}
   LoadingScreen: {fileID: 1690409631}
   StartMenu: {fileID: 640668078}
 --- !u!114 &204757844
@@ -1846,6 +1848,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da64e51da65d6c4489e99ccf58ef4a9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &204757845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204757838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da747ae8f28f0340a52d0e64b24f616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicRaycaster: {fileID: 204757839}
+  eventSystem: {fileID: 651019461}
 --- !u!1 &207908069
 GameObject:
   m_ObjectHideFlags: 0

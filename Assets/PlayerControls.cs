@@ -284,6 +284,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""3bae6b82-c4e2-4446-82a1-051cb061ae98"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -407,6 +415,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e24239bb-7645-4405-91fe-bc678a3f5f1e"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MouseMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1012,6 +1031,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Ui_Select = m_Ui.FindAction("Select", throwIfNotFound: true);
         m_Ui_Cancel = m_Ui.FindAction("Cancel", throwIfNotFound: true);
         m_Ui_Move = m_Ui.FindAction("Move", throwIfNotFound: true);
+        m_Ui_MouseMove = m_Ui.FindAction("MouseMove", throwIfNotFound: true);
         // LevelEditor
         m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
         m_LevelEditor_MoveMarker = m_LevelEditor.FindAction("MoveMarker", throwIfNotFound: true);
@@ -1152,6 +1172,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Ui_Select;
     private readonly InputAction m_Ui_Cancel;
     private readonly InputAction m_Ui_Move;
+    private readonly InputAction m_Ui_MouseMove;
     public struct UiActions
     {
         private @PlayerControls m_Wrapper;
@@ -1159,6 +1180,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Select => m_Wrapper.m_Ui_Select;
         public InputAction @Cancel => m_Wrapper.m_Ui_Cancel;
         public InputAction @Move => m_Wrapper.m_Ui_Move;
+        public InputAction @MouseMove => m_Wrapper.m_Ui_MouseMove;
         public InputActionMap Get() { return m_Wrapper.m_Ui; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1177,6 +1199,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_UiActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnMove;
+                @MouseMove.started -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
+                @MouseMove.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
+                @MouseMove.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
             }
             m_Wrapper.m_UiActionsCallbackInterface = instance;
             if (instance != null)
@@ -1190,6 +1215,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @MouseMove.started += instance.OnMouseMove;
+                @MouseMove.performed += instance.OnMouseMove;
+                @MouseMove.canceled += instance.OnMouseMove;
             }
         }
     }
@@ -1355,6 +1383,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnMouseMove(InputAction.CallbackContext context);
     }
     public interface ILevelEditorActions
     {

@@ -550,6 +550,7 @@ GameObject:
   - component: {fileID: 27242631}
   - component: {fileID: 27242632}
   - component: {fileID: 27242633}
+  - component: {fileID: 27242634}
   m_Layer: 5
   m_Name: EditorUi
   m_TagString: Untagged
@@ -654,6 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba58d080f3a4346f3853dfcca8cbd1c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MouseOverSeletableChecker: {fileID: 27242634}
   PauseMenu: {fileID: 1937398846}
   BlockMenu: {fileID: 170067617}
   TestLevelPauseMenu: {fileID: 1565537481}
@@ -687,6 +689,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyboardPrefab: {fileID: 4738026305631481555, guid: 5d83c0c860e4f974da938e836ce739b8,
     type: 3}
+--- !u!114 &27242634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27242626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da747ae8f28f0340a52d0e64b24f616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicRaycaster: {fileID: 27242627}
+  eventSystem: {fileID: 97385004}
 --- !u!1 &36248115
 GameObject:
   m_ObjectHideFlags: 0

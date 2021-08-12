@@ -17,6 +17,7 @@ public class MainMenuUi : UiManager
 
     private void Start()
     {
+        MouseOverSeletableChecker.Enable();
         StartCoroutine(ShowMenuWithDelay());
     }
 
@@ -30,6 +31,7 @@ public class MainMenuUi : UiManager
 
     public void LevelEditorButtonWasPressed()
     {
+        MouseOverSeletableChecker.Disable();
         LoadingScreen.Show();
         SceneManager.LoadScene("LevelEditor");
         Instance = null;
@@ -37,6 +39,7 @@ public class MainMenuUi : UiManager
 
     public void PlayButtonWasPressed()
     {
+        MouseOverSeletableChecker.Disable();
         LoadingScreen.Show();
         SceneManager.LoadScene("GamePlay");
         Instance = null;

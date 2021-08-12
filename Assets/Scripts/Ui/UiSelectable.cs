@@ -29,16 +29,22 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public void WasDeselected()
     {
         if (selectedMarker != null)
+        {
             Destroy(selectedMarker);
+            selectedMarker = null;
+        }
     }
 
     public void OnSelect(BaseEventData eventData)
     {
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         manager.SelectableWasSelected(this);
-        selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
-        selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
-        AudioManager.Instance.Play("select");
+        if (selectedMarker == null)
+        {
+            selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
+            selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
+            AudioManager.Instance.Play("select");
+        }
     }
 
     private void SetupManager(bool ignoreErrors = false)
