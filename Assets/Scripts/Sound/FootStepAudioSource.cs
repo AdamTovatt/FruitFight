@@ -45,6 +45,6 @@ public class FootStepAudioSource : MonoBehaviour
 
     private Sound GetPlayableSound()
     {
-        return Sounds[Random.Range(0, Sounds.Count - 1)];
+        return Sounds[Random.Range(0, Sounds.Count)];
     }
 }

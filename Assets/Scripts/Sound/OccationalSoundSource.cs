@@ -36,7 +36,7 @@ public class OccationalSoundSource : MonoBehaviour
         {
             if (Random.Range(0, 1000) < ProbabilityPerSecond * 10)
             {
-                AudioSource.clip = Clips[Random.Range(0, Clips.Length - 1)];
+                AudioSource.clip = Clips[Random.Range(0, Clips.Length)];
                 AudioSource.PlayDelayed(Random.Range(0, 1.4f));
             }
         }
