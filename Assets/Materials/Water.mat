@@ -37,9 +37,11 @@ Material:
     - FoamDistance: 0.2
     - FoamSize: 6
     - FoamSpeed: 0.6
+    - NormalInfluence: 0.5
     - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
+    - Smoothness: 0.7
     - Tiling: 0.2
     - WaterDepth: 0.5
     - WaveHeight: 0.45

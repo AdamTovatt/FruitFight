@@ -20,15 +20,19 @@ public class MoveOnTrigger : MonoBehaviour
     private Block block;
 
     private StateSwitcher stateSwitcher;
+    private LoopingAudioSource loopingAudio;
 
     private bool active = false;
-    private bool lerping = false;
+    private bool lerping { get { return _lerping; } set { _lerping = value; LerpingWasSet(value); } }
+    private bool _lerping;
     private float lerpValue = 0f;
     private Vector3 lastPosition;
+    private float currentMoveSpeed = 0;
+    private float isPingPongSoundMultiplier = 1f; //will be multiplied with the speed to set the volume of the looping sound, if it's pingpong the sound will be reduced to not get annoying
 
     private float initTime;
 
-    Coroutine coroutine;
+    private Coroutine coroutine;
 
     public void Init(Block thisBlock, Block activatorBlock)
     {
@@ -40,12 +44,15 @@ public class MoveOnTrigger : MonoBehaviour
         block = thisBlock;
         activatorObject = activatorBlock;
         lastPosition = transform.position;
+
+        loopingAudio = gameObject.GetComponent<LoopingAudioSource>();
     }
 
     public void BindStateSwitcher()
     {
         if (PingPong)
         {
+            isPingPongSoundMultiplier = 0.25f; //sounds that are on constantly are reduced to not get annoying
             Activated();
             return; //can't both ping pong and be activated
         }
@@ -107,7 +114,7 @@ public class MoveOnTrigger : MonoBehaviour
         active = true;
         lerping = true;
 
-        if (!PingPong && Time.time - initTime < 1.5f)
+        if (!PingPong && IsAtStartOfLevel())
         {
             lerpValue = 1;
             transform.position = FinalPosition + block.RotationOffset;
@@ -124,10 +131,16 @@ public class MoveOnTrigger : MonoBehaviour
             {
                 float lerpDelta = 0;
 
+                float appliedMoveSpeed = MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+                currentMoveSpeed = appliedMoveSpeed;
+                
+                if (loopingAudio != null)
+                    loopingAudio.SetVolumeMultiplier(Mathf.Clamp01(currentMoveSpeed) * isPingPongSoundMultiplier); //ping pong sounds are reduced to not get annoying
+
                 if (active)
-                    lerpDelta = Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+                    lerpDelta = Time.deltaTime * appliedMoveSpeed;
                 else
-                    lerpDelta = -Time.deltaTime * MoveSpeed * (LinearMovement ? 1 : Mathf.Clamp((-(Mathf.Pow(((lerpValue * 2) - 1), 2))) + 1, 0.1f, 0.8f));
+                    lerpDelta = -Time.deltaTime * appliedMoveSpeed;
 
                 lerpValue += lerpDelta;
 
@@ -135,7 +148,7 @@ public class MoveOnTrigger : MonoBehaviour
                 CurrentMovement = newPosition - lastPosition;
                 transform.position = newPosition;
                 lastPosition = transform.position;
-                
+
                 Vector3 positionDifference = (block.Position + block.RotationOffset) - (FinalPosition + block.RotationOffset);
                 CurrentMovement = positionDifference * lerpDelta;
             }
@@ -157,6 +170,22 @@ public class MoveOnTrigger : MonoBehaviour
                         Deactivated();
                 }
             }
+        }
+    }
+
+    private bool IsAtStartOfLevel()
+    {
+        return Time.time - initTime < 1.5f;
+    }
+
+    private void LerpingWasSet(bool newValue)
+    {
+        if (!IsAtStartOfLevel() && loopingAudio != null)
+        {
+            if (newValue)
+                loopingAudio.StartPlaying();
+            else
+                loopingAudio.StopPlaying();
         }
     }
 

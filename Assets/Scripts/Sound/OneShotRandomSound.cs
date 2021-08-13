@@ -33,7 +33,6 @@ public class OneShotRandomSound : MonoBehaviour
     {
         if (!AudioSource.isPlaying)
         {
-            Debug.Log("Play sound");
             Play();
         }
     }

@@ -81,9 +81,11 @@ Material:
     - FoamDistance: 0.15
     - FoamSize: 20
     - FoamSpeed: 0.4
+    - NormalInfluence: 4
     - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
+    - Smoothness: 0.7
     - Tiling: 20
     - WaterDepth: 0.5
     - WaveHeight: 0.002
