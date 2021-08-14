@@ -1120,6 +1120,9 @@ MonoBehaviour:
   StartHealth: 10
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
+  SpawnOnDeathPrefab: {fileID: 0}
+  SoundSource: {fileID: 0}
+  DamageSoundName: 
   DestroyOnDeath: 0
   CanDie: 1
 --- !u!114 &8783279518762641839
@@ -1148,7 +1151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 210
-  Volume: 1.45
+  Volume: 1.6
   AudioSourceRange: 50
   GlobalPitchShift: 0.08
   SoundCountMultiplier: 3
