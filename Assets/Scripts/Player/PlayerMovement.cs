@@ -435,6 +435,9 @@ public class PlayerMovement : MovingCharacter
                 JellyBeans++;
                 Debug.Log("Jelly beans: " + JellyBeans);
                 break;
+            case AbsorbableItemType.Coin:
+                Debug.Log("Coin was absorbed!");
+                break;
             default:
                 break;
         }

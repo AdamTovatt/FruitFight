@@ -16,6 +16,9 @@ public class Health : MonoBehaviour
     public event OnHealthUpdatedHandler OnHealthUpdated;
 
     public GameObject WaterSplash;
+    public GameObject SpawnOnDeathPrefab;
+    public SoundSource SoundSource;
+    public string DamageSoundName;
 
     public bool DestroyOnDeath = true;
     public bool CanDie = true;
@@ -64,7 +67,7 @@ public class Health : MonoBehaviour
         {
             if (CanDie)
             {
-                OnDied?.Invoke(this, CauseOfDeath.Damage);
+                Died(CauseOfDeath.Damage);
 
                 if (DestroyOnDeath)
                 {
@@ -86,15 +89,17 @@ public class Health : MonoBehaviour
             if (CanDie)
             {
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
-                OnDied?.Invoke(this, CauseOfDeath.Water);
-
-                //if (IsPlayer)
-                //    RemoveFromPlayerList();
-
-                //DestroyWithDelay destroyWithDelay = gameObject.AddComponent<DestroyWithDelay>();
-                //destroyWithDelay.DelaySeconds = 0.2f;
+                Died(CauseOfDeath.Water);
             }
         }
+    }
+
+    private void Died(CauseOfDeath causeOfDeath)
+    {
+        if (SpawnOnDeathPrefab != null)
+            Instantiate(SpawnOnDeathPrefab, transform.position, Quaternion.identity);
+
+        OnDied?.Invoke(this, causeOfDeath);
     }
 
     private void RemoveFromPlayerList()
@@ -119,6 +124,9 @@ public class Health : MonoBehaviour
 
         emissionIsOn = true;
         emissionOnTime = Time.time;
+
+        if (SoundSource != null && !string.IsNullOrEmpty(DamageSoundName))
+            SoundSource.Play(DamageSoundName);
     }
 
     private void SetEmission(Material material, float emission)

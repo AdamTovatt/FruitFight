@@ -31,5 +31,5 @@ public class AbsorbableItem : MonoBehaviour
 
 public enum AbsorbableItemType
 {
-    JellyBean
+    JellyBean, Coin
 }
