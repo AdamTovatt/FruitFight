@@ -6,7 +6,8 @@ public class ActivateComponentWithDelay : MonoBehaviour
 {
     public List<MonoBehaviour> Components;
     public float Delay;
-    public List<Component> DeactivateComponents;
+    public List<Component> DestoryComponents;
+    public List<Collider> ActivateColliders;
 
     private Coroutine coroutine;
 
@@ -30,8 +31,11 @@ public class ActivateComponentWithDelay : MonoBehaviour
         foreach (MonoBehaviour component in Components)
             component.enabled = true;
 
-        foreach (Component component in DeactivateComponents)
+        foreach (Component component in DestoryComponents)
             Destroy(component);
+
+        foreach (Collider collider in ActivateColliders)
+            collider.enabled = true;
 
         coroutine = null;
     }

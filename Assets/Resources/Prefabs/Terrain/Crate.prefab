@@ -253,7 +253,8 @@ MonoBehaviour:
   SpawnOnBreakPrefab: {fileID: 7684453904019838991, guid: d327fab57d04d6248ab0b8d1855cc349,
     type: 3}
   AmountToSpawn: 5
-  SpawnForceStrength: 2
+  SpawnForceStrength: 4
+  BoxCollider: {fileID: 4951548209883622889}
 --- !u!1 &8928398162022148262
 GameObject:
   m_ObjectHideFlags: 0

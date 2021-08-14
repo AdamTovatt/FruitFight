@@ -8,6 +8,7 @@ public class Crate : MonoBehaviour
     [Range(1, 10)]
     public int AmountToSpawn = 1;
     public float SpawnForceStrength = 5f;
+    public BoxCollider BoxCollider;
 
     private Health health;
 
@@ -24,6 +25,8 @@ public class Crate : MonoBehaviour
 
     private void WasBroken(Health sender, CauseOfDeath causeOfDeath)
     {
+        BoxCollider.enabled = false;
+
         if (SpawnOnBreakPrefab != null)
         {
             for (int i = 0; i < AmountToSpawn; i++)
@@ -39,7 +42,7 @@ public class Crate : MonoBehaviour
         Rigidbody rigidbody = instantiatedObject.GetComponent<Rigidbody>();
         if (rigidbody != null)
         {
-            rigidbody.velocity = (Quaternion.Euler(0, Random.Range(0, 360), 0) * Vector3.right).normalized * SpawnForceStrength;// + (Vector3.up * (SpawnForceStrength / 3));
+            rigidbody.velocity = Random.onUnitSphere * SpawnForceStrength + Vector3.up;
         }
     }
 

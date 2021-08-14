@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7684453904019838992}
   - component: {fileID: 7684453904019838995}
   - component: {fileID: 7684453904019838994}
+  - component: {fileID: 6840336299803106079}
   - component: {fileID: 7684453904019838993}
   - component: {fileID: 7217649375711097979}
   - component: {fileID: 3044898243371419746}
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e76320166152408285d23c6bad6e9b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnOnAbsorbedPrefab: {fileID: 715575899294543152, guid: dd377f763dfc1ae4eb771a041f8e47e8,
+  SpawnOnAbsorbedPrefab: {fileID: 7274938570909421772, guid: af79d5ed42a61d44ba4c35f1c8fe2540,
     type: 3}
   Type: 1
   AbsorbDelay: 0.2
@@ -68,9 +69,27 @@ MonoBehaviour:
   Components:
   - {fileID: 7684453904019838995}
   - {fileID: 7684453904019838993}
-  Delay: 2
-  DeactivateComponents:
+  Delay: 1
+  DestoryComponents:
   - {fileID: 7217649375711097979}
+  - {fileID: 1542352264572061334}
+  ActivateColliders: []
+--- !u!114 &6840336299803106079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7684453904019838991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c362b79796ad5c45b8cb52292d9ddd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Components: []
+  Delay: 0.2
+  DestoryComponents: []
+  ActivateColliders:
   - {fileID: 1542352264572061334}
 --- !u!114 &7684453904019838993
 MonoBehaviour:
@@ -125,7 +144,7 @@ BoxCollider:
   m_GameObject: {fileID: 7684453904019838991}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.2, y: 0.5, z: 0.2}
   m_Center: {x: 0, y: 0.31, z: 0}
