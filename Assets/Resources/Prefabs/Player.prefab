@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 200
-  Volume: 1.45
+  Volume: 1.55
   AudioSourceRange: 50
   GlobalPitchShift: -0.05
   SoundCountMultiplier: 3
@@ -860,7 +860,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 30
+  MaxDistance: 40
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0

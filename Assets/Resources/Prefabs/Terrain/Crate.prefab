@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4552327f2d3edba44836f4b195052650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartHealth: 30
+  StartHealth: 25
   WaterSplash: {fileID: 0}
   SpawnOnDeathPrefab: {fileID: 8492701523010468686, guid: 6859a4bf69d03c949a52f3133ca8bf18,
     type: 3}

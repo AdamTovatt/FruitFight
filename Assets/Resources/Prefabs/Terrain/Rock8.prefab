@@ -47,7 +47,7 @@ MonoBehaviour:
   Sounds:
   - {fileID: 8300000, guid: baca8b35e099ba54184dabd9c50378ee, type: 3}
   - {fileID: 8300000, guid: 48c0085f8b5c31f49b0607002ebec0fe, type: 3}
-  Volume: 0.3
+  Volume: 0.18
   MinDistance: 1
   MaxDistance: 30
 --- !u!1001 &285517118487474751

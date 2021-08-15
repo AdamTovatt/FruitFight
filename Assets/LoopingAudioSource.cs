@@ -47,7 +47,6 @@ public class LoopingAudioSource : MonoBehaviour
 
     public void SetVolumeMultiplier(float volume)
     {
-        Debug.Log("Volume multiplier: " + volume);
         audioSource.volume = volume * originalVolume;
     }
 }

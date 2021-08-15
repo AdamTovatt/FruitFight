@@ -111,7 +111,6 @@ public class WorldEditor : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("world editor start");
         marker = Instantiate(MarkerPrefab).GetComponent<EditorMarker>();
         CreateGridFromMarker();
 

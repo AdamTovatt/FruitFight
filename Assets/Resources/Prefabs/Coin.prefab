@@ -103,9 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86fc4ed6b3a949d5a71e49a444de847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SphereOfInfluenceRadius: 3
-  Strength: 5
-  MaxSpeed: 6
+  SphereOfInfluenceRadius: 5
+  Strength: 6
+  MaxSpeed: 7
 --- !u!54 &7217649375711097979
 Rigidbody:
   m_ObjectHideFlags: 0
