@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
     private Spawner skyboxSpawner;
+    private float currentLevel = 1;
 
     public void Awake()
     {
@@ -175,7 +176,15 @@ public class GameManager : MonoBehaviour
 
     public void LevelFinished()
     {
-        Debug.Log("level finished");
+        currentLevel++;
+        WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
+        StartCoroutine(LoadMainMenuWithDelay());
+    }
+
+    private IEnumerator LoadMainMenuWithDelay()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     public void Pause(InputAction.CallbackContext context)
