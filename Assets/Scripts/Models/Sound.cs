@@ -53,7 +53,10 @@ public class Sound
 
     public void Play(float pitchShift, float delay = 0)
     {
-        Source.pitch = Pitch + (Random.Range(0, PitchVariation) * (Random.Range(0, 101) > 50 ? 1 : -1)) + pitchShift;
-        Source.PlayDelayed(delay);
+        if (Source.enabled)
+        {
+            Source.pitch = Pitch + (Random.Range(0, PitchVariation) * (Random.Range(0, 101) > 50 ? 1 : -1)) + pitchShift;
+            Source.PlayDelayed(delay);
+        }
     }
 }

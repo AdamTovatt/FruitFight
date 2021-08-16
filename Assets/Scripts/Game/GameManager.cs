@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
     private Spawner skyboxSpawner;
-    private float currentLevel = 1;
+    private static float currentLevel = 1;
 
     public void Awake()
     {
@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
         foreach (PlayerInformation player in Players)
         {
             GameUi.Instance.CreatePlayerInfoUi(player);
+            player.Movement.transform.parent = transform;
         }
     }
 
@@ -176,15 +177,18 @@ public class GameManager : MonoBehaviour
 
     public void LevelFinished()
     {
-        currentLevel++;
-        WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
-        StartCoroutine(LoadMainMenuWithDelay());
+        if (WorldEditor.Instance == null || !WorldEditor.Instance.IsTestingLevel)
+        {
+            currentLevel++;
+            WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
+            StartCoroutine(LoadGamePlay());
+        }
     }
 
-    private IEnumerator LoadMainMenuWithDelay()
+    private IEnumerator LoadGamePlay()
     {
         yield return new WaitForSeconds(5);
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("GamePlay");
     }
 
     public void Pause(InputAction.CallbackContext context)
