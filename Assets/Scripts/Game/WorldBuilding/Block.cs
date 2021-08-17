@@ -93,7 +93,7 @@ public class Block
         Vector3Int otherAxis = new Vector3Int(Math.Abs(axis.X - 1), 0, Math.Abs(axis.Z - 1));
 
         Vector3Int distance = axis * sideLength;
-        Vector3Int positive = position + distance + axis;
+        Vector3Int positive = position + distance + axis; //(why do we add axis and distance, effectively adding axis twice??? And why don't I comment when I write code like this?? This needs to be fixed sometime)
         Vector3Int negative = position - axis;
 
         List<Block> positiveBlocks = new List<Block>();
@@ -103,15 +103,14 @@ public class Block
         {
             for (int i = 0; i < sideLength; i++)
             {
-                Vector3Int checkPosition = positive + i * otherAxis;
-                positiveBlocks.AddRange(world.GetBlocksAtPosition(checkPosition));
+                positiveBlocks.AddRange(world.GetBlocksAtPosition(positive + i * otherAxis));
                 negativeBlocks.AddRange(world.GetBlocksAtPosition(negative + i * otherAxis));
             }
         }
         else
         {
-            positiveBlocks.AddRange(world.GetBlocksAtPosition(positive));
-            negativeBlocks.AddRange(world.GetBlocksAtPosition(negative));
+            positiveBlocks.AddRange(world.GetBlocksAtPosition(position + distance)); //(we don't add axis twice here but it seems to work fine)
+            negativeBlocks.AddRange(world.GetBlocksAtPosition(position - distance));
         }
 
         return new NeighborSet()

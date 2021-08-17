@@ -87,26 +87,8 @@ public class WorldEditor : MonoBehaviour
 
         input = new PlayerControls();
         input.LevelEditor.Enable();
-        input.LevelEditor.Place.performed += Place;
-        input.LevelEditor.MoveMarker.performed += MoveMarkerPerformed;
-        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
-        input.LevelEditor.RaiseMarker.performed += RaiseMarker;
-        input.LevelEditor.LowerMarker.performed += LowerMarker;
-        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
-        input.LevelEditor.Pause.performed += Pause;
-        input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
-        input.LevelEditor.NextPage.performed += NextPage;
-        input.LevelEditor.PreviousPage.performed += PreviousPage;
-        input.LevelEditor.NextPage.canceled += CancelNextPage;
-        input.LevelEditor.PreviousPage.canceled += CancelPreviousPage;
-        input.LevelEditor.Remove.performed += Remove;
-        input.LevelEditor.Rotate.performed += editorCamera.Rotate;
-        input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
-        input.LevelEditor.ToggleObjectRotation.performed += ToggleRotateObject;
-        input.LevelEditor.MouseRotate.performed += editorCamera.MouseRotate;
-        input.LevelEditor.MouseRotate.canceled += editorCamera.CancelMouseRotate;
-        input.LevelEditor.MouseWheel.performed += editorCamera.ScrollWheelDown;
-        input.LevelEditor.MouseWheel.canceled += editorCamera.ScrollWheelUp;
+
+        AddInputEventListeners();
     }
 
     void Start()
@@ -279,6 +261,27 @@ public class WorldEditor : MonoBehaviour
         };
     }
 
+    private void Grassify(InputAction.CallbackContext context)
+    {
+        List<Block> blocksToAdd = new List<Block>();
+
+        foreach (Block block in CurrentWorld.Blocks)
+        {
+            if(block.NeighborY.Positive.Count == 0)
+            {
+                blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position + new Vector3Int(0, 1, 0)));
+            }
+        }
+
+        foreach(Block block in blocksToAdd)
+        {
+            CurrentWorld.Add(block);
+        }
+
+        CurrentWorld.CalculateNeighbors();
+        Builder.BuildWorld(CurrentWorld);
+    }
+
     public void TestLevelButton()
     {
         if (CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
@@ -345,6 +348,31 @@ public class WorldEditor : MonoBehaviour
         Instance.CurrentWorld = CurrentWorld;
     }
 
+    private void AddInputEventListeners()
+    {
+        input.LevelEditor.Place.performed += Place;
+        input.LevelEditor.MoveMarker.performed += MoveMarkerPerformed;
+        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
+        input.LevelEditor.RaiseMarker.performed += RaiseMarker;
+        input.LevelEditor.LowerMarker.performed += LowerMarker;
+        input.LevelEditor.MoveMarker.canceled += MoveMarkerCanceled;
+        input.LevelEditor.Pause.performed += Pause;
+        input.LevelEditor.MoveBlockSelection.performed += MoveBlockSelection;
+        input.LevelEditor.NextPage.performed += NextPage;
+        input.LevelEditor.PreviousPage.performed += PreviousPage;
+        input.LevelEditor.NextPage.canceled += CancelNextPage;
+        input.LevelEditor.PreviousPage.canceled += CancelPreviousPage;
+        input.LevelEditor.Remove.performed += Remove;
+        input.LevelEditor.Rotate.performed += editorCamera.Rotate;
+        input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
+        input.LevelEditor.ToggleObjectRotation.performed += ToggleRotateObject;
+        input.LevelEditor.MouseRotate.performed += editorCamera.MouseRotate;
+        input.LevelEditor.MouseRotate.canceled += editorCamera.CancelMouseRotate;
+        input.LevelEditor.MouseWheel.performed += editorCamera.ScrollWheelDown;
+        input.LevelEditor.MouseWheel.canceled += editorCamera.ScrollWheelUp;
+        input.LevelEditor.Grassify.performed += Grassify;
+    }
+
     public void RemoveInputEventListeners()
     {
         SceneManager.sceneLoaded -= LevelEditorWasLoaded;
@@ -367,6 +395,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MouseWheel.performed -= editorCamera.ScrollWheelDown;
         input.LevelEditor.MouseWheel.canceled -= editorCamera.ScrollWheelUp;
         input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
+        input.LevelEditor.Grassify.performed -= Grassify;
     }
 
     public void ExitLevelTest()

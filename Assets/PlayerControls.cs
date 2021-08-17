@@ -536,6 +536,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Grassify"",
+                    ""type"": ""Button"",
+                    ""id"": ""6eeb42fb-66ee-471e-b026-c5879df00aa3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -989,6 +997,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""MouseWheel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8d25e0d-1255-458a-bf5c-7c89156b30d6"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Grassify"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38c82557-be3a-4c6b-9588-e440e5aeaa18"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Grassify"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1047,6 +1077,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_ToggleObjectRotation = m_LevelEditor.FindAction("ToggleObjectRotation", throwIfNotFound: true);
         m_LevelEditor_MouseRotate = m_LevelEditor.FindAction("MouseRotate", throwIfNotFound: true);
         m_LevelEditor_MouseWheel = m_LevelEditor.FindAction("MouseWheel", throwIfNotFound: true);
+        m_LevelEditor_Grassify = m_LevelEditor.FindAction("Grassify", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1239,6 +1270,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_ToggleObjectRotation;
     private readonly InputAction m_LevelEditor_MouseRotate;
     private readonly InputAction m_LevelEditor_MouseWheel;
+    private readonly InputAction m_LevelEditor_Grassify;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1256,6 +1288,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @ToggleObjectRotation => m_Wrapper.m_LevelEditor_ToggleObjectRotation;
         public InputAction @MouseRotate => m_Wrapper.m_LevelEditor_MouseRotate;
         public InputAction @MouseWheel => m_Wrapper.m_LevelEditor_MouseWheel;
+        public InputAction @Grassify => m_Wrapper.m_LevelEditor_Grassify;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1304,6 +1337,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MouseWheel.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
                 @MouseWheel.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
                 @MouseWheel.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseWheel;
+                @Grassify.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
+                @Grassify.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
+                @Grassify.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1347,6 +1383,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MouseWheel.started += instance.OnMouseWheel;
                 @MouseWheel.performed += instance.OnMouseWheel;
                 @MouseWheel.canceled += instance.OnMouseWheel;
+                @Grassify.started += instance.OnGrassify;
+                @Grassify.performed += instance.OnGrassify;
+                @Grassify.canceled += instance.OnGrassify;
             }
         }
     }
@@ -1400,5 +1439,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnToggleObjectRotation(InputAction.CallbackContext context);
         void OnMouseRotate(InputAction.CallbackContext context);
         void OnMouseWheel(InputAction.CallbackContext context);
+        void OnGrassify(InputAction.CallbackContext context);
     }
 }

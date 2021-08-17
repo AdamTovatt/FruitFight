@@ -523,6 +523,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Grassify",
+                    "type": "Button",
+                    "id": "6eeb42fb-66ee-471e-b026-c5879df00aa3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -974,6 +982,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "MouseWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8d25e0d-1255-458a-bf5c-7c89156b30d6",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Grassify",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38c82557-be3a-4c6b-9588-e440e5aeaa18",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Grassify",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
