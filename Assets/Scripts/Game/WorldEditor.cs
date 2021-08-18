@@ -316,6 +316,16 @@ public class WorldEditor : MonoBehaviour
 
         CurrentWorld.CalculateNeighbors();
         Builder.BuildWorld(CurrentWorld);
+
+        foreach (Block block in blocksToAdd)
+        {
+            if (block.Info.RotatableX) //rotate objects that can be rotated on y axis to a random rotation when placing them
+            {
+                block.Instance.transform.RotateAround(block.CenterPoint, new Vector3(0, 1, 0), Random.Range(0f, 360f));
+                block.Rotation = block.Instance.transform.rotation;
+                block.RotationOffset = block.Instance.transform.position - block.Position;
+            }
+        }
     }
 
     public void TestLevelButton()
