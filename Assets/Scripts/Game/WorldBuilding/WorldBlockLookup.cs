@@ -40,13 +40,17 @@ public class WorldBlockLookup
 
     public void Add(Block block)
     {
+        block.ObscuredPositions = new List<Vector3Int>();
+
         for (int x = 0; x < block.Info.Width; x++)
         {
             for (int z = 0; z < block.Info.Width; z++)
             {
                 for (int y = 0; y < block.Info.Height; y++)
                 {
-                    Add(block, new Vector3Int(block.X + x, block.Y - y, block.Z + z));
+                    Vector3Int position = new Vector3Int(block.X + x, block.Y - y, block.Z + z);
+                    Add(block, position);
+                    block.ObscuredPositions.Add(position);
                 }
             }
         }

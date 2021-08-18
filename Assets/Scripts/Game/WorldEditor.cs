@@ -287,18 +287,29 @@ public class WorldEditor : MonoBehaviour
             {
                 if (block.NeighborY.Positive.Count == 0)
                 {
-                    foreach(GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
+                    foreach (GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
                     {
-                        if(Random.Range(0f, 1f) < blockConfiguration.Probability)
+                        if (Random.Range(0f, 1f) < blockConfiguration.Probability)
                         {
-                            blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position));
+                            BlockInfo info = BlockInfoLookup.Get(blockConfiguration.Id);
+
+                            //limit obscured positions to only the ones that are on the same y level as the current block and are spaced with the same distance as the vegetation between
+                            IEnumerable<Vector3Int> filteredPositions = block.ObscuredPositions.Where(p => p.Y == block.Y);
+
+                            if (block.Info.Width > info.Width)
+                                filteredPositions = filteredPositions.Where(p => p.X % (block.Info.Width / info.Width) == 0 && p.Z % (block.Info.Width / info.Width) == 0);
+                            else
+                                filteredPositions = filteredPositions.Take(1);
+
+                                foreach (Vector3Int obscuredPosition in filteredPositions.ToList())
+                                blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockConfiguration.Id), obscuredPosition));
                         }
                     }
                 }
             }
         }
 
-        foreach(Block block in blocksToAdd)
+        foreach (Block block in blocksToAdd)
         {
             CurrentWorld.Add(block);
         }

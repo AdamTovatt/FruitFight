@@ -38,6 +38,8 @@ public class Block
     public GameObject Instance { get; set; }
     public SeeThroughBlock SeeThroughBlock { get; set; }
 
+    public List<Vector3Int> ObscuredPositions { get; set; }
+
     public Block(BlockInfo info, Vector3Int position)
     {
         _info = info;
