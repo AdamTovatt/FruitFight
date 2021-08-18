@@ -267,9 +267,10 @@ public class WorldEditor : MonoBehaviour
 
         foreach (Block block in CurrentWorld.Blocks)
         {
+            //if growblocks.contains(block)
             if(block.NeighborY.Positive.Count == 0)
             {
-                blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position + new Vector3Int(0, 1, 0)));
+                blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position));
             }
         }
 
