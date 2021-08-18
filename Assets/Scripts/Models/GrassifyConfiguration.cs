@@ -14,3 +14,12 @@ public class GrassifyConfiguration
         return JsonUtility.FromJson<GrassifyBlockConfiguration>(WorldUtilities.LoadTextFile("Configuration/GrassifyConfiguration"));
     }
 }
+
+[Serializable]
+public class GrassifyBlockConfiguration
+{
+    public int Id;
+    public float Probability;
+
+    public GrassifyBlockConfiguration() { }
+}

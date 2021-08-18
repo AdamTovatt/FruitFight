@@ -263,14 +263,38 @@ public class WorldEditor : MonoBehaviour
 
     private void Grassify(InputAction.CallbackContext context)
     {
+        GrassifyConfiguration grassifyConfiguration = new GrassifyConfiguration()
+        {
+            GrowBlocks = new List<int>()
+            {
+                5, 1
+            },
+            VegetationBlocks = new List<GrassifyBlockConfiguration>()
+            {
+                new GrassifyBlockConfiguration()
+                {
+                    Id = 18,
+                    Probability = 1
+                }
+            }
+        };
+
         List<Block> blocksToAdd = new List<Block>();
 
         foreach (Block block in CurrentWorld.Blocks)
         {
-            //if growblocks.contains(block)
-            if(block.NeighborY.Positive.Count == 0)
+            if (grassifyConfiguration.GrowBlocks.Contains(block.Info.Id))
             {
-                blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position));
+                if (block.NeighborY.Positive.Count == 0)
+                {
+                    foreach(GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
+                    {
+                        if(Random.Range(0f, 1f) < blockConfiguration.Probability)
+                        {
+                            blocksToAdd.Add(new Block(BlockInfoLookup.Get(18), block.Position));
+                        }
+                    }
+                }
             }
         }
 
