@@ -20,6 +20,8 @@ public class GrassifyBlockConfiguration
 {
     public int Id;
     public float Probability;
+    public List<int> Variations;
+    public float VariationProbability;
 
     public GrassifyBlockConfiguration() { }
 }

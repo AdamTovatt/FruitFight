@@ -274,7 +274,16 @@ public class WorldEditor : MonoBehaviour
                 new GrassifyBlockConfiguration()
                 {
                     Id = 18,
-                    Probability = 1
+                    Probability = 1,
+                    Variations = new List<int>(){ 22, 33 },
+                    VariationProbability = 0.2f
+                },
+                new GrassifyBlockConfiguration()
+                {
+                    Id = 27,
+                    Probability = 0.2f,
+                    Variations = new List<int>() { 28, 29 },
+                    VariationProbability = 0.6f
                 }
             }
         };
@@ -301,12 +310,29 @@ public class WorldEditor : MonoBehaviour
                             else
                                 filteredPositions = filteredPositions.Take(1);
 
-                                foreach (Vector3Int obscuredPosition in filteredPositions.ToList())
-                                blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockConfiguration.Id), obscuredPosition));
+                            foreach (Vector3Int obscuredPosition in filteredPositions.ToList())
+                            {
+                                int blockId = blockConfiguration.Id;
+
+                                if (Random.Range(0f, 1f) < blockConfiguration.VariationProbability) //take random variation id
+                                {
+                                    if (blockConfiguration.Variations.Count > 0)
+                                    {
+                                        blockId = blockConfiguration.Variations[Random.Range(0, blockConfiguration.Variations.Count)];
+                                    }
+                                }
+
+                                blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockId), obscuredPosition) { IsFromGrassify = true }); //add block that is sometimes of a random variation
+                            }
                         }
                     }
                 }
             }
+        }
+
+        foreach(Block block in CurrentWorld.Blocks.Where(x => x.IsFromGrassify))
+        {
+            CurrentWorld.Remove(block, block.Position);
         }
 
         foreach (Block block in blocksToAdd)

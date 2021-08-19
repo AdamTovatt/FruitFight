@@ -15,6 +15,7 @@ public class Block
     public Quaternion Rotation;
     public Vector3 RotationOffset;
     public int Id;
+    public bool IsFromGrassify;
     public bool HasPropertyExposer;
     public BehaviourPropertyContainer BehaviourProperties;
 
