@@ -623,7 +623,7 @@ MonoBehaviour:
   PunchWidth: 0.15
   PunchSphereRadius: 0.4
   PunchStrength: 5
-  RotateCameraSpeed: 5
+  RotateCameraSpeed: 9
 --- !u!54 &2012823961798305032
 Rigidbody:
   m_ObjectHideFlags: 0

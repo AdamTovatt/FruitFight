@@ -127,7 +127,7 @@ public class MultipleTargetCamera : MonoBehaviour
             targetPosition += (hint.transform.position - transform.position) * hintWeight;
         }
         
-        targetPosition += transform.right * cameraRotations.Sum(); //RotatePointAroundPivot(targetPosition, centerPoint, new Vector3(0, cameraRotation * Time.deltaTime, 0));
+        targetPosition += (transform.right + transform.forward * 0.2f).normalized * cameraRotations.Sum();
         cameraRotations.Clear();
 
         Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * MoveSpeed * 200);
