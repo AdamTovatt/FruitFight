@@ -152,5 +152,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ZoomSpeed: 2
   Distance: 32.6
-  SensitivityX: 1
-  SensitivityY: 1
+  SensitivityX: 2
+  SensitivityY: 2

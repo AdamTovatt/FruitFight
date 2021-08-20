@@ -89,8 +89,8 @@ public class EditorCamera : MonoBehaviour
 
         targetPosition = Vector3.SmoothDamp(targetPosition, newTargetPosition, ref moveVelocity, 1f);
 
-        currentX += moveVector.x;
-        currentY -= moveVector.y;
+        currentX += moveVector.x * Time.deltaTime * 100f * SensitivityX;
+        currentY -= moveVector.y * Time.deltaTime * 100f * SensitivityY;
         currentY = Mathf.Clamp(currentY, -89, 89);
 
         Distance += zoom * Time.deltaTime * Distance;
