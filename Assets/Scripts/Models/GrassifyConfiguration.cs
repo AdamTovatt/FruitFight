@@ -9,9 +9,14 @@ public class GrassifyConfiguration
     public List<int> GrowBlocks;
     public List<GrassifyBlockConfiguration> VegetationBlocks;
 
-    public static GrassifyBlockConfiguration FromJson()
+    public static GrassifyConfiguration LoadFromConfig()
     {
-        return JsonUtility.FromJson<GrassifyBlockConfiguration>(WorldUtilities.LoadTextFile("Configuration/GrassifyConfiguration"));
+        return JsonUtility.FromJson<GrassifyConfiguration>(WorldUtilities.LoadTextFile("Configuration/GrassifyConfiguration"));
+    }
+
+    public string ToJson(bool prettyPrint = false)
+    {
+        return JsonUtility.ToJson(this, prettyPrint);
     }
 }
 
@@ -22,6 +27,7 @@ public class GrassifyBlockConfiguration
     public float Probability;
     public List<int> Variations;
     public float VariationProbability;
+    public bool AllowOverlap = false;
 
     public GrassifyBlockConfiguration() { }
 }

@@ -1,0 +1,72 @@
+{
+  "GrowBlocks": [
+    5,
+    1
+  ],
+  "VegetationBlocks": [
+    {
+      "Id": 18,
+      "Probability": 1.0,
+      "Variations": [
+        22,
+        33
+      ],
+      "VariationProbability": 0.15,
+      "AllowOverlap": true
+    },
+    {
+      "Id": 27,
+      "Probability": 0.002,
+      "Variations": [
+        28,
+        29
+      ],
+      "VariationProbability": 0.5
+    },
+    {
+      "Id": 32,
+      "Probability": 0.003
+    },
+    {
+      "Id": 51,
+      "Probability": 0.004,
+      "Variations": [
+        50
+      ],
+      "VariationProbability": 0.2
+    },
+    {
+      "Id": 24,
+      "Probability": 0.005,
+      "Variations": [
+        34
+      ],
+      "VariationProbability": 0.3
+    },
+    {
+      "Id": 23,
+      "Probability": 0.005,
+      "Variations": [
+        26
+      ],
+      "VariationProbability": 0.15
+    },
+    {
+      "Id": 47,
+      "Probability": 0.006,
+      "Variations": [
+        48,
+        49
+      ],
+      "VariationProbability": 0.35
+    },
+    {
+      "Id": 35,
+      "Probability": 0.008,
+      "Variations": [
+        36
+      ],
+      "VariationProbability": 0.4
+    }
+  ]
+}

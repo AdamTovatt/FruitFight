@@ -263,54 +263,32 @@ public class WorldEditor : MonoBehaviour
 
     private void Grassify(InputAction.CallbackContext context)
     {
-        GrassifyConfiguration grassifyConfiguration = new GrassifyConfiguration()
-        {
-            GrowBlocks = new List<int>()
-            {
-                5, 1
-            },
-            VegetationBlocks = new List<GrassifyBlockConfiguration>()
-            {
-                new GrassifyBlockConfiguration()
-                {
-                    Id = 18,
-                    Probability = 1,
-                    Variations = new List<int>(){ 22, 33 },
-                    VariationProbability = 0.2f
-                },
-                new GrassifyBlockConfiguration()
-                {
-                    Id = 27,
-                    Probability = 0.2f,
-                    Variations = new List<int>() { 28, 29 },
-                    VariationProbability = 0.6f
-                }
-            }
-        };
+        GrassifyConfiguration grassifyConfiguration = GrassifyConfiguration.LoadFromConfig();
 
+        List<Vector3Int> placedPositions = new List<Vector3Int>();
         List<Block> blocksToAdd = new List<Block>();
 
-        foreach (Block block in CurrentWorld.Blocks)
+        foreach (Block growBlock in CurrentWorld.Blocks)
         {
-            if (grassifyConfiguration.GrowBlocks.Contains(block.Info.Id))
+            if (grassifyConfiguration.GrowBlocks.Contains(growBlock.Info.Id))
             {
-                if (block.NeighborY.Positive.Count == 0)
+                if (growBlock.NeighborY.Positive.Count == 0)
                 {
                     foreach (GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
                     {
-                        if (Random.Range(0f, 1f) < blockConfiguration.Probability)
+                        BlockInfo grassInfo = BlockInfoLookup.Get(blockConfiguration.Id);
+
+                        //limit obscured positions to only the ones that are on the same y level as the current block and are spaced with the same distance as the vegetation between
+                        IEnumerable<Vector3Int> filteredPositions = growBlock.ObscuredPositions.Where(p => p.Y == growBlock.Y && !placedPositions.Contains(p));
+
+                        if (growBlock.Info.Width > grassInfo.Width)
+                            filteredPositions = filteredPositions.Where(p => p.X % grassInfo.Width == 0 && p.Z % grassInfo.Width == 0);
+                        else
+                            filteredPositions = filteredPositions.Take(1);
+
+                        foreach (Vector3Int obscuredPosition in filteredPositions.ToList())
                         {
-                            BlockInfo info = BlockInfoLookup.Get(blockConfiguration.Id);
-
-                            //limit obscured positions to only the ones that are on the same y level as the current block and are spaced with the same distance as the vegetation between
-                            IEnumerable<Vector3Int> filteredPositions = block.ObscuredPositions.Where(p => p.Y == block.Y);
-
-                            if (block.Info.Width > info.Width)
-                                filteredPositions = filteredPositions.Where(p => p.X % (block.Info.Width / info.Width) == 0 && p.Z % (block.Info.Width / info.Width) == 0);
-                            else
-                                filteredPositions = filteredPositions.Take(1);
-
-                            foreach (Vector3Int obscuredPosition in filteredPositions.ToList())
+                            if (Random.Range(0f, 1f) < blockConfiguration.Probability)
                             {
                                 int blockId = blockConfiguration.Id;
 
@@ -323,6 +301,9 @@ public class WorldEditor : MonoBehaviour
                                 }
 
                                 blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockId), obscuredPosition) { IsFromGrassify = true }); //add block that is sometimes of a random variation
+
+                                if(!blockConfiguration.AllowOverlap) 
+                                    placedPositions.Add(obscuredPosition); //so that we won't place multiple things on same place
                             }
                         }
                     }
@@ -330,7 +311,7 @@ public class WorldEditor : MonoBehaviour
             }
         }
 
-        foreach(Block block in CurrentWorld.Blocks.Where(x => x.IsFromGrassify))
+        foreach (Block block in CurrentWorld.Blocks.Where(x => x.IsFromGrassify))
         {
             CurrentWorld.Remove(block, block.Position);
         }
