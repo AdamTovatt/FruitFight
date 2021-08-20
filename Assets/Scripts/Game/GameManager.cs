@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
                 if (hitInfo.transform == player.transform)
                     continue;
 
-                if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude)
+                if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude * 3)
                     continue;
             }
 

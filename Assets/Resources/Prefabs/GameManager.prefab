@@ -52,8 +52,7 @@ MonoBehaviour:
     type: 3}
   PlayerPrefab: {fileID: 2012823961798305035, guid: 7a8b9f89619f22843b473f64af50bf2b,
     type: 3}
-  BlockSeeThroughRadius: 2
-  TargetFrameRate: 71
+  BlockSeeThroughRadius: 3
 --- !u!114 &2800476988953670057
 MonoBehaviour:
   m_ObjectHideFlags: 0
