@@ -8,6 +8,7 @@ public class Tween : MonoBehaviour
     public float TweenSpeed = 8f;
     public float StartScale = 0.6f;
     public float EndScale = 1f;
+    public bool DestoryOnFinished = false;
 
     private Vector3 startSize;
     private bool startSizeHasBeenSet = false;
@@ -19,7 +20,13 @@ public class Tween : MonoBehaviour
         StartTween();
     }
 
-    private void StartTween()
+    public void ResetValues()
+    {
+        startSize = Vector3.zero;
+        startSizeHasBeenSet = false;
+    }
+
+    public void StartTween()
     {
         if (!startSizeHasBeenSet)
         {
@@ -49,6 +56,9 @@ public class Tween : MonoBehaviour
                     transform.localScale = startSize * EndScale;
 
                 tweening = false;
+                
+                if(DestoryOnFinished)
+                    Destroy(gameObject);
             }
         }
     }
