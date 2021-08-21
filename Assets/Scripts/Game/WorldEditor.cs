@@ -334,7 +334,7 @@ public class WorldEditor : MonoBehaviour
             }
         }
 
-        Ui.AlertCreator.CreateNotification("Vegetation was automatically added", 3);
+        Ui.AlertCreator.CreateNotification("Vegetation was automatically added", 2);
     }
 
     public void TestLevelButton()

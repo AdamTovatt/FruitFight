@@ -27,7 +27,9 @@ public class Notification : MonoBehaviour
         if(icon != null)
         {
             Icon.sprite = icon;
-            Background.rectTransform.sizeDelta = new Vector2(textWidth + iconWidth + Margin * 3, backgroundHeight);
+            Background.rectTransform.sizeDelta = new Vector2(textWidth + iconWidth + Margin * 2, backgroundHeight + 20f);
+            Icon.rectTransform.localPosition = new Vector3((textWidth / -2) - Margin/2f, Icon.rectTransform.localPosition.y);
+            Text.rectTransform.localPosition = new Vector3(Margin, Text.rectTransform.localPosition.y);
         }
         else
         {
