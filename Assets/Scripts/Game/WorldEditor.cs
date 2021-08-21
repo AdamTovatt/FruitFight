@@ -333,6 +333,8 @@ public class WorldEditor : MonoBehaviour
                 block.RotationOffset = block.Instance.transform.position - block.Position;
             }
         }
+
+        Ui.AlertCreator.CreateNotification("Vegetation was automatically added", 3);
     }
 
     public void TestLevelButton()
@@ -471,7 +473,6 @@ public class WorldEditor : MonoBehaviour
 
     private void Pause(InputAction.CallbackContext context)
     {
-        Ui.AlertCreator.CreateNotification("You did indeed pause", 2);
         if (!isTestingLevel)
         {
             if (!controlsDisabled)

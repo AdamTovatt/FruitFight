@@ -677,6 +677,15 @@ MonoBehaviour:
     type: 3}
   NotificationPrefab: {fileID: 3209350012550313086, guid: 64a380bc83cdce74dbe184ef9319d310,
     type: 3}
+  Icons:
+  - Name: Button_Up
+    Image: {fileID: 21300000, guid: 87d8a497eefa6ce41833f9c98be0ddf4, type: 3}
+  - Name: Button_Right
+    Image: {fileID: 21300000, guid: ca2472f19d7f05b4888e0f37b69eabfe, type: 3}
+  - Name: Button_Down
+    Image: {fileID: 21300000, guid: 748224d9fc1ff464696ca682b6a4d485, type: 3}
+  - Name: Button_Left
+    Image: {fileID: 21300000, guid: 57bb84cc0f66d0e4b907b8cfad6a68be, type: 3}
 --- !u!114 &27242633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2977,6 +2986,7 @@ MonoBehaviour:
   TweenSpeed: 8
   StartScale: 0.6
   EndScale: 1
+  DestoryOnFinished: 0
 --- !u!114 &533314333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3576,6 +3586,7 @@ MonoBehaviour:
   TweenSpeed: 8
   StartScale: 0.6
   EndScale: 1
+  DestoryOnFinished: 0
 --- !u!114 &812042460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4111,6 +4122,7 @@ MonoBehaviour:
   TweenSpeed: 8
   StartScale: 0.6
   EndScale: 1
+  DestoryOnFinished: 0
 --- !u!1 &956096022
 GameObject:
   m_ObjectHideFlags: 0
@@ -4308,6 +4320,7 @@ MonoBehaviour:
   TweenSpeed: 8
   StartScale: 0.6
   EndScale: 1
+  DestoryOnFinished: 0
 --- !u!114 &972423469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8001,6 +8014,7 @@ MonoBehaviour:
   TweenSpeed: 8
   StartScale: 0.6
   EndScale: 1
+  DestoryOnFinished: 0
 --- !u!114 &1503011453
 MonoBehaviour:
   m_ObjectHideFlags: 0
