@@ -642,6 +642,15 @@
       "Name": "Crate",
       "Prefab": "Crate",
       "RotatableX": true
+    },
+    {
+      "Id": 63,
+      "BlockType": 1,
+      "Width": 4,
+      "Height": 4,
+      "ShowInEditor": true,
+      "Name": "Trigger Zone",
+      "Prefab": "TriggerZone"
     }
   ]
 }
