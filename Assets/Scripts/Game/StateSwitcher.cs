@@ -27,10 +27,18 @@ public class StateSwitcher : MonoBehaviour
             DetailColor = gameObject.GetComponent<DetailColorController>().Color;
     }
 
+    public void Activate()
+    {
+        Activate(null);
+    }
+
     public void Activate(Holdable holdable)
     {
-        if (holdableDelegate != null)
-            holdableDelegate.SetContainedHoldable(holdable);
+        if (holdable != null)
+        {
+            if (holdableDelegate != null)
+                holdableDelegate.SetContainedHoldable(holdable);
+        }
 
         OnActivated?.Invoke();
     }

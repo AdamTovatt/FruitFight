@@ -17,6 +17,7 @@ public class WorldBuilder : MonoBehaviour
 
     private World upcommingWorld;
     private List<MoveOnTrigger> moveOnTriggerObjectsToBind = new List<MoveOnTrigger>();
+    private List<TriggerZone> triggerZoneObjectsToBind = new List<TriggerZone>();
     public World CurrentWorld { get; set; }
 
     private void Awake()
@@ -64,7 +65,7 @@ public class WorldBuilder : MonoBehaviour
         }
 
         if (!IsInEditor)
-            BindMoveOnTriggerObjects();
+            BindObjects();
 
         CurrentWorld = world;
     }
@@ -160,15 +161,30 @@ public class WorldBuilder : MonoBehaviour
                 propertyExposer.Behaviours.Add(moveOnTrigger);
             }
 
+            if(block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues)
+            {
+                TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
+
+                triggerZone.Init(block.BehaviourProperties.TriggerZonePropertyCollection.IsParent, upcommingWorld.Blocks.Where(b => b.Id == block.BehaviourProperties.TriggerZonePropertyCollection.ParentId).FirstOrDefault());
+                propertyExposer.Behaviours.Add(triggerZone);
+
+                triggerZoneObjectsToBind.Add(triggerZone);
+            }
+
             propertyExposer.WasLoaded(block.BehaviourProperties);
         }
     }
 
-    private void BindMoveOnTriggerObjects()
+    private void BindObjects()
     {
         foreach (MoveOnTrigger move in moveOnTriggerObjectsToBind)
         {
             move.BindStateSwitcher();
+        }
+
+        foreach(TriggerZone zone in triggerZoneObjectsToBind)
+        {
+            zone.Bind();
         }
     }
 
