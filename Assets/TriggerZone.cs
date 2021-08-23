@@ -32,6 +32,10 @@ public class TriggerZone : MonoBehaviour
         {
             parentBlock = parent;
         }
+        else
+        {
+            stateSwitcher = gameObject.AddComponent<StateSwitcher>();
+        }
     }
 
     public void Bind()
@@ -40,10 +44,6 @@ public class TriggerZone : MonoBehaviour
         {
             Parent = parentBlock.Instance.GetComponent<TriggerZone>();
             Parent.AddChild(this);
-        }
-        else //is parent
-        {
-            stateSwitcher = gameObject.AddComponent<StateSwitcher>();
         }
     }
 
