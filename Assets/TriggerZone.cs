@@ -36,7 +36,7 @@ public class TriggerZone : MonoBehaviour
 
     public void Bind()
     {
-        if (IsParent)
+        if (!IsParent)
         {
             Parent = parentBlock.Instance.GetComponent<TriggerZone>();
             Parent.AddChild(this);
@@ -61,11 +61,11 @@ public class TriggerZone : MonoBehaviour
 
     public void UpdateActiveStatus()
     {
-        bool status = true;
+        bool status = LocalTriggerActive;
 
         foreach (TriggerZone triggerZone in children)
         {
-            status = status && triggerZone.LocalTriggerActive;
+            status = status || triggerZone.LocalTriggerActive;
         }
 
         if (!triggerZoneActive && status)
@@ -95,7 +95,7 @@ public class TriggerZone : MonoBehaviour
     {
         LocalTriggerActive = false;
 
-        if (!Parent)
+        if (!IsParent)
             Parent.UpdateActiveStatus();
         else
             UpdateActiveStatus();

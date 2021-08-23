@@ -147,6 +147,14 @@ public class WorldBuilder : MonoBehaviour
                 {
                     block.BehaviourProperties.DetailColorPropertyCollection = new DetailColorPropertyCollection();
                 }
+
+                TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
+                if(triggerZone != null)
+                {
+                    block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
+                    block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
+                    block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
+                }
             }
 
             if (block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)

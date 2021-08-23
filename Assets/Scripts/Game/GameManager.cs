@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
             Ray ray = new Ray(MultipleTargetCamera.transform.position, (player.transform.position - MultipleTargetCamera.transform.position));
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
-                if (hitInfo.transform == player.transform)
+                if (hitInfo.transform == player.transform || hitInfo.transform.tag == "Invisible")
                     continue;
 
                 if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude * 3)

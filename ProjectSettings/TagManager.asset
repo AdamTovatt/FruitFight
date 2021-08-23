@@ -8,6 +8,7 @@ TagManager:
   - Magnet
   - Water
   - Interactable
+  - Invisible
   layers:
   - Default
   - TransparentFX

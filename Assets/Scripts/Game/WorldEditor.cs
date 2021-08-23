@@ -705,6 +705,9 @@ public class WorldEditor : MonoBehaviour
         }
 
         Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
+
+        
+
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
         selectedWorldObject = block;

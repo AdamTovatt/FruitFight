@@ -650,7 +650,8 @@
       "Height": 4,
       "ShowInEditor": true,
       "Name": "Trigger Zone",
-      "Prefab": "TriggerZone"
+      "Prefab": "TriggerZone",
+      "StartWithPropertyExposer": true
     }
   ]
 }
