@@ -9,14 +9,18 @@ public class BehaviourMenu : MonoBehaviour
 {
     public Button MoveButton;
     public Button DetailColorButton;
+    public Button TriggerZoneButton;
     public Button CloseButton;
     public TextMeshProUGUI DetailColorButtonText;
+    public TextMeshProUGUI TriggerZoneButtonText;
 
     public DetailColorMenu DetailColorMenu;
     public MoveMenu MoveMenu;
+    public TriggerZoneMenu TriggerZoneMenu;
 
     private Block currentBlock;
     private DetailColorController currentDetailColor;
+    private TriggerZone currentTriggerZone;
 
     private Color enabledColor;
 
@@ -29,7 +33,21 @@ public class BehaviourMenu : MonoBehaviour
     {
         MoveButton.onClick.AddListener(() => { Move(); });
         DetailColorButton.onClick.AddListener(() => { DetailColor(); });
+        TriggerZoneButton.onClick.AddListener(TriggerZone);
         CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
+    }
+
+    private void TriggerZone()
+    {
+        TriggerZoneMenu.gameObject.SetActive(true);
+        TriggerZoneMenu.AddSubZoneButton.Select();
+        TriggerZoneMenu.Show(currentBlock);
+
+        TriggerZoneMenu.OnClosed += () =>
+        {
+            TriggerZoneMenu.gameObject.SetActive(false);
+            CloseButton.Select();
+        };
     }
 
     private void DetailColor()
@@ -47,7 +65,7 @@ public class BehaviourMenu : MonoBehaviour
             detailColorCollection.Color = color;
             detailColorCollection.ApplyValues(currentDetailColor);
             DetailColorMenu.gameObject.SetActive(false);
-            MoveButton.Select();
+            CloseButton.Select();
         };
     }
 
@@ -67,27 +85,25 @@ public class BehaviourMenu : MonoBehaviour
         MoveMenu.OnClosed += () =>
         {
             MoveMenu.gameObject.SetActive(false);
-            MoveButton.Select();
+            CloseButton.Select();
         };
-
-
-        Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.ActivatorBlockId);
-        Debug.Log(currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition);
     }
 
     public void Show(Block block)
     {
         currentBlock = block;
         currentDetailColor = block.Instance.GetComponent<DetailColorController>();
-        
-        if(currentDetailColor == null)
-        {
+        currentTriggerZone = block.Instance.GetComponent<TriggerZone>();
+
+        if (currentDetailColor == null)
             DetailColorButtonText.color = Color.grey;
-        }
         else
-        {
             DetailColorButtonText.color = enabledColor;
-        }
+
+        if (currentTriggerZone == null)
+            TriggerZoneButtonText.color = Color.grey;
+        else
+            TriggerZoneButtonText.color = enabledColor;
 
         MoveButton.Select();
     }
