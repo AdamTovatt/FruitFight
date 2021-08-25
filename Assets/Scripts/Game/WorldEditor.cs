@@ -1,3 +1,4 @@
+using Assets.Scripts.Models;
 using Lookups;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,7 +51,9 @@ public class WorldEditor : MonoBehaviour
     private List<Block> currentlyAvailableActivators;
     private int currentActivatorIndex;
     private Block currentMovePropertiesBlock;
+    private Block currentTriggerZonePropertiesBlock;
 
+    private bool isAddingTriggerSubZone = false;
     private bool isPickingFinalPosition = false;
     private Vector2 currentLeftStickInput;
     private float moveMarkerStartTime = 0;
@@ -154,6 +157,29 @@ public class WorldEditor : MonoBehaviour
         moveMenu.gameObject.SetActive(true);
         moveMenu.FinalPositionWasSet(position);
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
+    }
+
+    public void AddTriggerSubZone(TriggerZoneMenu menu, Block block)
+    {
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
+        menu.gameObject.SetActive(false);
+        WorldEditorUi.Instance.DisableUiInput();
+        EnableControls();
+        SetSelectedBlock(block.BlockInfoId);
+        SetMarkerPositionToBlock(block);
+        isAddingTriggerSubZone = true;
+        currentTriggerZonePropertiesBlock = block;
+    }
+
+    public void AddedTriggerSubZone(Block triggerSubZone)
+    {
+        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
+        WorldEditorUi.Instance.EnableUiInput();
+        WorldEditorUi.Instance.BehaviourMenu.TriggerZoneMenu.gameObject.SetActive(true);
+        WorldEditorUi.Instance.BehaviourMenu.TriggerZoneMenu.SubZoneWasAdded(triggerSubZone);
+        SetMarkerPositionToBlock(currentTriggerZonePropertiesBlock);
+        isAddingTriggerSubZone = false;
+        controlsDisabled = true;
     }
 
     public void PickActivator(MoveMenu menu, Block block)
@@ -696,6 +722,9 @@ public class WorldEditor : MonoBehaviour
         List<Block> sameBlocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList();
         if (sameBlocks.Count() > 0)
         {
+            if (isAddingTriggerSubZone) //should not be able to place on top of another trigger but should not open behaviour menu when that is done either
+                return;
+
             Block selectedBlock = sameBlocks.First();
             Debug.Log("selected block: " + selectedBlock.ToString());
             Debug.Log(selectedBlock.HasPropertyExposer);
@@ -704,9 +733,16 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
-        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
+        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);    
 
-        
+        if(isAddingTriggerSubZone) //we should set this trigger sub zone to not be a parent
+        {
+            block.BehaviourProperties = new BehaviourPropertyContainer();
+            block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
+            block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = false; //should be false by default but why not set it again
+            block.BehaviourProperties.TriggerZonePropertyCollection.ParentId = currentTriggerZonePropertiesBlock.Id;
+            block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
+        }
 
         CurrentWorld.Add(block);
         CurrentWorld.CalculateNeighbors();
@@ -724,6 +760,9 @@ public class WorldEditor : MonoBehaviour
             block.Rotation = selectedWorldObject.Rotation;
             block.RotationOffset = selectedWorldObject.RotationOffset;
         }
+
+        if(isAddingTriggerSubZone)
+            AddedTriggerSubZone(block); //if we were adding a trigger zone we should do a callback to the trigger zone menu now
     }
 
     private void MoveMarker()

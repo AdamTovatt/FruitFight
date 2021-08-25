@@ -5,6 +5,7 @@ using UnityEngine;
 public class TriggerZone : MonoBehaviour
 {
     public AlwaysFaceCamera IconRotator;
+    public GameObject IconGraphic;
 
     public bool IsParent { get; set; }
     public TriggerZone Parent { get; set; }

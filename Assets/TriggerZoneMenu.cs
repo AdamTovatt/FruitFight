@@ -25,7 +25,15 @@ public class TriggerZoneMenu : MonoBehaviour
 
     private void AddSubZone()
     {
+        WorldEditor.Instance.AddTriggerSubZone(this, currentBlock);
+    }
 
+    public void SubZoneWasAdded(Block subZone)
+    {
+        WorldEditorUi.Instance.AlertCreator.CreateNotification("Sub zone was added to trigger", 2);
+        currentBlock.BehaviourProperties.TriggerZonePropertyCollection.Children.Add(subZone.Id);
+
+        CurrentSubZonesText.text = currentBlock.BehaviourProperties.TriggerZonePropertyCollection.Children.Count.ToString();
     }
 
     private void Close()

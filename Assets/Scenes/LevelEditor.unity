@@ -8427,7 +8427,7 @@ MonoBehaviour:
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
   UseCustomContentSize: 1
-  ContentSize: {x: 200, y: 50}
+  ContentSize: {x: 280, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1459113430

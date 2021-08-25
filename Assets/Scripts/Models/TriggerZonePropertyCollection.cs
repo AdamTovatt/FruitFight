@@ -10,6 +10,7 @@ public class TriggerZonePropertyCollection : BehaviourPropertyCollection
     public bool IsParent;
     public int ParentId;
     public bool HasValues;
+    public List<int> Children = new List<int>();
 
     public override void ApplyValues(MonoBehaviour behaviour)
     {
