@@ -5,7 +5,7 @@ using UnityEngine;
 public class TriggerZone : MonoBehaviour
 {
     public AlwaysFaceCamera IconRotator;
-    public GameObject IconGraphic;
+    public MeshRenderer IconGraphic;
 
     public bool IsParent { get; set; }
     public TriggerZone Parent { get; set; }
@@ -32,6 +32,8 @@ public class TriggerZone : MonoBehaviour
         if (!isParent)
         {
             parentBlock = parent;
+            IconGraphic.enabled = false;
+            IconRotator.DeActivate();
         }
         else
         {
@@ -51,13 +53,11 @@ public class TriggerZone : MonoBehaviour
     public void Activated()
     {
         stateSwitcher.Activate();
-        Debug.Log("Trigger zone was activated");
     }
 
     public void DeActivated()
     {
         stateSwitcher.Deactivate();
-        Debug.Log("Trigger zone was deactivated");
     }
 
     public void UpdateActiveStatus()

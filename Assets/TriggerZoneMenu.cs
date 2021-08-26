@@ -52,6 +52,8 @@ public class TriggerZoneMenu : MonoBehaviour
         if (currentBlock.BehaviourProperties.TriggerZonePropertyCollection == null)
             currentBlock.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
 
+        CurrentSubZonesText.text = currentBlock.BehaviourProperties.TriggerZonePropertyCollection.Children.Count.ToString();
+
         currentBlock.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
         currentBlock.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
     }

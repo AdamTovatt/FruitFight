@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IconRotator: {fileID: 6003658382765180443}
+  IconGraphic: {fileID: 3861656850555230777}
 --- !u!65 &4600152060376708663
 BoxCollider:
   m_ObjectHideFlags: 0
