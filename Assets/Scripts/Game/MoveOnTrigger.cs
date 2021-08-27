@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveOnTrigger : MonoBehaviour
+public class MoveOnTrigger : ActivatedByStateSwitcher
 {
     public Vector3 FinalPosition { get; set; }
-    public int ActivatorBlockId { get; set; }
     public float MoveSpeed { get; set; } = 0.5f;
     public float EndpointDelay { get; set; }
     public bool PingPong { get; set; }
@@ -34,7 +33,7 @@ public class MoveOnTrigger : MonoBehaviour
 
     private Coroutine coroutine;
 
-    public void Init(Block thisBlock, Block activatorBlock)
+    public override void Init(Block thisBlock, Block activatorBlock)
     {
         if (gameObject.GetComponent<AverageVelocityKeeper>() == null)
         {
@@ -48,7 +47,7 @@ public class MoveOnTrigger : MonoBehaviour
         loopingAudio = gameObject.GetComponent<LoopingAudioSource>();
     }
 
-    public void BindStateSwitcher()
+    public override void BindStateSwitcher()
     {
         if (PingPong)
         {
@@ -65,7 +64,7 @@ public class MoveOnTrigger : MonoBehaviour
         }
     }
 
-    public void Activated()
+    public override void Activated()
     {
         if (EndpointDelay > 0)
         {
@@ -77,7 +76,7 @@ public class MoveOnTrigger : MonoBehaviour
         }
     }
 
-    public void Deactivated()
+    public override void Deactivated()
     {
         if (EndpointDelay > 0)
         {

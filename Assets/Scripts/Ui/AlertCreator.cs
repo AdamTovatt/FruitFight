@@ -10,6 +10,24 @@ public class AlertCreator : MonoBehaviour
 
     private List<Notification> notifications = new List<Notification>();
 
+    private static AlertCreator instance;
+
+    private void Awake()
+    {
+        if(Icons.Count == 0)
+        {
+            AlertCreator instance = Instantiate(Resources.Load<GameObject>(string.Format("Prefabs/{0}", "AlertCreator"))).GetComponent<AlertCreator>();
+            Icons = new List<NotificationIcon>();
+            Icons.AddRange(instance.Icons);
+            Destroy(instance.gameObject);
+        }
+    }
+
+    public static AlertCreator GetInstance()
+    {
+        return instance;
+    }
+
     public Alert CreateAlert(string text, List<string> buttons)
     {
         Alert alert = Instantiate(AlertPrefab, transform).GetComponent<Alert>();

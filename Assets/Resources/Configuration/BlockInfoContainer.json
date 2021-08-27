@@ -652,6 +652,16 @@
       "Name": "Trigger Zone",
       "Prefab": "TriggerZone",
       "StartWithPropertyExposer": true
+    },
+    {
+      "Id": 64,
+      "BlockType": 1,
+      "Width": 4,
+      "Height": 4,
+      "ShowInEditor": true,
+      "Name": "Notification",
+      "Prefab": "NotificationBlock",
+      "StartWithPropertyExposer": true
     }
   ]
 }
