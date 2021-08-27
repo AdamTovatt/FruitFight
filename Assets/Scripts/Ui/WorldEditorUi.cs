@@ -28,9 +28,13 @@ public class WorldEditorUi : UiManager
         {
             Instance = this;
             eventSystemInstance = EventSystem;
+
+            AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>()); //set alert creator instance
         }
         else
         {
+            AlertCreator.SetInstance(Instance.GetComponent<AlertCreator>()); //set alert creator instance
+
             Destroy();
             return;
         }

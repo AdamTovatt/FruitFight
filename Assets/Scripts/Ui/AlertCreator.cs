@@ -6,26 +6,30 @@ public class AlertCreator : MonoBehaviour
 {
     public GameObject AlertPrefab;
     public GameObject NotificationPrefab;
-    public List<NotificationIcon> Icons;
+    public List<NotificationIcon> Icons { get; set; }
 
     private List<Notification> notifications = new List<Notification>();
 
-    private static AlertCreator instance;
+    public static AlertCreator Instance { get; private set; }
 
     private void Awake()
     {
-        if(Icons.Count == 0)
+        if (Icons == null || Icons.Count == 0)
         {
-            AlertCreator instance = Instantiate(Resources.Load<GameObject>(string.Format("Prefabs/{0}", "AlertCreator"))).GetComponent<AlertCreator>();
             Icons = new List<NotificationIcon>();
-            Icons.AddRange(instance.Icons);
-            Destroy(instance.gameObject);
+
+            IconConfiguration iconConfiguration = IconConfiguration.LoadFromConfiguration();
+            foreach (IconConfigurationEntry icon in iconConfiguration.Icons)
+            {
+                Sprite sprite = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileName));
+                Icons.Add(new NotificationIcon() { Image = sprite, Name = icon.Name });
+            }
         }
     }
 
-    public static AlertCreator GetInstance()
+    public static void SetInstance(AlertCreator newInstance)
     {
-        return instance;
+        Instance = newInstance;
     }
 
     public Alert CreateAlert(string text, List<string> buttons)

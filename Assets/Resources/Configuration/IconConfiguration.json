@@ -1,0 +1,20 @@
+{
+  "Icons": [
+    {
+      "Name": "Button_Up",
+      "FileName": "ButtonIcon_Up"
+    },
+    {
+      "Name": "Button_Right",
+      "FileName": "ButtonIcon_Right"
+    },
+    {
+      "Name": "Button_Left",
+      "FileName": "ButtonIcon_Left"
+    },
+    {
+      "Name": "Button_Down",
+      "FileName": "ButtonIcon_Down"
+    }
+  ]
+}
