@@ -10,13 +10,16 @@ public class BehaviourMenu : MonoBehaviour
     public Button MoveButton;
     public Button DetailColorButton;
     public Button TriggerZoneButton;
+    public Button NotificationButton;
     public Button CloseButton;
     public TextMeshProUGUI DetailColorButtonText;
     public TextMeshProUGUI TriggerZoneButtonText;
+    public TextMeshProUGUI NotificationButtonText;
 
     public DetailColorMenu DetailColorMenu;
     public MoveMenu MoveMenu;
     public TriggerZoneMenu TriggerZoneMenu;
+    public NotificationMenu NotificationMenu;
 
     private Block currentBlock;
     private DetailColorController currentDetailColor;
@@ -35,6 +38,7 @@ public class BehaviourMenu : MonoBehaviour
         DetailColorButton.onClick.AddListener(() => { DetailColor(); });
         TriggerZoneButton.onClick.AddListener(TriggerZone);
         CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
+        NotificationButton.onClick.AddListener(Notification);
     }
 
     private void TriggerZone()
@@ -50,6 +54,19 @@ public class BehaviourMenu : MonoBehaviour
         TriggerZoneMenu.OnClosed += () =>
         {
             TriggerZoneMenu.gameObject.SetActive(false);
+            CloseButton.Select();
+        };
+    }
+
+    private void Notification()
+    {
+        NotificationMenu.gameObject.SetActive(true);
+        NotificationMenu.SetActivatorButton.Select();
+        NotificationMenu.Show(currentBlock);
+
+        NotificationMenu.OnClosed += () =>
+        {
+            NotificationMenu.gameObject.SetActive(false);
             CloseButton.Select();
         };
     }

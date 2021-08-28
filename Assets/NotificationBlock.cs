@@ -10,6 +10,7 @@ public class NotificationBlock : ActivatedByStateSwitcher
     public string IconName { get; set; }
     public string Text { get; set; }
     public int DisplayTime { get; set; }
+    public bool ShowMultipleTimes { get; set; }
 
     private bool hasBeenActivated = false;
 
@@ -48,8 +49,6 @@ public class NotificationBlock : ActivatedByStateSwitcher
         {
             IconRotator.DeActivate();
         }
-
-        AlertCreator.Instance.CreateNotification("Test not", 1);
     }
 
     private void OnDestroy()

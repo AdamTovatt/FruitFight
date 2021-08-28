@@ -10,7 +10,8 @@ public class NotificationPropertyCollection : BehaviourPropertyCollection
     public string Text;
     public string IconName;
     public int ActivatorBlockId;
-    public int DisplayTime;
+    public int DisplayTime = 1;
+    public bool ShowMultipleTimes;
     public bool HasValues;
 
     public override void ApplyValues(MonoBehaviour behaviour)
@@ -25,6 +26,7 @@ public class NotificationPropertyCollection : BehaviourPropertyCollection
             notificationBlock.DisplayTime = DisplayTime;
             notificationBlock.ActivatorBlockId = ActivatorBlockId;
             notificationBlock.IconName = IconName;
+            notificationBlock.ShowMultipleTimes = ShowMultipleTimes;
 
         }
         else
