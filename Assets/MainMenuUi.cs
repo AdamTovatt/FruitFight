@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(AlertCreator))]
 public class MainMenuUi : UiManager
 {
     public static MainMenuUi Instance;
@@ -13,6 +14,7 @@ public class MainMenuUi : UiManager
     private void Awake()
     {
         Instance = this;
+        AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>());
     }
 
     private void Start()

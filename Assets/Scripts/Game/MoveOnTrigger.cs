@@ -15,10 +15,6 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
     public Vector3 CurrentMovement { get; private set; }
     public AverageVelocityKeeper AverageVelocityKeeper { get; set; }
 
-    private Block activatorObject;
-    private Block block;
-
-    private StateSwitcher stateSwitcher;
     private LoopingAudioSource loopingAudio;
 
     private bool active = false;

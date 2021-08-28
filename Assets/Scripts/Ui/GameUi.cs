@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 
+[RequireComponent(typeof(AlertCreator))]
 public class GameUi : MonoBehaviour
 {
     public GameObject PlayerInfoUiPrefab;
@@ -19,6 +20,7 @@ public class GameUi : MonoBehaviour
     {
         playerInfos = new List<UiPlayerInfo>();
         Instance = this;
+        AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>());
     }
 
     private void Start()

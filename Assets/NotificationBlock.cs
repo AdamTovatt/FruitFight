@@ -9,21 +9,32 @@ public class NotificationBlock : ActivatedByStateSwitcher
 
     public string IconName { get; set; }
     public string Text { get; set; }
-    public float DisplayTime { get; set; }
+    public int DisplayTime { get; set; }
+
+    private bool hasBeenActivated = false;
 
     public override void Activated()
     {
-        AlertCreator.GetInstance().CreateNotification(Text, DisplayTime, IconName);
+        if (!hasBeenActivated)
+        {
+            hasBeenActivated = true;
+            AlertCreator.Instance.CreateNotification(Text, DisplayTime, IconName);
+        }
     }
 
     public override void BindStateSwitcher()
     {
-        throw new System.NotImplementedException();
+        if (activatorObject != null && activatorObject.Instance != null)
+        {
+            stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
+            stateSwitcher.OnActivated += Activated;
+            stateSwitcher.OnDeactivated += Deactivated;
+        }
     }
 
     public override void Deactivated()
     {
-        throw new System.NotImplementedException();
+        //notifications don't really do anything when deactivated
     }
 
     public override void Init(Block thisBlock, Block activatorBlock)
@@ -37,6 +48,16 @@ public class NotificationBlock : ActivatedByStateSwitcher
         {
             IconRotator.DeActivate();
         }
-        AlertCreator.GetInstance().CreateNotification("Test not", 1);
+
+        AlertCreator.Instance.CreateNotification("Test not", 1);
+    }
+
+    private void OnDestroy()
+    {
+        if (stateSwitcher != null)
+        {
+            stateSwitcher.OnActivated -= Activated;
+            stateSwitcher.OnDeactivated -= Deactivated;
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class IconConfiguration : MonoBehaviour
+public class IconConfiguration
 {
     public List<IconConfigurationEntry> Icons;
 

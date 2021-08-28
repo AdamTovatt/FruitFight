@@ -16,7 +16,7 @@ public class WorldBuilder : MonoBehaviour
     private List<GameObject> previousWorldObjects;
 
     private World upcommingWorld;
-    private List<MoveOnTrigger> moveOnTriggerObjectsToBind = new List<MoveOnTrigger>();
+    private List<ActivatedByStateSwitcher> activatedByStateSwitcherObjectsToBind = new List<ActivatedByStateSwitcher>();
     private List<TriggerZone> triggerZoneObjectsToBind = new List<TriggerZone>();
     public World CurrentWorld { get; set; }
 
@@ -142,6 +142,8 @@ public class WorldBuilder : MonoBehaviour
             {
                 block.BehaviourProperties = new BehaviourPropertyContainer();
 
+                //add the behaviour property collections that should exist from start on those kinds of blocks that have behaviours from start
+
                 DetailColorController detailColor = block.Instance.GetComponent<DetailColorController>();
                 if (detailColor != null)
                 {
@@ -155,39 +157,58 @@ public class WorldBuilder : MonoBehaviour
                     block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
                     block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
                 }
+
+                NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
+                if(notificationBlock != null)
+                {
+                    block.BehaviourProperties.NotificationPropertyCollection = new NotificationPropertyCollection();
+                }
             }
 
-            if (block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues)
+            if (block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues) //init move
             {
                 MoveOnTrigger moveOnTrigger = block.Instance.GetComponent<MoveOnTrigger>();
                 if (moveOnTrigger == null)
                     moveOnTrigger = block.Instance.AddComponent<MoveOnTrigger>();
 
                 moveOnTrigger.Init(block, upcommingWorld.Blocks.Where(b => b.Id == block.BehaviourProperties.MovePropertyCollection.ActivatorBlockId).FirstOrDefault());
-                moveOnTriggerObjectsToBind.Add(moveOnTrigger);
+                activatedByStateSwitcherObjectsToBind.Add(moveOnTrigger);
 
                 propertyExposer.Behaviours.Add(moveOnTrigger);
             }
 
-            if(block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues)
+            if(block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues) //init trigger zone
             {
                 TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
 
-                triggerZone.Init(block.BehaviourProperties.TriggerZonePropertyCollection.IsParent, upcommingWorld.Blocks.Where(b => b.Id == block.BehaviourProperties.TriggerZonePropertyCollection.ParentId).FirstOrDefault());
+                triggerZone.Init(block.BehaviourProperties.TriggerZonePropertyCollection.IsParent, GetBlockInUpcommingWorld(block.BehaviourProperties.TriggerZonePropertyCollection.ParentId));
                 propertyExposer.Behaviours.Add(triggerZone);
 
                 triggerZoneObjectsToBind.Add(triggerZone);
+            }
+
+            if(block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
+            {
+                NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
+
+                notificationBlock.Init(block, GetBlockInUpcommingWorld(block.BehaviourProperties.NotificationPropertyCollection.ActivatorBlockId));
+                activatedByStateSwitcherObjectsToBind.Add(notificationBlock);
             }
 
             propertyExposer.WasLoaded(block.BehaviourProperties);
         }
     }
 
+    private Block GetBlockInUpcommingWorld(int blockId)
+    {
+        return upcommingWorld.Blocks.Where(b => b.Id == blockId).FirstOrDefault();
+    }
+
     private void BindObjects()
     {
-        foreach (MoveOnTrigger move in moveOnTriggerObjectsToBind)
+        foreach (ActivatedByStateSwitcher activatedByStateSwitcher in activatedByStateSwitcherObjectsToBind)
         {
-            move.BindStateSwitcher();
+            activatedByStateSwitcher.BindStateSwitcher();
         }
 
         foreach(TriggerZone zone in triggerZoneObjectsToBind)

@@ -25,8 +25,8 @@ public class OccationalSoundSource : MonoBehaviour
     }
 
     private void SecondPassed()
-    { 
-        if(AudioSource == null)
+    {
+        if (AudioSource == null)
         {
             OnDestroy();
             return;
@@ -45,6 +45,9 @@ public class OccationalSoundSource : MonoBehaviour
     private void OnDestroy()
     {
         if (!WorldBuilder.IsInEditor)
-            AudioManager.Instance.OnSecondHasPassed -= SecondPassed;
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.OnSecondHasPassed -= SecondPassed;
+        }
     }
 }

@@ -6,8 +6,9 @@ public abstract class ActivatedByStateSwitcher : MonoBehaviour
 {
     public int ActivatorBlockId { get; set; }
 
-    private Block activatorObject;
-    private Block block;
+    protected Block activatorObject;
+    protected Block block;
+    protected StateSwitcher stateSwitcher;
 
     public abstract void Init(Block thisBlock, Block activatorBlock);
 
