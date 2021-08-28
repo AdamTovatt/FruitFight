@@ -40,7 +40,8 @@ public class NotificationBlock : ActivatedByStateSwitcher
 
     public override void Init(Block thisBlock, Block activatorBlock)
     {
-        throw new System.NotImplementedException();
+        block = thisBlock;
+        activatorObject = activatorBlock;
     }
 
     private void Start()

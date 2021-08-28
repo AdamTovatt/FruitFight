@@ -58,7 +58,7 @@ public class WorldEditor : MonoBehaviour
     private Vector2 currentLeftStickInput;
     private float moveMarkerStartTime = 0;
     private Block selectedWorldObject; //this is the selected object in the world, the object which the marker is above
-    private MoveMenu moveMenu;
+    private MonoBehaviour activatorPickingMenu;
 
     private float lastMarkerMoveTime;
     private float lastPageSwitchTime;
@@ -138,7 +138,7 @@ public class WorldEditor : MonoBehaviour
     public void PickMoveFinalPosition(MoveMenu menu, Block block)
     {
         menu.gameObject.SetActive(false);
-        moveMenu = menu;
+        activatorPickingMenu = menu;
         WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
         WorldEditorUi.Instance.DisableUiInput();
         EnableControls();
@@ -154,8 +154,8 @@ public class WorldEditor : MonoBehaviour
         WorldEditorUi.Instance.EnableUiInput();
         controlsDisabled = true;
         isPickingFinalPosition = false;
-        moveMenu.gameObject.SetActive(true);
-        moveMenu.FinalPositionWasSet(position);
+        activatorPickingMenu.gameObject.SetActive(true);
+        ((MoveMenu)activatorPickingMenu).FinalPositionWasSet(position);
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
@@ -182,7 +182,7 @@ public class WorldEditor : MonoBehaviour
         controlsDisabled = true;
     }
 
-    public void PickActivator(MoveMenu menu, Block block)
+    public void PickActivator(MonoBehaviour menu, Block block)
     {
         currentlyAvailableActivators = new List<Block>();
         foreach (StateSwitcher stateSwitcher in FindObjectsOfType<StateSwitcher>())
@@ -199,7 +199,7 @@ public class WorldEditor : MonoBehaviour
 
         currentActivatorIndex = -1;
         menu.gameObject.SetActive(false);
-        moveMenu = menu;
+        activatorPickingMenu = menu;
         WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
         WorldEditorUi.Instance.DisableUiInput();
         EnableControls();
@@ -213,8 +213,14 @@ public class WorldEditor : MonoBehaviour
         WorldEditorUi.Instance.EnableUiInput();
         controlsDisabled = true;
         isPickingActivator = false;
-        moveMenu.gameObject.SetActive(true);
-        moveMenu.ActivatorWasSet(selectedStateSwitcher);
+        activatorPickingMenu.gameObject.SetActive(true);
+
+        if (activatorPickingMenu.GetType() == typeof(MoveMenu))
+            ((MoveMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
+        else if (activatorPickingMenu.GetType() == typeof(NotificationMenu))
+            ((NotificationMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
+        else
+            Debug.LogError(activatorPickingMenu.GetType().ToString() + " is not supported as a activator picking menu");
 
         currentlyAvailableActivators = null;
 
@@ -328,7 +334,7 @@ public class WorldEditor : MonoBehaviour
 
                                 blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockId), obscuredPosition) { IsFromGrassify = true }); //add block that is sometimes of a random variation
 
-                                if(!blockConfiguration.AllowOverlap) 
+                                if (!blockConfiguration.AllowOverlap)
                                     placedPositions.Add(obscuredPosition); //so that we won't place multiple things on same place
                             }
                         }
@@ -733,9 +739,9 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
-        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);    
+        Block block = new Block(BlockInfoLookup.Get(SelectedBlock), MarkerPosition);
 
-        if(isAddingTriggerSubZone) //we should set this trigger sub zone to not be a parent
+        if (isAddingTriggerSubZone) //we should set this trigger sub zone to not be a parent
         {
             block.BehaviourProperties = new BehaviourPropertyContainer();
             block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
@@ -761,7 +767,7 @@ public class WorldEditor : MonoBehaviour
             block.RotationOffset = selectedWorldObject.RotationOffset;
         }
 
-        if(isAddingTriggerSubZone)
+        if (isAddingTriggerSubZone)
             AddedTriggerSubZone(block); //if we were adding a trigger zone we should do a callback to the trigger zone menu now
     }
 
