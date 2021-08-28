@@ -28,13 +28,6 @@ public class NotificationMenu : MonoBehaviour
 
     private Block currentBlock;
 
-    private Color enabledColor;
-
-    private void Awake()
-    {
-        enabledColor = CurrentActivatorText.color;
-    }
-
     private void Start()
     {
         CloseButton.onClick.AddListener(Close);

@@ -24,6 +24,7 @@ public class BehaviourMenu : MonoBehaviour
     private Block currentBlock;
     private DetailColorController currentDetailColor;
     private TriggerZone currentTriggerZone;
+    private NotificationBlock currentNotificationBlock;
 
     private Color enabledColor;
 
@@ -115,6 +116,7 @@ public class BehaviourMenu : MonoBehaviour
         currentBlock = block;
         currentDetailColor = block.Instance.GetComponent<DetailColorController>();
         currentTriggerZone = block.Instance.GetComponent<TriggerZone>();
+        currentNotificationBlock = block.Instance.GetComponent<NotificationBlock>();
 
         if (currentDetailColor == null)
             DetailColorButtonText.color = Color.grey;
@@ -125,6 +127,11 @@ public class BehaviourMenu : MonoBehaviour
             TriggerZoneButtonText.color = Color.grey;
         else
             TriggerZoneButtonText.color = enabledColor;
+
+        if (currentNotificationBlock == null)
+            NotificationButtonText.color = Color.grey;
+        else
+            NotificationButtonText.color = enabledColor;
 
         MoveButton.Select();
     }

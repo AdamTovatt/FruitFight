@@ -5916,7 +5916,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1341246249}
+    m_SelectOnUp: {fileID: 950492538}
     m_SelectOnDown: {fileID: 507894833}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -6372,9 +6372,9 @@ MonoBehaviour:
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
   UseCustomContentSize: 1
-  ContentSize: {x: 650, y: 50}
+  ContentSize: {x: 400, y: 50}
   UseCustomPivot: 1
-  Pivot: {x: 0.17, y: 0.5}
+  Pivot: {x: 0.27, y: 0.5}
 --- !u!224 &950492540
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8878,7 +8878,7 @@ MonoBehaviour:
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
   UseCustomContentSize: 1
-  ContentSize: {x: 50, y: 50}
+  ContentSize: {x: 80, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1263531391
@@ -10778,7 +10778,7 @@ MonoBehaviour:
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
   UseCustomContentSize: 1
-  ContentSize: {x: 350, y: 50}
+  ContentSize: {x: 250, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1341246252
@@ -12198,7 +12198,7 @@ MonoBehaviour:
   SelectedMarkerPrefab: {fileID: 3549504340327507814, guid: f61b94829d20880409f54e716258e5cb,
     type: 3}
   UseCustomContentSize: 1
-  ContentSize: {x: 50, y: 50}
+  ContentSize: {x: 80, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1503730487
