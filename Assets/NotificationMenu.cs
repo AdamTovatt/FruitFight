@@ -16,8 +16,9 @@ public class NotificationMenu : MonoBehaviour
 
     public TextMeshProUGUI CurrentActivatorText;
     public TextMeshProUGUI TextText;
-    public TextMeshProUGUI IconText;
     public TextMeshProUGUI DisplayTimeText;
+    public Image IconImage;
+    public TextMeshProUGUI IconText;
 
     public Toggle ShowMultipleTimesToggle;
 
@@ -25,23 +26,92 @@ public class NotificationMenu : MonoBehaviour
     public event OnClosedHandler OnClosed;
 
     private Block currentBlock;
+    private List<IconConfigurationEntry> icons;
+    private int currentIconIndex;
 
     private void Start()
     {
+        icons = IconConfiguration.LoadFromConfiguration().Icons;
+        icons.Add(new IconConfigurationEntry() { Name = "None", FileName = "None" });
+
         CloseButton.onClick.AddListener(Close);
         SetTextButton.onClick.AddListener(TakeTextInput);
         SetActivatorButton.onClick.AddListener(PickActivator);
+        IncreaseIconButton.onClick.AddListener(IncreaseIcon);
+        DecreaseIconButton.onClick.AddListener(DecreaseIcon);
+        IncreaseDisplayTimeButton.onClick.AddListener(IncreaseDisplayTime);
+        DecreaseDisplayTimeButton.onClick.AddListener(DecreaseDisplayTime);
+
+        DecreaseIcon();
+    }
+
+    private void IncreaseIcon()
+    {
+        currentIconIndex++;
+        if (currentIconIndex >= icons.Count)
+            currentIconIndex = 0;
+
+        IconConfigurationEntry icon = icons[currentIconIndex];
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.IconName = icon.Name == "None" ? null : icon.Name;
+
+        if (icon.Name == "None")
+        {
+            IconText.enabled = true;
+            IconText.text = "None";
+            IconImage.enabled = false;
+        }
+        else
+        {
+            IconText.enabled = false;
+            IconImage.enabled = true;
+            IconImage.sprite = AlertCreator.Instance.GetIcon(icon.Name).Image;
+        }
+    }
+
+    private void DecreaseIcon()
+    {
+        currentIconIndex--;
+        if (currentIconIndex < 0)
+            currentIconIndex = icons.Count - 1;
+
+        IconConfigurationEntry icon = icons[currentIconIndex];
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.IconName = icon.Name == "None" ? null : icon.Name;
+
+        if (icon.Name == "None")
+        {
+            IconText.enabled = true;
+            IconText.text = "None";
+            IconImage.enabled = false;
+        }
+        else
+        {
+            IconText.enabled = false;
+            IconImage.enabled = true;
+            IconImage.sprite = AlertCreator.Instance.GetIcon(icon.Name).Image;
+        }
+    }
+
+    private void IncreaseDisplayTime()
+    {
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime += 1;
+        DisplayTimeText.text = currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime.ToString();
+    }
+
+    private void DecreaseDisplayTime()
+    {
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime -= 1;
+        DisplayTimeText.text = currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime.ToString();
     }
 
     public void Show(Block block)
     {
         currentBlock = block;
 
-        if(block.BehaviourProperties.NotificationPropertyCollection.HasValues)
+        if (block.BehaviourProperties.NotificationPropertyCollection.HasValues)
         {
             TextText.text = block.BehaviourProperties.NotificationPropertyCollection.Text;
             CurrentActivatorText.text = block.BehaviourProperties.NotificationPropertyCollection.ActivatorBlockId.ToString();
-            IconText.text = block.BehaviourProperties.NotificationPropertyCollection.IconName;
+            IconImage.sprite = AlertCreator.Instance.GetIcon(block.BehaviourProperties.NotificationPropertyCollection.IconName).Image;
         }
         else
         {
@@ -67,7 +137,7 @@ public class NotificationMenu : MonoBehaviour
 
     public void GotTextInput(object sender, bool success, string text)
     {
-        if(success)
+        if (success)
         {
             currentBlock.BehaviourProperties.NotificationPropertyCollection.Text = text;
             TextText.text = text;

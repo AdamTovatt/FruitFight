@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 1557549032}
   - component: {fileID: 1557549031}
   - component: {fileID: 1557549035}
+  - component: {fileID: 1557549036}
   m_Layer: 5
   m_Name: Ui
   m_TagString: Untagged
@@ -437,6 +438,22 @@ MonoBehaviour:
   Canvas: {fileID: 1557549033}
   UiInput: {fileID: 735766989}
   EventSystem: {fileID: 735766990}
+--- !u!114 &1557549036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557549030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b7dd4adc1f09f4f9940281003c31da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AlertPrefab: {fileID: 248482683191041438, guid: 50ad5f7b6cd3fbd4d878a9c35b395a4b,
+    type: 3}
+  NotificationPrefab: {fileID: 3209350012550313086, guid: 64a380bc83cdce74dbe184ef9319d310,
+    type: 3}
 --- !u!1 &2138677391
 GameObject:
   m_ObjectHideFlags: 0

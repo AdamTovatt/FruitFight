@@ -50,13 +50,18 @@ public class AlertCreator : MonoBehaviour
         return CreateNotification(text, displayTime, null);
     }
 
+    public NotificationIcon GetIcon(string name)
+    {
+        return Icons.Where(x => x.Name == name).FirstOrDefault();
+    }
+
     public Notification CreateNotification(string text, float displayTime, string iconName)
     {
         Sprite iconImage = null;
 
         if (!string.IsNullOrEmpty(iconName))
         {
-            NotificationIcon icon = Icons.Where(x => x.Name == iconName).FirstOrDefault();
+            NotificationIcon icon = GetIcon(iconName);
             if (icon != null)
             {
                 iconImage = icon.Image;
