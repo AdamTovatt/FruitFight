@@ -41,8 +41,15 @@ public class NotificationMenu : MonoBehaviour
         DecreaseIconButton.onClick.AddListener(DecreaseIcon);
         IncreaseDisplayTimeButton.onClick.AddListener(IncreaseDisplayTime);
         DecreaseDisplayTimeButton.onClick.AddListener(DecreaseDisplayTime);
+        ShowMultipleTimesToggle.onValueChanged.AddListener(ShowMultipleTimesValueChanged);
 
         DecreaseIcon();
+    }
+
+    private void ShowMultipleTimesValueChanged(bool newValue)
+    {
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.ShowMultipleTimes = newValue;
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.HasValues = true;
     }
 
     private void IncreaseIcon()
@@ -53,6 +60,7 @@ public class NotificationMenu : MonoBehaviour
 
         IconConfigurationEntry icon = icons[currentIconIndex];
         currentBlock.BehaviourProperties.NotificationPropertyCollection.IconName = icon.Name == "None" ? null : icon.Name;
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.HasValues = true;
 
         if (icon.Name == "None")
         {
@@ -76,6 +84,7 @@ public class NotificationMenu : MonoBehaviour
 
         IconConfigurationEntry icon = icons[currentIconIndex];
         currentBlock.BehaviourProperties.NotificationPropertyCollection.IconName = icon.Name == "None" ? null : icon.Name;
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.HasValues = true;
 
         if (icon.Name == "None")
         {
@@ -95,12 +104,14 @@ public class NotificationMenu : MonoBehaviour
     {
         currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime += 1;
         DisplayTimeText.text = currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime.ToString();
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.HasValues = true;
     }
 
     private void DecreaseDisplayTime()
     {
         currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime -= 1;
         DisplayTimeText.text = currentBlock.BehaviourProperties.NotificationPropertyCollection.DisplayTime.ToString();
+        currentBlock.BehaviourProperties.NotificationPropertyCollection.HasValues = true;
     }
 
     public void Show(Block block)

@@ -16,7 +16,7 @@ public class NotificationBlock : ActivatedByStateSwitcher
 
     public override void Activated()
     {
-        if (!hasBeenActivated)
+        if (!hasBeenActivated || ShowMultipleTimes)
         {
             hasBeenActivated = true;
             AlertCreator.Instance.CreateNotification(Text, DisplayTime, IconName);
