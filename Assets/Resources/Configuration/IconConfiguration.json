@@ -1,20 +1,36 @@
 {
   "Icons": [
     {
-      "Name": "Button_Up",
+      "Name": "Button Up",
       "FileName": "ButtonIcon_Up"
     },
     {
-      "Name": "Button_Right",
+      "Name": "Button Right",
       "FileName": "ButtonIcon_Right"
     },
     {
-      "Name": "Button_Left",
+      "Name": "Button Left",
       "FileName": "ButtonIcon_Left"
     },
     {
-      "Name": "Button_Down",
+      "Name": "Button Down",
       "FileName": "ButtonIcon_Down"
+    },
+    {
+      "Name": "Trigger Right",
+      "FileName": "TriggerIcon_Right_Generic"
+    },
+    {
+      "Name": "Trigger Left",
+      "FileName": "TriggerIcon_Left_Generic"
+    },
+    {
+      "Name": "Stick Right",
+      "FileName": "StickIcon_Right"
+    },
+    {
+      "Name": "Stick Left",
+      "FileName": "StickIcon_Left"
     }
   ]
 }
