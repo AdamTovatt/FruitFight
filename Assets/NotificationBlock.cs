@@ -28,8 +28,15 @@ public class NotificationBlock : ActivatedByStateSwitcher
         if (activatorObject != null && activatorObject.Instance != null)
         {
             stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
-            stateSwitcher.OnActivated += Activated;
-            stateSwitcher.OnDeactivated += Deactivated;
+            if (stateSwitcher != null)
+            {
+                stateSwitcher.OnActivated += Activated;
+                stateSwitcher.OnDeactivated += Deactivated;
+            }
+            else
+            {
+                Debug.Log("StateSwitcher was null: " + transform.name);
+            }
         }
     }
 

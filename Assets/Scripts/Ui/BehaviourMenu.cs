@@ -113,6 +113,9 @@ public class BehaviourMenu : MonoBehaviour
 
     public void Show(Block block)
     {
+        if (block.Instance == null)
+            return;
+
         currentBlock = block;
         currentDetailColor = block.Instance.GetComponent<DetailColorController>();
         currentTriggerZone = block.Instance.GetComponent<TriggerZone>();

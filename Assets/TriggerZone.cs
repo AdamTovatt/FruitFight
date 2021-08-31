@@ -46,7 +46,10 @@ public class TriggerZone : MonoBehaviour
         if (!IsParent)
         {
             Parent = parentBlock.Instance.GetComponent<TriggerZone>();
-            Parent.AddChild(this);
+            if (Parent != null)
+                Parent.AddChild(this);
+            else
+                Debug.Log("Parent was null");
         }
     }
 
