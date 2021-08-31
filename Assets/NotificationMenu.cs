@@ -122,7 +122,20 @@ public class NotificationMenu : MonoBehaviour
         {
             TextText.text = block.BehaviourProperties.NotificationPropertyCollection.Text;
             CurrentActivatorText.text = block.BehaviourProperties.NotificationPropertyCollection.ActivatorBlockId.ToString();
-            IconImage.sprite = AlertCreator.Instance.GetIcon(block.BehaviourProperties.NotificationPropertyCollection.IconName).Image;
+
+            string iconName = block.BehaviourProperties.NotificationPropertyCollection.IconName;
+            if (string.IsNullOrEmpty(iconName) || iconName == "None")
+            {
+                IconText.enabled = true;
+                IconText.text = "None";
+                IconImage.enabled = false;
+            }
+            else
+            {
+                IconText.enabled = false;
+                IconImage.enabled = true;
+                IconImage.sprite = AlertCreator.Instance.GetIcon(iconName).Image;
+            }
         }
         else
         {

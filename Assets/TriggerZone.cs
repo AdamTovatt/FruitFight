@@ -87,12 +87,15 @@ public class TriggerZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        LocalTriggerActive = true;
+        if (other.tag == "Player")
+        {
+            LocalTriggerActive = true;
 
-        if (!IsParent)
-            Parent.UpdateActiveStatus();
-        else
-            UpdateActiveStatus();
+            if (!IsParent)
+                Parent.UpdateActiveStatus();
+            else
+                UpdateActiveStatus();
+        }
     }
 
     private void OnTriggerExit(Collider other)
