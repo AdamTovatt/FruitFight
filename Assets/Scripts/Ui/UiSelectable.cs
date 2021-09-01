@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UiSelectable : MonoBehaviour, ISelectHandler
 {
@@ -32,6 +33,15 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
         {
             Destroy(selectedMarker);
             selectedMarker = null;
+        }
+    }
+
+    public void SelectUnderlyingComponent()
+    {
+        Button button = gameObject.GetComponent<Button>();
+        if (button != null)
+        {
+            button.Select();
         }
     }
 

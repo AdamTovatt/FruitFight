@@ -28,7 +28,7 @@ public class MouseOverSelectableChecker : MonoBehaviour
         {
             UiSelectable selectable = result.gameObject.GetComponentInParent<UiSelectable>();
             if (selectable != null)
-                selectable.OnSelect(null);
+                selectable.SelectUnderlyingComponent();
         }
     }
 
