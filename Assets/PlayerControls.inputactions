@@ -823,7 +823,18 @@
                 {
                     "name": "",
                     "id": "b90a5893-2d1e-40c7-8010-569f1a64d7e1",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/delete",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Remove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3edc5e42-b088-4204-aa82-dfe8d391984a",
+                    "path": "<Keyboard>/backspace",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
