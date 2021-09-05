@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
             StartLevel();
 
         PlayerControls playerControls = new PlayerControls();
+        playerControls.Enable();
         playerControls.Gameplay.Pause.performed += Pause;
     }
 
@@ -124,6 +125,8 @@ public class GameManager : MonoBehaviour
             GameUi.Instance.CreatePlayerInfoUi(player);
             player.Movement.transform.parent = transform;
         }
+
+        GameUi.Instance.HideLoadingScreen();
     }
 
     public void Update()
@@ -199,13 +202,22 @@ public class GameManager : MonoBehaviour
             {
                 DisablePlayerControls();
                 Paused = true;
+                GameUi.Instance.ShowPauseMenu();
             }
             else
             {
-                EnablePlayerControls();
-                Paused = false;
+                GameUi.Instance.PauseMenuWasClosed();
+                //EnablePlayerControls();
+                //Paused = false;
+                //GameUi.Instance.HidePauseMenu();
             }
         }
+    }
+
+    public void GameWasResumed()
+    {
+        EnablePlayerControls();
+        Paused = false;
     }
 
     private void SetPlayerControls(bool newValue)

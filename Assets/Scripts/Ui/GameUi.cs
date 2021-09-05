@@ -5,12 +5,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(AlertCreator))]
-public class GameUi : MonoBehaviour
+public class GameUi : UiManager
 {
     public GameObject PlayerInfoUiPrefab;
     public Canvas Canvas;
     public InputSystemUIInputModule UiInput;
     public EventSystem EventSystem;
+    public InGamePauseMenu PauseMenu;
+    public LoadingScreen LoadingScreen;
 
     public static GameUi Instance { get; private set; }
 
@@ -38,5 +40,35 @@ public class GameUi : MonoBehaviour
         UiPlayerInfo uiPlayerInfo = Instantiate(PlayerInfoUiPrefab, Canvas.transform).GetComponent<UiPlayerInfo>();
         uiPlayerInfo.Init(playerInformation, !(playerInfos.Count > 0)); //if it's the first player we will set it to be left
         playerInfos.Add(uiPlayerInfo);
+    }
+
+    public void ShowPauseMenu()
+    {
+        UiInput.enabled = true;
+        PauseMenu.gameObject.SetActive(true);
+        PauseMenu.Show();
+        PauseMenu.OnClosed += PauseMenuWasClosed;
+    }
+
+    public void PauseMenuWasClosed()
+    {
+        UiInput.enabled = false;
+        HidePauseMenu();
+        GameManager.Instance.GameWasResumed();
+    }
+
+    public void HidePauseMenu()
+    {
+        PauseMenu.gameObject.SetActive(false);
+    }
+
+    public void HideLoadingScreen()
+    {
+        LoadingScreen.gameObject.SetActive(false);
+    }
+
+    public void ShowLoadingScreen()
+    {
+        LoadingScreen.gameObject.SetActive(true);
     }
 }

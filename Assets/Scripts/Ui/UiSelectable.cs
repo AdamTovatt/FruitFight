@@ -69,6 +69,11 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
             MainMenuUi.Instance.RegisterSelectable(this);
             manager = MainMenuUi.Instance;
         }
+        else if(GameUi.Instance != null)
+        {
+            GameUi.Instance.RegisterSelectable(this);
+            manager = GameUi.Instance;
+        }
         else
         {
             if (!ignoreErrors)
