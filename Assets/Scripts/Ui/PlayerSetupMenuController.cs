@@ -20,7 +20,7 @@ public class PlayerSetupMenuController : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerControls playerControls;
 
-    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->" };
+    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->", "<- Sweat Band ->" };
 
     void Update()
     {

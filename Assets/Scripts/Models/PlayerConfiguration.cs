@@ -35,6 +35,9 @@ public class PlayerConfiguration
         if (Hat == 2)
             return Prefab.Beanie;
 
+        if (Hat == 3)
+            return Prefab.SweatBand;
+
         return null;
     }
 }
