@@ -18,5 +18,8 @@ public class IconConfiguration
 public class IconConfigurationEntry
 {
     public string Name;
+    public bool VaryByDevice;
     public string FileName;
+    public string FileNameKeyboard;
+    public string FileNameController;
 }

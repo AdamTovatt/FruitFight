@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AlertCreator : MonoBehaviour
 {
@@ -21,8 +22,17 @@ public class AlertCreator : MonoBehaviour
             IconConfiguration iconConfiguration = IconConfiguration.LoadFromConfiguration();
             foreach (IconConfigurationEntry icon in iconConfiguration.Icons)
             {
-                Sprite sprite = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileName));
-                Icons.Add(new NotificationIcon() { Image = sprite, Name = icon.Name });
+                if (!icon.VaryByDevice)
+                {
+                    Sprite sprite = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileName));
+                    Icons.Add(new NotificationIcon() { ImageKeyboard = sprite, Name = icon.Name });
+                }
+                else
+                {
+                    Sprite keyboardImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameKeyboard));
+                    Sprite controllerImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameController));
+                    Icons.Add(new NotificationIcon() { ImageController = controllerImage, ImageKeyboard = keyboardImage, VaryByDevice = true });
+                }
             }
         }
     }
@@ -55,8 +65,11 @@ public class AlertCreator : MonoBehaviour
         return Icons.Where(x => x.Name == name).FirstOrDefault();
     }
 
-    public Notification CreateNotification(string text, float displayTime, string iconName)
+    private Notification CreateNotification(string text, float displayTime, string iconName, bool keyboard, bool controller)
     {
+        if (keyboard && controller)
+            Debug.LogError("Can't create a notification for both keyboard and controller");
+
         Sprite iconImage = null;
 
         if (!string.IsNullOrEmpty(iconName))
@@ -64,7 +77,12 @@ public class AlertCreator : MonoBehaviour
             NotificationIcon icon = GetIcon(iconName);
             if (icon != null)
             {
-                iconImage = icon.Image;
+                if (!keyboard && !controller)
+                    iconImage = icon.Image;
+                else if (keyboard)
+                    iconImage = icon.ImageKeyboard;
+                else
+                    iconImage = icon.ImageController;
             }
             else
             {
@@ -81,5 +99,28 @@ public class AlertCreator : MonoBehaviour
 
         notifications.Add(notification);
         return notification;
+    }
+
+    public Notification CreateNotification(string text, float displayTime, string iconName)
+    {
+        bool keyboard = false;
+        bool controller = false;
+
+        if (iconName != null) //if we don't have an icon we don't need to find the icon for the right device
+        {
+            if (GameManager.Instance != null)
+            {
+                foreach (PlayerInformation playerConfig in GameManager.Instance.Players)
+                {
+                    Debug.Log("Player input: ");
+                    foreach (InputDevice device in playerConfig.Configuration.Input.devices)
+                    {
+                        Debug.Log(device.displayName + " " + device.description);
+                    }
+                }
+            } //set keyboard and controller values
+        }
+
+        return CreateNotification(text, displayTime, iconName, keyboard, controller);
     }
 }

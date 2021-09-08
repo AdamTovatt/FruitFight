@@ -59,6 +59,10 @@ public class Notification : MonoBehaviour
 [Serializable]
 public class NotificationIcon
 {
+    public Sprite Image { get { return ImageKeyboard; } }
+
     public string Name;
-    public Sprite Image;
+    public bool VaryByDevice;
+    public Sprite ImageKeyboard;
+    public Sprite ImageController;
 }
