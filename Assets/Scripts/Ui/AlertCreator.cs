@@ -31,7 +31,7 @@ public class AlertCreator : MonoBehaviour
                 {
                     Sprite keyboardImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameKeyboard));
                     Sprite controllerImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameController));
-                    Icons.Add(new NotificationIcon() { ImageController = controllerImage, ImageKeyboard = keyboardImage, VaryByDevice = true });
+                    Icons.Add(new NotificationIcon() { ImageController = controllerImage, ImageKeyboard = keyboardImage, VaryByDevice = true, Name = icon.Name });
                 }
             }
         }
@@ -55,7 +55,7 @@ public class AlertCreator : MonoBehaviour
         return CreateAlert(text, new List<string>() { "Ok" });
     }
 
-    public Notification CreateNotification(string text, float displayTime)
+    public List<Notification> CreateNotification(string text, float displayTime)
     {
         return CreateNotification(text, displayTime, null);
     }
@@ -101,7 +101,7 @@ public class AlertCreator : MonoBehaviour
         return notification;
     }
 
-    public Notification CreateNotification(string text, float displayTime, string iconName)
+    public List<Notification> CreateNotification(string text, float displayTime, string iconName)
     {
         bool keyboard = false;
         bool controller = false;
@@ -112,15 +112,40 @@ public class AlertCreator : MonoBehaviour
             {
                 foreach (PlayerInformation playerConfig in GameManager.Instance.Players)
                 {
-                    Debug.Log("Player input: ");
-                    foreach (InputDevice device in playerConfig.Configuration.Input.devices)
+                    if (playerConfig.Configuration.Input.currentControlScheme == "Gamepad")
                     {
-                        Debug.Log(device.displayName + " " + device.description);
+                        controller = true;
+                    }
+                    else if (playerConfig.Configuration.Input.currentControlScheme == "Keyboard")
+                    {
+                        keyboard = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Unknown controlScheme: " + playerConfig.Configuration.Input.currentControlScheme);
                     }
                 }
-            } //set keyboard and controller values
+            }
         }
 
-        return CreateNotification(text, displayTime, iconName, keyboard, controller);
+        List<Notification> createdNotifications = new List<Notification>();
+
+        if (!keyboard && !controller)
+        {
+            createdNotifications.Add(CreateNotification(text, displayTime, iconName, keyboard, controller));
+        }
+        else
+        {
+            if (keyboard) //Ugh, this doesn't really feel like the best solution
+            {
+                createdNotifications.Add(CreateNotification(text, displayTime, iconName, true, false));
+            }
+            if (controller)
+            {
+                createdNotifications.Add(CreateNotification(text, displayTime, iconName, false, true));
+            }
+        }
+
+        return createdNotifications;
     }
 }

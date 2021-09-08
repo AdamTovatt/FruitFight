@@ -34,7 +34,8 @@
     },
     {
       "Name": "Move",
-      "FileNameKeyboard": "KeyboardButton_W",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "Keyboard_WASD",
       "FileNameController": "StickIcon_Left"
     }
   ]
