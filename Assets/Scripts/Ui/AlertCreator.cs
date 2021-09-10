@@ -138,11 +138,11 @@ public class AlertCreator : MonoBehaviour
         {
             if (keyboard) //Ugh, this doesn't really feel like the best solution
             {
-                createdNotifications.Add(CreateNotification(text, displayTime, iconName, true, false));
+                createdNotifications.Add(CreateNotification(keyboard && controller ? "(keyboard) " + text : text, displayTime, iconName, true, false));
             }
             if (controller)
             {
-                createdNotifications.Add(CreateNotification(text, displayTime, iconName, false, true));
+                createdNotifications.Add(CreateNotification(keyboard && controller ? "(gamepad) " + text : text, displayTime, iconName, false, true));
             }
         }
 
