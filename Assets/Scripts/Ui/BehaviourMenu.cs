@@ -111,6 +111,14 @@ public class BehaviourMenu : MonoBehaviour
         };
     }
 
+    public void Hide()
+    {
+        MoveMenu.gameObject.SetActive(false);
+        DetailColorMenu.gameObject.SetActive(false);
+        NotificationMenu.gameObject.SetActive(false);
+        TriggerZoneMenu.gameObject.SetActive(false);
+    }
+
     public void Show(Block block)
     {
         if (block.Instance == null)

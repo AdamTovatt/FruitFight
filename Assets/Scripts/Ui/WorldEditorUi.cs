@@ -124,6 +124,12 @@ public class WorldEditorUi : UiManager
         if (uiInput != null)
             uiInput.enabled = false;
 
+        if (BehaviourMenu.gameObject.activeSelf)
+        {
+            BehaviourMenu.Hide();
+            BehaviourMenu.gameObject.SetActive(false);
+        }
+
         PauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
     }
