@@ -259,8 +259,42 @@ public class WorldEditor : MonoBehaviour
         };
     }
 
+    private void LoadLevelFromMetadata(WorldMetadata metadata)
+    {
+        string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
+
+        if (!Directory.Exists(mapDirectory))
+            Directory.CreateDirectory(mapDirectory);
+
+        string levelPath = string.Format("{0}/{1}.map", mapDirectory, metadata.Name);
+
+        if (File.Exists(levelPath))
+        {
+            CurrentWorld = World.FromJson(File.ReadAllText(levelPath));
+            Builder.BuildWorld(CurrentWorld);
+        }
+        else
+        {
+            Ui.AlertCreator.CreateNotification(string.Format("No such level found: {0}", levelPath), 4f);
+        }
+    }
+
+    private void OnLevelWasSelected(WorldMetadata metadata)
+    {
+        LoadLevelFromMetadata(metadata);
+
+        WorldEditorUi.Instance.LoadLevelScreen.Close();
+        Ui.ClosePauseMenu();
+
+        Ui.AlertCreator.CreateNotification(string.Format("Loaded the level: {0}", metadata.Name), 3f);
+    }
+
     public void LoadLevel()
     {
+        WorldEditorUi.Instance.LoadLevelScreen.gameObject.SetActive(true);
+        WorldEditorUi.Instance.LoadLevelScreen.Show().OnLevelWasSelected += OnLevelWasSelected;
+
+        /*
         Ui.AlertCreator.CreateAlert("Enter level name to load a level").OnOptionWasChosen += (sender, optionIndex) =>
         {
             Ui.OnScreenKeyboard.OpenKeyboard();
@@ -291,6 +325,7 @@ public class WorldEditor : MonoBehaviour
                 }
             };
         };
+        */
     }
 
     private void Grassify(InputAction.CallbackContext context)

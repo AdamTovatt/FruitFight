@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +17,11 @@ public class LevelButtonContainer : MonoBehaviour
 
     public Button NextPageButton;
     public Button PreviousPageButton;
+    public TextMeshProUGUI PageNumberText;
+    public Image BackgroundImage;
+
+    public delegate void LevelWasSelected(WorldMetadata worldMetadata);
+    public LevelWasSelected OnLevelWasSelected;
 
     private List<WorldMetadata> currentLevels;
     private List<LevelButton> currentButtons;
@@ -34,20 +39,13 @@ public class LevelButtonContainer : MonoBehaviour
     {
         NextPageButton.onClick.AddListener(NextPage);
         PreviousPageButton.onClick.AddListener(PreviousPage);
+    }
 
-        List<WorldMetadata> worldMetadatas = new List<WorldMetadata>();
-
-        string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
-
-        if (!Directory.Exists(mapDirectory))
-            Directory.CreateDirectory(mapDirectory);
-
-        foreach (string file in Directory.GetFiles(mapDirectory).Where(x => x.EndsWith(".meta")).ToList())
-        {
-            worldMetadatas.Add(WorldMetadata.FromJson(File.ReadAllText(file)));
-        }
-
-        Show(worldMetadatas);
+    private void ButtonWasClicked(WorldMetadata level)
+    {
+        Debug.Log("level selected: " + level.Name);
+        OnLevelWasSelected?.Invoke(level);
+        OnLevelWasSelected = null;
     }
 
     private void SetButtonSizeValues()
@@ -86,6 +84,43 @@ public class LevelButtonContainer : MonoBehaviour
         SetButtonSizeValues();
 
         FillCurrentSizeWithButtons(currentButtonOffset);
+
+        if (currentButtons.Count > 0)
+            currentButtons[0].Button.Select();
+    }
+
+    public void SetSize(float width, float height)
+    {
+        PanelTransform.sizeDelta = new Vector2(width, height);
+    }
+
+    public void SetPosition(float x, float y)
+    {
+        PanelTransform.localPosition = new Vector3(x, y, 0);
+    }
+
+    public void DisableBackgroundImage()
+    {
+        BackgroundImage.enabled = false;
+    }
+
+    public void EnableBackgroundImage()
+    {
+        BackgroundImage.enabled = true;
+    }
+
+    public void Remove()
+    {
+        if (currentButtons != null)
+        {
+            foreach (LevelButton button in currentButtons)
+            {
+                button.Button.onClick.RemoveAllListeners();
+                Destroy(button.gameObject);
+            }
+
+            currentButtons.Clear();
+        }
     }
 
     private void FillCurrentSizeWithButtons(int buttonOffset)
@@ -94,6 +129,7 @@ public class LevelButtonContainer : MonoBehaviour
         {
             foreach (LevelButton button in currentButtons)
             {
+                button.Button.onClick.RemoveAllListeners();
                 Destroy(button.gameObject);
             }
 
@@ -104,16 +140,18 @@ public class LevelButtonContainer : MonoBehaviour
             currentButtons = new List<LevelButton>();
         }
 
-        float pageButtonsCenterOffset = PanelTransform.sizeDelta.x / 4f;
-        NextPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) + pageButtonsCenterOffset, NextPageButtonsMargin, 0);
-        PreviousPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) - pageButtonsCenterOffset, NextPageButtonsMargin, 0);
-
         float usableSpaceY = (PanelTransform.sizeDelta.y - (NextPageButtonsMargin * 2));
 
         int columns = Mathf.FloorToInt(PanelTransform.sizeDelta.x / (buttonWidth + ButtonMarginRight));
         int rows = Mathf.FloorToInt(usableSpaceY / (buttonHeight + ButtonMarginDown));
 
         currentButtonsPerPage = columns * rows;
+
+        float pageButtonsCenterOffset = PanelTransform.sizeDelta.x / 4f;
+        NextPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) + pageButtonsCenterOffset, NextPageButtonsMargin, 0);
+        PreviousPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) - pageButtonsCenterOffset, NextPageButtonsMargin, 0);
+        PageNumberText.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f), PanelTransform.sizeDelta.x < (NextPageButton.GetComponent<RectTransform>().sizeDelta.x + PreviousPageButton.GetComponent<RectTransform>().sizeDelta.x + PageNumberText.rectTransform.sizeDelta.x + ButtonMarginRight * 2) ? NextPageButtonsMargin * 2 : NextPageButtonsMargin, 0);
+        PageNumberText.text = string.Format("Page: {0}/{1}", Mathf.FloorToInt((float)currentButtonOffset / currentButtonsPerPage), Mathf.FloorToInt((float)currentLevels.Count / currentButtonsPerPage));
 
         float edgeMarginX = (PanelTransform.sizeDelta.x - (columns * (buttonWidth + ButtonMarginRight))) / 2f;
         float edgeMarginY = Mathf.Min(ButtonMarginDown * 2, (usableSpaceY - (rows * (buttonHeight + ButtonMarginDown))) / 2f);
@@ -126,6 +164,7 @@ public class LevelButtonContainer : MonoBehaviour
             LevelButton button = Instantiate(LevelButtonPrefab, new Vector3(0, 0, 0), PanelTransform.rotation, PanelTransform).GetComponent<LevelButton>();
             button.Init(level.Name, "level text", NoLevelThumbnailDefaultImage);
             button.GetComponent<RectTransform>().localPosition = new Vector3(edgeMarginX + currentX * (buttonWidth + ButtonMarginRight), PanelTransform.sizeDelta.y - (edgeMarginY + currentY * (buttonHeight + ButtonMarginDown)), 0);
+            button.Button.onClick.AddListener(() => { ButtonWasClicked(level); });
             currentButtons.Add(button);
 
             if (currentX < columns - 1)

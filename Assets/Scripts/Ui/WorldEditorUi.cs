@@ -13,6 +13,9 @@ public class WorldEditorUi : UiManager
     public EditorBlockMenu BlockMenu;
     public TestLevelPauseMenu TestLevelPauseMenu;
     public BehaviourMenu BehaviourMenu;
+    public EditorLoadLevelScreen LoadLevelScreen;
+
+    public List<GameObject> UiSectionPanels;
 
     public GameObject EventSystem;
 
@@ -22,8 +25,14 @@ public class WorldEditorUi : UiManager
     public AlertCreator AlertCreator { get; set; }
     public UiKeyboardInput OnScreenKeyboard { get; set; }
 
+    private Dictionary<GameObject, bool> uiSectionPanelsOriginalActiveStatus;
+
     private void Awake()
     {
+        uiSectionPanelsOriginalActiveStatus = new Dictionary<GameObject, bool>();
+        foreach (GameObject uiSectionPanel in UiSectionPanels)
+            uiSectionPanelsOriginalActiveStatus.Add(uiSectionPanel, uiSectionPanel.activeSelf);
+
         if (Instance == null)
         {
             Instance = this;
@@ -54,6 +63,29 @@ public class WorldEditorUi : UiManager
         uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
 
         MouseOverSeletableChecker.Enable();
+    }
+
+    public void DisableAllButOneSectionPanels(GameObject visiblePanel)
+    {
+        foreach (GameObject uiSectionPanel in UiSectionPanels)
+        {
+            if (uiSectionPanel != visiblePanel)
+            {
+                uiSectionPanelsOriginalActiveStatus[uiSectionPanel] = uiSectionPanel.activeSelf;
+                uiSectionPanel.SetActive(false);
+            }
+        }
+    }
+
+    public void EnableSectionPanelsAgain(GameObject visiblePanel)
+    {
+        foreach (GameObject uiSectionPanel in UiSectionPanels)
+        {
+            if (uiSectionPanel != visiblePanel)
+            {
+                uiSectionPanel.SetActive(uiSectionPanelsOriginalActiveStatus[uiSectionPanel]);
+            }
+        }
     }
 
     private void HandeThumbnailsCreated(object sender, Dictionary<string, Texture2D> thumbnails)
