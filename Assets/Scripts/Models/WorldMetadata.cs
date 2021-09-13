@@ -5,6 +5,10 @@ using UnityEngine;
 public class WorldMetadata
 {
     public string Name;
+    public string Description;
+    public string ImageData;
+    public int AuthorId;
+    public string AuthorName;
 
     public WorldMetadata() { }
     public WorldMetadata(string name)

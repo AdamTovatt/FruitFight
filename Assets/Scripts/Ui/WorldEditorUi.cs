@@ -14,6 +14,7 @@ public class WorldEditorUi : UiManager
     public TestLevelPauseMenu TestLevelPauseMenu;
     public BehaviourMenu BehaviourMenu;
     public EditorLoadLevelScreen LoadLevelScreen;
+    public LevelPropertiesScreen LevelPropertiesScreen;
 
     public List<GameObject> UiSectionPanels;
 
@@ -205,5 +206,19 @@ public class WorldEditorUi : UiManager
     {
         if (uiInput != null)
             uiInput.enabled = false;
+    }
+
+    public void ShowLevelProperties()
+    {
+        DisableAllButOneSectionPanels(LevelPropertiesScreen.gameObject);
+        LevelPropertiesScreen.gameObject.SetActive(true);
+        LevelPropertiesScreen.Show();
+    }
+
+    public void CloseLevelProperties()
+    {
+        EnableSectionPanelsAgain(LevelPropertiesScreen.gameObject);
+        LevelPropertiesScreen.gameObject.SetActive(false);
+        PauseMenu.LevelPropertiesButton.Select();
     }
 }
