@@ -64,7 +64,7 @@ public class LevelButtonContainer : MonoBehaviour
 
         currentButtonOffset += currentButtonsPerPage;
 
-        Show(currentLevels);
+        Show(currentLevels, false);
     }
 
     private void PreviousPage()
@@ -74,10 +74,10 @@ public class LevelButtonContainer : MonoBehaviour
         else
             currentButtonOffset -= currentButtonsPerPage;
 
-        Show(currentLevels);
+        Show(currentLevels, false);
     }
 
-    public void Show(List<WorldMetadata> levels)
+    public void Show(List<WorldMetadata> levels, bool selectFirstButton = true)
     {
         currentLevels = levels;
 
@@ -85,8 +85,11 @@ public class LevelButtonContainer : MonoBehaviour
 
         FillCurrentSizeWithButtons(currentButtonOffset);
 
-        if (currentButtons.Count > 0)
-            currentButtons[0].Button.Select();
+        if (selectFirstButton)
+        {
+            if (currentButtons.Count > 0)
+                currentButtons[0].Button.Select();
+        }
     }
 
     public void SetSize(float width, float height)
