@@ -143,3 +143,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MarkerGraphic: {fileID: 4328048634791307466}
+  GraphicRenderer: {fileID: 3196286425683612581}

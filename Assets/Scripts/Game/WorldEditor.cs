@@ -1,5 +1,6 @@
 using Assets.Scripts.Models;
 using Lookups;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(BlockThumbnailManager))]
 public class WorldEditor : MonoBehaviour
@@ -27,6 +29,9 @@ public class WorldEditor : MonoBehaviour
     public float MarkerMaxSpeed = 0.8f;
     public float MarkerMoveSensitivity = 0.5f;
     public float ObjectRotationSpeed = 180f;
+
+    public delegate void ImageWasCaptured(Texture2D image);
+    public event ImageWasCaptured OnImageWasCaptured;
 
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
@@ -53,6 +58,7 @@ public class WorldEditor : MonoBehaviour
     private Block currentMovePropertiesBlock;
     private Block currentTriggerZonePropertiesBlock;
 
+    private bool isCapturingImage = false;
     private bool isAddingTriggerSubZone = false;
     private bool isPickingFinalPosition = false;
     private Vector2 currentLeftStickInput;
@@ -180,6 +186,24 @@ public class WorldEditor : MonoBehaviour
         SetMarkerPositionToBlock(currentTriggerZonePropertiesBlock);
         isAddingTriggerSubZone = false;
         controlsDisabled = true;
+    }
+
+    public void CaptureImage()
+    {
+        Ui.LevelPropertiesScreen.gameObject.SetActive(false);
+        EnableControls();
+        Ui.DisableUiInput();
+        marker.Hide();
+        isCapturingImage = true;
+    }
+
+    public void CaptureImageWasCompleted()
+    {
+        Ui.LevelPropertiesScreen.gameObject.SetActive(true);
+        marker.Show();
+        DisableControls();
+        Ui.EnableUiInput();
+        isCapturingImage = false;
     }
 
     public void PickActivator(MonoBehaviour menu, Block block)
@@ -573,6 +597,11 @@ public class WorldEditor : MonoBehaviour
         controlsDisabled = false;
     }
 
+    public void DisableControls()
+    {
+        controlsDisabled = true;
+    }
+
     private void CancelNextPage(InputAction.CallbackContext context)
     {
         editorCamera.EndZoomIn();
@@ -734,10 +763,30 @@ public class WorldEditor : MonoBehaviour
         Builder.BuildWorld(CurrentWorld);
     }
 
+    private IEnumerator CaptureScreenShot()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Texture2D image = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        image.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        image.Apply();
+
+        OnImageWasCaptured?.Invoke(image);
+        OnImageWasCaptured = null;
+
+        CaptureImageWasCompleted();
+    }
+
     private void Place(InputAction.CallbackContext context)
     {
         if (controlsDisabled || isTestingLevel)
             return;
+
+        if (isCapturingImage)
+        {
+            StartCoroutine(CaptureScreenShot());
+            return;
+        }
 
         if (isRotatingObject)
         {
@@ -915,6 +964,9 @@ public class WorldEditor : MonoBehaviour
         {
             Destroy(grid);
         }
+
+        if (isCapturingImage)
+            return;
 
         for (int x = -tiles; x < tiles + 1; x++)
         {
