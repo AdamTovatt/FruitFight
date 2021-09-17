@@ -124,6 +124,8 @@ MonoBehaviour:
   SoundClips:
   - {fileID: 8300000, guid: aabc4dcc2e989114d8f0a4ce67e370b3, type: 3}
   - {fileID: 8300000, guid: 36ef43a3c9c0b25469f59f9f10e034c6, type: 3}
+  - {fileID: 8300000, guid: bbe48d25e8be0864ba4a40471e6c0bb2, type: 3}
+  - {fileID: 8300000, guid: 4f9671b32dc11b9459a7619ae8b00e2d, type: 3}
   AudioSource: {fileID: 8689676849349563658}
   PlayOnAwake: 0
   PlayOnCollision: 1
