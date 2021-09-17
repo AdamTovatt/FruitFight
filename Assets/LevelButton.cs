@@ -11,6 +11,11 @@ public class LevelButton : MonoBehaviour
     public Image LevelImage;
     public Button Button;
 
+    public Sprite CreateScaledSpriteFromTexture(Texture2D texture)
+    {
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+    }
+
     public void Init(string title, string levelText, Sprite thumbnail)
     {
         Title.text = title;

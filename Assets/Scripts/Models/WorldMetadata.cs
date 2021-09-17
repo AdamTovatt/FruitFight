@@ -25,4 +25,11 @@ public class WorldMetadata
     {
         return JsonUtility.ToJson(this);
     }
+
+    public Texture2D GetImageDataAsTexture2d()
+    {
+        Texture2D result = new Texture2D(512, 512);
+        result.LoadImage(Convert.FromBase64String(ImageData));
+        return result;
+    }
 }

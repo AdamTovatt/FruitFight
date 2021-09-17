@@ -165,7 +165,10 @@ public class LevelButtonContainer : MonoBehaviour
         foreach (WorldMetadata level in currentLevels.Skip(buttonOffset).Take(currentButtonsPerPage))
         {
             LevelButton button = Instantiate(LevelButtonPrefab, new Vector3(0, 0, 0), PanelTransform.rotation, PanelTransform).GetComponent<LevelButton>();
-            button.Init(level.Name, "level text", NoLevelThumbnailDefaultImage);
+
+            Sprite buttonSprite = level.ImageData == null ? NoLevelThumbnailDefaultImage : button.CreateScaledSpriteFromTexture(level.GetImageDataAsTexture2d());
+
+            button.Init(level.Name, "level text", buttonSprite);
             button.GetComponent<RectTransform>().localPosition = new Vector3(edgeMarginX + currentX * (buttonWidth + ButtonMarginRight), PanelTransform.sizeDelta.y - (edgeMarginY + currentY * (buttonHeight + ButtonMarginDown)), 0);
             button.Button.onClick.AddListener(() => { ButtonWasClicked(level); });
             currentButtons.Add(button);
