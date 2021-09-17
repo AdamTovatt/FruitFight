@@ -77,3 +77,10 @@ MonoBehaviour:
     Pitch: 1
     PitchVariation: 0
     Delay: 0
+  - Name: cameraShutter
+    Clips:
+    - {fileID: 8300000, guid: b4e1dadb01673524e96d692a4f87700c, type: 3}
+    Volume: 0.2
+    Pitch: 1
+    PitchVariation: 0
+    Delay: 0
