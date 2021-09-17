@@ -70,11 +70,8 @@ public class AlertCreator : MonoBehaviour
         return Icons.Where(x => x.Name == name).FirstOrDefault();
     }
 
-    private Notification CreateNotification(string text, float displayTime, string iconName, bool keyboard, bool controller)
+    private Notification CreateNotification(string text, float displayTime, string iconName, bool keyboard)
     {
-        if (keyboard && controller)
-            Debug.LogError("Can't create a notification for both keyboard and controller");
-
         Sprite iconImage = null;
 
         if (!string.IsNullOrEmpty(iconName))
@@ -82,12 +79,18 @@ public class AlertCreator : MonoBehaviour
             NotificationIcon icon = GetIcon(iconName);
             if (icon != null)
             {
-                if (!keyboard && !controller)
-                    iconImage = icon.Image;
-                else if (keyboard)
+                if (keyboard)
+                {
                     iconImage = icon.ImageKeyboard;
+                    if (iconImage == null)
+                        iconImage = icon.Image;
+                }
                 else
+                {
                     iconImage = icon.ImageController;
+                    if (iconImage == null)
+                        iconImage = icon.Image;
+                }
             }
             else
             {
@@ -135,20 +138,20 @@ public class AlertCreator : MonoBehaviour
 
         List<Notification> createdNotifications = new List<Notification>();
 
-        if (!keyboard && !controller)
-        {
-            createdNotifications.Add(CreateNotification(text, displayTime, iconName, keyboard, controller));
-        }
-        else
+        if (keyboard && controller) //both inputs at the same time
         {
             if (keyboard) //Ugh, this doesn't really feel like the best solution
             {
-                createdNotifications.Add(CreateNotification(keyboard && controller ? "(keyboard) " + text : text, displayTime, iconName, true, false));
+                createdNotifications.Add(CreateNotification(keyboard && controller ? "(keyboard) " + text : text, displayTime, iconName, true));
             }
             if (controller)
             {
-                createdNotifications.Add(CreateNotification(keyboard && controller ? "(gamepad) " + text : text, displayTime, iconName, false, true));
+                createdNotifications.Add(CreateNotification(keyboard && controller ? "(gamepad) " + text : text, displayTime, iconName, false));
             }
+        }
+        else
+        {
+            createdNotifications.Add(CreateNotification(text, displayTime, iconName, keyboard));
         }
 
         return createdNotifications;
