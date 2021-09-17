@@ -56,7 +56,7 @@ public class EditorLoadLevelScreen : MonoBehaviour
         if (!Directory.Exists(mapDirectory))
             Directory.CreateDirectory(mapDirectory);
 
-        foreach (string file in Directory.GetFiles(mapDirectory).Where(x => x.EndsWith(".meta")).ToList())
+        foreach (string file in Directory.GetFiles(mapDirectory).Where(x => x.EndsWith(".mapmeta")).ToList())
         {
             worldMetadatas.Add(WorldMetadata.FromJson(File.ReadAllText(file)));
         }

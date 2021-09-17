@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class LevelPropertiesScreen : MonoBehaviour
 {
     public Button CloseButton;
     public Button CaptureThumbnailButton;
+    public Button SetLevelNameButton;
+    public TextMeshProUGUI LevelNameText;
     public GameObject CaptureThumbnailCameraOverlay;
     public Image ThumbnailImage;
     public ImageTransition ThumbnailTransition;
@@ -21,6 +24,7 @@ public class LevelPropertiesScreen : MonoBehaviour
     {
         CloseButton.onClick.AddListener(Close);
         CaptureThumbnailButton.onClick.AddListener(CaptureThumbnail);
+        SetLevelNameButton.onClick.AddListener(SetLevelName);
     }
 
     private void CaptureThumbnail()
@@ -52,6 +56,25 @@ public class LevelPropertiesScreen : MonoBehaviour
         WorldEditor.Instance.CurrentWorld.Metadata.ImageData = Convert.ToBase64String(lowRes.EncodeToJPG());
     }
 
+    private void SetLevelName()
+    {
+        WorldEditorUi.Instance.OnScreenKeyboard.OnGotText += (sender, success, text) =>
+        {
+            if(success)
+            {
+                if (WorldEditor.Instance.CurrentWorld.Metadata == null)
+                    WorldEditor.Instance.CurrentWorld.Metadata = new WorldMetadata();
+
+                WorldEditor.Instance.CurrentWorld.Metadata.Name = text;
+                LevelNameText.text = text;
+            }
+
+            SetLevelNameButton.Select();
+        };
+
+        WorldEditorUi.Instance.OnScreenKeyboard.OpenKeyboard();
+    }
+
     private static Texture2D ResizeTexture2d(Texture2D source, int newWidth, int newHeight)
     {
         source.filterMode = FilterMode.Point;
@@ -79,6 +102,30 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     public void Show()
     {
-        TouchScreenKeyboard.Open("text", TouchScreenKeyboardType.Default);
+        WorldMetadata metadata = WorldEditor.Instance.CurrentWorld.Metadata;
+
+        if(metadata != null)
+        {
+            if(metadata.Name != null)
+            {
+                LevelNameText.text = metadata.Name;
+            }
+            else
+            {
+                LevelNameText.text = "(Untitled level)";
+            }
+
+            if(metadata.ImageData != null)
+            {
+                Texture2D thumbnail = metadata.GetImageDataAsTexture2d();
+                ThumbnailImage.sprite = Sprite.Create(thumbnail, new Rect(0, 0, thumbnail.width, thumbnail.height), Vector2.zero);
+            }
+            else
+            {
+                ThumbnailImage.sprite = null;
+            }
+        }
+
+        SetLevelNameButton.Select();
     }
 }

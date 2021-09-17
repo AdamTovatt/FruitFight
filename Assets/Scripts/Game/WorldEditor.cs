@@ -251,8 +251,52 @@ public class WorldEditor : MonoBehaviour
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
+    private bool triedSavingWithoutSuccess = false;
+    private bool showedWarning = false;
+
     public void SaveLevel()
     {
+        if (CurrentWorld.Metadata == null || string.IsNullOrEmpty(CurrentWorld.Metadata.Name)) //the player needs to go to level properties before saving
+        {
+            if (!triedSavingWithoutSuccess)
+            {
+                AlertCreator.Instance.CreateNotification("You need to chose a name for this level first! Please go to Level Properties");
+                triedSavingWithoutSuccess = true;
+            }
+            else
+            {
+                if (!showedWarning)
+                {
+                    AlertCreator.Instance.CreateNotification("If you click Save again you will be taken to Level Properties");
+                    showedWarning = true;
+                }
+                else
+                {
+                    Ui.ShowLevelProperties();
+                    triedSavingWithoutSuccess = false;
+                    showedWarning = false;
+                }
+            }
+
+            return;
+        }
+
+        string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
+
+        if (!Directory.Exists(mapDirectory))
+            Directory.CreateDirectory(mapDirectory);
+
+        string fileName = CurrentWorld.Metadata.Name.Replace(' ', '_');
+        string levelPath = string.Format("{0}/{1}.mapdata", mapDirectory, fileName);
+        string metaPath = string.Format("{0}/{1}.mapmeta", mapDirectory, fileName);
+
+        File.WriteAllText(levelPath, CurrentWorld.ToJson());
+        File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
+
+        Debug.Log("Wrote map data to: " + levelPath);
+        AlertCreator.Instance.CreateNotification("Level was saved!", 2f);
+
+        /*
         Ui.AlertCreator.CreateAlert("Enter level name to save the level (will overwrite)").OnOptionWasChosen += (sender, optionIndex) =>
         {
             Ui.OnScreenKeyboard.OpenKeyboard();
@@ -280,7 +324,7 @@ public class WorldEditor : MonoBehaviour
 
                 Ui.ClosePauseMenu();
             };
-        };
+        };*/
     }
 
     private void LoadLevelFromMetadata(WorldMetadata metadata)
@@ -290,7 +334,7 @@ public class WorldEditor : MonoBehaviour
         if (!Directory.Exists(mapDirectory))
             Directory.CreateDirectory(mapDirectory);
 
-        string levelPath = string.Format("{0}/{1}.map", mapDirectory, metadata.Name);
+        string levelPath = string.Format("{0}/{1}.mapdata", mapDirectory, metadata.Name.Replace(' ', '_'));
 
         if (File.Exists(levelPath))
         {

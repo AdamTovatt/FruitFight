@@ -55,6 +55,11 @@ public class AlertCreator : MonoBehaviour
         return CreateAlert(text, new List<string>() { "Ok" });
     }
 
+    public List<Notification> CreateNotification(string text)
+    {
+        return CreateNotification(text, 5f);
+    }
+
     public List<Notification> CreateNotification(string text, float displayTime)
     {
         return CreateNotification(text, displayTime, null);
