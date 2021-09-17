@@ -18,8 +18,6 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     public GameObject FlashWhiteTransitionPrefab;
 
-    private Sprite thumbnailSprite;
-
     private void Start()
     {
         CloseButton.onClick.AddListener(Close);
@@ -44,6 +42,7 @@ public class LevelPropertiesScreen : MonoBehaviour
 
         ThumbnailImage.sprite = null;
 
+        ThumbnailTransition.enabled = true;
         ThumbnailTransition.OnDidTransition += ThumbnailTransitionWasCompleted;
         ThumbnailTransition.SetImage(squareSprite);
         ThumbnailTransition.DoTransition(Vector2.zero, squareSprite.rect.size, ThumbnailImage.rectTransform.localPosition, ThumbnailImage.rectTransform.sizeDelta, 1f);
@@ -60,11 +59,8 @@ public class LevelPropertiesScreen : MonoBehaviour
     {
         WorldEditorUi.Instance.OnScreenKeyboard.OnGotText += (sender, success, text) =>
         {
-            if(success)
+            if (success)
             {
-                if (WorldEditor.Instance.CurrentWorld.Metadata == null)
-                    WorldEditor.Instance.CurrentWorld.Metadata = new WorldMetadata();
-
                 WorldEditor.Instance.CurrentWorld.Metadata.Name = text;
                 LevelNameText.text = text;
             }
@@ -92,7 +88,8 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     private void ThumbnailTransitionWasCompleted()
     {
-        ThumbnailImage.sprite = thumbnailSprite;
+        Texture2D thumbnail = WorldEditor.Instance.CurrentWorld.Metadata.GetImageDataAsTexture2d();
+        ThumbnailImage.sprite = Sprite.Create(thumbnail, new Rect(0, 0, thumbnail.width, thumbnail.height), Vector2.zero);
     }
 
     public void Close()
@@ -104,9 +101,9 @@ public class LevelPropertiesScreen : MonoBehaviour
     {
         WorldMetadata metadata = WorldEditor.Instance.CurrentWorld.Metadata;
 
-        if(metadata != null)
+        if (metadata != null)
         {
-            if(metadata.Name != null)
+            if (metadata.Name != null)
             {
                 LevelNameText.text = metadata.Name;
             }
@@ -115,8 +112,9 @@ public class LevelPropertiesScreen : MonoBehaviour
                 LevelNameText.text = "(Untitled level)";
             }
 
-            if(metadata.ImageData != null)
+            if (metadata.ImageData != null)
             {
+                Debug.Log("Image data is not null");
                 Texture2D thumbnail = metadata.GetImageDataAsTexture2d();
                 ThumbnailImage.sprite = Sprite.Create(thumbnail, new Rect(0, 0, thumbnail.width, thumbnail.height), Vector2.zero);
             }
@@ -124,6 +122,10 @@ public class LevelPropertiesScreen : MonoBehaviour
             {
                 ThumbnailImage.sprite = null;
             }
+        }
+        else
+        {
+            WorldEditor.Instance.CurrentWorld.Metadata = new WorldMetadata();
         }
 
         SetLevelNameButton.Select();

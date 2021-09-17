@@ -295,36 +295,6 @@ public class WorldEditor : MonoBehaviour
 
         Debug.Log("Wrote map data to: " + levelPath);
         AlertCreator.Instance.CreateNotification("Level was saved!", 2f);
-
-        /*
-        Ui.AlertCreator.CreateAlert("Enter level name to save the level (will overwrite)").OnOptionWasChosen += (sender, optionIndex) =>
-        {
-            Ui.OnScreenKeyboard.OpenKeyboard();
-            Ui.OnScreenKeyboard.OnGotText += (sender, success, text) =>
-            {
-                if (success)
-                {
-                    if (CurrentWorld.Metadata == null)
-                        CurrentWorld.Metadata = new WorldMetadata(text);
-
-                    string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
-
-                    if (!Directory.Exists(mapDirectory))
-                        Directory.CreateDirectory(mapDirectory);
-
-                    string fileName = text.Replace(' ', '_');
-                    string levelPath = string.Format("{0}/{1}.map", mapDirectory, fileName);
-                    string metaPath = string.Format("{0}/{1}.meta", mapDirectory, fileName);
-
-                    File.WriteAllText(levelPath, CurrentWorld.ToJson());
-                    File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
-
-                    Debug.Log("Wrote map data to: " + levelPath);
-                }
-
-                Ui.ClosePauseMenu();
-            };
-        };*/
     }
 
     private void LoadLevelFromMetadata(WorldMetadata metadata)
@@ -361,39 +331,6 @@ public class WorldEditor : MonoBehaviour
     {
         WorldEditorUi.Instance.LoadLevelScreen.gameObject.SetActive(true);
         WorldEditorUi.Instance.LoadLevelScreen.Show().OnLevelWasSelected += OnLevelWasSelected;
-
-        /*
-        Ui.AlertCreator.CreateAlert("Enter level name to load a level").OnOptionWasChosen += (sender, optionIndex) =>
-        {
-            Ui.OnScreenKeyboard.OpenKeyboard();
-            Ui.OnScreenKeyboard.OnGotText += (sender, success, text) =>
-            {
-                if (success)
-                {
-                    string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
-
-                    if (!Directory.Exists(mapDirectory))
-                        Directory.CreateDirectory(mapDirectory);
-
-                    string fileName = text.Replace(' ', '_');
-                    string levelPath = string.Format("{0}/{1}.map", mapDirectory, fileName);
-                    string metaPath = string.Format("{0}/{1}.meta", mapDirectory, fileName);
-
-                    if (File.Exists(levelPath) && File.Exists(metaPath))
-                    {
-                        CurrentWorld = World.FromJson(File.ReadAllText(levelPath));
-                        Builder.BuildWorld(CurrentWorld);
-
-                        Ui.ClosePauseMenu();
-                    }
-                    else
-                    {
-                        Ui.AlertCreator.CreateAlert(string.Format("No such level found:\n{0}", text)).OnOptionWasChosen += (o, i) => { Ui.ClosePauseMenu(); };
-                    }
-                }
-            };
-        };
-        */
     }
 
     private void Grassify(InputAction.CallbackContext context)

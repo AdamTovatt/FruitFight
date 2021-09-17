@@ -35,7 +35,7 @@ public class ImageTransition : MonoBehaviour
             graphicTransform.localPosition = Vector2.Lerp(startPosition, endPosition, transitionValue);
             graphicTransform.sizeDelta = Vector2.Lerp(startSize, endSize, transitionValue);
 
-            if(transitionValue == 0)
+            if(transitionValue == 1)
             {
                 OnDidTransition?.Invoke();
                 OnDidTransition = null;
