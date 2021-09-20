@@ -97,6 +97,14 @@ public class Keyboard : MonoBehaviour
         }
 
         buttons[0][0].Button.Select();
+
+        if(WorldEditorUi.Instance != null)
+        {
+            if(WorldEditorUi.Instance.KeyboardExists != null && (bool)WorldEditorUi.Instance.KeyboardExists)
+            {
+                TextField.Select();
+            }
+        }
     }
 
     public void ButtonWasClicked(KeyboardButton button)

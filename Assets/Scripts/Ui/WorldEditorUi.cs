@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
 
@@ -23,6 +24,8 @@ public class WorldEditorUi : UiManager
     private LoadingScreen loadingScreen;
     private InputSystemUIInputModule uiInput;
 
+    public bool? KeyboardExists { get; set; }
+
     public AlertCreator AlertCreator { get; set; }
     public UiKeyboardInput OnScreenKeyboard { get; set; }
 
@@ -38,6 +41,7 @@ public class WorldEditorUi : UiManager
         {
             Instance = this;
             eventSystemInstance = EventSystem;
+            KeyboardExists = eventSystemInstance.GetComponent<InputSystemUIInputModule>().actionsAsset.controlSchemes.Where(x => x.name == "Keyboard").Count() > 0;
 
             AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>()); //set alert creator instance
         }
