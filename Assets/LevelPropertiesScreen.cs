@@ -18,6 +18,13 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     public GameObject FlashWhiteTransitionPrefab;
 
+    private Sprite nullSprite;
+
+    private void Awake()
+    {
+        nullSprite = ThumbnailImage.sprite;
+    }
+
     private void Start()
     {
         CloseButton.onClick.AddListener(Close);
@@ -40,7 +47,7 @@ public class LevelPropertiesScreen : MonoBehaviour
 
         Sprite squareSprite = Sprite.Create(image, new Rect((image.width - image.height) / 2, 0, image.height, image.height), Vector2.zero);
 
-        ThumbnailImage.sprite = null;
+        ThumbnailImage.sprite = nullSprite;
 
         ThumbnailTransition.enabled = true;
         ThumbnailTransition.OnDidTransition += ThumbnailTransitionWasCompleted;
@@ -120,7 +127,7 @@ public class LevelPropertiesScreen : MonoBehaviour
             }
             else
             {
-                ThumbnailImage.sprite = null;
+                ThumbnailImage.sprite = nullSprite;
             }
         }
         else
