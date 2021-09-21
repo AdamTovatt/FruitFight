@@ -10,6 +10,7 @@ public class MainMenuUi : UiManager
 
     public LoadingScreen LoadingScreen;
     public MainMenuStart StartMenu;
+    public BrowseLevelsScreen BrowseLevelsScreen;
 
     private void Awake()
     {
@@ -45,5 +46,12 @@ public class MainMenuUi : UiManager
         LoadingScreen.Show();
         SceneManager.LoadScene("GamePlay");
         Instance = null;
+    }
+
+    public void BrowseLevelsButtonWasPressed()
+    {
+        Debug.Log("I wanna browse me levels");
+        StartMenu.gameObject.SetActive(false);
+        BrowseLevelsScreen.gameObject.SetActive(true);
     }
 }

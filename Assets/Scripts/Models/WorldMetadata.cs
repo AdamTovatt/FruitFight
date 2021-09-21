@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -32,4 +33,12 @@ public class WorldMetadata
         result.LoadImage(Convert.FromBase64String(ImageData));
         return result;
     }
+}
+
+[Serializable]
+public class WorldMetadataResponse
+{
+    public List<WorldMetadata> Levels;
+
+    public WorldMetadataResponse() { }
 }
