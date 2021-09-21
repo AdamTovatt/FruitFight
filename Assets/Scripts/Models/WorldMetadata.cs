@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,4 +42,9 @@ public class WorldMetadataResponse
     public List<WorldMetadata> Levels;
 
     public WorldMetadataResponse() { }
+
+    public static WorldMetadataResponse FromJson(string json)
+    {
+        return JsonConvert.DeserializeObject<WorldMetadataResponse>(json);
+    }
 }

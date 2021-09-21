@@ -2,6 +2,8 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,21 +12,28 @@ public class BrowseLevelsScreen : MonoBehaviour
     public Button CloseButton;
     public Button UploadLevelButton;
     public RectTransform ButtonContainerSizeReference;
+    public TextMeshProUGUI LoadingText;
 
     public GameObject ButtonContainerPrefab;
 
     private LevelButtonContainer instantiatedButtonContainer;
 
-    private static readonly HttpClient httpClient = new HttpClient();
-    private static readonly string apiPath = "https://fruit-fight-api.herokuapp.com";
-
     private void Start()
     {
-        string response = httpClient.GetAsync(apiPath + "/api/level/list").Result.Content.ReadAsStringAsync().Result;
+        LoadingText.gameObject.SetActive(true);
+        FetchLevels();
+    }
 
-        List<WorldMetadata> levels = JsonConvert.DeserializeObject<WorldMetadataResponse>("{\"levels\":" + response + "}").Levels;
+    private async void FetchLevels()
+    {
+        WorldMetadataResponse response = await ApiLevelManager.GetLevelsList(6, 0);
 
-        ShowLevels(levels);
+        if(response != null)
+        {
+            ShowLevels(response.Levels);
+        }
+
+        LoadingText.gameObject.SetActive(false);
     }
 
     public LevelButtonContainer ShowLevels(List<WorldMetadata> levels)
