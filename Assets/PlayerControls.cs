@@ -292,6 +292,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""EnterText"",
+                    ""type"": ""Button"",
+                    ""id"": ""fcf471d5-6a43-4c37-8ea2-5335352d6127"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -424,6 +432,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""MouseMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""965aa013-961d-40c0-bf65-09345676023e"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""EnterText"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1073,6 +1092,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Ui_Cancel = m_Ui.FindAction("Cancel", throwIfNotFound: true);
         m_Ui_Move = m_Ui.FindAction("Move", throwIfNotFound: true);
         m_Ui_MouseMove = m_Ui.FindAction("MouseMove", throwIfNotFound: true);
+        m_Ui_EnterText = m_Ui.FindAction("EnterText", throwIfNotFound: true);
         // LevelEditor
         m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
         m_LevelEditor_MoveMarker = m_LevelEditor.FindAction("MoveMarker", throwIfNotFound: true);
@@ -1215,6 +1235,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Ui_Cancel;
     private readonly InputAction m_Ui_Move;
     private readonly InputAction m_Ui_MouseMove;
+    private readonly InputAction m_Ui_EnterText;
     public struct UiActions
     {
         private @PlayerControls m_Wrapper;
@@ -1223,6 +1244,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Ui_Cancel;
         public InputAction @Move => m_Wrapper.m_Ui_Move;
         public InputAction @MouseMove => m_Wrapper.m_Ui_MouseMove;
+        public InputAction @EnterText => m_Wrapper.m_Ui_EnterText;
         public InputActionMap Get() { return m_Wrapper.m_Ui; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1244,6 +1266,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MouseMove.started -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
                 @MouseMove.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
                 @MouseMove.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnMouseMove;
+                @EnterText.started -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
+                @EnterText.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
+                @EnterText.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
             }
             m_Wrapper.m_UiActionsCallbackInterface = instance;
             if (instance != null)
@@ -1260,6 +1285,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MouseMove.started += instance.OnMouseMove;
                 @MouseMove.performed += instance.OnMouseMove;
                 @MouseMove.canceled += instance.OnMouseMove;
+                @EnterText.started += instance.OnEnterText;
+                @EnterText.performed += instance.OnEnterText;
+                @EnterText.canceled += instance.OnEnterText;
             }
         }
     }
@@ -1434,6 +1462,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnMouseMove(InputAction.CallbackContext context);
+        void OnEnterText(InputAction.CallbackContext context);
     }
     public interface ILevelEditorActions
     {

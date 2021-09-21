@@ -279,6 +279,14 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "EnterText",
+                    "type": "Button",
+                    "id": "fcf471d5-6a43-4c37-8ea2-5335352d6127",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -411,6 +419,17 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "MouseMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "965aa013-961d-40c0-bf65-09345676023e",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "EnterText",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

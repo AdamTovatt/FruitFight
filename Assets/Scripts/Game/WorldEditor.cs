@@ -335,6 +335,9 @@ public class WorldEditor : MonoBehaviour
 
     private void Grassify(InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         GrassifyConfiguration grassifyConfiguration = GrassifyConfiguration.LoadFromConfig();
 
         List<Vector3Int> placedPositions = new List<Vector3Int>();

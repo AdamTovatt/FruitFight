@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Keyboard : MonoBehaviour
@@ -25,6 +26,9 @@ public class Keyboard : MonoBehaviour
 
     public delegate void ClosedHandler(object sender);
     public event ClosedHandler OnClosed;
+
+    private bool isEnteringTextWithKeyboard = false;
+    private PlayerControls inputActions;
 
     void Start()
     {
@@ -98,12 +102,34 @@ public class Keyboard : MonoBehaviour
 
         buttons[0][0].Button.Select();
 
-        if(WorldEditorUi.Instance != null)
+        inputActions = new PlayerControls();
+        inputActions.Enable();
+        inputActions.Ui.EnterText.performed += EnterWasPressed;
+    }
+
+    private void EnterWasPressed(InputAction.CallbackContext obj)
+    {
+        if (!isEnteringTextWithKeyboard)
         {
-            if(WorldEditorUi.Instance.KeyboardExists != null && (bool)WorldEditorUi.Instance.KeyboardExists)
+            if (WorldEditorUi.Instance != null)
             {
-                TextField.Select();
+                if (WorldEditorUi.Instance.KeyboardExists != null && (bool)WorldEditorUi.Instance.KeyboardExists)
+                {
+                    WorldEditorUi.Instance.DisableUiInput();
+                    WorldEditor.Instance.DisableControls();
+                    TextField.Select();
+                    isEnteringTextWithKeyboard = true;
+                }
             }
+        }
+        else
+        {
+            WorldEditorUi.Instance.EnableUiInput();
+            WorldEditor.Instance.EnableControls();
+            inputActions.Ui.EnterText.performed -= EnterWasPressed;
+            currentText = new StringBuilder(TextField.text);
+            isEnteringTextWithKeyboard = false;
+            Submit();
         }
     }
 
