@@ -23,6 +23,11 @@ public class LevelButtonContainer : MonoBehaviour
     public delegate void LevelWasSelected(WorldMetadata worldMetadata);
     public LevelWasSelected OnLevelWasSelected;
 
+    public delegate void PageSwitchWasRequested(int newPage);
+    public PageSwitchWasRequested OnPageSwitchRequested;
+
+    public int ButtonsPerPage { get { return currentButtonsPerPage; } }
+
     private List<WorldMetadata> currentLevels;
     private List<LevelButton> currentButtons;
     private float buttonWidth;
@@ -59,6 +64,8 @@ public class LevelButtonContainer : MonoBehaviour
 
     private void NextPage()
     {
+        OnPageSwitchRequested?.Invoke(currentButtonOffset + currentButtonsPerPage);
+
         if (currentButtonOffset + currentButtonsPerPage >= currentLevels.Count)
             return;
 
@@ -69,6 +76,8 @@ public class LevelButtonContainer : MonoBehaviour
 
     private void PreviousPage()
     {
+        OnPageSwitchRequested?.Invoke(currentButtonOffset - currentButtonsPerPage);
+
         if (currentButtonOffset - currentButtonsPerPage < 0)
             currentButtonOffset = 0;
         else
@@ -87,9 +96,14 @@ public class LevelButtonContainer : MonoBehaviour
 
         if (selectFirstButton)
         {
-            if (currentButtons.Count > 0)
-                currentButtons[0].Button.Select();
+            SelectFirstButton();
         }
+    }
+
+    public void SelectFirstButton()
+    {
+        if (currentButtons.Count > 0)
+            currentButtons[0].Button.Select();
     }
 
     public void SetSize(float width, float height)
@@ -124,6 +138,16 @@ public class LevelButtonContainer : MonoBehaviour
 
             currentButtons.Clear();
         }
+    }
+
+    private void CalculateCurrentButtonsPerPage()
+    {
+        float usableSpaceY = (PanelTransform.sizeDelta.y - (NextPageButtonsMargin * 2));
+
+        int columns = Mathf.FloorToInt(PanelTransform.sizeDelta.x / (buttonWidth + ButtonMarginRight));
+        int rows = Mathf.FloorToInt(usableSpaceY / (buttonHeight + ButtonMarginDown));
+
+        currentButtonsPerPage = columns * rows;
     }
 
     private void FillCurrentSizeWithButtons(int buttonOffset)

@@ -50,8 +50,15 @@ public class MainMenuUi : UiManager
 
     public void BrowseLevelsButtonWasPressed()
     {
-        Debug.Log("I wanna browse me levels");
         StartMenu.gameObject.SetActive(false);
         BrowseLevelsScreen.gameObject.SetActive(true);
+        BrowseLevelsScreen.Show();
+    }
+
+    public void ExitBrowseLevelsScreen()
+    {
+        StartMenu.gameObject.SetActive(true);
+        BrowseLevelsScreen.gameObject.SetActive(false);
+        StartMenu.BrowseLevelsButton.Select();
     }
 }
