@@ -121,15 +121,32 @@ public class Keyboard : MonoBehaviour
                     isEnteringTextWithKeyboard = true;
                 }
             }
+            else if (MainMenuUi.Instance != null)
+            {
+                MainMenuUi.Instance.DisableUiInput();
+                TextField.Select();
+                isEnteringTextWithKeyboard = true;
+            }
         }
         else
         {
-            WorldEditorUi.Instance.EnableUiInput();
-            WorldEditor.Instance.EnableControls();
-            inputActions.Ui.EnterText.performed -= EnterWasPressed;
-            currentText = new StringBuilder(TextField.text);
-            isEnteringTextWithKeyboard = false;
-            Submit();
+            if (WorldEditorUi.Instance != null)
+            {
+                WorldEditorUi.Instance.EnableUiInput();
+                WorldEditor.Instance.EnableControls();
+                inputActions.Ui.EnterText.performed -= EnterWasPressed;
+                currentText = new StringBuilder(TextField.text);
+                isEnteringTextWithKeyboard = false;
+                Submit();
+            }
+            else if(MainMenuUi.Instance != null)
+            {
+                MainMenuUi.Instance.EnableUiInput();
+                inputActions.Ui.EnterText.performed -= EnterWasPressed;
+                currentText = new StringBuilder(TextField.text);
+                isEnteringTextWithKeyboard = false;
+                Submit();
+            }
         }
     }
 

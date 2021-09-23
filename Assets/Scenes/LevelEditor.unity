@@ -701,7 +701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 012d26717f62330469ecc90f9eebad16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KeyboardPrefab: {fileID: 4738026305631481555, guid: 5d83c0c860e4f974da938e836ce739b8,
+  KeyboardPrefab: {fileID: 8610447907832962882, guid: 5d83c0c860e4f974da938e836ce739b8,
     type: 3}
 --- !u!114 &27242634
 MonoBehaviour:

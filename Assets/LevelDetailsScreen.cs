@@ -18,7 +18,11 @@ public class LevelDetailsScreen : MonoBehaviour
 
     public CenterContentContainer ButtonContainer;
 
+    public LoginScreen LoginScreen;
+
     private BrowseLevelsScreen parentScreen;
+
+    private WorldMetadata currentWorldMetadata;
 
     private void Start()
     {
@@ -27,6 +31,7 @@ public class LevelDetailsScreen : MonoBehaviour
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
     {
+        currentWorldMetadata = worldMetadata;
         this.parentScreen = parentScreen;
 
         ThumbnailImage.sprite = worldMetadata.GetImageDataAsSprite();
@@ -37,6 +42,10 @@ public class LevelDetailsScreen : MonoBehaviour
         if(localLevel) //this is a level from the file system
         {
             PublishOnlineButton.gameObject.SetActive(true);
+
+            PublishOnlineButton.onClick.RemoveAllListeners();
+            PublishOnlineButton.onClick.AddListener(PublishOnlineButtonWasClicked);
+
             LikeButton.gameObject.SetActive(false);
         }
         else //this is a level from the online library
@@ -47,6 +56,25 @@ public class LevelDetailsScreen : MonoBehaviour
 
         ButtonContainer.CenterContent();
         PlayButton.Select();
+    }
+
+    private void PublishOnlineButtonWasClicked()
+    {
+        if(!ApiHelper.HasUserCredentials)
+        {
+            LoginScreen.OnLoginScreenWasExited += LoginScreenWasClosed;
+            LoginScreen.gameObject.SetActive(true);
+            LoginScreen.Show(this);
+        }
+        else
+        {
+
+        }
+    }
+
+    private void LoginScreenWasClosed()
+    {
+
     }
 
     private void Close()

@@ -6,6 +6,7 @@ public class UiKeyboardInput : MonoBehaviour
     public GameObject KeyboardPrefab;
 
     private Keyboard currentKeyboard;
+    private GameObject currentKeyboardContainer;
 
     public delegate void GotTextHandler(object sender, bool success, string text);
     public event GotTextHandler OnGotText;
@@ -17,7 +18,8 @@ public class UiKeyboardInput : MonoBehaviour
         if(currentKeyboard != null)
             throw new Exception("A keyboard is already open");
 
-        currentKeyboard = Instantiate(KeyboardPrefab, transform).GetComponent<Keyboard>();
+        currentKeyboardContainer = Instantiate(KeyboardPrefab, transform);
+        currentKeyboard = currentKeyboardContainer.GetComponentInChildren<Keyboard>();
         currentKeyboard.OnTextSubmitted += GotText;
         currentKeyboard.OnClosed += CloseKeyboard;
     }
@@ -27,7 +29,7 @@ public class UiKeyboardInput : MonoBehaviour
         OnGotText?.Invoke(this, false, null);
         currentKeyboard.OnTextSubmitted -= GotText;
         currentKeyboard.OnClosed -= CloseKeyboard;
-        Destroy(currentKeyboard.gameObject);
+        Destroy(currentKeyboardContainer);
         currentKeyboard = null;
     }
 
