@@ -24,4 +24,23 @@ public class ApiLevelManager
             return null;
         }
     }
+
+    public async static Task<bool> UploadLevel(World world)
+    {
+        UploadLevelRequestBody body = new UploadLevelRequestBody()
+        {
+            Description = world.Metadata.Description,
+            Name = world.Metadata.Name,
+            PuzzleRatio = 50,
+            Thumbnail = world.Metadata.ImageData,
+            twoPlayers = true
+        };
+
+        world.Metadata = null;
+        body.WorldData = world.ToJson();
+
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/upload", body);
+
+        return response.IsSuccessStatusCode;
+    }
 }

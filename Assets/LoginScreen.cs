@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,16 +51,14 @@ public class LoginScreen : MonoBehaviour
         Keyboard.OpenKeyboard();
     }
 
-    private void LoginButtonPressed()
+    private async void LoginButtonPressed()
     {
-        Login(UsernameText.text, PasswordText.text);
+        bool loginSuccess = await ApiUserManager.Login(UsernameText.text, PasswordText.text);
 
-        Close();
-    }
-
-    private void Login(string username, string password)
-    {
-        
+        if (loginSuccess)
+            Close();
+        else
+            AlertCreator.Instance.CreateNotification("Invalid username and/or password");
     }
 
     private void Close()

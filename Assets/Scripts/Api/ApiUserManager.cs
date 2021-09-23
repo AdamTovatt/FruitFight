@@ -6,9 +6,16 @@ using UnityEngine;
 
 public class ApiUserManager
 {
-    public async Task<string> GetUserToken(string username, string password)
+    public static async Task<bool> Login(string username, string password)
     {
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/user/login", new { username = username, password = password });
-        return null;
+
+        if(response.IsSuccessStatusCode)
+        {
+            ApiHelper.SetCredentialValues(UserCredentials.FromJson(await response.Content.ReadAsStringAsync()));
+            return true;
+        }
+
+        return false;
     }
 }

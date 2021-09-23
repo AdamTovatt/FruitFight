@@ -2150,8 +2150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b7dd4adc1f09f4f9940281003c31da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlertPrefab: {fileID: 0}
-  NotificationPrefab: {fileID: 0}
+  AlertPrefab: {fileID: 248482683191041438, guid: 50ad5f7b6cd3fbd4d878a9c35b395a4b,
+    type: 3}
+  NotificationPrefab: {fileID: 3209350012550313086, guid: 64a380bc83cdce74dbe184ef9319d310,
+    type: 3}
 --- !u!1 &207908069
 GameObject:
   m_ObjectHideFlags: 0

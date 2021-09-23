@@ -39,7 +39,7 @@ public class LevelDetailsScreen : MonoBehaviour
         LevelDescriptionText.text = worldMetadata.Description;
         LevelAuthorText.text = string.Format("Created by: {0}", localLevel ? "you" : worldMetadata.AuthorName);
 
-        if(localLevel) //this is a level from the file system
+        if (localLevel) //this is a level from the file system
         {
             PublishOnlineButton.gameObject.SetActive(true);
 
@@ -58,9 +58,9 @@ public class LevelDetailsScreen : MonoBehaviour
         PlayButton.Select();
     }
 
-    private void PublishOnlineButtonWasClicked()
+    private async void PublishOnlineButtonWasClicked()
     {
-        if(!ApiHelper.HasUserCredentials)
+        if (ApiHelper.UserCredentials == null)
         {
             LoginScreen.OnLoginScreenWasExited += LoginScreenWasClosed;
             LoginScreen.gameObject.SetActive(true);
@@ -68,7 +68,14 @@ public class LevelDetailsScreen : MonoBehaviour
         }
         else
         {
+            World world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
+            world.Metadata = currentWorldMetadata;
+            bool uploadResult = await ApiLevelManager.UploadLevel(world);
 
+            if (uploadResult)
+                AlertCreator.Instance.CreateNotification("Level was uploaded!");
+            else
+                AlertCreator.Instance.CreateNotification("Error when uploading level");
         }
     }
 
