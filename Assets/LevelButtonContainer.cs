@@ -26,6 +26,8 @@ public class LevelButtonContainer : MonoBehaviour
     public delegate void PageSwitchWasRequested(int newPage);
     public PageSwitchWasRequested OnPageSwitchRequested;
 
+    public bool ClearLevelSelectSubscribersOnEventInvoke { get; set; } = true;
+
     public int ButtonsPerPage { get { return currentButtonsPerPage; } }
 
     private List<WorldMetadata> currentLevels;
@@ -48,9 +50,10 @@ public class LevelButtonContainer : MonoBehaviour
 
     private void ButtonWasClicked(WorldMetadata level)
     {
-        Debug.Log("level selected: " + level.Name);
         OnLevelWasSelected?.Invoke(level);
-        OnLevelWasSelected = null;
+
+        if (ClearLevelSelectSubscribersOnEventInvoke)
+            OnLevelWasSelected = null;
     }
 
     private void SetButtonSizeValues()

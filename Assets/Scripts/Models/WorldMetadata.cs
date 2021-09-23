@@ -34,6 +34,12 @@ public class WorldMetadata
         result.LoadImage(Convert.FromBase64String(ImageData));
         return result;
     }
+
+    public Sprite GetImageDataAsSprite()
+    {
+        Texture2D texture = GetImageDataAsTexture2d();
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+    }
 }
 
 [Serializable]

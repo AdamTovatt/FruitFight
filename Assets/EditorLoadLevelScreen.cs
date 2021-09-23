@@ -49,19 +49,7 @@ public class EditorLoadLevelScreen : MonoBehaviour
         instantiatedButtonContainer.SetPosition(ButtonContainerSizeReference.localPosition.x, ButtonContainerSizeReference.localPosition.y);
         instantiatedButtonContainer.DisableBackgroundImage();
 
-        List<WorldMetadata> worldMetadatas = new List<WorldMetadata>();
-
-        string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
-
-        if (!Directory.Exists(mapDirectory))
-            Directory.CreateDirectory(mapDirectory);
-
-        foreach (string file in Directory.GetFiles(mapDirectory).Where(x => x.EndsWith(".mapmeta")).ToList())
-        {
-            worldMetadatas.Add(WorldMetadata.FromJson(File.ReadAllText(file)));
-        }
-
-        instantiatedButtonContainer.Show(worldMetadatas);
+        instantiatedButtonContainer.Show(FileHelper.LoadMetadatasFromDisk());
 
         WorldEditorUi.Instance.DisableAllButOneSectionPanels(gameObject);
 

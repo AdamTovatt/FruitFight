@@ -10,6 +10,9 @@ public class ApiHelper
     private static readonly HttpClient httpClient = new HttpClient();
     private static readonly string apiBasePath = "https://fruit-fight-api.herokuapp.com/api";
 
+    public static bool HasUserCredentials { get; set; }
+    public static long CurrentUserId { get; set; }
+
     public static async Task<HttpResponseMessage> PerformRequest(HttpMethod method, string path, object content = null, Dictionary<string, object> queryParameters = null)
     {
         StringBuilder requestPath = new StringBuilder(apiBasePath);
