@@ -23,6 +23,7 @@ public class BrowseLevelsScreen : MonoBehaviour
     private LevelButtonContainer instantiatedButtonContainer;
 
     private int currentPage = 0;
+    private int currentOffset = 0;
     private bool viewingLocalLevels;
 
     private void Start()
@@ -97,7 +98,21 @@ public class BrowseLevelsScreen : MonoBehaviour
 
     private void ButtonContainerSwitchedPage(int newOffset)
     {
-        Debug.Log("new offset: " + newOffset);
+        if (currentOffset + newOffset < 0)
+        {
+            currentOffset = 0;
+            currentPage = 0;
+        }
+        else
+        {
+            if (newOffset > 0)
+                currentPage++;
+            else if (newOffset < 0)
+                currentPage--;
+
+            currentOffset += newOffset;
+        }
+
         FetchLevels();
     }
 
@@ -121,6 +136,9 @@ public class BrowseLevelsScreen : MonoBehaviour
         instantiatedButtonContainer.ClearLevelSelectSubscribersOnEventInvoke = false;
 
         if (!viewingLocalLevels)
+            instantiatedButtonContainer.SetPaginationIsControlledExternally();
+
+        if (!viewingLocalLevels)
             instantiatedButtonContainer.OnPageSwitchRequested += ButtonContainerSwitchedPage;
 
         instantiatedButtonContainer.SetSize(ButtonContainerSizeReference.sizeDelta.x, ButtonContainerSizeReference.sizeDelta.y);
@@ -128,6 +146,9 @@ public class BrowseLevelsScreen : MonoBehaviour
         instantiatedButtonContainer.DisableBackgroundImage();
 
         instantiatedButtonContainer.Show(levels);
+
+        if (!viewingLocalLevels)
+            instantiatedButtonContainer.SetPageNumberText(currentPage, 10);
 
         instantiatedButtonContainer.OnLevelWasSelected += LevelWasSelected;
 

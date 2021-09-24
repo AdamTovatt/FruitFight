@@ -25,7 +25,7 @@ public class ApiLevelManager
         }
     }
 
-    public async static Task<bool> UploadLevel(World world)
+    public async static Task<ErrorResponse> UploadLevel(World world)
     {
         UploadLevelRequestBody body = new UploadLevelRequestBody()
         {
@@ -41,6 +41,13 @@ public class ApiLevelManager
 
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/upload", body);
 
-        return response.IsSuccessStatusCode;
+        if(response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+        else
+        {
+            return ErrorResponse.FromJson(await response.Content.ReadAsStringAsync());
+        }
     }
 }

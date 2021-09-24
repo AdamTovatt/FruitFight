@@ -28,6 +28,7 @@ public class LevelButtonContainer : MonoBehaviour
 
     public bool ClearLevelSelectSubscribersOnEventInvoke { get; set; } = true;
 
+    public bool PaginationIsControlledExternally { get; private set; }
     public int ButtonsPerPage { get { return currentButtonsPerPage; } }
 
     private List<WorldMetadata> currentLevels;
@@ -65,28 +66,40 @@ public class LevelButtonContainer : MonoBehaviour
         }
     }
 
+    public void SetPaginationIsControlledExternally()
+    {
+        PaginationIsControlledExternally = true;
+        CalculateCurrentButtonsPerPage();
+    }
+
     private void NextPage()
     {
         OnPageSwitchRequested?.Invoke(currentButtonOffset + currentButtonsPerPage);
 
-        if (currentButtonOffset + currentButtonsPerPage >= currentLevels.Count)
-            return;
+        if (!PaginationIsControlledExternally)
+        {
+            if (currentButtonOffset + currentButtonsPerPage >= currentLevels.Count)
+                return;
 
-        currentButtonOffset += currentButtonsPerPage;
+            currentButtonOffset += currentButtonsPerPage;
 
-        Show(currentLevels, false);
+            Show(currentLevels, false);
+        }
     }
 
     private void PreviousPage()
     {
         OnPageSwitchRequested?.Invoke(currentButtonOffset - currentButtonsPerPage);
 
-        if (currentButtonOffset - currentButtonsPerPage < 0)
-            currentButtonOffset = 0;
-        else
-            currentButtonOffset -= currentButtonsPerPage;
+        if (!PaginationIsControlledExternally)
+        {
+            if (currentButtonOffset - currentButtonsPerPage < 0)
+                currentButtonOffset = 0;
+            else
+                currentButtonOffset -= currentButtonsPerPage;
 
-        Show(currentLevels, false);
+            Show(currentLevels, false);
+        }
     }
 
     public void Show(List<WorldMetadata> levels, bool selectFirstButton = true)
@@ -95,7 +108,7 @@ public class LevelButtonContainer : MonoBehaviour
 
         SetButtonSizeValues();
 
-        FillCurrentSizeWithButtons(currentButtonOffset);
+        FillCurrentSizeWithButtons(PaginationIsControlledExternally ? 0 : currentButtonOffset);
 
         if (selectFirstButton)
         {
@@ -153,6 +166,11 @@ public class LevelButtonContainer : MonoBehaviour
         currentButtonsPerPage = columns * rows;
     }
 
+    public void SetPageNumberText(int currentPage, int totalPages)
+    {
+        PageNumberText.text = string.Format("Page: {0}/{1}", currentPage, totalPages);
+    }
+
     private void FillCurrentSizeWithButtons(int buttonOffset)
     {
         if (currentButtons != null)
@@ -181,7 +199,7 @@ public class LevelButtonContainer : MonoBehaviour
         NextPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) + pageButtonsCenterOffset, NextPageButtonsMargin, 0);
         PreviousPageButton.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f) - pageButtonsCenterOffset, NextPageButtonsMargin, 0);
         PageNumberText.GetComponent<RectTransform>().localPosition = new Vector3((PanelTransform.sizeDelta.x / 2f), PanelTransform.sizeDelta.x < (NextPageButton.GetComponent<RectTransform>().sizeDelta.x + PreviousPageButton.GetComponent<RectTransform>().sizeDelta.x + PageNumberText.rectTransform.sizeDelta.x + ButtonMarginRight * 2) ? NextPageButtonsMargin * 2 : NextPageButtonsMargin, 0);
-        PageNumberText.text = string.Format("Page: {0}/{1}", Mathf.FloorToInt((float)currentButtonOffset / currentButtonsPerPage), Mathf.FloorToInt((float)currentLevels.Count / currentButtonsPerPage));
+        SetPageNumberText(Mathf.FloorToInt((float)currentButtonOffset / currentButtonsPerPage), Mathf.FloorToInt((float)currentLevels.Count / currentButtonsPerPage));
 
         float edgeMarginX = (PanelTransform.sizeDelta.x - (columns * (buttonWidth + ButtonMarginRight))) / 2f;
         float edgeMarginY = Mathf.Min(ButtonMarginDown * 2, (usableSpaceY - (rows * (buttonHeight + ButtonMarginDown))) / 2f);

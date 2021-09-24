@@ -70,12 +70,14 @@ public class LevelDetailsScreen : MonoBehaviour
         {
             World world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
             world.Metadata = currentWorldMetadata;
-            bool uploadResult = await ApiLevelManager.UploadLevel(world);
+            ErrorResponse uploadResult = await ApiLevelManager.UploadLevel(world);
 
-            if (uploadResult)
+            if (uploadResult == null)
                 AlertCreator.Instance.CreateNotification("Level was uploaded!");
+            else if (uploadResult.ErrorCode == "23505")
+                AlertCreator.Instance.CreateNotification("You have already uploaded a level with this name");
             else
-                AlertCreator.Instance.CreateNotification("Error when uploading level");
+                AlertCreator.Instance.CreateNotification(uploadResult.Message);
         }
     }
 
