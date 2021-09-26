@@ -501,14 +501,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Remove"",
-                    ""type"": ""Button"",
-                    ""id"": ""edc1528b-57f6-44c8-aaf1-9a84951c4492"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""NextPage"",
                     ""type"": ""Button"",
                     ""id"": ""950f6777-e0bd-4882-9227-8aedeea3049b"",
@@ -560,6 +552,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": ""Grassify"",
                     ""type"": ""Button"",
                     ""id"": ""6eeb42fb-66ee-471e-b026-c5879df00aa3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""b1f5d8a9-1ba4-4656-ad54-b41fd83cb0db"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -843,39 +843,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""5e5fc9ab-0cd6-40e3-abf2-606fe9ec2ec9"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Remove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b90a5893-2d1e-40c7-8010-569f1a64d7e1"",
-                    ""path"": ""<Keyboard>/delete"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Remove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3edc5e42-b088-4204-aa82-dfe8d391984a"",
-                    ""path"": ""<Keyboard>/backspace"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Remove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3ad7e55b-2e0e-4171-96d5-16ba9264a9f4"",
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
@@ -1049,6 +1016,39 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Grassify"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a7f6f55-0504-479f-a3c8-d871993e3895"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ca168487-2e28-4d4b-ab54-0181513e2be9"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d0ef2bf2-1acb-4287-9de4-ca69e75951fd"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1101,7 +1101,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_LowerMarker = m_LevelEditor.FindAction("LowerMarker", throwIfNotFound: true);
         m_LevelEditor_Pause = m_LevelEditor.FindAction("Pause", throwIfNotFound: true);
         m_LevelEditor_MoveBlockSelection = m_LevelEditor.FindAction("MoveBlockSelection", throwIfNotFound: true);
-        m_LevelEditor_Remove = m_LevelEditor.FindAction("Remove", throwIfNotFound: true);
         m_LevelEditor_NextPage = m_LevelEditor.FindAction("NextPage", throwIfNotFound: true);
         m_LevelEditor_PreviousPage = m_LevelEditor.FindAction("PreviousPage", throwIfNotFound: true);
         m_LevelEditor_Rotate = m_LevelEditor.FindAction("Rotate", throwIfNotFound: true);
@@ -1109,6 +1108,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_MouseRotate = m_LevelEditor.FindAction("MouseRotate", throwIfNotFound: true);
         m_LevelEditor_MouseWheel = m_LevelEditor.FindAction("MouseWheel", throwIfNotFound: true);
         m_LevelEditor_Grassify = m_LevelEditor.FindAction("Grassify", throwIfNotFound: true);
+        m_LevelEditor_RightClick = m_LevelEditor.FindAction("RightClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1302,7 +1302,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_LowerMarker;
     private readonly InputAction m_LevelEditor_Pause;
     private readonly InputAction m_LevelEditor_MoveBlockSelection;
-    private readonly InputAction m_LevelEditor_Remove;
     private readonly InputAction m_LevelEditor_NextPage;
     private readonly InputAction m_LevelEditor_PreviousPage;
     private readonly InputAction m_LevelEditor_Rotate;
@@ -1310,6 +1309,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_MouseRotate;
     private readonly InputAction m_LevelEditor_MouseWheel;
     private readonly InputAction m_LevelEditor_Grassify;
+    private readonly InputAction m_LevelEditor_RightClick;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1320,7 +1320,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @LowerMarker => m_Wrapper.m_LevelEditor_LowerMarker;
         public InputAction @Pause => m_Wrapper.m_LevelEditor_Pause;
         public InputAction @MoveBlockSelection => m_Wrapper.m_LevelEditor_MoveBlockSelection;
-        public InputAction @Remove => m_Wrapper.m_LevelEditor_Remove;
         public InputAction @NextPage => m_Wrapper.m_LevelEditor_NextPage;
         public InputAction @PreviousPage => m_Wrapper.m_LevelEditor_PreviousPage;
         public InputAction @Rotate => m_Wrapper.m_LevelEditor_Rotate;
@@ -1328,6 +1327,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @MouseRotate => m_Wrapper.m_LevelEditor_MouseRotate;
         public InputAction @MouseWheel => m_Wrapper.m_LevelEditor_MouseWheel;
         public InputAction @Grassify => m_Wrapper.m_LevelEditor_Grassify;
+        public InputAction @RightClick => m_Wrapper.m_LevelEditor_RightClick;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1355,9 +1355,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveBlockSelection.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
                 @MoveBlockSelection.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
                 @MoveBlockSelection.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMoveBlockSelection;
-                @Remove.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
-                @Remove.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
-                @Remove.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRemove;
                 @NextPage.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
                 @NextPage.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
                 @NextPage.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnNextPage;
@@ -1379,6 +1376,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Grassify.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
                 @Grassify.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
                 @Grassify.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnGrassify;
+                @RightClick.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
+                @RightClick.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
+                @RightClick.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1401,9 +1401,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @MoveBlockSelection.started += instance.OnMoveBlockSelection;
                 @MoveBlockSelection.performed += instance.OnMoveBlockSelection;
                 @MoveBlockSelection.canceled += instance.OnMoveBlockSelection;
-                @Remove.started += instance.OnRemove;
-                @Remove.performed += instance.OnRemove;
-                @Remove.canceled += instance.OnRemove;
                 @NextPage.started += instance.OnNextPage;
                 @NextPage.performed += instance.OnNextPage;
                 @NextPage.canceled += instance.OnNextPage;
@@ -1425,6 +1422,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Grassify.started += instance.OnGrassify;
                 @Grassify.performed += instance.OnGrassify;
                 @Grassify.canceled += instance.OnGrassify;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
             }
         }
     }
@@ -1472,7 +1472,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnLowerMarker(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnMoveBlockSelection(InputAction.CallbackContext context);
-        void OnRemove(InputAction.CallbackContext context);
         void OnNextPage(InputAction.CallbackContext context);
         void OnPreviousPage(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
@@ -1480,5 +1479,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMouseRotate(InputAction.CallbackContext context);
         void OnMouseWheel(InputAction.CallbackContext context);
         void OnGrassify(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
     }
 }

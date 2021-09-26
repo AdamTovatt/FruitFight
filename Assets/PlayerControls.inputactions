@@ -488,14 +488,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Remove",
-                    "type": "Button",
-                    "id": "edc1528b-57f6-44c8-aaf1-9a84951c4492",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "NextPage",
                     "type": "Button",
                     "id": "950f6777-e0bd-4882-9227-8aedeea3049b",
@@ -547,6 +539,14 @@
                     "name": "Grassify",
                     "type": "Button",
                     "id": "6eeb42fb-66ee-471e-b026-c5879df00aa3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "b1f5d8a9-1ba4-4656-ad54-b41fd83cb0db",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -830,39 +830,6 @@
                 },
                 {
                     "name": "",
-                    "id": "5e5fc9ab-0cd6-40e3-abf2-606fe9ec2ec9",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Remove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b90a5893-2d1e-40c7-8010-569f1a64d7e1",
-                    "path": "<Keyboard>/delete",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Remove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3edc5e42-b088-4204-aa82-dfe8d391984a",
-                    "path": "<Keyboard>/backspace",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Remove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3ad7e55b-2e0e-4171-96d5-16ba9264a9f4",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -1034,6 +1001,39 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Grassify",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a7f6f55-0504-479f-a3c8-d871993e3895",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca168487-2e28-4d4b-ab54-0181513e2be9",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0ef2bf2-1acb-4287-9de4-ca69e75951fd",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

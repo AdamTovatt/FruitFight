@@ -492,7 +492,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.PreviousPage.performed += PreviousPage;
         input.LevelEditor.NextPage.canceled += CancelNextPage;
         input.LevelEditor.PreviousPage.canceled += CancelPreviousPage;
-        input.LevelEditor.Remove.performed += Remove;
+        input.LevelEditor.RightClick.performed += OpenBehaviourMenu;
         input.LevelEditor.Rotate.performed += editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled += editorCamera.CancelRotate;
         input.LevelEditor.ToggleObjectRotation.performed += ToggleRotateObject;
@@ -517,7 +517,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.PreviousPage.performed -= PreviousPage;
         input.LevelEditor.NextPage.canceled -= CancelNextPage;
         input.LevelEditor.PreviousPage.canceled -= CancelPreviousPage;
-        input.LevelEditor.Remove.performed -= Remove;
+        input.LevelEditor.RightClick.performed -= OpenBehaviourMenu;
         input.LevelEditor.Rotate.performed -= editorCamera.Rotate;
         input.LevelEditor.Rotate.canceled -= editorCamera.CancelRotate;
         input.LevelEditor.MouseRotate.performed -= editorCamera.MouseRotate;
@@ -720,15 +720,10 @@ public class WorldEditor : MonoBehaviour
         lastMarkerMoveTime = Time.time;
     }
 
-    private void Remove(InputAction.CallbackContext context)
+    private void RemoveBlockAtPosition(Vector3Int position)
     {
-        if (controlsDisabled || isTestingLevel)
-            return;
-
         if (isRotatingObject)
             ExitRotationMode();
-
-        CloseBlockSelection();
 
         List<Block> blocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition);
         Block block = blocks.Where(x => x.Info.Id == selectedBlock).FirstOrDefault();
@@ -745,6 +740,17 @@ public class WorldEditor : MonoBehaviour
         CurrentWorld.CalculateNeighbors();
 
         Builder.BuildWorld(CurrentWorld);
+    }
+
+    private void OpenBehaviourMenu(InputAction.CallbackContext context)
+    {
+        Block block = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList().FirstOrDefault();
+
+        if (block == null)
+            return;
+
+        controlsDisabled = true;
+        WorldEditorUi.Instance.OpenBehaviourMenu(block);
     }
 
     private IEnumerator CaptureScreenShot()
@@ -796,14 +802,7 @@ public class WorldEditor : MonoBehaviour
         List<Block> sameBlocks = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList();
         if (sameBlocks.Count() > 0)
         {
-            if (isAddingTriggerSubZone) //should not be able to place on top of another trigger but should not open behaviour menu when that is done either
-                return;
-
-            Block selectedBlock = sameBlocks.First();
-            Debug.Log("selected block: " + selectedBlock.ToString());
-            Debug.Log(selectedBlock.HasPropertyExposer);
-            controlsDisabled = true;
-            WorldEditorUi.Instance.OpenBehaviourMenu(selectedBlock);
+            RemoveBlockAtPosition(MarkerPosition);
             return;
         }
 
