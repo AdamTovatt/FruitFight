@@ -22,6 +22,7 @@ public class LoginScreen : MonoBehaviour
     public event LoginScreenWasExited OnLoginScreenWasExited;
 
     private MonoBehaviour previousScreen;
+    private string rawPasswordInput;
 
     private void Start()
     {
@@ -41,19 +42,38 @@ public class LoginScreen : MonoBehaviour
 
     private void StartUsernameInput()
     {
-        Keyboard.OnGotText += (sender, success, text) => { if (success) UsernameText.text = text; };
+        Keyboard.OnGotText += (sender, success, text) => { OnGotUserName(success, text); };
         Keyboard.OpenKeyboard();
     }
 
     private void StartPasswordInput()
     {
-        Keyboard.OnGotText += (sender, success, text) => { if (success) PasswordText.text = text; };
-        Keyboard.OpenKeyboard();
+        Keyboard.OnGotText += (sender, success, text) => { OnGotPassword(success, text); };
+        Keyboard.OpenKeyboard(true);
+    }
+
+    private void OnGotUserName(bool success, string text)
+    {
+        if (success) 
+            UsernameText.text = text;
+
+        PasswordInputArea.Select();
+    }
+
+    private void OnGotPassword(bool success, string text)
+    {
+        if (success) 
+        { 
+            rawPasswordInput = text; 
+            PasswordText.text = new string('*', text.Length); 
+        }
+
+        LoginButton.Select();
     }
 
     private async void LoginButtonPressed()
     {
-        bool loginSuccess = await ApiUserManager.Login(UsernameText.text, PasswordText.text);
+        bool loginSuccess = await ApiUserManager.Login(UsernameText.text, rawPasswordInput);
 
         if (loginSuccess)
             Close();

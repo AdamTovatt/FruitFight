@@ -107,6 +107,11 @@ public class Keyboard : MonoBehaviour
         inputActions.Ui.EnterText.performed += EnterWasPressed;
     }
 
+    public void SetToPassword()
+    {
+        TextField.contentType = TMP_InputField.ContentType.Password;
+    }
+
     private void EnterWasPressed(InputAction.CallbackContext obj)
     {
         if (!isEnteringTextWithKeyboard)

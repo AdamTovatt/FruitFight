@@ -13,7 +13,7 @@ public class UiKeyboardInput : MonoBehaviour
 
     public string LastText { get; private set; }
 
-    public void OpenKeyboard()
+    public void OpenKeyboard(bool password = false)
     {
         if(currentKeyboard != null)
             throw new Exception("A keyboard is already open");
@@ -22,6 +22,9 @@ public class UiKeyboardInput : MonoBehaviour
         currentKeyboard = currentKeyboardContainer.GetComponentInChildren<Keyboard>();
         currentKeyboard.OnTextSubmitted += GotText;
         currentKeyboard.OnClosed += CloseKeyboard;
+
+        if (password)
+            currentKeyboard.SetToPassword();
     }
 
     public void CloseKeyboard(object sender)
