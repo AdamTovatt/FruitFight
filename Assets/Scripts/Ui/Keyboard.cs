@@ -30,6 +30,8 @@ public class Keyboard : MonoBehaviour
     private bool isEnteringTextWithKeyboard = false;
     private PlayerControls inputActions;
 
+    private bool isShifted;
+
     void Start()
     {
         currentText = new StringBuilder();
@@ -163,7 +165,8 @@ public class Keyboard : MonoBehaviour
                 string text = button.ButtonConfiguration.Text;
                 if (text.All(c => c == ' '))
                     text = " ";
-                currentText.Append(text);
+                currentText.Append(isShifted ? text.ToUpper() : text);
+                isShifted = false;
                 break;
             case KeyboardButtonType.Enter:
                 Submit();
@@ -175,6 +178,7 @@ public class Keyboard : MonoBehaviour
                 Close();
                 break;
             case KeyboardButtonType.Shift:
+                isShifted = !isShifted;
                 break;
             case KeyboardButtonType.CapsLock:
                 break;

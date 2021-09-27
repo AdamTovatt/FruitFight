@@ -55,6 +55,11 @@ public class LevelDetailsScreen : MonoBehaviour
         }
 
         ButtonContainer.CenterContent();
+        SelectDefaultButton();
+    }
+
+    public void SelectDefaultButton()
+    {
         PlayButton.Select();
     }
 

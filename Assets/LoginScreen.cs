@@ -86,6 +86,9 @@ public class LoginScreen : MonoBehaviour
         OnLoginScreenWasExited?.Invoke();
         previousScreen.gameObject.SetActive(true);
         gameObject.SetActive(false);
+
+        if (previousScreen.GetType() == typeof(LevelDetailsScreen))
+            ((LevelDetailsScreen)previousScreen).SelectDefaultButton();
     }
 
     private void CreateNewAccountButtonPressed()
