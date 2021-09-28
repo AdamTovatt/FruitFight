@@ -18,6 +18,8 @@ public class LoginScreen : MonoBehaviour
 
     public UiKeyboardInput Keyboard;
 
+    public CreateAccountScreen CreateAccountScreen;
+
     public delegate void LoginScreenWasExited();
     public event LoginScreenWasExited OnLoginScreenWasExited;
 
