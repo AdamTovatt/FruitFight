@@ -247,6 +247,7 @@ public class PlayerMovement : MovingCharacter
                 transform.parent = null;
                 UpdateGroundedPosition();
                 averageVelocityKeeper.Parent = null;
+                OnParentUpdated?.Invoke(null);
             }
         }
         else
@@ -254,13 +255,10 @@ public class PlayerMovement : MovingCharacter
             transform.parent = null;
         }
 
-        if (!(hits.Where(x => x.transform.position.y > transform.position.y + 0.3f).Count() > 0)) //needs to be cast in a way that it hits even small blocks if the player is in the air
-        {
-            RigidBody.MovePosition(newPosition);
+        RigidBody.MovePosition(newPosition);
 
-            if (transform.parent != null) //if we are on a moveOnTrigger
-                transform.position += movement * CurrentRunSpeed * 6 * Time.deltaTime; //we should move with transform.position since rigidbody movement doesn't work
-        }
+        if (transform.parent != null) //if we are on a moveOnTrigger
+            transform.position += movement * CurrentRunSpeed * 6 * Time.deltaTime; //we should move with transform.position since rigidbody movement doesn't work
 
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
