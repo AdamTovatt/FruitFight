@@ -29,6 +29,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchSphereRadius = 0.4f;
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
+    public float GameTimeLength = 0.2f;
 
     public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get; set; }
@@ -52,16 +53,29 @@ public class PlayerMovement : MovingCharacter
     public override bool StopFootSetDefault { get { return false; } }
     public override bool StandingStill { get { return move == Vector2.zero; } }
 
+    public bool IsGroundedWithGameTime
+    {
+        get
+        {
+            if (_isGrounded == null)
+                CalculateIsGrounded();
+
+            return (bool)_isGrounded || Time.time - _lastGroundedTime < GameTimeLength;
+        }
+    }
+
     public override bool IsGrounded
     {
         get
         {
             if (_isGrounded == null)
-                _isGrounded = CalculateIsGrounded();
+                CalculateIsGrounded();
+
             return (bool)_isGrounded;
         }
     }
     private bool? _isGrounded = null;
+    private float _lastGroundedTime;
     private bool previousGrounded = false;
 
     private Transform groundTransform;
@@ -379,7 +393,7 @@ public class PlayerMovement : MovingCharacter
 
     private void Jump()
     {
-        if (Time.time - lastJumpTime > 0.2f && IsGrounded)
+        if (Time.time - lastJumpTime > GameTimeLength + 0.1f && IsGroundedWithGameTime)
         {
             RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y + JumpStrength, RigidBody.velocity.z);
             lastJumpTime = Time.time;
@@ -399,7 +413,7 @@ public class PlayerMovement : MovingCharacter
         ControlsEnabled = false;
     }
 
-    private bool CalculateIsGrounded()
+    private void CalculateIsGrounded()
     {
         Ray ray = new Ray(transform.position + Vector3.up * 0.4f, -Vector3.up);
 
@@ -412,12 +426,14 @@ public class PlayerMovement : MovingCharacter
                 if (!previousGrounded)
                     JustLanded();
 
-                return true;
+                _lastGroundedTime = Time.time;
+                _isGrounded = true;
+                return;
             }
         }
 
         groundTransform = null;
-        return false;
+        _isGrounded = false;
     }
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
