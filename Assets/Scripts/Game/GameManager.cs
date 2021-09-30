@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
         HashSet<Block> blocks = new HashSet<Block>();
         foreach (PlayerMovement player in PlayerCharacters)
         {
-            Ray ray = new Ray(MultipleTargetCamera.transform.position, (player.transform.position - MultipleTargetCamera.transform.position));
+            Ray ray = new Ray(MultipleTargetCamera.transform.position, ((player.transform.position + Vector3.up * 0.2f) - MultipleTargetCamera.transform.position));
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
                 if (hitInfo.transform == player.transform || hitInfo.transform.tag == "Invisible")
