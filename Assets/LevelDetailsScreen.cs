@@ -88,12 +88,16 @@ public class LevelDetailsScreen : MonoBehaviour
 
     private void LoginScreenWasClosed()
     {
-
+        if (ApiHelper.UserCredentials != null)
+            AlertCreator.Instance.CreateNotification("Login successful");
+        else
+            AlertCreator.Instance.CreateNotification("You have not been logged in");
     }
 
     private void Close()
     {
         parentScreen.gameObject.SetActive(true);
         gameObject.SetActive(false);
+        parentScreen.SelectDefaultButton();
     }
 }

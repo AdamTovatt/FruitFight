@@ -35,11 +35,16 @@ public class LoginScreen : MonoBehaviour
         CloseButton.onClick.AddListener(Close);
     }
 
+    public void SelectDefaultButton()
+    {
+        LoginButton.Select();
+    }
+
     public void Show(MonoBehaviour previousScreen)
     {
         this.previousScreen = previousScreen;
         previousScreen.gameObject.SetActive(false);
-        LoginButton.Select();
+        SelectDefaultButton();
     }
 
     private void StartUsernameInput()
@@ -95,6 +100,9 @@ public class LoginScreen : MonoBehaviour
 
     private void CreateNewAccountButtonPressed()
     {
+        CreateAccountScreen.gameObject.SetActive(true);
+        gameObject.SetActive(false);
 
+        CreateAccountScreen.Show(this);
     }
 }

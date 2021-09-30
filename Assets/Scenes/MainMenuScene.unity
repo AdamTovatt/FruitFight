@@ -8015,7 +8015,7 @@ MonoBehaviour:
   UseCustomContentSize: 0
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
-  Pivot: {x: 0.4, y: 0.5}
+  Pivot: {x: -0.05, y: 0.05}
 --- !u!114 &598785179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11208,6 +11208,7 @@ MonoBehaviour:
   UsernameText: {fileID: 1442623143}
   PasswordText: {fileID: 421160778}
   Keyboard: {fileID: 793732607}
+  CreateAccountScreen: {fileID: 2076892560}
 --- !u!1 &810355631
 GameObject:
   m_ObjectHideFlags: 0
@@ -11712,6 +11713,7 @@ GameObject:
   - component: {fileID: 841642501}
   - component: {fileID: 841642500}
   - component: {fileID: 841642499}
+  - component: {fileID: 841642502}
   m_Layer: 5
   m_Name: EmailInfoButton
   m_TagString: Untagged
@@ -11821,6 +11823,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841642497}
   m_CullTransparentMesh: 1
+--- !u!114 &841642502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841642497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be0765cabf3a0d4aa7a63da8a32b011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedMarkerPrefab: {fileID: 1433374967141964429, guid: 505294e70bf28be41a4f01e209de570c,
+    type: 3}
+  UseCustomContentSize: 0
+  ContentSize: {x: 300, y: 50}
+  UseCustomPivot: 1
+  Pivot: {x: -0.05, y: 0.05}
 --- !u!1 &851520382
 GameObject:
   m_ObjectHideFlags: 0
@@ -28345,6 +28365,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d3d9b32f98322478afc3ff6e131c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CloseButton: {fileID: 1289100843}
+  CreateAccountButton: {fileID: 1623827676}
+  UsernameInputArea: {fileID: 1992887894}
+  EmailInputArea: {fileID: 598785179}
+  PasswordInputArea: {fileID: 226143385}
+  VerifyPasswordInputArea: {fileID: 1380236583}
+  EmailInformationButton: {fileID: 841642499}
 --- !u!114 &2076892561
 MonoBehaviour:
   m_ObjectHideFlags: 0

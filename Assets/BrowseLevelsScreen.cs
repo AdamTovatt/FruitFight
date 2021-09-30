@@ -32,8 +32,15 @@ public class BrowseLevelsScreen : MonoBehaviour
         ChangeViewModeButton.onClick.AddListener(ViewModeButtonClicked);
     }
 
+    public void SelectDefaultButton()
+    {
+        ChangeViewModeButton.Select();
+    }
+
     public void Show()
     {
+        SelectDefaultButton();
+
         ViewModeWasChanged(viewingLocalLevels);
 
         PopulateLevelList();
@@ -75,7 +82,7 @@ public class BrowseLevelsScreen : MonoBehaviour
         }
     }
 
-    private async void FetchLevels()
+    private async Task FetchLevels()
     {
         CleanLevelList();
 
@@ -96,7 +103,7 @@ public class BrowseLevelsScreen : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void ButtonContainerSwitchedPage(int newOffset)
+    private async void ButtonContainerSwitchedPage(int newOffset)
     {
         if (currentOffset + newOffset < 0)
         {
@@ -113,7 +120,12 @@ public class BrowseLevelsScreen : MonoBehaviour
             currentOffset += newOffset;
         }
 
-        FetchLevels();
+        await FetchLevels();
+
+        if (newOffset > 0)
+            instantiatedButtonContainer.NextPageButton.Select();
+        else
+            instantiatedButtonContainer.PreviousPageButton.Select();
     }
 
     private void CleanLevelList()
@@ -145,7 +157,7 @@ public class BrowseLevelsScreen : MonoBehaviour
         instantiatedButtonContainer.SetPosition(ButtonContainerSizeReference.localPosition.x, ButtonContainerSizeReference.localPosition.y);
         instantiatedButtonContainer.DisableBackgroundImage();
 
-        instantiatedButtonContainer.Show(levels);
+        instantiatedButtonContainer.Show(levels, false);
 
         if (!viewingLocalLevels)
             instantiatedButtonContainer.SetPageNumberText(currentPage, 10);
