@@ -14,7 +14,7 @@ public class ApiLevelManager
 
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Get, "/level/list", queryParameters: parameters);
 
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             return WorldMetadataResponse.FromJson(await response.Content.ReadAsStringAsync());
         }
@@ -25,7 +25,7 @@ public class ApiLevelManager
         }
     }
 
-    public async static Task<ErrorResponse> UploadLevel(World world)
+    public async static Task<UploadLevelResponse> UploadLevel(World world)
     {
         UploadLevelRequestBody body = new UploadLevelRequestBody()
         {
@@ -40,14 +40,21 @@ public class ApiLevelManager
         body.WorldData = world.ToJson();
 
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/upload", body);
+        string responseJson = await response.Content.ReadAsStringAsync();
 
-        if(response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (response.IsSuccessStatusCode)
+            return UploadLevelResponse.FromJson(responseJson);
         else
-        {
-            return ErrorResponse.FromJson(await response.Content.ReadAsStringAsync());
-        }
+            return new UploadLevelResponse() { ErrorResponse = ErrorResponse.FromJson(responseJson) };
+    }
+
+    public async static Task<bool> DeleteLevel(long levelId)
+    {
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Delete, "/level/delete", null, new Dictionary<string, object>() { { "levelId", levelId } });
+
+        if (response.IsSuccessStatusCode)
+            return true;
+
+        return false;
     }
 }

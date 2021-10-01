@@ -72,9 +72,23 @@ public class ApiHelper
             StringContent body = new StringContent(json, Encoding.UTF8, "application/json");
             return await httpClient.PostAsync(requestPath.ToString(), body);
         }
+        else if(method == HttpMethod.Delete)
+        {
+            return await httpClient.DeleteAsync(requestPath.ToString());
+        }
+        else if (method == HttpMethod.Put)
+        {
+            string json = "";
+
+            if (content != null)
+                json = content.GetType() == typeof(string) ? (string)content : JsonConvert.SerializeObject(content);
+
+            StringContent body = new StringContent(json, Encoding.UTF8, "application/json");
+            return await httpClient.PutAsync(requestPath.ToString(), body);
+        }
         else
         {
-            throw new System.Exception(string.Format("{0} not supported", method));
+            throw new System.Exception(string.Format("{0} not supported in ApiHelper yet", method));
         }
     }
 }

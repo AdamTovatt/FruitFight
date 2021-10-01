@@ -6,11 +6,16 @@ using UnityEngine;
 [Serializable]
 public class WorldMetadata
 {
+    public long Id;
     public string Name;
     public string Description;
     public string ImageData;
     public int AuthorId;
     public string AuthorName;
+    public int Likes;
+    public int Plays;
+    public bool TwoPlayers;
+    public int PuzzleRatio;
 
     public WorldMetadata() { }
     public WorldMetadata(string name)

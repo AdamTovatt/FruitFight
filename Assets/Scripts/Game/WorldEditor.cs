@@ -281,19 +281,8 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
-        string mapDirectory = string.Format("{0}/maps", Application.persistentDataPath);
+        FileHelper.SaveWorld(CurrentWorld);
 
-        if (!Directory.Exists(mapDirectory))
-            Directory.CreateDirectory(mapDirectory);
-
-        string fileName = CurrentWorld.Metadata.Name.Replace(' ', '_');
-        string levelPath = string.Format("{0}/{1}.mapdata", mapDirectory, fileName);
-        string metaPath = string.Format("{0}/{1}.mapmeta", mapDirectory, fileName);
-
-        File.WriteAllText(levelPath, CurrentWorld.ToJson());
-        File.WriteAllText(metaPath, CurrentWorld.Metadata.ToJson());
-
-        Debug.Log("Wrote map data to: " + levelPath);
         AlertCreator.Instance.CreateNotification("Level was saved!", 2f);
     }
 

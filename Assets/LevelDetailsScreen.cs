@@ -15,6 +15,8 @@ public class LevelDetailsScreen : MonoBehaviour
     public Button PlayButton;
     public Button LikeButton;
     public Button PublishOnlineButton;
+    public Button UpdateOnlineVersionButton;
+    public Button RemovePublishedButton;
 
     public CenterContentContainer ButtonContainer;
 
@@ -23,6 +25,7 @@ public class LevelDetailsScreen : MonoBehaviour
     private BrowseLevelsScreen parentScreen;
 
     private WorldMetadata currentWorldMetadata;
+    private bool currentLocalLevel;
 
     private void Start()
     {
@@ -31,27 +34,58 @@ public class LevelDetailsScreen : MonoBehaviour
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
     {
+        currentLocalLevel = localLevel;
         currentWorldMetadata = worldMetadata;
         this.parentScreen = parentScreen;
 
         ThumbnailImage.sprite = worldMetadata.GetImageDataAsSprite();
         LevelTitleText.text = worldMetadata.Name;
         LevelDescriptionText.text = worldMetadata.Description;
-        LevelAuthorText.text = string.Format("Created by: {0}", localLevel ? "you" : worldMetadata.AuthorName);
+
+        LevelAuthorText.text = string.Format("Created by: {0}", localLevel ? "you" : (ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId ? worldMetadata.AuthorName + " (you)" : worldMetadata.AuthorName));
 
         if (localLevel) //this is a level from the file system
         {
-            PublishOnlineButton.gameObject.SetActive(true);
+            if (worldMetadata.Id == 0) //this level isn't published, at least as we know it
+            {
+                PublishOnlineButton.gameObject.SetActive(true);
+                UpdateOnlineVersionButton.gameObject.SetActive(false);
+                RemovePublishedButton.gameObject.SetActive(false);
 
-            PublishOnlineButton.onClick.RemoveAllListeners();
-            PublishOnlineButton.onClick.AddListener(PublishOnlineButtonWasClicked);
+                PublishOnlineButton.onClick.RemoveAllListeners();
+                PublishOnlineButton.onClick.AddListener(PublishOnlineButtonWasClicked);
+            }
+            else //this level is published
+            {
+                PublishOnlineButton.gameObject.SetActive(false);
+                UpdateOnlineVersionButton.gameObject.SetActive(true);
+                RemovePublishedButton.gameObject.SetActive(true);
+
+                RemovePublishedButton.onClick.RemoveAllListeners();
+                RemovePublishedButton.onClick.AddListener(RemoveOnlineButtonWasClicked);
+            }
 
             LikeButton.gameObject.SetActive(false);
         }
         else //this is a level from the online library
         {
+            if(ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId) //this is our level
+            {
+                RemovePublishedButton.gameObject.SetActive(true);
+                UpdateOnlineVersionButton.gameObject.SetActive(true);
+                LikeButton.gameObject.SetActive(false);
+
+                RemovePublishedButton.onClick.RemoveAllListeners();
+                RemovePublishedButton.onClick.AddListener(RemoveOnlineButtonWasClicked);
+            }
+            else //this is not our level
+            {
+                RemovePublishedButton.gameObject.SetActive(false);
+                UpdateOnlineVersionButton.gameObject.SetActive(false);
+                LikeButton.gameObject.SetActive(true);
+            }
+
             PublishOnlineButton.gameObject.SetActive(false);
-            LikeButton.gameObject.SetActive(true);
         }
 
         ButtonContainer.CenterContent();
@@ -61,6 +95,36 @@ public class LevelDetailsScreen : MonoBehaviour
     public void SelectDefaultButton()
     {
         PlayButton.Select();
+    }
+
+    private async void UpdateOnlineButtonWasClicked()
+    {
+
+    }
+
+    private async void RemoveOnlineButtonWasClicked()
+    {
+        if(await ApiLevelManager.DeleteLevel(currentWorldMetadata.Id))
+        {
+            currentWorldMetadata.Id = 0;
+            FileHelper.SaveMetadataToDisk(currentWorldMetadata);
+
+            if(!currentLocalLevel)
+            {
+                Close();
+                parentScreen.Show();
+            }
+            else
+            {
+                Show(currentWorldMetadata, parentScreen, currentLocalLevel);
+            }
+            
+            AlertCreator.Instance.CreateNotification("Level was removed from online library");
+        }
+        else
+        {
+            AlertCreator.Instance.CreateNotification("Error when removing level");
+        }
     }
 
     private async void PublishOnlineButtonWasClicked()
@@ -74,16 +138,33 @@ public class LevelDetailsScreen : MonoBehaviour
         else
         {
             World world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
-            world.Metadata = currentWorldMetadata;
-            ErrorResponse uploadResult = await ApiLevelManager.UploadLevel(world);
 
-            if (uploadResult == null)
+            if(world.Metadata.Id != 0)
+            {
+                AlertCreator.Instance.CreateNotification("This level is already published");
+                return;
+            }
+
+            world.Metadata = currentWorldMetadata;
+
+            UploadLevelResponse uploadResult = await ApiLevelManager.UploadLevel(world);
+
+            if (uploadResult.ErrorResponse == null)
+            {
+                AssignIdToLocalFile(currentWorldMetadata, uploadResult.LevelId);
                 AlertCreator.Instance.CreateNotification("Level was uploaded!");
-            else if (uploadResult.ErrorCode == "23505")
+            }
+            else if (uploadResult.ErrorResponse.ErrorCode == "23505")
                 AlertCreator.Instance.CreateNotification("You have already uploaded a level with this name");
             else
-                AlertCreator.Instance.CreateNotification(uploadResult.Message);
+                AlertCreator.Instance.CreateNotification(uploadResult.ErrorResponse.Message);
         }
+    }
+
+    private void AssignIdToLocalFile(WorldMetadata worldMetadata, long id)
+    {
+        worldMetadata.Id = id;
+        FileHelper.SaveMetadataToDisk(worldMetadata);
     }
 
     private void LoginScreenWasClosed()

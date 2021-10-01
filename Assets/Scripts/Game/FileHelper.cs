@@ -26,6 +26,33 @@ public class FileHelper
         return worldMetadatas;
     }
 
+    public static void SaveMetadataToDisk(WorldMetadata metadata)
+    {
+        string mapDirectory = GetPath(mapDirectoryBaseString);
+
+        string fileName = metadata.Name.Replace(' ', '_');
+        string metaPath = string.Format("{0}/{1}.mapmeta", mapDirectory, fileName);
+
+        File.WriteAllText(metaPath, metadata.ToJson());
+    }
+
+    public static void SaveWorld(World world)
+    {
+        string mapDirectory = GetPath(mapDirectoryBaseString);
+
+        if (!Directory.Exists(mapDirectory))
+            Directory.CreateDirectory(mapDirectory);
+
+        string fileName = world.Metadata.Name.Replace(' ', '_');
+        string levelPath = string.Format("{0}/{1}.mapdata", mapDirectory, fileName);
+        string metaPath = string.Format("{0}/{1}.mapmeta", mapDirectory, fileName);
+
+        File.WriteAllText(levelPath, world.ToJson());
+        File.WriteAllText(metaPath, world.Metadata.ToJson());
+
+        Debug.Log("wrote level data to: " + levelPath);
+    }
+
     public static string LoadMapData(string levelName)
     {
         string mapDirectory = GetPath(mapDirectoryBaseString);
