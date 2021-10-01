@@ -28372,6 +28372,11 @@ MonoBehaviour:
   PasswordInputArea: {fileID: 226143385}
   VerifyPasswordInputArea: {fileID: 1380236583}
   EmailInformationButton: {fileID: 841642499}
+  EmailText: {fileID: 1436733668}
+  UsernameText: {fileID: 1561892765}
+  PasswordText: {fileID: 1097945302}
+  VerifyPasswordText: {fileID: 1916900195}
+  Keyboard: {fileID: 2076892559}
 --- !u!114 &2076892561
 MonoBehaviour:
   m_ObjectHideFlags: 0

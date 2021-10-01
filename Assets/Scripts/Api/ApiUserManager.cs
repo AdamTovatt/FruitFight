@@ -18,4 +18,16 @@ public class ApiUserManager
 
         return false;
     }
+
+    public static async Task<bool> CreateUserAccount(string username, string email, string password)
+    {
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/user/create", new { username = username, password = password, email = email });
+
+        if(response.IsSuccessStatusCode)
+        {
+            return await Login(username, password);
+        }
+
+        return false;
+    }
 }

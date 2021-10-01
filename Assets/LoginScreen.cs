@@ -88,6 +88,11 @@ public class LoginScreen : MonoBehaviour
             AlertCreator.Instance.CreateNotification("Invalid username and/or password");
     }
 
+    public void CloseFromCreateAccountScreen()
+    {
+        Close();
+    }
+
     private void Close()
     {
         OnLoginScreenWasExited?.Invoke();
