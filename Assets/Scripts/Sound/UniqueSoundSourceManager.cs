@@ -23,30 +23,48 @@ public class UniqueSoundSourceManager : MonoBehaviour
         }
         else
         {
+            List<string> keysToRemove = null;
+
             foreach (string key in sources.Keys)
             {
                 if (sources[key].Count > 0)
                 {
-                    UniqueSoundSource closest = sources[key][0];
-                    float closestDistance = (transform.position - closest.transform.position).sqrMagnitude;
-                    float distance;
-                    foreach (UniqueSoundSource source in sources[key])
+                    if (sources[key][0] == null) //if this source doesn't exist anymore we want to add it to the list of keys to delete
                     {
-                        distance = (transform.position - source.transform.position).sqrMagnitude;
-                        if (distance < closestDistance)
+                        if (keysToRemove == null)
+                            keysToRemove = new List<string>();
+
+                        keysToRemove.Add(key);
+                    }
+                    else //we only do this if the sources exists
+                    {
+                        UniqueSoundSource closest = sources[key][0];
+                        float closestDistance = (transform.position - closest.transform.position).sqrMagnitude;
+                        float distance;
+                        foreach (UniqueSoundSource source in sources[key])
                         {
-                            closestDistance = distance;
-                            closest = source;
+                            distance = (transform.position - source.transform.position).sqrMagnitude;
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                closest = source;
+                            }
                         }
-                    }
 
-                    foreach (UniqueSoundSource source in sources[key])
-                    {
-                        source.Deactivate();
-                    }
+                        foreach (UniqueSoundSource source in sources[key])
+                        {
+                            source.Deactivate();
+                        }
 
-                    closest.Activate();
+                        closest.Activate();
+                    }
                 }
+            }
+
+            if (keysToRemove != null)
+            {
+                foreach (string key in keysToRemove) //remove all the sources that don't exist anymore
+                    sources.Remove(key);
             }
         }
     }

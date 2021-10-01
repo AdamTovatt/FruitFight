@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AlertCreator))]
 public class GameUi : UiManager
@@ -33,6 +34,14 @@ public class GameUi : UiManager
         {
             EventSystem.enabled = false;
         }
+
+        PauseMenu.OnExitLevel += ExitLevel;
+    }
+
+    private void ExitLevel()
+    {
+        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.sceneLoaded += MainMenuUi.Instance.WasReentered;
     }
 
     public void CreatePlayerInfoUi(PlayerInformation playerInformation)

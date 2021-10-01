@@ -23,6 +23,12 @@ public class MainMenuUi : UiManager
 
     private void Awake()
     {
+        if(Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
 
         KeyboardExists = EventSystem.GetComponent<InputSystemUIInputModule>().actionsAsset.controlSchemes.Where(x => x.name == "Keyboard").Count() > 0;
@@ -39,6 +45,30 @@ public class MainMenuUi : UiManager
         ApiHelper.PingServer();
     }
 
+    public void WasReentered(Scene scene, LoadSceneMode mode)
+    {
+        gameObject.SetActive(true);
+        MouseOverSeletableChecker.Enable();
+
+        if (EventSystem == null)
+            EventSystem = FindObjectOfType<EventSystem>();
+
+        if (PlayerConfigurationManager.Instance != null)
+            Destroy(PlayerConfigurationManager.Instance.gameObject);
+
+        MouseOverSeletableChecker.eventSystem = EventSystem;
+
+        if(BrowseLevelsScreen.LevelDetailsScreen.gameObject.activeSelf)
+        {
+            Debug.Log("It's active");
+            BrowseLevelsScreen.LevelDetailsScreen.SelectDefaultButton();
+        }
+
+        gameObject.transform.parent = null;
+
+        SceneManager.sceneLoaded -= WasReentered;
+    }
+
     private IEnumerator ShowMenuWithDelay()
     {
         yield return new WaitForSeconds(0.2f);
@@ -51,6 +81,9 @@ public class MainMenuUi : UiManager
     {
         MouseOverSeletableChecker.Disable();
         LoadingScreen.Show();
+
+        Destroy(gameObject);
+
         SceneManager.LoadScene("LevelEditor");
         Instance = null;
     }

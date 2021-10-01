@@ -191,7 +191,9 @@ public class LevelDetailsScreen : MonoBehaviour
             world = World.FromJson(currentGetLevelResponse.WorldData);
         }
 
+        DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
         MainMenuUi.Instance.MouseOverSeletableChecker.Disable();
+        MainMenuUi.Instance.gameObject.SetActive(false);
         WorldBuilder.NextLevel = world;
         SceneManager.LoadScene("GamePlay");
     }
