@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelDetailsScreen : MonoBehaviour
@@ -27,16 +28,22 @@ public class LevelDetailsScreen : MonoBehaviour
     private WorldMetadata currentWorldMetadata;
     private bool currentLocalLevel;
 
+    private GetLevelResponse currentGetLevelResponse;
+
     private void Start()
     {
         CloseButton.onClick.AddListener(Close);
+        PlayButton.onClick.AddListener(PlayLevel);
     }
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
     {
+        currentGetLevelResponse = null;
         currentLocalLevel = localLevel;
         currentWorldMetadata = worldMetadata;
         this.parentScreen = parentScreen;
+
+        GetCurrentLevel();
 
         ThumbnailImage.sprite = worldMetadata.GetImageDataAsSprite();
         LevelTitleText.text = worldMetadata.Name;
@@ -90,6 +97,11 @@ public class LevelDetailsScreen : MonoBehaviour
 
         ButtonContainer.CenterContent();
         SelectDefaultButton();
+    }
+
+    private async void GetCurrentLevel()
+    {
+        currentGetLevelResponse = await ApiLevelManager.GetLevel(currentWorldMetadata.Id);
     }
 
     public void SelectDefaultButton()
@@ -159,6 +171,29 @@ public class LevelDetailsScreen : MonoBehaviour
             else
                 AlertCreator.Instance.CreateNotification(uploadResult.ErrorResponse.Message);
         }
+    }
+
+    private async void PlayLevel()
+    {
+        World world = null;
+
+        if(currentLocalLevel)
+        {
+            world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
+        }
+        else
+        {
+            if (currentGetLevelResponse == null)
+            {
+                currentGetLevelResponse = await ApiLevelManager.GetLevel(currentWorldMetadata.Id);
+            }
+
+            world = World.FromJson(currentGetLevelResponse.WorldData);
+        }
+
+        MainMenuUi.Instance.MouseOverSeletableChecker.Disable();
+        WorldBuilder.NextLevel = world;
+        SceneManager.LoadScene("GamePlay");
     }
 
     private void AssignIdToLocalFile(WorldMetadata worldMetadata, long id)

@@ -35,6 +35,8 @@ public class MainMenuUi : UiManager
     {
         MouseOverSeletableChecker.Enable();
         StartCoroutine(ShowMenuWithDelay());
+
+        ApiHelper.PingServer();
     }
 
     private IEnumerator ShowMenuWithDelay()

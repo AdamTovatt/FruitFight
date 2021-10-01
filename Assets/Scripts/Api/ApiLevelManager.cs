@@ -48,6 +48,18 @@ public class ApiLevelManager
             return new UploadLevelResponse() { ErrorResponse = ErrorResponse.FromJson(responseJson) };
     }
 
+    public async static Task<GetLevelResponse> GetLevel(long levelId)
+    {
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Get, "/level/get", null, new Dictionary<string, object>() { { "id", levelId } });
+
+        if(response.IsSuccessStatusCode)
+        {
+            return GetLevelResponse.FromJson(await response.Content.ReadAsStringAsync());
+        }
+
+        return null;
+    }
+
     public async static Task<bool> DeleteLevel(long levelId)
     {
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Delete, "/level/delete", null, new Dictionary<string, object>() { { "levelId", levelId } });

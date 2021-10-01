@@ -91,4 +91,9 @@ public class ApiHelper
             throw new System.Exception(string.Format("{0} not supported in ApiHelper yet", method));
         }
     }
+
+    public static async void PingServer()
+    {
+        await PerformRequest(HttpMethod.Get, "/ping");
+    }
 }
