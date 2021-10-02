@@ -24,9 +24,7 @@ public class Magnet : MonoBehaviour
 
     private void Update()
     {
-        Targets = Targets.Where(x => (x.transform.position - transform.position).sqrMagnitude < sphereOfInfluenceRadiusSquared).ToList();
-
-        foreach (MagnetAttractor target in Targets)
+        foreach (MagnetAttractor target in Targets.Where(x => (x.transform.position - transform.position).sqrMagnitude < sphereOfInfluenceRadiusSquared))
         {
             Vector3 distance = transform.position - target.AttractionPoint;
             transform.position = Vector3.MoveTowards(transform.position, target.AttractionPoint, Mathf.Min(MaxSpeed, Strength / (distance.sqrMagnitude / 2)) * Time.deltaTime);
