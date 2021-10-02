@@ -54,6 +54,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1609803099858604, guid: 31c73101a9bbcf34a946720a06a6c4d5, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 1746669243612088, guid: 31c73101a9bbcf34a946720a06a6c4d5, type: 3}
       propertyPath: m_Name
       value: Tree_05_LOD
@@ -61,6 +65,10 @@ PrefabInstance:
     - target: {fileID: 1746669243612088, guid: 31c73101a9bbcf34a946720a06a6c4d5, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1746669243612088, guid: 31c73101a9bbcf34a946720a06a6c4d5, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4298837700111880, guid: 31c73101a9bbcf34a946720a06a6c4d5, type: 3}
       propertyPath: m_RootOrder

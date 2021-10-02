@@ -10,20 +10,17 @@ public class MagnetAttractor : MonoBehaviour
 
     public Vector3 AttractionPoint { get { return transform.position + AttractionPointOffset; } }
 
-    private void Start()
+    public static List<MagnetAttractor> MagnetAttractors;
+
+    private void Awake()
     {
-        
+        if (MagnetAttractors == null)
+            MagnetAttractors = new List<MagnetAttractor>();
     }
 
-    private void Update()
+    private void Start()
     {
-        List<Magnet> magnets = CheckForMagnets();
-
-        foreach(Magnet magnet in magnets)
-        {
-            if (!magnet.Targets.Contains(this))
-                magnet.Targets.Add(this);
-        }
+        MagnetAttractors.Add(this);
     }
 
     private List<Magnet> CheckForMagnets()
@@ -42,5 +39,10 @@ public class MagnetAttractor : MonoBehaviour
         }
 
         return result;
+    }
+
+    private void OnDestroy()
+    {
+        MagnetAttractors = MagnetAttractors.Where(x => x != this).ToList();
     }
 }

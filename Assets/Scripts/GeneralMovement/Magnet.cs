@@ -18,6 +18,8 @@ public class Magnet : MonoBehaviour
         sphereOfInfluenceRadiusSquared = SphereOfInfluenceRadius * SphereOfInfluenceRadius;
         Targets = new List<MagnetAttractor>();
         transform.tag = "Magnet";
+
+        Targets = MagnetAttractor.MagnetAttractors;
     }
 
     private void Update()
