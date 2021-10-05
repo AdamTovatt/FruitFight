@@ -45,7 +45,7 @@ public class MainMenuUi : UiManager
         ApiHelper.PingServer();
     }
 
-    public void WasReentered(Scene scene, LoadSceneMode mode)
+    public void WasReentered()
     {
         gameObject.SetActive(true);
         MouseOverSeletableChecker.Enable();
@@ -65,8 +65,6 @@ public class MainMenuUi : UiManager
         }
 
         gameObject.transform.parent = null;
-
-        SceneManager.sceneLoaded -= WasReentered;
     }
 
     private IEnumerator ShowMenuWithDelay()

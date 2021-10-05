@@ -41,7 +41,15 @@ public class GameUi : UiManager
     private void ExitLevel()
     {
         SceneManager.LoadScene("MainMenuScene");
-        SceneManager.sceneLoaded += MainMenuUi.Instance.WasReentered;
+        SceneManager.sceneLoaded += MainMenuWasEntered;
+    }
+
+    private void MainMenuWasEntered(Scene scene, LoadSceneMode mode)
+    {
+        if (MainMenuUi.Instance != null)
+            MainMenuUi.Instance.WasReentered();
+
+        SceneManager.sceneLoaded -= MainMenuWasEntered;
     }
 
     public void CreatePlayerInfoUi(PlayerInformation playerInformation)
