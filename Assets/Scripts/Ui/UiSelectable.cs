@@ -16,6 +16,8 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     private UiManager manager { get { if (_manager == null) SetupManager(); return _manager; } set { _manager = value; } }
     private UiManager _manager;
 
+    private Button button;
+
     private void Start()
     {
         Physics.queriesHitTriggers = true;
@@ -25,6 +27,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     private void Awake()
     {
         SetupManager(true);
+        button = gameObject.GetComponent<Button>();
     }
 
     public void WasDeselected()
@@ -38,10 +41,17 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
 
     public void SelectUnderlyingComponent()
     {
-        Button button = gameObject.GetComponent<Button>();
         if (button != null)
         {
             button.Select();
+        }
+    }
+
+    public void ForceClick()
+    {
+        if(button != null)
+        {
+            button.onClick.Invoke();
         }
     }
 

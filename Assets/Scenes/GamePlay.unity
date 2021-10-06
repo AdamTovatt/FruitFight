@@ -1867,6 +1867,7 @@ GameObject:
   - component: {fileID: 1557549031}
   - component: {fileID: 1557549035}
   - component: {fileID: 1557549036}
+  - component: {fileID: 1557549037}
   m_Layer: 5
   m_Name: Ui
   m_TagString: Untagged
@@ -1968,7 +1969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46dfe82f9cffaa9409a36091f41d7541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MouseOverSeletableChecker: {fileID: 0}
+  MouseOverSeletableChecker: {fileID: 1557549037}
   PlayerInfoUiPrefab: {fileID: 9196543932476015330, guid: c5d185aa7631cf045a7565fe40c8b816,
     type: 3}
   Canvas: {fileID: 1557549033}
@@ -1992,6 +1993,20 @@ MonoBehaviour:
     type: 3}
   NotificationPrefab: {fileID: 3209350012550313086, guid: 64a380bc83cdce74dbe184ef9319d310,
     type: 3}
+--- !u!114 &1557549037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557549030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da747ae8f28f0340a52d0e64b24f616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicRaycaster: {fileID: 1557549031}
+  eventSystem: {fileID: 735766990}
 --- !u!1 &1861681495
 GameObject:
   m_ObjectHideFlags: 0

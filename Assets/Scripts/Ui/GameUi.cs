@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
@@ -18,12 +19,16 @@ public class GameUi : UiManager
     public static GameUi Instance { get; private set; }
 
     private List<UiPlayerInfo> playerInfos;
+    private PlayerControls playerInput;
 
     private void Awake()
     {
         playerInfos = new List<UiPlayerInfo>();
         Instance = this;
         AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>());
+        playerInput = new PlayerControls();
+        playerInput.Ui.Select.performed += SelectPerformed;
+        playerInput.Ui.Enable();
     }
 
     private void Start()
@@ -40,6 +45,7 @@ public class GameUi : UiManager
 
     private void ExitLevel()
     {
+        MouseOverSeletableChecker.Disable();
         SceneManager.LoadScene("MainMenuScene");
         SceneManager.sceneLoaded += MainMenuWasEntered;
     }
@@ -59,6 +65,14 @@ public class GameUi : UiManager
         playerInfos.Add(uiPlayerInfo);
     }
 
+    private void SelectPerformed(InputAction.CallbackContext context)
+    {
+        if(context.control.ToString().ToLower().Contains("mouse"))
+        {
+            MouseOverSeletableChecker.ClickCurrentItem();
+        }
+    }
+
     public void ShowPauseMenu()
     {
         UiInput.enabled = true;
@@ -66,6 +80,7 @@ public class GameUi : UiManager
         PauseMenu.Show();
         PauseMenu.OnClosed += PauseMenuWasClosed;
         Cursor.lockState = CursorLockMode.None;
+        MouseOverSeletableChecker.Enable();
     }
 
     public void PauseMenuWasClosed()
@@ -73,6 +88,7 @@ public class GameUi : UiManager
         UiInput.enabled = false;
         HidePauseMenu();
         GameManager.Instance.GameWasResumed();
+        MouseOverSeletableChecker.Disable();
     }
 
     public void HidePauseMenu()

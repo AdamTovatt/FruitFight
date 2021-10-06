@@ -11,6 +11,7 @@ public class MouseOverSelectableChecker : MonoBehaviour
     public EventSystem eventSystem;
 
     private PlayerControls input;
+    private UiSelectable currentlySelectedItem;
 
     private void Awake()
     {
@@ -28,7 +29,18 @@ public class MouseOverSelectableChecker : MonoBehaviour
         {
             UiSelectable selectable = result.gameObject.GetComponentInParent<UiSelectable>();
             if (selectable != null)
+            {
                 selectable.SelectUnderlyingComponent();
+                currentlySelectedItem = selectable;
+            }
+        }
+    }
+
+    public void ClickCurrentItem()
+    {
+        if(currentlySelectedItem != null)
+        {
+            currentlySelectedItem.ForceClick();
         }
     }
 
