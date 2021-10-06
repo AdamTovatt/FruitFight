@@ -65,6 +65,7 @@ public class GameUi : UiManager
         PauseMenu.gameObject.SetActive(true);
         PauseMenu.Show();
         PauseMenu.OnClosed += PauseMenuWasClosed;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void PauseMenuWasClosed()

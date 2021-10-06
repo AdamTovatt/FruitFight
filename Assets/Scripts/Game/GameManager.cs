@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour
         }
 
         GameUi.Instance.HideLoadingScreen();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Update()
@@ -218,6 +219,7 @@ public class GameManager : MonoBehaviour
     {
         EnablePlayerControls();
         Paused = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void SetPlayerControls(bool newValue)

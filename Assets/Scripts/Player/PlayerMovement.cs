@@ -112,6 +112,7 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.RotateCameraLeft.id, PlayerInputAction.RotateCameraLeft);
         inputActions.Add(playerControls.Gameplay.RotateCameraRight.id, PlayerInputAction.RotateCameraRight);
         inputActions.Add(playerControls.Gameplay.Pause.id, PlayerInputAction.Pause);
+        inputActions.Add(playerControls.Gameplay.RotateCameraWithMouse.id, PlayerInputAction.MouseLook);
     }
 
     private void Start()
@@ -152,6 +153,28 @@ public class PlayerMovement : MovingCharacter
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
     {
         playerConfiguration.Input.onActionTriggered += HandleAction;
+
+        if (playerConfiguration.Input.currentControlScheme == "Keyboard")
+        {
+            PlayerControls input = new PlayerControls();
+            input.Gameplay.Attack.performed += CheckForMouseInput;
+            input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
+            input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
+            input.Gameplay.Enable();
+        }
+    }
+
+    private void MouseLookCancelled(InputAction.CallbackContext context)
+    {
+        rotateCamera = 0;
+    }
+
+    private void CheckForMouseInput(InputAction.CallbackContext context)
+    {
+        if (context.control.ToString().ToLower().Contains("mouse"))
+        {
+            HandleAction(context);
+        }
     }
 
     private void HandleAction(InputAction.CallbackContext context)
@@ -193,6 +216,9 @@ public class PlayerMovement : MovingCharacter
                     break;
                 case PlayerInputAction.Pause:
                     //don't do anything, this is handled in the GameManager
+                    break;
+                case PlayerInputAction.MouseLook:
+                    rotateCamera = Mathf.Clamp(context.ReadValue<Vector2>().x * -3, -15, 15);
                     break;
                 default:
                     throw new System.Exception("Unknown action: " + context.action.name);
@@ -514,5 +540,5 @@ public class PlayerMovement : MovingCharacter
 
 public enum PlayerInputAction
 {
-    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause
+    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause, MouseLook
 }

@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "RotateCameraWithMouse",
+                    "type": "Value",
+                    "id": "e4447601-f118-4b38-b1fe-44f27ec14719",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -178,6 +186,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6afd50e3-228d-4995-8dc0-30aa0efaaecd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "bd24fc55-580b-4dd8-ae3d-f1c984e94dea",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
@@ -239,6 +258,17 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8438c5e5-e91f-468e-85a3-32db383446b4",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotateCameraWithMouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

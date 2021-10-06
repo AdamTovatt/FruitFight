@@ -65,6 +65,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RotateCameraWithMouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""e4447601-f118-4b38-b1fe-44f27ec14719"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -191,6 +199,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""6afd50e3-228d-4995-8dc0-30aa0efaaecd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""bd24fc55-580b-4dd8-ae3d-f1c984e94dea"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -252,6 +271,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8438c5e5-e91f-468e-85a3-32db383446b4"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RotateCameraWithMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1086,6 +1116,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Gameplay_RotateCameraRight = m_Gameplay.FindAction("RotateCameraRight", throwIfNotFound: true);
         m_Gameplay_RotateCameraLeft = m_Gameplay.FindAction("RotateCameraLeft", throwIfNotFound: true);
         m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
+        m_Gameplay_RotateCameraWithMouse = m_Gameplay.FindAction("RotateCameraWithMouse", throwIfNotFound: true);
         // Ui
         m_Ui = asset.FindActionMap("Ui", throwIfNotFound: true);
         m_Ui_Select = m_Ui.FindAction("Select", throwIfNotFound: true);
@@ -1164,6 +1195,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Gameplay_RotateCameraRight;
     private readonly InputAction m_Gameplay_RotateCameraLeft;
     private readonly InputAction m_Gameplay_Pause;
+    private readonly InputAction m_Gameplay_RotateCameraWithMouse;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -1174,6 +1206,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @RotateCameraRight => m_Wrapper.m_Gameplay_RotateCameraRight;
         public InputAction @RotateCameraLeft => m_Wrapper.m_Gameplay_RotateCameraLeft;
         public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
+        public InputAction @RotateCameraWithMouse => m_Wrapper.m_Gameplay_RotateCameraWithMouse;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1201,6 +1234,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
+                @RotateCameraWithMouse.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraWithMouse;
+                @RotateCameraWithMouse.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraWithMouse;
+                @RotateCameraWithMouse.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotateCameraWithMouse;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1223,6 +1259,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @RotateCameraWithMouse.started += instance.OnRotateCameraWithMouse;
+                @RotateCameraWithMouse.performed += instance.OnRotateCameraWithMouse;
+                @RotateCameraWithMouse.canceled += instance.OnRotateCameraWithMouse;
             }
         }
     }
@@ -1455,6 +1494,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRotateCameraRight(InputAction.CallbackContext context);
         void OnRotateCameraLeft(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnRotateCameraWithMouse(InputAction.CallbackContext context);
     }
     public interface IUiActions
     {
