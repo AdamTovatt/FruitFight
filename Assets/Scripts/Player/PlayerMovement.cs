@@ -218,7 +218,7 @@ public class PlayerMovement : MovingCharacter
                     //don't do anything, this is handled in the GameManager
                     break;
                 case PlayerInputAction.MouseLook:
-                    rotateCamera = Mathf.Clamp(context.ReadValue<Vector2>().x * -3, -15, 15);
+                    rotateCamera = Mathf.Clamp(context.ReadValue<Vector2>().x * -3, -15, 15 * 500 * Time.deltaTime);
                     break;
                 default:
                     throw new System.Exception("Unknown action: " + context.action.name);
