@@ -37,6 +37,12 @@
       "VaryByDevice": true,
       "FileNameKeyboard": "Keyboard_WASD",
       "FileNameController": "StickIcon_Left"
+    },
+    {
+      "Name": "Interact",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "Mouse_Left",
+      "FileNameController": "ButtonIcon_Left"
     }
   ]
 }
