@@ -197,8 +197,8 @@ public class GameManager : MonoBehaviour
 
     public void Pause(InputAction.CallbackContext context)
     {
-        if (WorldEditorUi.Instance == null) //if we come from the world editor we will let the world editor handle the ui
-        {
+        //if (WorldEditorUi.Instance == null) //if we come from the world editor we will let the world editor handle the ui
+        //{
             if (!Paused)
             {
                 DisablePlayerControls();
@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
                 //Paused = false;
                 //GameUi.Instance.HidePauseMenu();
             }
-        }
+        //}
     }
 
     public void GameWasResumed()
