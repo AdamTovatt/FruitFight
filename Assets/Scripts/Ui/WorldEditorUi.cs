@@ -117,6 +117,7 @@ public class WorldEditorUi : UiManager
         GameManager.Instance.DisablePlayerControls();
         TestLevelPauseMenu.gameObject.SetActive(true);
         TestLevelPauseMenu.WasShown();
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void CloseLevelTestPauseMenu()
@@ -127,6 +128,7 @@ public class WorldEditorUi : UiManager
         GameManager.Instance.EnablePlayerControls();
         TestLevelPauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void OpenBehaviourMenu(Block block)
