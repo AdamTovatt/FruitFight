@@ -109,28 +109,6 @@ public class WorldEditorUi : UiManager
         Destroy(this);
     }
 
-    public void OpenLevelTestPauseMenu()
-    {
-        if (uiInput != null)
-            uiInput.enabled = true;
-
-        GameManager.Instance.DisablePlayerControls();
-        TestLevelPauseMenu.gameObject.SetActive(true);
-        TestLevelPauseMenu.WasShown();
-        Cursor.lockState = CursorLockMode.None;
-    }
-
-    public void CloseLevelTestPauseMenu()
-    {
-        if (uiInput != null)
-            uiInput.enabled = false;
-
-        GameManager.Instance.EnablePlayerControls();
-        TestLevelPauseMenu.gameObject.SetActive(false);
-        WorldEditor.Instance.EnableControls();
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     public void OpenBehaviourMenu(Block block)
     {
         if (uiInput != null)

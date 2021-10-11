@@ -555,12 +555,10 @@ public class WorldEditor : MonoBehaviour
             if (!controlsDisabled)
             {
                 controlsDisabled = true;
-                Ui.OpenLevelTestPauseMenu();
             }
             else
             {
                 controlsDisabled = false;
-                Ui.CloseLevelTestPauseMenu();
             }
         }
     }

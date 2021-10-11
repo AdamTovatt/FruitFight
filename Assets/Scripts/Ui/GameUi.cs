@@ -46,8 +46,16 @@ public class GameUi : UiManager
     private void ExitLevel()
     {
         MouseOverSeletableChecker.Disable();
-        SceneManager.LoadScene("MainMenuScene");
-        SceneManager.sceneLoaded += MainMenuWasEntered;
+
+        if (WorldEditor.Instance.IsTestingLevel)
+        {
+            WorldEditor.Instance.ExitLevelTest();
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenuScene");
+            SceneManager.sceneLoaded += MainMenuWasEntered;
+        }
     }
 
     private void MainMenuWasEntered(Scene scene, LoadSceneMode mode)
@@ -85,6 +93,12 @@ public class GameUi : UiManager
 
     public void PauseMenuWasClosed()
     {
+        if(UiInput == null)
+        {
+            Destroy(this);
+            return;
+        }
+
         UiInput.enabled = false;
         HidePauseMenu();
         GameManager.Instance.GameWasResumed();
