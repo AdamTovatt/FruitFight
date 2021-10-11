@@ -91,7 +91,9 @@ public class WorldBuilder : MonoBehaviour
             {
                 for (int y = -5; y < 5; y++)
                 {
-                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab("Water"), new Vector3(x * width, -2f, y * width), Quaternion.identity, transform));
+                    GameObject water = Instantiate(PrefabLookup.GetPrefab("Water"), new Vector3(x * width, -2f, y * width), Quaternion.identity, transform);
+                    water.GetComponent<MeshRenderer>().enabled = false;
+                    previousWorldObjects.Add(water);
                 }
             }
         }

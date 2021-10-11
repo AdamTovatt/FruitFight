@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
     public void LevelFinished()
     {
-        if (WorldEditor.Instance == null || !WorldEditor.Instance.IsTestingLevel)
+        if (WorldEditor.Instance == null || !WorldEditor.IsTestingLevel)
         {
             currentLevel++;
             WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));

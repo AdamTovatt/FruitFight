@@ -47,7 +47,8 @@ public class GameUi : UiManager
     {
         MouseOverSeletableChecker.Disable();
 
-        if (WorldEditor.Instance != null && WorldEditor.Instance.IsTestingLevel)
+
+        if (WorldEditor.IsTestingLevel)
         {
             WorldEditor.Instance.ExitLevelTest();
         }
@@ -75,7 +76,7 @@ public class GameUi : UiManager
 
     private void SelectPerformed(InputAction.CallbackContext context)
     {
-        if(context.control.ToString().ToLower().Contains("mouse"))
+        if (context.control.ToString().ToLower().Contains("mouse"))
         {
             MouseOverSeletableChecker.ClickCurrentItem();
         }
@@ -93,7 +94,7 @@ public class GameUi : UiManager
 
     public void PauseMenuWasClosed()
     {
-        if(UiInput == null)
+        if (UiInput == null)
         {
             Destroy(this);
             return;

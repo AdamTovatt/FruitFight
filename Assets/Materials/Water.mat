@@ -34,18 +34,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - FoamDistance: 0.2
-    - FoamSize: 6
+    - FoamDistance: 0.15
+    - FoamSize: 4
     - FoamSpeed: 0.6
-    - NormalInfluence: 0.5
+    - NormalInfluence: 1.74
     - RippleDensity: 4
     - RippleSlimness: 5.6
     - RippleSpeed: 1
-    - Smoothness: 0.7
+    - Smoothness: 0.3
     - Tiling: 0.2
     - WaterDepth: 0.5
     - WaveHeight: 0.45
-    - WaveSize: 0.5
+    - WaveSize: 0.4
     - WaveSpeed: 1
     m_Colors:
     - BaseColor: {r: 0.14402476, g: 0.4476445, b: 0.942, a: 1}

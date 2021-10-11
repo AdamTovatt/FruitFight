@@ -43,13 +43,13 @@ public class WorldEditor : MonoBehaviour
     private int selectedBlock;
 
     public Vector3Int MarkerPosition { get { return new Vector3Int(marker.transform.position); } }
-    public bool IsTestingLevel { get { return isTestingLevel; } }
+    public static bool IsTestingLevel { get { return isTestingLevel; } }
 
     private List<GameObject> gridLines;
     private EditorCamera editorCamera;
     private EditorMarker marker;
     private bool controlsDisabled = false;
-    private bool isTestingLevel = false;
+    private static bool isTestingLevel = false;
     private bool isRotatingObject = false;
 
     private bool isPickingActivator = false;
