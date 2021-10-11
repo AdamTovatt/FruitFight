@@ -47,7 +47,7 @@ public class GameUi : UiManager
     {
         MouseOverSeletableChecker.Disable();
 
-        if (WorldEditor.Instance.IsTestingLevel)
+        if (WorldEditor.Instance != null && WorldEditor.Instance.IsTestingLevel)
         {
             WorldEditor.Instance.ExitLevelTest();
         }
