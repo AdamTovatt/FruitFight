@@ -34,7 +34,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - FoamDistance: 0.15
+    - FoamDistance: 0.2
     - FoamSize: 4
     - FoamSpeed: 0.6
     - NormalInfluence: 1.74
