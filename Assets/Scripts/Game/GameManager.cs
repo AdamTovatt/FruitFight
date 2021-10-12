@@ -197,22 +197,16 @@ public class GameManager : MonoBehaviour
 
     public void Pause(InputAction.CallbackContext context)
     {
-        //if (WorldEditorUi.Instance == null) //if we come from the world editor we will let the world editor handle the ui
-        //{
-            if (!Paused)
-            {
-                DisablePlayerControls();
-                Paused = true;
-                GameUi.Instance.ShowPauseMenu();
-            }
-            else
-            {
-                GameUi.Instance.PauseMenuWasClosed();
-                //EnablePlayerControls();
-                //Paused = false;
-                //GameUi.Instance.HidePauseMenu();
-            }
-        //}
+        if (!Paused)
+        {
+            DisablePlayerControls();
+            Paused = true;
+            GameUi.Instance.ShowPauseMenu();
+        }
+        else
+        {
+            GameUi.Instance.PauseMenuWasClosed();
+        }
     }
 
     public void GameWasResumed()

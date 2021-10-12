@@ -439,6 +439,7 @@ public class WorldEditor : MonoBehaviour
 
     private void StartLevelTest()
     {
+        Ui.EventSystem.SetActive(false);
         Ui.ShowLoadingScreen();
         Ui.ClosePauseMenu();
         Ui.HideBlockSelection();
@@ -465,6 +466,9 @@ public class WorldEditor : MonoBehaviour
 
         WorldBuilder.Instance.BuildWorld(CurrentWorld);
         Instance.CurrentWorld = CurrentWorld;
+
+        if (Ui.EventSystem != null)
+            Ui.EventSystem.SetActive(true);
     }
 
     private void AddInputEventListeners()

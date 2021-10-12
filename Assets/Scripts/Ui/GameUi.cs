@@ -90,6 +90,8 @@ public class GameUi : UiManager
         PauseMenu.OnClosed += PauseMenuWasClosed;
         Cursor.lockState = CursorLockMode.None;
         MouseOverSeletableChecker.Enable();
+        EventSystem.enabled = true;
+        PauseMenu.ResumeButton.Select();
     }
 
     public void PauseMenuWasClosed()
