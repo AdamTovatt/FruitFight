@@ -130,7 +130,7 @@ public class MultipleTargetCamera : MonoBehaviour
         targetPosition += (transform.right + transform.forward * 0.2f).normalized * cameraRotations.Sum();
         cameraRotations.Clear();
 
-        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * MoveSpeed * 200);
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, MoveSpeed);
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref moveVelocity, SmoothTime);
     }
 
