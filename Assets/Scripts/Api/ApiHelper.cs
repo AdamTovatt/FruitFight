@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -72,7 +74,7 @@ public class ApiHelper
             StringContent body = new StringContent(json, Encoding.UTF8, "application/json");
             return await httpClient.PostAsync(requestPath.ToString(), body);
         }
-        else if(method == HttpMethod.Delete)
+        else if (method == HttpMethod.Delete)
         {
             return await httpClient.DeleteAsync(requestPath.ToString());
         }
@@ -88,7 +90,7 @@ public class ApiHelper
         }
         else
         {
-            throw new System.Exception(string.Format("{0} not supported in ApiHelper yet", method));
+            throw new Exception(string.Format("{0} not supported in ApiHelper yet", method));
         }
     }
 

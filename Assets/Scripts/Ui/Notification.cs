@@ -46,6 +46,11 @@ public class Notification : MonoBehaviour
         Background.rectTransform.localPosition = new Vector3(position.x, position.y - amount);
     }
 
+    public void SetAlpha(int alpha)
+    {
+        Background.color = new Color(Background.color.r, Background.color.g, Background.color.b, alpha);
+    }
+
     private void TweenOut()
     {
         Tween.ResetValues();

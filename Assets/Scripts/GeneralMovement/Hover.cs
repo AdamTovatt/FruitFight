@@ -19,4 +19,9 @@ public class Hover : MonoBehaviour
         float newY = Mathf.Sin(Time.time * Speed) * Height;
         transform.localPosition = new Vector3(startPosition.x, startPosition.y + newY, startPosition.z);
     }
+
+    public void Stop()
+    {
+        transform.localPosition = startPosition;
+    }
 }

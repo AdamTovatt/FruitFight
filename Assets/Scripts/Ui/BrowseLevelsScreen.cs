@@ -48,6 +48,8 @@ public class BrowseLevelsScreen : MonoBehaviour
 
     private void PopulateLevelList()
     {
+        LoadingText.gameObject.SetActive(false);
+
         if (!viewingLocalLevels)
         {
             LoadingText.gameObject.SetActive(true);
@@ -86,14 +88,26 @@ public class BrowseLevelsScreen : MonoBehaviour
     {
         CleanLevelList();
 
-        WorldMetadataResponse response = await ApiLevelManager.GetLevelsList(6, currentPage);
-
-        if (response != null)
+        try
         {
-            ShowLevels(response.Levels);
-        }
+            WorldMetadataResponse response = await ApiLevelManager.GetLevelsList(6, currentPage);
 
-        LoadingText.gameObject.SetActive(false);
+            if (response != null)
+            {
+                ShowLevels(response.Levels);
+            }
+
+            LoadingText.gameObject.SetActive(false);
+        }
+        catch(HttpRequestException)
+        {
+            LoadingText.gameObject.SetActive(true);
+            Hover hover = LoadingText.gameObject.GetComponent<Hover>();
+            hover.Stop();
+            hover.enabled = false;
+            LoadingText.text = "Network error";
+            AlertCreator.Instance.CreateNotification("A connection to the server could not be established")[0].SetAlpha(255);
+        }
     }
 
     private void LevelWasSelected(WorldMetadata metadata)
