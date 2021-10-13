@@ -1027,6 +1027,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""618dfaf9-550b-42aa-b3d8-aca7a92b745a"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MouseWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b8d25e0d-1255-458a-bf5c-7c89156b30d6"",
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
