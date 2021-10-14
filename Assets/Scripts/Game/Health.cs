@@ -23,6 +23,13 @@ public class Health : MonoBehaviour
     public bool DestroyOnDeath = true;
     public bool CanDie = true;
 
+    public bool EmitOnDamage = true;
+
+    public bool WobbleOnDamage;
+    public float WobbleAmplitude;
+    public float WobbleSpeed;
+    public float WobbleDuration;
+
     private bool IsPlayer { get { playerMovement = gameObject.GetComponent<PlayerMovement>(); return playerMovement != null; } }
     private PlayerMovement playerMovement;
 
@@ -30,6 +37,10 @@ public class Health : MonoBehaviour
 
     private bool emissionIsOn;
     private float emissionOnTime;
+
+    private bool wobbleIsOn;
+    private float wobbleStartTime;
+    private Vector3 originalSize;
 
     private void Awake()
     {
@@ -44,21 +55,54 @@ public class Health : MonoBehaviour
             meshRenderers.Add(meshRenderer);
 
         meshRenderers.AddRange(gameObject.GetComponentsInChildren<Renderer>());
+        originalSize = transform.localScale;
     }
 
     private void Update()
     {
-        if(emissionIsOn)
+        if (emissionIsOn)
         {
-            if(Time.time - emissionOnTime > 0.1f)
+            if (Time.time - emissionOnTime > 0.1f)
             {
-                foreach(Renderer renderer in meshRenderers)
+                foreach (Renderer renderer in meshRenderers)
                 {
                     SetEmission(renderer.material, 0);
                     emissionIsOn = false;
                 }
             }
         }
+
+        if (wobbleIsOn)
+        {
+            float x = Time.time - wobbleStartTime;
+            if (x < WobbleDuration)
+            {
+                float sizeMultiplier = ((Mathf.Sin(x * WobbleSpeed) * Mathf.Pow(2.71828f, Mathf.Pow(x, 2) * -(4 / WobbleDuration)) * WobbleAmplitude)) + 1;
+                transform.localScale = originalSize * sizeMultiplier;
+            }
+            else
+            {
+                wobbleIsOn = false;
+                transform.localScale = originalSize;
+            }
+        }
+    }
+
+    private void StartWobble()
+    {
+        wobbleIsOn = true;
+        wobbleStartTime = Time.time;
+    }
+
+    private void StartEmission()
+    {
+        foreach (Renderer meshRenderer in meshRenderers)
+        {
+            SetEmission(meshRenderer.material, 1);
+        }
+
+        emissionIsOn = true;
+        emissionOnTime = Time.time;
     }
 
     private void HealthWasUpdated()
@@ -117,13 +161,16 @@ public class Health : MonoBehaviour
     {
         CurrentHealth -= amount;
 
-        foreach(Renderer meshRenderer in meshRenderers)
+
+        if (EmitOnDamage)
         {
-            SetEmission(meshRenderer.material, 1);
+            StartEmission();
         }
 
-        emissionIsOn = true;
-        emissionOnTime = Time.time;
+        if (WobbleOnDamage)
+        {
+            StartWobble();
+        }
 
         if (SoundSource != null && !string.IsNullOrEmpty(DamageSoundName))
             SoundSource.Play(DamageSoundName);
