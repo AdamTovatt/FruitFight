@@ -745,6 +745,11 @@ MonoBehaviour:
   DamageSoundName: 
   DestroyOnDeath: 0
   CanDie: 1
+  EmitOnDamage: 1
+  WobbleOnDamage: 1
+  WobbleAmplitude: 0.1
+  WobbleSpeed: 16
+  WobbleDuration: 10
 --- !u!114 &6360796239342531682
 MonoBehaviour:
   m_ObjectHideFlags: 0
