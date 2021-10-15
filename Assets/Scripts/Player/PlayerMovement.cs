@@ -248,10 +248,10 @@ public class PlayerMovement : MovingCharacter
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        Vector3 movementX = (cameraRight * move.x * CurrentRunSpeed) / 100f;
-        Vector3 movementY = (cameraForward * move.y * CurrentRunSpeed) / 100f;
+        Vector3 movementX = cameraRight * move.x;
+        Vector3 movementY = cameraForward * move.y;
 
-        Vector3 movement = movementX + movementY;
+        Vector3 movement = (movementX + movementY).normalized;
 
         Ray forwardRay = new Ray(transform.position, transform.forward);
         RaycastHit[] hits = Physics.SphereCastAll(forwardRay, 0.4f, 0.4f, ~3);
@@ -265,7 +265,7 @@ public class PlayerMovement : MovingCharacter
             movement = Vector3.Dot(wallDirection, movement) * wallDirection;
         }
 
-        Vector3 newPosition = RigidBody.transform.position + movement;
+        Vector3 groundVelocity = Vector3.zero;
 
         if (IsGrounded)
         {
@@ -274,32 +274,26 @@ public class PlayerMovement : MovingCharacter
 
             MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundTransform];
 
-            if (moveOnTrigger != null && moveOnTrigger.Moving) //if we are on a moving platform
-            { //we want to use special movement on moving platforms
-                if (transform.parent != moveOnTrigger.transform)
-                    OnParentUpdated?.Invoke(moveOnTrigger);
-
-                transform.SetParent(moveOnTrigger.transform);
+            if (moveOnTrigger != null && moveOnTrigger.Moving)
+            {
+                groundVelocity = moveOnTrigger.CurrentVelocity * 8.2f; //I don't know why but 8.2 seems to be about the right value to multiply with to avoid slippage on moving platforms
                 averageVelocityKeeper.Parent = moveOnTrigger.AverageVelocityKeeper;
             }
-            else //we are on normal ground
+            else
             {
-                transform.parent = null;
                 UpdateGroundedPosition();
                 averageVelocityKeeper.Parent = null;
-                OnParentUpdated?.Invoke(null);
             }
         }
         else
         {
-            transform.parent = null;
+            transform.parent = null; //this is a bit wierd tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
         }
 
-        RigidBody.MovePosition(newPosition);
+        Vector3 newVelocity = movement * CurrentRunSpeed;
+        RigidBody.velocity = new Vector3(newVelocity.x + groundVelocity.x, RigidBody.velocity.y, newVelocity.z + groundVelocity.z);
 
-        if (transform.parent != null) //if we are on a moveOnTrigger
-            transform.position += movement * CurrentRunSpeed * 6 * Time.deltaTime; //we should move with transform.position since rigidbody movement doesn't work
-
+        Vector3 newPosition = RigidBody.transform.position + movement;
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
 

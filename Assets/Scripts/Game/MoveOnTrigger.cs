@@ -13,6 +13,7 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
     public bool Moving { get { return lerping; } }
 
     public Vector3 CurrentMovement { get; private set; }
+    public Vector3 CurrentVelocity { get; private set; }
     public AverageVelocityKeeper AverageVelocityKeeper { get; set; }
 
     private LoopingAudioSource loopingAudio;
@@ -133,11 +134,17 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
                     loopingAudio.SetVolumeMultiplier(Mathf.Clamp01(currentMoveSpeed) * isPingPongSoundMultiplier); //ping pong sounds are reduced to not get annoying
 
                 if (active)
+                {
                     lerpDelta = Time.deltaTime * appliedMoveSpeed;
+                    CurrentVelocity = appliedMoveSpeed * ((FinalPosition + block.RotationOffset) - block.AppliedPosition).normalized;
+                }
                 else
+                {
                     lerpDelta = -Time.deltaTime * appliedMoveSpeed;
+                    CurrentVelocity = appliedMoveSpeed * (block.AppliedPosition - (FinalPosition + block.RotationOffset)).normalized;
+                }
 
-                lerpValue += lerpDelta;
+                lerpValue += lerpDelta;             
 
                 Vector3 newPosition = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
                 CurrentMovement = newPosition - lastPosition;
@@ -156,6 +163,7 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
 
                 lerpValue = Mathf.Clamp(lerpValue, 0, 1);
                 lerping = false;
+                CurrentVelocity = Vector3.zero;
 
                 if (PingPong)
                 {
