@@ -122,8 +122,8 @@ MonoBehaviour:
   CanDie: 1
   EmitOnDamage: 0
   WobbleOnDamage: 1
-  WobbleAmplitude: 0.2
-  WobbleSpeed: 20
+  WobbleAmplitude: 0.15
+  WobbleSpeed: 25
   WobbleDuration: 0.65
 --- !u!114 &7776792978690844188
 MonoBehaviour:
