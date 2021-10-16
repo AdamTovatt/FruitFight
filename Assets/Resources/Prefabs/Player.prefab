@@ -749,7 +749,7 @@ MonoBehaviour:
   WobbleOnDamage: 1
   WobbleAmplitude: 0.1
   WobbleSpeed: 16
-  WobbleDuration: 10
+  WobbleDuration: 1.2
 --- !u!114 &6360796239342531682
 MonoBehaviour:
   m_ObjectHideFlags: 0
