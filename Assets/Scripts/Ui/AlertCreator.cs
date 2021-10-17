@@ -7,7 +7,7 @@ public class AlertCreator : MonoBehaviour
 {
     public GameObject AlertPrefab;
     public GameObject NotificationPrefab;
-    public List<NotificationIcon> Icons { get; set; }
+    public List<UiIcon> Icons { get; set; }
 
     private List<Notification> notifications = new List<Notification>();
 
@@ -17,21 +17,21 @@ public class AlertCreator : MonoBehaviour
     {
         if (Icons == null || Icons.Count == 0)
         {
-            Icons = new List<NotificationIcon>();
+            Icons = new List<UiIcon>();
 
-            IconConfiguration iconConfiguration = IconConfiguration.LoadFromConfiguration();
+            IconConfiguration iconConfiguration = IconConfiguration.Get();
             foreach (IconConfigurationEntry icon in iconConfiguration.Icons)
             {
                 if (!icon.VaryByDevice)
                 {
                     Sprite sprite = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileName));
-                    Icons.Add(new NotificationIcon() { ImageKeyboard = sprite, Name = icon.Name });
+                    Icons.Add(new UiIcon() { ImageKeyboard = sprite, Name = icon.Name });
                 }
                 else
                 {
                     Sprite keyboardImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameKeyboard));
                     Sprite controllerImage = Resources.Load<Sprite>(string.Format("Icons/{0}", icon.FileNameController));
-                    Icons.Add(new NotificationIcon() { ImageController = controllerImage, ImageKeyboard = keyboardImage, VaryByDevice = true, Name = icon.Name });
+                    Icons.Add(new UiIcon() { ImageController = controllerImage, ImageKeyboard = keyboardImage, VaryByDevice = true, Name = icon.Name });
                 }
             }
         }
@@ -65,7 +65,7 @@ public class AlertCreator : MonoBehaviour
         return CreateNotification(text, displayTime, null);
     }
 
-    public NotificationIcon GetIcon(string name)
+    public UiIcon GetIcon(string name)
     {
         return Icons.Where(x => x.Name == name).FirstOrDefault();
     }
@@ -76,21 +76,10 @@ public class AlertCreator : MonoBehaviour
 
         if (!string.IsNullOrEmpty(iconName))
         {
-            NotificationIcon icon = GetIcon(iconName);
+            UiIcon icon = GetIcon(iconName);
             if (icon != null)
             {
-                if (keyboard)
-                {
-                    iconImage = icon.ImageKeyboard;
-                    if (iconImage == null)
-                        iconImage = icon.Image;
-                }
-                else
-                {
-                    iconImage = icon.ImageController;
-                    if (iconImage == null)
-                        iconImage = icon.Image;
-                }
+                iconImage = icon.GetSpriteByDevice(keyboard ? Device.Keyboard : Device.Gamepad);
             }
             else
             {

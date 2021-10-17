@@ -33,6 +33,18 @@
       "FileName": "StickIcon_Left"
     },
     {
+      "Name": "Select",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "KeyboardButton_E",
+      "FileNameController": "ButtonIcon_Down"
+    },
+    {
+      "Name": "Cancel",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "KeyboardButton_ESC",
+      "FileNameController": "ButtonIcon_Right"
+    },
+    {
       "Name": "Move",
       "VaryByDevice": true,
       "FileNameKeyboard": "Keyboard_WASD",

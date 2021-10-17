@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class PlayerConfigurationManager : MonoBehaviour
 {
@@ -23,7 +21,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            throw new System.Exception("Instance of PlayerConfigurationManager already exists");
+            throw new Exception("Instance of PlayerConfigurationManager already exists");
         }
         else
         {
@@ -39,7 +37,6 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     public void SetPlayerHat(int index, int hat)
     {
-        Debug.Log("hat: " + hat);
         PlayerConfigurations[index].Hat = hat;
     }
 
@@ -111,7 +108,7 @@ public class PlayerConfigurationManager : MonoBehaviour
             case InputMode.Ui:
                 return "Ui";
             default:
-                throw new System.Exception("No input mode with name: " + inputModeEnum.ToString());
+                throw new Exception("No input mode with name: " + inputModeEnum.ToString());
         }
     }
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class CenterContentContainer : MonoBehaviour
@@ -30,9 +32,13 @@ public class CenterContentContainer : MonoBehaviour
         float totalMarginSpace = SpaceBetween * (activeObjects.Count - 1);
         float totalOccupiedSpace = 0;
 
+        Dictionary<RectTransform, float> sizeXDictionary = new Dictionary<RectTransform, float>();
+
         foreach(RectTransform rect in activeObjects)
         {
-            totalOccupiedSpace += rect.sizeDelta.x;
+            float sizeX = GetSizeX(rect);
+            sizeXDictionary.Add(rect, sizeX);
+            totalOccupiedSpace += sizeX;
         }
 
         float currentXPosition = -1 * ((totalMarginSpace + totalOccupiedSpace) / 2);
@@ -40,7 +46,18 @@ public class CenterContentContainer : MonoBehaviour
         foreach(RectTransform rect in activeObjects)
         {
             rect.transform.localPosition = new Vector3(rectTransform.localPosition.x + currentXPosition, 0);
-            currentXPosition += rect.sizeDelta.x + SpaceBetween;
+            currentXPosition += sizeXDictionary[rect] + SpaceBetween;
         }
+    }
+
+    private float GetSizeX(RectTransform rectTransform)
+    {
+        TextMeshProUGUI text = rectTransform.gameObject.GetComponent<TextMeshProUGUI>();
+
+        if (text == null)
+            return rectTransform.sizeDelta.x;
+
+        text.ForceMeshUpdate();
+        return text.textBounds.size.x;
     }
 }

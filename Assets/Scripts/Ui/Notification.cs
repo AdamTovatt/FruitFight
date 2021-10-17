@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,15 +55,4 @@ public class Notification : MonoBehaviour
         Tween.DestoryOnFinished = true;
         Tween.StartTween();
     }
-}
-
-[Serializable]
-public class NotificationIcon
-{
-    public Sprite Image { get { return ImageKeyboard; } }
-
-    public string Name;
-    public bool VaryByDevice;
-    public Sprite ImageKeyboard;
-    public Sprite ImageController;
 }

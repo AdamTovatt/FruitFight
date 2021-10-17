@@ -20,6 +20,8 @@ public class MultipleChoiceSlider : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerControls playerControls;
 
+    private bool inputBurnedOut = false;
+
     void Awake()
     {
         lastInputTime = Time.time;
@@ -36,20 +38,32 @@ public class MultipleChoiceSlider : MonoBehaviour
     {
         if (InputEnabled)
         {
-            if (!context.performed)
-                return;
-
-            if (Time.time - lastInputTime < 0.2f)
-                return;
-
-            if (context.action.id == playerControls.Ui.Move.id)
+            if (context.canceled)
             {
-                lastInputTime = Time.time;
+                inputBurnedOut = false;
+                return;
+            }
 
-                Vector2 inputValue = context.ReadValue<Vector2>();
+            if (context.performed)
+            {
+                if (Time.time - lastInputTime > 1f || !inputBurnedOut)
+                {
+                    if (context.action.id == playerControls.Ui.Move.id)
+                    {
+                        Vector2 inputValue = context.ReadValue<Vector2>();
 
-                sliderValue += inputValue.x > 0 ? 1 : -1;
-                ValueChanged();
+                        if (Mathf.Abs(inputValue.x) < 0.3f)
+                        {
+                            inputBurnedOut = false;
+                            return;
+                        }
+
+                        sliderValue += inputValue.x > 0 ? 1 : -1;
+                        ValueChanged();
+                        lastInputTime = Time.time;
+                        inputBurnedOut = true;
+                    }
+                }
             }
         }
     }

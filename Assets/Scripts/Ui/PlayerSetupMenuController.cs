@@ -12,6 +12,7 @@ public class PlayerSetupMenuController : MonoBehaviour
     public TextMeshProUGUI TitleText;
     public GameObject ReadyText;
     public TextMeshProUGUI ReadyInstructionsText;
+    public Image ReadyInstructionsIcon;
     public UiModelDisplay UiModelDisplay;
     public MultipleChoiceSlider HatSlider;
 
@@ -43,7 +44,27 @@ public class PlayerSetupMenuController : MonoBehaviour
         HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
 
         playerInput.onActionTriggered += HandleInput;
-        ReadyInstructionsText.text = string.Format("Press {0} to ready up", GetButtonName(playerControls.Ui.Select));
+        SetReadyInstructionsText(false);
+    }
+
+    private void SetReadyInstructionsText(bool playerIsReady)
+    {
+        Device device = Device.Unspecified;
+        if (playerInput.currentControlScheme == "Keyboard")
+            device = Device.Keyboard;
+        else if (playerInput.currentControlScheme == "Gamepad")
+            device = Device.Gamepad;
+
+        if (!playerIsReady)
+        {
+            ReadyInstructionsIcon.sprite = IconConfiguration.Get().GetIcon("Select").GetSpriteByDevice(device);
+            ReadyInstructionsText.text = "to ready up";
+        }
+        else
+        {
+            ReadyInstructionsIcon.sprite = IconConfiguration.Get().GetIcon("Cancel").GetSpriteByDevice(device);
+            ReadyInstructionsText.text = "to unready";
+        }
     }
 
     private void HandleInput(InputAction.CallbackContext context)
@@ -88,18 +109,15 @@ public class PlayerSetupMenuController : MonoBehaviour
         uiBananaMan.SetHat(hatPrefab);
     }
 
-    private string GetButtonName(InputAction inputAction)
-    {
-        return inputAction.name;
-    }
-
     public void ReadyPlayer()
     {
         if (!inputEnabled)
             return;
 
-        if (ReadyText != null) ReadyText.gameObject.SetActive(true);
-        ReadyInstructionsText.text = string.Format("Press {0} to unready", GetButtonName(playerControls.Ui.Cancel));
+        if (ReadyText != null) 
+            ReadyText.gameObject.SetActive(true);
+
+        SetReadyInstructionsText(true);
 
         UiModelDisplay.OnImageGenerated += (Texture2D image) => { PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex, image); };
         if (this != null)
@@ -112,7 +130,7 @@ public class PlayerSetupMenuController : MonoBehaviour
             return;
 
         ReadyText.gameObject.SetActive(false);
-        ReadyInstructionsText.text = string.Format("Press {0} to ready up", GetButtonName(playerControls.Ui.Select));
+        SetReadyInstructionsText(false);
         PlayerConfigurationManager.Instance.UnReadyPlayer(PlayerIndex);
     }
 }

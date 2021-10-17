@@ -31,7 +31,7 @@ public class NotificationMenu : MonoBehaviour
 
     private void Start()
     {
-        icons = IconConfiguration.LoadFromConfiguration().Icons;
+        icons = IconConfiguration.Get().Icons;
         icons.Add(new IconConfigurationEntry() { Name = "None", FileName = "None" });
 
         CloseButton.onClick.AddListener(Close);
