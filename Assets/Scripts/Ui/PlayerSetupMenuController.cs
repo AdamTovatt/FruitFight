@@ -21,7 +21,7 @@ public class PlayerSetupMenuController : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerControls playerControls;
 
-    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->", "<- Sweat Band ->" };
+    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->", "<- Sweat Band ->", "<- Mushroom Hat ->" };
 
     void Update()
     {
@@ -100,7 +100,7 @@ public class PlayerSetupMenuController : MonoBehaviour
     public void SetHat(int hat)
     {
         PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
-
+        
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
 
         Prefab? hatPrefab = null;

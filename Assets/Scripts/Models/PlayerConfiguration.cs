@@ -38,6 +38,9 @@ public class PlayerConfiguration
         if (Hat == 3)
             return Prefab.SweatBand;
 
+        if (Hat == 4)
+            return Prefab.MushroomHat;
+
         return null;
     }
 }
