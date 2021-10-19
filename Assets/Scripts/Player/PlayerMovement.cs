@@ -326,32 +326,31 @@ public class PlayerMovement : MovingCharacter
 
         if (HeldItem == null)
         {
-            Ray ray = new Ray(transform.position + transform.up * 0.5f, transform.forward);
-            if (Physics.Raycast(ray, out RaycastHit hit)) //this is to check if there is something to pick up
+            Vector3 pickupPosition = transform.position + (transform.up * 0.4f) + (transform.forward * 0.5f); //the center point of the spehere which we will use for pick up detection
+
+            Holdable holdable = null;
+            foreach (Collider collider in Physics.OverlapSphere(pickupPosition, 0.5f).Where(x => x.transform.tag == "Interactable")) //try to get the holdable component
             {
-                if (hit.distance <= PunchDistance * 1.4f) //we can pick up things at 1.4 times the punch distance, I just picked 1.4 because it seems to work fine
+                holdable = collider.transform.GetComponent<Holdable>();
+
+                if (holdable == null)
                 {
-                    if (hit.transform.tag == "Interactable")
-                    {
-                        Holdable holdable = hit.transform.GetComponent<Holdable>();
-
-                        if (holdable == null)
-                        {
-                            HoldableDelegate holdableDelegate = hit.transform.GetComponentInParent<HoldableDelegate>();
-                            if (holdableDelegate != null)
-                                holdable = holdableDelegate.ContainedHoldable;
-                        }
-
-                        if (holdable != null)
-                        {
-                            shouldPunch = false;
-                            holdable.WasPickedUp(SpineTransform, transform.position + transform.up * PunchHeight + transform.forward * PunchDistance * 1.1f); //1.1 is the multiplier for how far forward we should hold the item
-                            HeldItem = holdable;
-                            CurrentRunSpeed = Speed * 0.8f;
-                            OnPickedUpItem?.Invoke(holdable);
-                        }
-                    }
+                    HoldableDelegate holdableDelegate = collider.transform.GetComponentInParent<HoldableDelegate>();
+                    if (holdableDelegate != null)
+                        holdable = holdableDelegate.ContainedHoldable;
                 }
+
+                if (holdable != null)
+                    break;
+            }
+
+            if (holdable != null)
+            {
+                shouldPunch = false;
+                holdable.WasPickedUp(SpineTransform, transform.position + transform.up * PunchHeight + transform.forward * PunchDistance * 1.1f); //1.1 is the multiplier for how far forward we should hold the item
+                HeldItem = holdable;
+                CurrentRunSpeed = Speed * 0.8f;
+                OnPickedUpItem?.Invoke(holdable);
             }
         }
         else
@@ -376,15 +375,11 @@ public class PlayerMovement : MovingCharacter
 
         Instantiate(PunchSoundEffectPrefab, punchPosition, Quaternion.identity);
 
-        List<Transform> hits = new List<Transform>();
-        CustomPhysics.ConeCastAll(transform.position + (transform.up * DistanceToGround), 2f, transform.forward, 1f, 25f).ForEach(x => hits.Add(x.transform));
-        Physics.OverlapSphere(PunchSphereTransform.position, PunchSphereRadius).ToList().ForEach(x => hits.Add(x.transform));
-
         bool didHit = false;
         List<Transform> checkedTransforms = new List<Transform>();
-        foreach (Transform hit in hits)
+        foreach (Collider hit in Physics.OverlapSphere(PunchSphereTransform.position, PunchSphereRadius))
         {
-            if (hit != transform)
+            if (hit.transform != transform)
             {
                 if (!checkedTransforms.Contains(hit.transform))
                 {
