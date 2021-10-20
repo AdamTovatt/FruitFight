@@ -19,7 +19,7 @@ public class Holdable : MonoBehaviour
     private SoundSource soundSource;
     private Vector3 lastCollisionPoint;
 
-    private void Start()
+    private void Awake()
     {
         _collider = gameObject.GetComponent<Collider>();
         _rigidbody = gameObject.GetComponent<Rigidbody>();
