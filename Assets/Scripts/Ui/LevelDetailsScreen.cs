@@ -193,9 +193,17 @@ public class LevelDetailsScreen : MonoBehaviour
 
         DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
         MainMenuUi.Instance.MouseOverSeletableChecker.Disable();
-        MainMenuUi.Instance.gameObject.SetActive(false);
+        MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(true);
         WorldBuilder.NextLevel = world;
+        SceneManager.sceneLoaded += SceneLoaded;
         SceneManager.LoadScene("GamePlay");
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(false);
+        MainMenuUi.Instance.gameObject.SetActive(false);
+        SceneManager.sceneLoaded -= SceneLoaded;
     }
 
     private void AssignIdToLocalFile(WorldMetadata worldMetadata, long id)
