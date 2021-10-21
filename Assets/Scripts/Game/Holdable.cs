@@ -19,7 +19,7 @@ public class Holdable : MonoBehaviour
     private SoundSource soundSource;
     private Vector3 lastCollisionPoint;
 
-    private void Awake()
+    private void Start()
     {
         _collider = gameObject.GetComponent<Collider>();
         _rigidbody = gameObject.GetComponent<Rigidbody>();
@@ -32,6 +32,9 @@ public class Holdable : MonoBehaviour
 
     public void PlacedInHolder(Transform newParent)
     {
+        if(_rigidbody == null)
+            _rigidbody = gameObject.GetComponent<Rigidbody>();
+
         _rigidbody.isKinematic = true;
         transform.parent = newParent;
         transform.localPosition = Vector3.zero;
