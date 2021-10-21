@@ -23,6 +23,7 @@ public class JellyBean : MovingCharacter
     public Transform JellyBeanModel;
     public List<Texture2D> CoatingTextures;
     public Health Health;
+    public CapsuleCollider Collider;
 
     public JellyBeanMaterialSettings MaterialSettings { get; private set; }
 
@@ -231,7 +232,14 @@ public class JellyBean : MovingCharacter
                     }
                     break;
                 case JellyBeanState.Chasing:
-                    if ((targetPosition - transform.position).sqrMagnitude < personalBoundaryDistanceSquared)
+                    Vector3 targetDistance = targetPosition - transform.position;
+
+                    if (targetDistance.y > 0)
+                        targetDistance = new Vector3(targetDistance.x, targetDistance.y - Collider.height, targetDistance.z);
+                    else
+                        targetDistance = new Vector3(targetDistance.x, targetDistance.y + Collider.height, targetDistance.z);
+
+                    if (targetDistance.sqrMagnitude < personalBoundaryDistanceSquared)
                     {
                         targetPosition = transform.position;
 
@@ -239,6 +247,7 @@ public class JellyBean : MovingCharacter
                         {
                             lastAttackTime = Time.time;
                             inRangeForAttack = true;
+                            Debug.Log("Now in range");
                         }
                         else
                         {
