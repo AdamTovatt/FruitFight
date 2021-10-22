@@ -68,6 +68,11 @@ public class WorldBuilder : MonoBehaviour
             BindObjects();
 
         CurrentWorld = world;
+
+        if(DaylightController.Instance != null)
+        {
+            DaylightController.Instance.Initialize(world.NorthRotation, world.TimeOfDay);
+        }
     }
 
     List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();

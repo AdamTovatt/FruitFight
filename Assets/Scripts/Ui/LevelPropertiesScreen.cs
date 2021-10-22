@@ -11,6 +11,9 @@ public class LevelPropertiesScreen : MonoBehaviour
     public Button CloseButton;
     public Button CaptureThumbnailButton;
     public Button SetLevelNameButton;
+    public Button IncreaseTimeButton;
+    public Button DecreaseTimeButton;
+    public TextMeshProUGUI TimeText;
     public TextMeshProUGUI LevelNameText;
     public GameObject CaptureThumbnailCameraOverlay;
     public Image ThumbnailImage;
@@ -30,6 +33,8 @@ public class LevelPropertiesScreen : MonoBehaviour
         CloseButton.onClick.AddListener(Close);
         CaptureThumbnailButton.onClick.AddListener(CaptureThumbnail);
         SetLevelNameButton.onClick.AddListener(SetLevelName);
+        IncreaseTimeButton.onClick.AddListener(IncreaseTime);
+        DecreaseTimeButton.onClick.AddListener(DecreaseTime);
     }
 
     private void CaptureThumbnail()
@@ -37,6 +42,26 @@ public class LevelPropertiesScreen : MonoBehaviour
         CaptureThumbnailCameraOverlay.gameObject.SetActive(true);
         WorldEditor.Instance.OnImageWasCaptured += ThumbnailWasCaptured;
         WorldEditor.Instance.CaptureImage();
+    }
+
+    private void IncreaseTime()
+    {
+        if (WorldEditor.Instance.CurrentWorld.TimeOfDay < 24)
+        {
+            WorldEditor.Instance.CurrentWorld.TimeOfDay += 0.25f;
+            SetTimeOfDayText();
+            SetTimeOfDayLight();
+        }
+    }
+
+    private void DecreaseTime()
+    {
+        if (WorldEditor.Instance.CurrentWorld.TimeOfDay > 0)
+        {
+            WorldEditor.Instance.CurrentWorld.TimeOfDay -= 0.25f;
+            SetTimeOfDayText();
+            SetTimeOfDayLight();
+        }
     }
 
     public void ThumbnailWasCaptured(Texture2D image)
@@ -135,6 +160,25 @@ public class LevelPropertiesScreen : MonoBehaviour
             WorldEditor.Instance.CurrentWorld.Metadata = new WorldMetadata();
         }
 
+        SetTimeOfDayText();
+
         SetLevelNameButton.Select();
+    }
+
+    private void SetTimeOfDayText()
+    {
+        float timeOfDay = WorldEditor.Instance.CurrentWorld.TimeOfDay;
+        float hours = Mathf.Floor(timeOfDay);
+        float minutes = (timeOfDay - hours) * 60;
+
+        TimeText.text = string.Format("{0}:{1}", hours.ToString("00"), minutes.ToString("00"));
+    }
+
+    private void SetTimeOfDayLight()
+    {
+        if(DaylightController.Instance != null)
+        {
+            DaylightController.Instance.Initialize(WorldEditor.Instance.CurrentWorld.NorthRotation, WorldEditor.Instance.CurrentWorld.TimeOfDay);
+        }
     }
 }

@@ -110,6 +110,9 @@ public class WorldEditor : MonoBehaviour
         editorCamera.Target = marker.transform;
 
         Ui = FindObjectOfType<WorldEditorUi>();
+
+        if (DaylightController.Instance != null)
+            DaylightController.Instance.Initialize(CurrentWorld.NorthRotation, CurrentWorld.TimeOfDay);
     }
 
     private void Update()

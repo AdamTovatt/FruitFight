@@ -14,6 +14,8 @@ public class World
     private WorldBlockLookup blockLookup;
 
     public WorldMetadata Metadata;
+    public float TimeOfDay = 15;
+    public float NorthRotation = 180;
 
     public static int LastBlockId { get; set; }
 
