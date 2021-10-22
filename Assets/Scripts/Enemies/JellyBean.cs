@@ -235,9 +235,11 @@ public class JellyBean : MovingCharacter
                     Vector3 targetDistance = targetPosition - transform.position;
 
                     if (targetDistance.y > 0)
-                        targetDistance = new Vector3(targetDistance.x, targetDistance.y - Collider.height, targetDistance.z);
-                    else
-                        targetDistance = new Vector3(targetDistance.x, targetDistance.y + Collider.height, targetDistance.z);
+                    {
+                        targetDistance = new Vector3(targetDistance.x, Mathf.Min(Mathf.Abs(targetDistance.y - Collider.height), Mathf.Abs(targetDistance.y)), targetDistance.z);
+                    }
+                    //else
+                    //    targetDistance = new Vector3(targetDistance.x, targetDistance.y + Collider.height, targetDistance.z);
 
                     if (targetDistance.sqrMagnitude < personalBoundaryDistanceSquared)
                     {
