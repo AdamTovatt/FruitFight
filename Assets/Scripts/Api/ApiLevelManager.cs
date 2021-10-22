@@ -42,17 +42,17 @@ public class ApiLevelManager
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/upload", body);
         string responseJson = await response.Content.ReadAsStringAsync();
 
-        if (response.IsSuccessStatusCode)
-            return UploadLevelResponse.FromJson(responseJson);
-        else
-            return new UploadLevelResponse() { ErrorResponse = ErrorResponse.FromJson(responseJson) };
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            ApiHelper.RemoveUserCredentials();
+
+        return new UploadLevelResponse(responseJson, response.IsSuccessStatusCode, response.StatusCode);
     }
 
     public async static Task<GetLevelResponse> GetLevel(long levelId)
     {
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Get, "/level/get", null, new Dictionary<string, object>() { { "id", levelId } });
 
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             return GetLevelResponse.FromJson(await response.Content.ReadAsStringAsync());
         }

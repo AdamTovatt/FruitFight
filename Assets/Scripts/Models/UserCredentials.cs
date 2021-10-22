@@ -17,6 +17,14 @@ public class UserCredentials
     [JsonProperty("username")]
     public string Username;
 
+    [JsonIgnore]
+    public bool Valid { get { return !string.IsNullOrEmpty(Token); } }
+
+    public void Devalidate()
+    {
+        Token = null;
+    }
+
     public static UserCredentials FromJson(string json)
     {
         return JsonConvert.DeserializeObject<UserCredentials>(json);

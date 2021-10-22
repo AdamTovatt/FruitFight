@@ -37,6 +37,15 @@ public class ApiHelper
         Initialize();
     }
 
+    public static void RemoveUserCredentials()
+    {
+        if(UserCredentials != null)
+        {
+            UserCredentials.Devalidate();
+            FileHelper.SaveUserCredentials(UserCredentials);
+        }
+    }
+
     public static async Task<HttpResponseMessage> PerformRequest(HttpMethod method, string path, object content = null, Dictionary<string, object> queryParameters = null)
     {
         if (!hasBeenInitialized)

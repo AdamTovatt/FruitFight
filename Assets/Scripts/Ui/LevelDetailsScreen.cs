@@ -76,7 +76,7 @@ public class LevelDetailsScreen : MonoBehaviour
         }
         else //this is a level from the online library
         {
-            if(ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId) //this is our level
+            if (ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId) //this is our level
             {
                 RemovePublishedButton.gameObject.SetActive(true);
                 UpdateOnlineVersionButton.gameObject.SetActive(true);
@@ -116,12 +116,12 @@ public class LevelDetailsScreen : MonoBehaviour
 
     private async void RemoveOnlineButtonWasClicked()
     {
-        if(await ApiLevelManager.DeleteLevel(currentWorldMetadata.Id))
+        if (await ApiLevelManager.DeleteLevel(currentWorldMetadata.Id))
         {
             currentWorldMetadata.Id = 0;
             FileHelper.SaveMetadataToDisk(currentWorldMetadata);
 
-            if(!currentLocalLevel)
+            if (!currentLocalLevel)
             {
                 Close();
                 parentScreen.Show();
@@ -130,7 +130,7 @@ public class LevelDetailsScreen : MonoBehaviour
             {
                 Show(currentWorldMetadata, parentScreen, currentLocalLevel);
             }
-            
+
             AlertCreator.Instance.CreateNotification("Level was removed from online library");
         }
         else
@@ -139,19 +139,24 @@ public class LevelDetailsScreen : MonoBehaviour
         }
     }
 
+    private void RedirectToLogin()
+    {
+        LoginScreen.OnLoginScreenWasExited += LoginScreenWasClosed;
+        LoginScreen.gameObject.SetActive(true);
+        LoginScreen.Show(this);
+    }
+
     private async void PublishOnlineButtonWasClicked()
     {
-        if (ApiHelper.UserCredentials == null)
+        if (ApiHelper.UserCredentials == null || !ApiHelper.UserCredentials.Valid)
         {
-            LoginScreen.OnLoginScreenWasExited += LoginScreenWasClosed;
-            LoginScreen.gameObject.SetActive(true);
-            LoginScreen.Show(this);
+            RedirectToLogin();
         }
         else
         {
             World world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
 
-            if(world.Metadata.Id != 0)
+            if (world.Metadata.Id != 0)
             {
                 AlertCreator.Instance.CreateNotification("This level is already published");
                 return;
@@ -161,15 +166,20 @@ public class LevelDetailsScreen : MonoBehaviour
 
             UploadLevelResponse uploadResult = await ApiLevelManager.UploadLevel(world);
 
-            if (uploadResult.ErrorResponse == null)
+            if (uploadResult.Success)
             {
                 AssignIdToLocalFile(currentWorldMetadata, uploadResult.LevelId);
                 AlertCreator.Instance.CreateNotification("Level was uploaded!");
             }
-            else if (uploadResult.ErrorResponse.ErrorCode == "23505")
-                AlertCreator.Instance.CreateNotification("You have already uploaded a level with this name");
             else
-                AlertCreator.Instance.CreateNotification(uploadResult.ErrorResponse.Message);
+            {
+                if (uploadResult.ErrorResponse != null && uploadResult.ErrorResponse.ErrorCode == "23505")
+                    AlertCreator.Instance.CreateNotification("You have already uploaded a level with this name");
+                else if (uploadResult.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    RedirectToLogin();
+                else
+                    AlertCreator.Instance.CreateNotification(uploadResult.ErrorResponse == null ? "Unknown error" : uploadResult.ErrorResponse.Message);
+            }
         }
     }
 
@@ -177,7 +187,7 @@ public class LevelDetailsScreen : MonoBehaviour
     {
         World world = null;
 
-        if(currentLocalLevel)
+        if (currentLocalLevel)
         {
             world = World.FromJson(FileHelper.LoadMapData(currentWorldMetadata.Name));
         }
