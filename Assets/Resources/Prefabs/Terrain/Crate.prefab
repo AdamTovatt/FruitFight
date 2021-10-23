@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7776792978690844188}
   - component: {fileID: 3721024981576652270}
   - component: {fileID: 796600360729338935}
+  - component: {fileID: 8201957718039134685}
   m_Layer: 3
   m_Name: Crate
   m_TagString: Ground
@@ -260,6 +261,23 @@ MonoBehaviour:
   AmountToSpawn: 5
   SpawnForceStrength: 4
   BoxCollider: {fileID: 4951548209883622889}
+  Rigidbody: {fileID: 8201957718039134685}
+--- !u!54 &8201957718039134685
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951548209883622888}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 122
+  m_CollisionDetection: 0
 --- !u!1 &8928398162022148262
 GameObject:
   m_ObjectHideFlags: 0

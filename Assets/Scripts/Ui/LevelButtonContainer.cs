@@ -78,7 +78,7 @@ public class LevelButtonContainer : MonoBehaviour
 
         if (!PaginationIsControlledExternally)
         {
-            if (currentButtonOffset + currentButtonsPerPage >= currentLevels.Count)
+            if (currentButtonOffset + currentButtonsPerPage > currentLevels.Count)
                 return;
 
             currentButtonOffset += currentButtonsPerPage;
