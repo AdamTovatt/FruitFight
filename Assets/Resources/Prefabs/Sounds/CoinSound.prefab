@@ -142,7 +142,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundClips:
-  - {fileID: 8300000, guid: 65ccb60617bbf084e9ea9c9a168d0a95, type: 3}
+  - {fileID: 8300000, guid: 9cb1a810eee2df548a793dd3fce697bc, type: 3}
+  - {fileID: 8300000, guid: 8bc700eef037006409d306e790291b00, type: 3}
+  - {fileID: 8300000, guid: 4277d480e7db13341b1301974aa1db23, type: 3}
+  - {fileID: 8300000, guid: 4277d480e7db13341b1301974aa1db23, type: 3}
+  - {fileID: 8300000, guid: de61256550be18440ac4ce76aef93e0b, type: 3}
   AudioSource: {fileID: 6921529022183800657}
   PlayOnAwake: 1
   PlayOnCollision: 0

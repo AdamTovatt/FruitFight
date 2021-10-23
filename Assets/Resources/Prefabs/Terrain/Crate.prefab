@@ -122,6 +122,8 @@ MonoBehaviour:
   DestroyOnDeath: 1
   CanDie: 1
   EmitOnDamage: 0
+  BecomeInvincibleAfterHit: 0
+  InvincibleTime: 0.4
   WobbleOnDamage: 1
   WobbleAmplitude: 0.15
   WobbleSpeed: 25
@@ -143,7 +145,7 @@ MonoBehaviour:
   - Name: hit
     Clips:
     - {fileID: 8300000, guid: c14a0d3954b518145968e49d015ec39b, type: 3}
-    Volume: 0.14
+    Volume: 0.06
     Pitch: 1
     PitchVariation: 0.119
     Delay: 0
@@ -160,7 +162,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.122
+  m_Volume: 0.086
   m_Pitch: 1
   Loop: 0
   Mute: 0
