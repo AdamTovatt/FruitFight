@@ -1127,6 +1127,8 @@ MonoBehaviour:
   DestroyOnDeath: 0
   CanDie: 1
   EmitOnDamage: 1
+  BecomeInvincibleAfterHit: 1
+  InvincibleTime: 0.8
   WobbleOnDamage: 1
   WobbleAmplitude: 0.5
   WobbleSpeed: 20

@@ -25,10 +25,14 @@ public class Health : MonoBehaviour
 
     public bool EmitOnDamage = true;
 
+    public bool BecomeInvincibleAfterHit = false;
+    public float InvincibleTime = 0.4f;
     public bool WobbleOnDamage;
     public float WobbleAmplitude;
     public float WobbleSpeed;
     public float WobbleDuration;
+
+    public bool CurrentlyInvincible { get { return BecomeInvincibleAfterHit && (Time.time - lastHitTime < InvincibleTime); } }
 
     private bool IsPlayer { get { playerMovement = gameObject.GetComponent<PlayerMovement>(); return playerMovement != null; } }
     private PlayerMovement playerMovement;
@@ -41,6 +45,8 @@ public class Health : MonoBehaviour
     private bool wobbleIsOn;
     private float wobbleStartTime;
     private Vector3 originalSize;
+
+    private float lastHitTime;
 
     private void Awake()
     {
@@ -159,8 +165,14 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        Debug.Log("Cur: " + CurrentlyInvincible + " " + (Time.time - lastHitTime).ToString());
+        if (CurrentlyInvincible)
+            return;
+
         CurrentHealth -= amount;
 
+        if (BecomeInvincibleAfterHit)
+            lastHitTime = Time.time;
 
         if (EmitOnDamage)
         {

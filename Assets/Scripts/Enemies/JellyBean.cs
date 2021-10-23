@@ -362,10 +362,10 @@ public class JellyBean : MovingCharacter
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
-        soundSource.Play("hurt");
-
         if (!knockBack)
         {
+            soundSource.Play("hurt");
+
             _rigidbody.isKinematic = false;
             navMeshAgent.enabled = false;
             _rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
