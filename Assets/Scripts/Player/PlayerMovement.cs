@@ -17,6 +17,7 @@ public class PlayerMovement : MovingCharacter
     private FootStepAudioSource footStepAudioSource;
     private SoundSource soundSource;
 
+    public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
     public float Speed = 5f;
@@ -81,6 +82,7 @@ public class PlayerMovement : MovingCharacter
     private Transform groundTransform;
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
+    private bool hasDoubleJumped;
     private float lastJumpTime;
     private Collision lastCollision;
     private float rotateCamera;
@@ -410,12 +412,26 @@ public class PlayerMovement : MovingCharacter
     {
         if (Time.time - lastJumpTime > GameTimeLength + 0.1f && IsGroundedWithGameTime)
         {
-            RigidBody.velocity = new Vector3(RigidBody.velocity.x, RigidBody.velocity.y + JumpStrength, RigidBody.velocity.z);
-            lastJumpTime = Time.time;
-
-            StepWasTaken(transform.position); //two sounds effects because two feet
-            StepWasTaken(transform.position);
+            PerformJump();
         }
+        else
+        {
+            if(!hasDoubleJumped && Time.time - lastJumpTime > 0.2f)
+            {
+                PerformJump();
+                hasDoubleJumped = true;
+                Instantiate(DoubleJumpSmokePrefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
+            }
+        }
+    }
+
+    private void PerformJump()
+    {
+        RigidBody.velocity = new Vector3(RigidBody.velocity.x, JumpStrength, RigidBody.velocity.z);
+        lastJumpTime = Time.time;
+
+        StepWasTaken(transform.position); //two sounds effects because two feet
+        StepWasTaken(transform.position);
     }
 
     private void OnEnable()
@@ -443,6 +459,7 @@ public class PlayerMovement : MovingCharacter
 
                 _lastGroundedTime = Time.time;
                 _isGrounded = true;
+                hasDoubleJumped = false;
                 return;
             }
         }

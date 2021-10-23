@@ -611,10 +611,12 @@ MonoBehaviour:
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
   RigidBody: {fileID: 2012823961798305032}
+  DoubleJumpSmokePrefab: {fileID: 8706223902884326236, guid: bc07c8feeed50c648aa62f95e3b1613e,
+    type: 3}
   PunchSphereTransform: {fileID: 4974615858160056374}
   SpineTransform: {fileID: 6981282915230941826}
   Speed: 4
-  JumpStrength: 7
+  JumpStrength: 6
   DistanceToGround: 0.8
   MovementInputCutoff: 0.2
   PunchDistance: 0.5
