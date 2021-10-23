@@ -41,8 +41,6 @@ public class Crate : MonoBehaviour
             {
                 if (CheckIfOnGround())
                 {
-                    Debug.Log("Is on ground");
-
                     if (!wasOnGroundLastCheck)
                     {
                         wasOnGroundLastCheck = true;
@@ -52,7 +50,6 @@ public class Crate : MonoBehaviour
                         isFalling = false;
                         Rigidbody.isKinematic = true;
                         wasOnGroundLastCheck = false;
-                        Debug.Log("Became kinematic again");
                     }
                 }
 

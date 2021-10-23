@@ -36,7 +36,7 @@ public class PlayerMovement : MovingCharacter
     public bool ControlsEnabled { get; set; }
     public Holdable HeldItem { get; private set; }
 
-    public Collider Collider { get; set; }
+    public CapsuleCollider Collider { get; set; }
 
     public int JellyBeans { get; set; }
 
@@ -100,7 +100,7 @@ public class PlayerMovement : MovingCharacter
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
         playerControls = new PlayerControls();
         RigidBody = gameObject.GetComponent<Rigidbody>();
-        Collider = gameObject.GetComponent<Collider>();
+        Collider = gameObject.GetComponent<CapsuleCollider>();
         health = gameObject.GetComponent<Health>();
         averageVelocityKeeper = gameObject.GetComponent<AverageVelocityKeeper>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
@@ -305,6 +305,46 @@ public class PlayerMovement : MovingCharacter
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
     }
 
+    private void FixedUpdate()
+    {
+        ClimbStep(0.1f, 0.6f, 0.5f, 0.1f);
+    }
+
+    private void ClimbStep(float ray1Height, float ray2Height, float rayLenght, float stepHeight)
+    {
+        if (IsGrounded && move.sqrMagnitude > 0)
+        {
+            Transform lowerHitTransform = null;
+
+            Ray lowerRay1 = new Ray(transform.position + transform.up * ray1Height, transform.forward);
+            if (Physics.Raycast(lowerRay1, out RaycastHit hit, rayLenght + Collider.radius))
+            {
+                if (hit.transform.tag == "Ground")
+                    lowerHitTransform = hit.transform;
+
+            }
+            else
+            {
+                Ray lowerRay2 = new Ray(transform.position + transform.up * (ray1Height + 0.2f), transform.forward);
+                if (Physics.Raycast(lowerRay2, out RaycastHit hit2, rayLenght + Collider.radius))
+                {
+                    if (hit2.transform.tag == "Ground")
+                        lowerHitTransform = hit.transform;
+
+                }
+            }
+
+            if (lowerHitTransform != null && lowerHitTransform != groundTransform)
+            {
+                Ray ray2 = new Ray(transform.position + transform.up * ray2Height, transform.forward);
+                if (!Physics.Raycast(ray2, out RaycastHit upperHit, rayLenght + Collider.radius))
+                {
+                    RigidBody.position += transform.up * stepHeight;
+                }
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -312,6 +352,9 @@ public class PlayerMovement : MovingCharacter
         {
             Gizmos.DrawSphere(pos, 0.2f);
         }
+
+        Gizmos.DrawRay(transform.position + transform.up * 0.2f, transform.forward * (0.5f + Collider.radius));
+        Gizmos.DrawRay(transform.position + transform.up * 0.6f, transform.forward * (0.5f + Collider.radius));
     }
 
     private void Move(Vector2 moveValue)
@@ -416,7 +459,7 @@ public class PlayerMovement : MovingCharacter
         }
         else
         {
-            if(!hasDoubleJumped && Time.time - lastJumpTime > 0.2f)
+            if (!hasDoubleJumped && Time.time - lastJumpTime > 0.2f)
             {
                 PerformJump();
                 hasDoubleJumped = true;

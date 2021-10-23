@@ -165,7 +165,6 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        Debug.Log("Cur: " + CurrentlyInvincible + " " + (Time.time - lastHitTime).ToString());
         if (CurrentlyInvincible)
             return;
 
