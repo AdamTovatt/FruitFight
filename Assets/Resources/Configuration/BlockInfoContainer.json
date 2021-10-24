@@ -662,6 +662,17 @@
       "Name": "Notification",
       "Prefab": "NotificationBlock",
       "StartWithPropertyExposer": true
+    },
+    {
+      "Id": 65,
+      "BlockType": 3,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Rock Small",
+      "Prefab": "Rock9",
+      "RotatableX": true,
+      "RotatableY": true
     }
   ]
 }
