@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
-    public MouseOverSelectableChecker MouseOverSeletableChecker;
+    public MouseOverSelectableChecker MouseOverSelectableChecker;
 
     private List<UiSelectable> selectables = new List<UiSelectable>();
 

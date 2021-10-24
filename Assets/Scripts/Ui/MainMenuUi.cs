@@ -39,7 +39,7 @@ public class MainMenuUi : UiManager
 
     private void Start()
     {
-        MouseOverSeletableChecker.Enable();
+        MouseOverSelectableChecker.Enable();
         StartCoroutine(ShowMenuWithDelay());
 
         ApiHelper.PingServer();
@@ -48,7 +48,7 @@ public class MainMenuUi : UiManager
     public void WasReentered()
     {
         gameObject.SetActive(true);
-        MouseOverSeletableChecker.Enable();
+        MouseOverSelectableChecker.Enable();
 
         if (EventSystem == null)
             EventSystem = FindObjectOfType<EventSystem>();
@@ -56,7 +56,7 @@ public class MainMenuUi : UiManager
         if (PlayerConfigurationManager.Instance != null)
             Destroy(PlayerConfigurationManager.Instance.gameObject);
 
-        MouseOverSeletableChecker.eventSystem = EventSystem;
+        MouseOverSelectableChecker.eventSystem = EventSystem;
 
         if(BrowseLevelsScreen.LevelDetailsScreen.gameObject.activeSelf)
         {
@@ -77,7 +77,7 @@ public class MainMenuUi : UiManager
 
     public void LevelEditorButtonWasPressed()
     {
-        MouseOverSeletableChecker.Disable();
+        MouseOverSelectableChecker.Disable();
         LoadingScreen.Show();
 
         Destroy(gameObject);
@@ -88,7 +88,7 @@ public class MainMenuUi : UiManager
 
     public void PlayButtonWasPressed()
     {
-        MouseOverSeletableChecker.Disable();
+        MouseOverSelectableChecker.Disable();
         LoadingScreen.Show();
         SceneManager.LoadScene("GamePlay");
         Instance = null;

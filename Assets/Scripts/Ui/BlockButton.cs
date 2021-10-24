@@ -10,13 +10,27 @@ public class BlockButton : MonoBehaviour
     public TextMeshProUGUI Text;
     public Button Button;
 
+    public delegate void OnSelectHandler(BlockButton button);
+    public event OnSelectHandler OnSelected;
+
     public BlockInfo BlockInfo { get; set; }
     public int MenuIndex { get; set; }
+
+    public UiSelectable Selectable { get; private set; }
 
     public void Initialize(Texture2D image, string text)
     {
         Image.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
         Text.text = text;
+
+        Selectable = gameObject.GetComponent<UiSelectable>();
+        if (Selectable != null)
+            Selectable.OnSelected += SelectedComponentWasSelected;
+    }
+
+    private void SelectedComponentWasSelected()
+    {
+        OnSelected?.Invoke(this);
     }
 
     public void SetNavigation(Button up, Button down, Button left, Button right)
@@ -28,6 +42,11 @@ public class BlockButton : MonoBehaviour
         navigation.selectOnRight = right;
         navigation.mode = Navigation.Mode.Explicit;
         Button.navigation = navigation;
+    }
+
+    public void OnDestroy()
+    {
+        OnSelected = null;
     }
 
     public override string ToString()

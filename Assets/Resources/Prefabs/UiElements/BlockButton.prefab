@@ -367,3 +367,4 @@ MonoBehaviour:
   ContentSize: {x: 153, y: 153}
   UseCustomPivot: 0
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 1

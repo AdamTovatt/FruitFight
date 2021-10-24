@@ -2606,7 +2606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f4e56135e3dad40a148ddc46ff55b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MouseOverSeletableChecker: {fileID: 204757845}
+  MouseOverSelectableChecker: {fileID: 204757845}
   LoadingScreen: {fileID: 1690409631}
   StartMenu: {fileID: 640668078}
   BrowseLevelsScreen: {fileID: 862275047}
@@ -2743,6 +2743,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &226143385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3743,6 +3744,7 @@ MonoBehaviour:
   ContentSize: {x: 200, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &321648575
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3973,6 +3975,7 @@ MonoBehaviour:
   ContentSize: {x: 380, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &351617781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7404,6 +7407,7 @@ MonoBehaviour:
   ContentSize: {x: 230, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &537010264
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8432,6 +8436,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!114 &598785179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11813,6 +11818,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 1
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!114 &822013221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12007,6 +12013,7 @@ MonoBehaviour:
   ContentSize: {x: 240, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &826817804
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12257,6 +12264,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 1
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!1 &851520382
 GameObject:
   m_ObjectHideFlags: 0
@@ -14012,6 +14020,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &959221066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14796,6 +14805,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 1
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!114 &1034153513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16434,6 +16444,7 @@ MonoBehaviour:
   ContentSize: {x: 380, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1159933689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17659,6 +17670,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 1
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!114 &1289100843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19067,6 +19079,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1380236583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19321,6 +19334,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1421795588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19866,6 +19880,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 1
   Pivot: {x: -0.05, y: 0.05}
+  RequirePointOnSelectable: 0
 --- !u!114 &1454468048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21376,6 +21391,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1544673982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22381,6 +22397,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1617431366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22603,6 +22620,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1623827676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23078,6 +23096,7 @@ MonoBehaviour:
   ContentSize: {x: 250, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &1652576505
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23850,6 +23869,7 @@ MonoBehaviour:
   ContentSize: {x: 200, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &1698081698
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -24705,6 +24725,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1769720674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25778,6 +25799,7 @@ MonoBehaviour:
   ContentSize: {x: 380, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1880884985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27427,6 +27449,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1947718388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27868,6 +27891,7 @@ MonoBehaviour:
   ContentSize: {x: 300, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1990097170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28009,6 +28033,7 @@ MonoBehaviour:
   ContentSize: {x: 220, y: 50}
   UseCustomPivot: 0
   Pivot: {x: 0.4, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &1992887894
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,12 +11,19 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public Vector2 ContentSize = new Vector2(300, 50);
     public bool UseCustomPivot = false;
     public Vector2 Pivot = new Vector2(0.5f, 0.5f);
+    public bool RequirePointOnSelectable = false; // if the selectable should enforce a point on the selectable to be selected, this is controlled in MouseOverSelectableChecker.cs
+
+    public delegate void SelectedHandler();
+    public event SelectedHandler OnSelected;
 
     private GameObject selectedMarker = null;
     private UiManager manager { get { if (_manager == null) SetupManager(); return _manager; } set { _manager = value; } }
     private UiManager _manager;
 
     private Button button;
+    private float lastSelectTime;
+
+    private RectTransform rectTransform;
 
     private void Start()
     {
@@ -28,6 +35,21 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     {
         SetupManager(true);
         button = gameObject.GetComponent<Button>();
+        rectTransform = gameObject.GetComponent<RectTransform>();
+    }
+
+    public bool PointIsOnSelectable(Vector2 point)
+    {
+        if (point.x < rectTransform.position.x)
+            return false;
+        if (point.y > rectTransform.position.y)
+            return false;
+        if (point.x > rectTransform.position.x + rectTransform.sizeDelta.x)
+            return false;
+        if (point.y < rectTransform.position.y - rectTransform.sizeDelta.y)
+            return false;
+
+        return true;
     }
 
     public void WasDeselected()
@@ -49,7 +71,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
 
     public void ForceClick()
     {
-        if(button != null)
+        if (button != null)
         {
             button.onClick.Invoke();
         }
@@ -58,12 +80,19 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public void OnSelect(BaseEventData eventData)
     {
         RectTransform rect = gameObject.GetComponent<RectTransform>();
+
         manager.SelectableWasSelected(this);
+
         if (selectedMarker == null)
         {
-            selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
-            selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
-            AudioManager.Instance.Play("select");
+            if (SelectedMarkerPrefab != null)
+            {
+                selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
+                selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
+                AudioManager.Instance.Play("select");
+            }
+
+            OnSelected?.Invoke();
         }
     }
 
@@ -79,7 +108,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
             MainMenuUi.Instance.RegisterSelectable(this);
             manager = MainMenuUi.Instance;
         }
-        else if(GameUi.Instance != null)
+        else if (GameUi.Instance != null)
         {
             GameUi.Instance.RegisterSelectable(this);
             manager = GameUi.Instance;

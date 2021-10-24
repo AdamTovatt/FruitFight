@@ -18,6 +18,13 @@ public class EditorBlockMenu : MonoBehaviour
     public TextMeshProUGUI PageText;
     public TextMeshProUGUI NextPageInstuctionLabel;
     public TextMeshProUGUI PreviousPageInstuctionLabel;
+    public Button NextPageButton;
+    public Button PreviousPageButton;
+
+    public Button DeselectButtonRight;
+    public Button DeselectButtonLeft;
+    public Button DeselectButtonDown;
+    public Button DeselectButtonUp;
 
     public bool IsOpen { get; private set; }
     public int CurrentOffset { get { return selectedIndex; } }
@@ -31,6 +38,20 @@ public class EditorBlockMenu : MonoBehaviour
     private BlockButton selectedButton;
 
     public BlockInfo CurrentBuildingBlock { get { if (selectedButton == null) return null; return selectedButton.BlockInfo; } }
+
+    private bool deselect = true;
+
+    private void Start()
+    {
+        NextPageButton.onClick.AddListener(NextPage);
+        PreviousPageButton.onClick.AddListener(PreviousPage);
+        DeselectButtonRight.onClick.AddListener(Close);
+        DeselectButtonDown.onClick.AddListener(Close);
+        DeselectButtonRight.GetComponent<UiSelectable>().OnSelected += Deselect;
+        DeselectButtonLeft.GetComponent<UiSelectable>().OnSelected += Deselect;
+        DeselectButtonDown.GetComponent<UiSelectable>().OnSelected += Deselect;
+        DeselectButtonUp.GetComponent<UiSelectable>().OnSelected += Deselect;
+    }
 
     public void ThumbnailsWereCreated()
     {
@@ -53,11 +74,40 @@ public class EditorBlockMenu : MonoBehaviour
         }
     }
 
+    private void Deselect()
+    {
+        deselect = true;
+    }
+
     public void ButtonWasSelected(BlockButton button)
     {
+        if (button == null)
+            return;
+
         selectedButton = button;
         selectedIndex = button.MenuIndex;
         WorldEditor.Instance.SelectedBlock = CurrentBuildingBlock.Id;
+
+        if (!IsOpen && deselect)
+        {
+            Open();
+        }
+    }
+
+    public void DisableDeselectButtons()
+    {
+        DeselectButtonDown.gameObject.SetActive(false);
+        DeselectButtonLeft.gameObject.SetActive(false);
+        DeselectButtonRight.gameObject.SetActive(false);
+        DeselectButtonUp.gameObject.SetActive(false);
+    }
+
+    public void EnableDeslectButtons()
+    {
+        DeselectButtonDown.gameObject.SetActive(true);
+        DeselectButtonLeft.gameObject.SetActive(true);
+        DeselectButtonRight.gameObject.SetActive(true);
+        DeselectButtonUp.gameObject.SetActive(true);
     }
 
     public void Close()
@@ -67,6 +117,7 @@ public class EditorBlockMenu : MonoBehaviour
         PageText.gameObject.SetActive(false);
         NextPageInstuctionLabel.gameObject.SetActive(false);
         PreviousPageInstuctionLabel.gameObject.SetActive(false);
+        deselect = false;
     }
 
     public void Open()
@@ -97,7 +148,6 @@ public class EditorBlockMenu : MonoBehaviour
             ButtonWasSelected(currentButtons[currentButtons.Count - 1]);
         }
 
-        selectedButton.Button.Select();
         SetPageText();
     }
 
@@ -118,7 +168,6 @@ public class EditorBlockMenu : MonoBehaviour
             ButtonWasSelected(currentButtons[currentButtons.Count - 1]);
         }
 
-        selectedButton.Button.Select();
         SetPageText();
     }
 
@@ -132,11 +181,14 @@ public class EditorBlockMenu : MonoBehaviour
         if (!IsOpen)
             Open();
 
+        Selectable newSelectable = null;
+
         bool moved = false;
 
         if (moveVector.x == 1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnRight;
+            newSelectable = selectable;
 
             if (selectable != null)
             {
@@ -148,6 +200,7 @@ public class EditorBlockMenu : MonoBehaviour
         else if (moveVector.x == -1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnLeft;
+            newSelectable = selectable;
 
             if (selectable != null)
             {
@@ -159,6 +212,7 @@ public class EditorBlockMenu : MonoBehaviour
         else if (moveVector.y == -1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnDown;
+            newSelectable = selectable;
 
             if (selectable != null)
             {
@@ -170,6 +224,7 @@ public class EditorBlockMenu : MonoBehaviour
         else if (moveVector.y == 1)
         {
             Selectable selectable = selectedButton.Button.navigation.selectOnUp;
+            newSelectable = selectable;
 
             if (selectable != null)
             {
@@ -183,6 +238,18 @@ public class EditorBlockMenu : MonoBehaviour
         {
             selectedButton.GetComponent<Selectable>().Select();
         }
+
+        if (newSelectable != null)
+        {
+            UiSelectable uiSelectable = newSelectable.transform.GetComponent<UiSelectable>();
+            if (uiSelectable != null)
+                WorldEditorUi.Instance.MouseOverSelectableChecker.SetSelectedItem(uiSelectable);
+        }
+    }
+
+    private void BlockButtonWasClicked()
+    {
+        Close();
     }
 
     public void SetSize(int columns, int rows, int page)
@@ -198,7 +265,7 @@ public class EditorBlockMenu : MonoBehaviour
 
         float spaceLeftOverX = buttonContainer.sizeDelta.x - (buttonSideLength * columns);
         float buttonMarginX = spaceLeftOverX / (columns + 1);
-        float spaceLeftOverY = buttonContainer.sizeDelta.y - (buttonSideLength * columns);
+        float spaceLeftOverY = buttonContainer.sizeDelta.y - appliedExtraMargin / 2 - (buttonSideLength * columns);
         float buttonMarginY = spaceLeftOverY / (rows + 1);
 
         BlockButton[][] blockButtons = new BlockButton[columns][];
@@ -229,10 +296,12 @@ public class EditorBlockMenu : MonoBehaviour
             int x = i % columns;
             int y = Mathf.FloorToInt(i / (float)columns);
             float positionX = (x * buttonSideLength) + (buttonMarginX * (x + 1));
-            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y + 1)) + appliedExtraMargin / 4;
+            float positionY = (y * buttonSideLength * -1) - (buttonMarginY * (y + 1)) + appliedExtraMargin / 8;
             if (!(positionX >= buttonContainer.sizeDelta.x) && !(positionY <= buttonContainer.sizeDelta.y * -1f))
             {
                 BlockButton button = Instantiate(BlockButtonPrefab, new Vector3(0, 0, 0), BlockButtonContainer.transform.rotation, BlockButtonContainer.transform).GetComponent<BlockButton>();
+                button.transform.name = string.Format("{0} Button", limitedList[i].Name);
+                button.Button.onClick.AddListener(BlockButtonWasClicked);
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
                 button.Initialize(BlockThumbnailManager.BlockThumbnails[limitedList[i].Prefab], limitedList[i].Name);
                 button.BlockInfo = limitedList[i];
@@ -291,7 +360,31 @@ public class EditorBlockMenu : MonoBehaviour
                             left = leftButton.Button;
                     }
 
+                    if (down == null) //setting navigation to page arrows
+                    {
+                        Navigation navigation = new Navigation();
+                        navigation.mode = Navigation.Mode.Explicit;
+                        navigation.selectOnUp = button.Button;
+                        navigation.selectOnRight = null;
+                        navigation.selectOnDown = null;
+
+                        if (right == null)
+                        {
+                            down = NextPageButton;
+                            navigation.selectOnLeft = PreviousPageButton;
+                            NextPageButton.navigation = navigation;
+                        }
+
+                        if (left == null)
+                        {
+                            down = PreviousPageButton;
+                            navigation.selectOnRight = NextPageButton;
+                            PreviousPageButton.navigation = navigation;
+                        }
+                    }
+
                     button.SetNavigation(up, down, left, right);
+                    button.OnSelected += ButtonWasSelected;
                 }
             }
         }

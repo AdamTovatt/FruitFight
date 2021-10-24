@@ -202,7 +202,7 @@ public class LevelDetailsScreen : MonoBehaviour
         }
 
         DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
-        MainMenuUi.Instance.MouseOverSeletableChecker.Disable();
+        MainMenuUi.Instance.MouseOverSelectableChecker.Disable();
         MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(true);
         WorldBuilder.NextLevel = world;
         SceneManager.sceneLoaded += SceneLoaded;

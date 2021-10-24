@@ -465,6 +465,7 @@ MonoBehaviour:
   ContentSize: {x: 240, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &55879804
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -884,6 +885,7 @@ MonoBehaviour:
   ContentSize: {x: 200, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!114 &461101063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1541,6 +1543,7 @@ MonoBehaviour:
   ContentSize: {x: 250, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &862123433
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1708,6 +1711,7 @@ MonoBehaviour:
   ContentSize: {x: 200, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &883507318
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2202,7 +2206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46dfe82f9cffaa9409a36091f41d7541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MouseOverSeletableChecker: {fileID: 1557549037}
+  MouseOverSelectableChecker: {fileID: 1557549037}
   PlayerInfoUiPrefab: {fileID: 9196543932476015330, guid: c5d185aa7631cf045a7565fe40c8b816,
     type: 3}
   Canvas: {fileID: 1557549033}
@@ -2352,6 +2356,7 @@ MonoBehaviour:
   ContentSize: {x: 230, y: 50}
   UseCustomPivot: 1
   Pivot: {x: 0.5, y: 0.5}
+  RequirePointOnSelectable: 0
 --- !u!222 &1861681499
 CanvasRenderer:
   m_ObjectHideFlags: 0

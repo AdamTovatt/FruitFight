@@ -640,6 +640,7 @@ public class WorldEditor : MonoBehaviour
                 if (selectedWorldObject.Info.RotatableX || selectedWorldObject.Info.RotatableY)
                 {
                     isRotatingObject = true;
+                    AlertCreator.Instance.CreateNotification("to rotate object", 2f, "Move");
                 }
             }
         }
@@ -654,6 +655,7 @@ public class WorldEditor : MonoBehaviour
         selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
         selectedWorldObject.RotationOffset = selectedWorldObject.Instance.transform.position - selectedWorldObject.Position;
         isRotatingObject = false;
+        AlertCreator.Instance.CreateNotification("Rotate mode exited", 2f);
     }
 
     private void MoveBlockSelection(InputAction.CallbackContext context)
@@ -763,6 +765,9 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(InputAction.CallbackContext context)
     {
+        if (Ui.BlockMenu.IsOpen)
+            return;
+
         if (controlsDisabled || isTestingLevel)
             return;
 
@@ -777,8 +782,6 @@ public class WorldEditor : MonoBehaviour
             ExitRotationMode();
             return;
         }
-
-        CloseBlockSelection();
 
         if (isPickingActivator)
         {

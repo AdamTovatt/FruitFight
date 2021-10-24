@@ -45,7 +45,7 @@ public class GameUi : UiManager
 
     private void ExitLevel()
     {
-        MouseOverSeletableChecker.Disable();
+        MouseOverSelectableChecker.Disable();
 
 
         if (WorldEditor.IsTestingLevel)
@@ -78,7 +78,7 @@ public class GameUi : UiManager
     {
         if (context.control.ToString().ToLower().Contains("mouse"))
         {
-            MouseOverSeletableChecker.ClickCurrentItem();
+            MouseOverSelectableChecker.ClickCurrentItem();
         }
     }
 
@@ -89,7 +89,7 @@ public class GameUi : UiManager
         PauseMenu.Show();
         PauseMenu.OnClosed += PauseMenuWasClosed;
         Cursor.lockState = CursorLockMode.None;
-        MouseOverSeletableChecker.Enable();
+        MouseOverSelectableChecker.Enable();
         EventSystem.enabled = true;
         PauseMenu.ResumeButton.Select();
     }
@@ -105,7 +105,7 @@ public class GameUi : UiManager
         UiInput.enabled = false;
         HidePauseMenu();
         GameManager.Instance.GameWasResumed();
-        MouseOverSeletableChecker.Disable();
+        MouseOverSelectableChecker.Disable();
     }
 
     public void HidePauseMenu()

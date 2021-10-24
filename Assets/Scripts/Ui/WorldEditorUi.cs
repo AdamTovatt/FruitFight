@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(AlertCreator))]
@@ -30,6 +31,8 @@ public class WorldEditorUi : UiManager
     public UiKeyboardInput OnScreenKeyboard { get; set; }
 
     private Dictionary<GameObject, bool> uiSectionPanelsOriginalActiveStatus;
+
+    private PlayerControls playerInput;
 
     private void Awake()
     {
@@ -67,7 +70,19 @@ public class WorldEditorUi : UiManager
 
         uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
 
-        MouseOverSeletableChecker.Enable();
+        MouseOverSelectableChecker.Enable();
+
+        playerInput = new PlayerControls();
+        playerInput.Ui.Select.performed += SelectPerformed;
+        playerInput.Ui.Enable();
+    }
+
+    private void SelectPerformed(InputAction.CallbackContext context)
+    {
+        if (BlockMenu.IsOpen)
+        {
+            MouseOverSelectableChecker.ClickCurrentItem();
+        }
     }
 
     public void DisableAllButOneSectionPanels(GameObject visiblePanel)
@@ -102,7 +117,7 @@ public class WorldEditorUi : UiManager
 
     public void Destroy()
     {
-        MouseOverSeletableChecker.Disable();
+        MouseOverSelectableChecker.Disable();
         WorldEditor.Instance.ThumbnailManager.OnThumbnailsCreated -= HandeThumbnailsCreated;
         Destroy(EventSystem);
         Destroy(gameObject);
@@ -134,6 +149,8 @@ public class WorldEditorUi : UiManager
 
         PauseMenu.gameObject.SetActive(true);
         PauseMenu.WasShown();
+
+        BlockMenu.DisableDeselectButtons();
     }
 
     public void ClosePauseMenu()
@@ -149,6 +166,8 @@ public class WorldEditorUi : UiManager
 
         PauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
+
+        BlockMenu.EnableDeslectButtons();
     }
 
     public void HideBlockSelection()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ public class MouseOverSelectableChecker : MonoBehaviour
     private PlayerControls input;
     private UiSelectable currentlySelectedItem;
 
+    private Dictionary<GameObject, UiSelectable> selectableDictionary = new Dictionary<GameObject, UiSelectable>();
+
     private void Awake()
     {
         input = new PlayerControls();
@@ -25,20 +28,31 @@ public class MouseOverSelectableChecker : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>();
         graphicRaycaster.Raycast(pointerData, results);
 
-        foreach(RaycastResult result in results)
+        foreach (RaycastResult result in results)
         {
-            UiSelectable selectable = result.gameObject.GetComponentInParent<UiSelectable>();
-            if (selectable != null)
+            if (!selectableDictionary.ContainsKey(result.gameObject))
+                selectableDictionary.Add(result.gameObject, result.gameObject.GetComponentInParent<UiSelectable>());
+
+            UiSelectable selectable = selectableDictionary[result.gameObject];
+            if (selectable != null && selectable != currentlySelectedItem)
             {
-                selectable.SelectUnderlyingComponent();
-                currentlySelectedItem = selectable;
+                if (!selectable.RequirePointOnSelectable || selectable.PointIsOnSelectable(pointerData.position))
+                {
+                    selectable.SelectUnderlyingComponent();
+                    currentlySelectedItem = selectable;
+                }
             }
         }
     }
 
+    public void SetSelectedItem(UiSelectable selectable)
+    {
+        currentlySelectedItem = selectable;
+    }
+
     public void ClickCurrentItem()
     {
-        if(currentlySelectedItem != null)
+        if (currentlySelectedItem != null)
         {
             currentlySelectedItem.ForceClick();
         }
