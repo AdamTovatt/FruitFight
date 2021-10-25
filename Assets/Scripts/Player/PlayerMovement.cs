@@ -33,6 +33,9 @@ public class PlayerMovement : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
+    public delegate void JellyBeansUpdatedHandler(int newAmount);
+    public event JellyBeansUpdatedHandler OnJellyBeansUpdated;
+
     public delegate void OnPickedUpItemHandler(Holdable holdableItem);
     public event OnPickedUpItemHandler OnPickedUpItem;
 
@@ -123,6 +126,7 @@ public class PlayerMovement : MovingCharacter
     private void Start()
     {
         health.OnDied += OnDied;
+        OnJellyBeansUpdated?.Invoke(JellyBeans);
     }
 
     private void OnDestroy()
@@ -528,7 +532,7 @@ public class PlayerMovement : MovingCharacter
         {
             case AbsorbableItemType.JellyBean:
                 JellyBeans++;
-                Debug.Log("Jelly beans: " + JellyBeans);
+                OnJellyBeansUpdated?.Invoke(JellyBeans);
                 break;
             case AbsorbableItemType.Coin:
                 Debug.Log("Coin was absorbed!");
