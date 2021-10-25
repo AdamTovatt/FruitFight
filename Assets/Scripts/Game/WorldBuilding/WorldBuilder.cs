@@ -65,7 +65,16 @@ public class WorldBuilder : MonoBehaviour
         }
 
         if (!IsInEditor)
+        {
             BindObjects();
+        }
+        else
+        {
+            foreach(AlwaysFaceCamera faceCamera in FindObjectsOfType<AlwaysFaceCamera>())
+            {
+                faceCamera.Activate();
+            }
+        }
 
         CurrentWorld = world;
 

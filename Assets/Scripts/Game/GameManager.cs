@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public bool IsDebug = false;
     public GameObject CameraPrefab;
     public GameObject PlayerPrefab;
+    public CameraManager CameraManager;
     public int BlockSeeThroughRadius = 2;
 
     public bool Paused { get; private set; }
@@ -28,7 +29,6 @@ public class GameManager : MonoBehaviour
     private PlayerInputManager playerInputManager;
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
-    private Spawner skyboxSpawner;
     private static float currentLevel = 1;
 
     public void Awake()
@@ -36,9 +36,6 @@ public class GameManager : MonoBehaviour
         Players = new List<PlayerInformation>();
         PlayerCharacters = new List<PlayerMovement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
-        skyboxSpawner = GetComponent<Spawner>();
-
-        skyboxSpawner.OnObjectSpawned += SkyboxWasCreated;
     }
 
     public void Start()
@@ -69,14 +66,6 @@ public class GameManager : MonoBehaviour
         {
             playerControls.Gameplay.Pause.performed -= Pause;
         }
-
-        skyboxSpawner.OnObjectSpawned -= SkyboxWasCreated;
-    }
-
-    private void SkyboxWasCreated(object sender, GameObject spawnedObject)
-    {
-        if (MultipleTargetCamera != null)
-            spawnedObject.GetComponentInChildren<SkyboxCamera>().SetMainCamera(MultipleTargetCamera.transform);
     }
 
     public void StartLevel()
@@ -85,22 +74,25 @@ public class GameManager : MonoBehaviour
         WorldBuilder.Instance.BuildNext();
         navMeshSurface.BuildNavMesh();
 
-        GameObject cameraObject = Instantiate(CameraPrefab, transform.position, transform.rotation);
-        WorldBuilder.Instance.AddPreviousWorldObjects(cameraObject);
-        MultipleTargetCamera = cameraObject.GetComponent<MultipleTargetCamera>();
-        MultipleTargetCamera.SetCameraHints(FindObjectsOfType<CameraHint>());
-
         PlayerSpawnpoint playerSpawnpoint = FindObjectOfType<PlayerSpawnpoint>();
+
+        bool addedPlayerCamera = false;
 
         if (playerSpawnpoint != null)
         {
-            foreach (PlayerConfiguration playerConfiguration in PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray())
+            PlayerConfiguration[] playerConfigurations = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray();
+            foreach (PlayerConfiguration playerConfiguration in playerConfigurations)
             {
                 playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
 
                 GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
                 PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
-                MultipleTargetCamera.Targets.Add(player.transform);
+                
+                SingleTargetCamera camera = CameraManager.AddCamera(player.transform, playerConfiguration.Input);
+                CameraViewType viewType = playerConfigurations.Length > 1 ? (addedPlayerCamera ? CameraViewType.Right : CameraViewType.Left) : CameraViewType.Full;
+                camera.SetViewType(viewType);
+                addedPlayerCamera = true;
+                WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
 
                 GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
                 if (hatPrefab != null)
@@ -109,7 +101,7 @@ public class GameManager : MonoBehaviour
                     playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
                 }
 
-                playerMovement.InitializePlayerInput(playerConfiguration);
+                playerMovement.InitializePlayerInput(playerConfiguration, camera);
                 PlayerCharacters.Add(playerMovement);
 
                 Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
@@ -117,7 +109,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            MultipleTargetCamera.Targets.Add(Instantiate(new GameObject(), new Vector3(0, 3, 0), Quaternion.identity, transform).transform);
+            CameraManager.AddCamera(transform, null, false);
         }
 
         foreach (PlayerInformation player in Players)
@@ -141,29 +133,32 @@ public class GameManager : MonoBehaviour
 
         World currentWorld = WorldBuilder.Instance.CurrentWorld;
         HashSet<Block> blocks = new HashSet<Block>();
-        foreach (PlayerMovement player in PlayerCharacters)
+        foreach (SingleTargetCamera camera in CameraManager.Cameras)
         {
-            Ray ray = new Ray(MultipleTargetCamera.transform.position, ((player.transform.position + Vector3.up * 0.2f) - MultipleTargetCamera.transform.position));
-            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            foreach (PlayerMovement player in PlayerCharacters)
             {
-                if (hitInfo.transform == player.transform || hitInfo.transform.tag == "Invisible")
-                    continue;
-
-                if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude * 3)
-                    continue;
-            }
-
-            for (int x = 0; x < BlockSeeThroughRadius * 2; x++)
-            {
-                for (int y = 0; y < BlockSeeThroughRadius * 2; y++)
+                Ray ray = new Ray(camera.transform.position, ((player.transform.position + Vector3.up * 0.2f) - camera.transform.position));
+                if (Physics.Raycast(ray, out RaycastHit hitInfo))
                 {
-                    for (int z = 0; z < BlockSeeThroughRadius * 2; z++)
-                    {
-                        Vector3Int searchPosition = ((Vector3Int)player.transform.position) + new Vector3Int(BlockSeeThroughRadius - x, BlockSeeThroughRadius - y, BlockSeeThroughRadius - z);
+                    if (hitInfo.transform == player.transform || hitInfo.transform.tag == "Invisible")
+                        continue;
 
-                        foreach (Block block in currentWorld.GetBlocksAtPosition(searchPosition))
+                    if (hitInfo.collider.bounds.size.sqrMagnitude < player.Collider.bounds.size.sqrMagnitude * 3)
+                        continue;
+                }
+
+                for (int x = 0; x < BlockSeeThroughRadius * 2; x++)
+                {
+                    for (int y = 0; y < BlockSeeThroughRadius * 2; y++)
+                    {
+                        for (int z = 0; z < BlockSeeThroughRadius * 2; z++)
                         {
-                            blocks.Add(block);
+                            Vector3Int searchPosition = ((Vector3Int)player.transform.position) + new Vector3Int(BlockSeeThroughRadius - x, BlockSeeThroughRadius - y, BlockSeeThroughRadius - z);
+
+                            foreach (Block block in currentWorld.GetBlocksAtPosition(searchPosition))
+                            {
+                                blocks.Add(block);
+                            }
                         }
                     }
                 }
@@ -227,10 +222,12 @@ public class GameManager : MonoBehaviour
     public void DisablePlayerControls()
     {
         SetPlayerControls(false);
+        CameraManager.DisableCameraInput();
     }
 
     public void EnablePlayerControls()
     {
         SetPlayerControls(true);
+        CameraManager.EnableCameraInput();
     }
 }

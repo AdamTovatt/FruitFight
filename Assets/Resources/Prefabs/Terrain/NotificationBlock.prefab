@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MeshRenderer: {fileID: 9094481544057581730}
-  StartActive: 1
+  StartActive: 0
 --- !u!1 &9094481543678010122
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,8 +122,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IconRotator: {fileID: 1796951404060503168}
   IconGraphic: {fileID: 9094481544057581730}
-  IconName: 
-  Text: 
 --- !u!1 &9094481544057581662
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,9 +11,11 @@ public class AlwaysFaceCamera : MonoBehaviour
 
     private Transform cameraTransform;
 
+    private bool? assignedValue = null;
+
     private void Start()
     {
-        active = StartActive;
+        active = assignedValue == null ? StartActive : (bool)assignedValue;
 
         if (active)
             cameraTransform = GetCameraTransform();
@@ -65,6 +67,8 @@ public class AlwaysFaceCamera : MonoBehaviour
             active = false;
             MeshRenderer.enabled = false;
         }
+
+        assignedValue = newValue;
     }
 
     public void Activate()

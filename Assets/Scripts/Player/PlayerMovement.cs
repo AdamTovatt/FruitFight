@@ -6,16 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MovingCharacter
 {
-    private Vector2 move;
     public Rigidbody RigidBody;
-    private Transform Camera;
-    private MultipleTargetCamera multipleTargetCamera;
-    private PlayerControls playerControls;
-    private Dictionary<System.Guid, PlayerInputAction> inputActions;
-    private Health health;
-    private AverageVelocityKeeper averageVelocityKeeper;
-    private FootStepAudioSource footStepAudioSource;
-    private SoundSource soundSource;
 
     public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
@@ -79,6 +70,17 @@ public class PlayerMovement : MovingCharacter
     private float _lastGroundedTime;
     private bool previousGrounded = false;
 
+    private Transform Camera;
+    private SingleTargetCamera singleTargetCamera;
+    private PlayerControls playerControls;
+    private Dictionary<System.Guid, PlayerInputAction> inputActions;
+    private Health health;
+    private AverageVelocityKeeper averageVelocityKeeper;
+    private FootStepAudioSource footStepAudioSource;
+    private SoundSource soundSource;
+    private Vector2 move;
+    private PlayerConfiguration playerConfiguration;
+
     private Transform groundTransform;
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -115,6 +117,7 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.RotateCameraRight.id, PlayerInputAction.RotateCameraRight);
         inputActions.Add(playerControls.Gameplay.Pause.id, PlayerInputAction.Pause);
         inputActions.Add(playerControls.Gameplay.RotateCameraWithMouse.id, PlayerInputAction.MouseLook);
+        inputActions.Add(playerControls.Gameplay.Zoom.id, PlayerInputAction.Zoom);
     }
 
     private void Start()
@@ -152,8 +155,12 @@ public class PlayerMovement : MovingCharacter
         }
     }
 
-    public void InitializePlayerInput(PlayerConfiguration playerConfiguration)
+    public void InitializePlayerInput(PlayerConfiguration playerConfiguration, SingleTargetCamera singleTargetCamera)
     {
+        this.playerConfiguration = playerConfiguration;
+        this.singleTargetCamera = singleTargetCamera;
+        Camera = singleTargetCamera.transform;
+
         playerConfiguration.Input.onActionTriggered += HandleAction;
 
         if (playerConfiguration.Input.currentControlScheme == "Keyboard")
@@ -222,6 +229,8 @@ public class PlayerMovement : MovingCharacter
                 case PlayerInputAction.MouseLook:
                     rotateCamera = Mathf.Clamp(context.ReadValue<Vector2>().x * -2f, -15, 15);
                     break;
+                case PlayerInputAction.Zoom:
+                    break;
                 default:
                     throw new System.Exception("Unknown action: " + context.action.name);
             }
@@ -234,12 +243,9 @@ public class PlayerMovement : MovingCharacter
     {
         if (Camera == null)
         {
-            Camera = GameManager.Instance.MultipleTargetCamera.transform;
-            multipleTargetCamera = Camera.gameObject.GetComponent<MultipleTargetCamera>();
+            singleTargetCamera = GameManager.Instance.CameraManager.Cameras.Where(x => x.Input == playerConfiguration.Input).FirstOrDefault();
+            Camera = singleTargetCamera.transform;
         }
-
-        if (multipleTargetCamera != null)
-            multipleTargetCamera.RotateCamera(rotateCamera);
 
         Vector3 cameraForward = Camera.forward;
         Vector3 cameraRight = Camera.right;
@@ -589,5 +595,5 @@ public class PlayerMovement : MovingCharacter
 
 public enum PlayerInputAction
 {
-    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause, MouseLook
+    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause, MouseLook, Zoom
 }

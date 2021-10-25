@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2800476988953670055}
   - component: {fileID: 2800476988953670057}
   - component: {fileID: 2800476988953670056}
-  - component: {fileID: 6023764845615035362}
+  - component: {fileID: -5938182796316300376}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -52,6 +52,7 @@ MonoBehaviour:
     type: 3}
   PlayerPrefab: {fileID: 2012823961798305035, guid: 7a8b9f89619f22843b473f64af50bf2b,
     type: 3}
+  CameraManager: {fileID: -5938182796316300376}
   BlockSeeThroughRadius: 3
 --- !u!114 &2800476988953670057
 MonoBehaviour:
@@ -94,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc79911b6c91a5a4b80ef31b5171a63d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6023764845615035362
+--- !u!114 &-5938182796316300376
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,11 +104,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2800476988953670052}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 274d0ae719705634d94b53fd67319c12, type: 3}
+  m_Script: {fileID: 11500000, guid: 6633f0e29d5fa21459949ec308f298dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 8968286937793633843, guid: 317bc864145390645bd726912d1b406e, type: 3}
-  SpawnInEditor: 1
-  SpawnAtStart: 1
-  SpawnAtInterval: 0
-  SecondsBetweenSpawning: 5
+  CameraPrefab: {fileID: 4417066508167040906, guid: de517d1fff8dbf24ca31ac2d72b1b16e,
+    type: 3}

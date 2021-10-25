@@ -765,10 +765,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(InputAction.CallbackContext context)
     {
-        if (Ui.BlockMenu.IsOpen)
-            return;
-
-        if (controlsDisabled || isTestingLevel)
+        if (controlsDisabled || isTestingLevel || Ui.BlockMenu.IsOpen)
             return;
 
         if (isCapturingImage)
@@ -776,6 +773,9 @@ public class WorldEditor : MonoBehaviour
             StartCoroutine(CaptureScreenShot());
             return;
         }
+
+        if (Ui.PauseMenuIsOpen)
+            return;
 
         if (isRotatingObject)
         {

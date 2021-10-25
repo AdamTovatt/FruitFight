@@ -88,7 +88,7 @@ public class EditorBlockMenu : MonoBehaviour
         selectedIndex = button.MenuIndex;
         WorldEditor.Instance.SelectedBlock = CurrentBuildingBlock.Id;
 
-        if (!IsOpen && deselect)
+        if (!WorldEditorUi.Instance.PauseMenuIsOpen && !IsOpen && deselect)
         {
             Open();
         }

@@ -25,6 +25,8 @@ public class WorldEditorUi : UiManager
     private LoadingScreen loadingScreen;
     private InputSystemUIInputModule uiInput;
 
+    public bool PauseMenuIsOpen { get; private set; }
+
     public bool? KeyboardExists { get; set; }
 
     public AlertCreator AlertCreator { get; set; }
@@ -151,6 +153,9 @@ public class WorldEditorUi : UiManager
         PauseMenu.WasShown();
 
         BlockMenu.DisableDeselectButtons();
+        
+        PauseMenuIsOpen = true;
+        BlockMenu.Close();
     }
 
     public void ClosePauseMenu()
@@ -168,6 +173,7 @@ public class WorldEditorUi : UiManager
         WorldEditor.Instance.EnableControls();
 
         BlockMenu.EnableDeslectButtons();
+        PauseMenuIsOpen = false;
     }
 
     public void HideBlockSelection()
