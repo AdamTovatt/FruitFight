@@ -11,6 +11,7 @@ public class UiPlayerInfo : MonoBehaviour
     public GameObject UiHeartPrefab;
 
     public UiCountDisplay JellyBeanCounter;
+    public UiCountDisplay CoinCounter;
 
     public float HeartSpacing = 60f;
     public float MarginY = 30f;
@@ -58,8 +59,15 @@ public class UiPlayerInfo : MonoBehaviour
 
         playerInformation.Health.OnHealthUpdated += UpdateHearts;
         playerInformation.Movement.OnJellyBeansUpdated += UpdateJellyBeans;
+        playerInformation.Movement.OnCoinsUpdated += UpdateCoins;
 
         JellyBeanCounter.Initialize(!isLeft);
+        CoinCounter.Initialize(!isLeft);
+    }
+
+    private void UpdateCoins(int newCount)
+    {
+        CoinCounter.SetCount(newCount);
     }
 
     private void UpdateJellyBeans(int newCount)
@@ -82,6 +90,7 @@ public class UiPlayerInfo : MonoBehaviour
     {
         playerInformation.Health.OnHealthUpdated -= UpdateHearts;
         playerInformation.Movement.OnJellyBeansUpdated -= UpdateJellyBeans;
+        playerInformation.Movement.OnCoinsUpdated -= UpdateCoins;
     }
 
     private void Awake()

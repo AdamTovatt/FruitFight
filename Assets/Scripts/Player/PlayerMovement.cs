@@ -30,11 +30,15 @@ public class PlayerMovement : MovingCharacter
     public CapsuleCollider Collider { get; set; }
 
     public int JellyBeans { get; set; }
+    public int Coins { get; set; }
 
     public override event AttackHandler OnAttack;
 
     public delegate void JellyBeansUpdatedHandler(int newAmount);
     public event JellyBeansUpdatedHandler OnJellyBeansUpdated;
+
+    public delegate void CoinsUpdatedHandler(int newAmount);
+    public event CoinsUpdatedHandler OnCoinsUpdated;
 
     public delegate void OnPickedUpItemHandler(Holdable holdableItem);
     public event OnPickedUpItemHandler OnPickedUpItem;
@@ -127,6 +131,7 @@ public class PlayerMovement : MovingCharacter
     {
         health.OnDied += OnDied;
         OnJellyBeansUpdated?.Invoke(JellyBeans);
+        OnCoinsUpdated?.Invoke(Coins);
     }
 
     private void OnDestroy()
@@ -535,7 +540,8 @@ public class PlayerMovement : MovingCharacter
                 OnJellyBeansUpdated?.Invoke(JellyBeans);
                 break;
             case AbsorbableItemType.Coin:
-                Debug.Log("Coin was absorbed!");
+                Coins++;
+                OnCoinsUpdated?.Invoke(Coins);
                 break;
             default:
                 break;
