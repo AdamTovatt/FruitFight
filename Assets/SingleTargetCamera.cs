@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,12 +11,13 @@ public class SingleTargetCamera : MonoBehaviour
     public UniqueSoundSourceManager SoundSourceManager;
     public float StartDistance = 8f;
     public float SmoothTime = 1f;
+    public float InsideWallDistance = 0.2f;
     public Vector2 StartRotation;
 
     public Transform Target { get; private set; }
     public PlayerInput Input { get; private set; }
     public bool AllowInput { get; set; }
-    public bool CameraViewType { get; private set; }
+    public CameraViewType CameraViewType { get; private set; }
     public float Distance { get; private set; }
 
     private Vector3 targetPoint;
@@ -33,6 +35,8 @@ public class SingleTargetCamera : MonoBehaviour
 
     private float gamepadSensitivityMultiplier = 10f;
     private float gamepadScrollMultiplier = 0.1f;
+
+    private bool blockerIsActive = false;
 
     private void Awake()
     {
@@ -129,7 +133,29 @@ public class SingleTargetCamera : MonoBehaviour
 
             transform.position = truePosition;
             transform.rotation = Quaternion.LookRotation(targetPoint - transform.position);
+
+            if(IsInsideObject())
+            {
+                if(!blockerIsActive)
+                {
+                    GameUi.Instance.CameraViewBlocker.ActivateBlocker(CameraViewType);
+                    blockerIsActive = true;
+                }
+            }
+            else
+            {
+                if(blockerIsActive)
+                {
+                    GameUi.Instance.CameraViewBlocker.DeactivateBlocker(CameraViewType);
+                    blockerIsActive = false;
+                }
+            }
         }
+    }
+
+    public bool IsInsideObject()
+    {
+        return Physics.OverlapSphere(transform.position + transform.forward * InsideWallDistance, 0.001f).Where(x => x.transform.tag == "Ground" || x.transform.tag == "Water").Count() > 0;
     }
 
     public void DisableSound()
@@ -146,6 +172,8 @@ public class SingleTargetCamera : MonoBehaviour
 
     public void SetViewType(CameraViewType viewType)
     {
+        CameraViewType = viewType;
+
         switch (viewType)
         {
             case global::CameraViewType.Full:

@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4417066508167040906}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.373252, y: 5.52443, z: 0.7992652}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.43343, y: 0.43343, z: 0.43343}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -135,6 +135,7 @@ MonoBehaviour:
   SoundSourceManager: {fileID: 2208430968058263026}
   StartDistance: 8
   SmoothTime: 0.2
+  InsideWallDistance: 0.2
   StartRotation: {x: 40, y: 0}
 --- !u!114 &2208430968058263026
 MonoBehaviour:

@@ -15,6 +15,7 @@ public class GameUi : UiManager
     public EventSystem EventSystem;
     public InGamePauseMenu PauseMenu;
     public LoadingScreen LoadingScreen;
+    public CameraViewBlocker CameraViewBlocker;
 
     public static GameUi Instance { get; private set; }
 
