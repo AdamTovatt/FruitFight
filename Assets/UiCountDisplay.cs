@@ -7,9 +7,11 @@ public class UiCountDisplay : MonoBehaviour
     public Image CounterBackground;
     public TextMeshProUGUI CounterText;
     public Image CounterIcon;
+    public Wobble IconWobble;
     public Image CounterBackgroundMirrored;
     public TextMeshProUGUI CounterTextMirrored;
     public Image CounterIconMirrored;
+    public Wobble IconWobbleMirrored;
 
     public int NormalXPosition;
     public int MirroredXPosition;
@@ -46,6 +48,8 @@ public class UiCountDisplay : MonoBehaviour
     {
         if (!isMirrored)
         {
+            IconWobble.StartWobble();
+
             CounterText.text = count.ToString();
             CounterText.ForceMeshUpdate();
 
@@ -53,6 +57,8 @@ public class UiCountDisplay : MonoBehaviour
         }
         else
         {
+            IconWobbleMirrored.StartWobble();
+
             CounterTextMirrored.text = count.ToString();
             CounterTextMirrored.ForceMeshUpdate();
 

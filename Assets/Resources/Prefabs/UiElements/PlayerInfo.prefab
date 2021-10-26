@@ -57,9 +57,11 @@ MonoBehaviour:
   CounterBackground: {fileID: 2492615064230837858}
   CounterText: {fileID: 9149844308923949139}
   CounterIcon: {fileID: 1198427766807777331}
+  IconWobble: {fileID: 7535851631237626640}
   CounterBackgroundMirrored: {fileID: 4648684221887756998}
   CounterTextMirrored: {fileID: 4099174490403894676}
   CounterIconMirrored: {fileID: 8038877936838035372}
+  IconWobbleMirrored: {fileID: 6597363188950683786}
   NormalXPosition: 185
   MirroredXPosition: -190
   SizeMValue: 44
@@ -495,6 +497,7 @@ GameObject:
   - component: {fileID: 4443607058491016042}
   - component: {fileID: 2157940347247186742}
   - component: {fileID: 8038877936838035372}
+  - component: {fileID: 6597363188950683786}
   m_Layer: 5
   m_Name: CoinIconMirrored
   m_TagString: Untagged
@@ -559,6 +562,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6597363188950683786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483095020609988174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cdedbc425515d499363a58fd51f04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WobbleDuration: 1.2
+  WobbleSpeed: 16
+  WobbleAmplitude: 0.12
+  StartOffset: 0.2
 --- !u!1 &3027661077755608879
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +799,7 @@ GameObject:
   - component: {fileID: 1849160828611597184}
   - component: {fileID: 5261979463026082990}
   - component: {fileID: 1198427766807777331}
+  - component: {fileID: 7535851631237626640}
   m_Layer: 5
   m_Name: CoinIcon
   m_TagString: Untagged
@@ -844,6 +864,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7535851631237626640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3283875389130238772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cdedbc425515d499363a58fd51f04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WobbleDuration: 1.2
+  WobbleSpeed: 16
+  WobbleAmplitude: 0.12
+  StartOffset: 0.2
 --- !u!1 &4671760902588508550
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,6 +1026,7 @@ GameObject:
   - component: {fileID: 7708341544344168291}
   - component: {fileID: 3480745473624281201}
   - component: {fileID: 2489796771192806901}
+  - component: {fileID: 5406722153140900912}
   m_Layer: 5
   m_Name: JellyBeanIconMirrored
   m_TagString: Untagged
@@ -1054,6 +1091,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5406722153140900912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6040661046206261246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cdedbc425515d499363a58fd51f04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WobbleDuration: 1.2
+  WobbleSpeed: 16
+  WobbleAmplitude: 0.12
+  StartOffset: 0.2
 --- !u!1 &6333909983896658045
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1118,7 @@ GameObject:
   - component: {fileID: 1907803529460006796}
   - component: {fileID: 6429525401311524379}
   - component: {fileID: 5089961627471521062}
+  - component: {fileID: 3216998338390822522}
   m_Layer: 5
   m_Name: JellyBeanIcon
   m_TagString: Untagged
@@ -1129,6 +1183,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3216998338390822522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6333909983896658045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cdedbc425515d499363a58fd51f04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WobbleDuration: 1.2
+  WobbleSpeed: 16
+  WobbleAmplitude: 0.12
+  StartOffset: 0.2
 --- !u!1 &7441034080658193759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,9 +1257,11 @@ MonoBehaviour:
   CounterBackground: {fileID: 7851696985328312872}
   CounterText: {fileID: 2936928319404722447}
   CounterIcon: {fileID: 5089961627471521062}
+  IconWobble: {fileID: 3216998338390822522}
   CounterBackgroundMirrored: {fileID: 266379157959355786}
   CounterTextMirrored: {fileID: 1925079447768866398}
   CounterIconMirrored: {fileID: 2489796771192806901}
+  IconWobbleMirrored: {fileID: 5406722153140900912}
   NormalXPosition: 105
   MirroredXPosition: -190
   SizeMValue: 44
