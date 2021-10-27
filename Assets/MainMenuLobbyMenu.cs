@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class MainMenuLobbyMenu : MonoBehaviour
 {
+    public static bool IsActive { get { return Instance != null && Instance.gameObject.activeSelf; } }
+    public static MainMenuLobbyMenu Instance;
+
     public TextMeshProUGUI HostInformationText;
     public Button BackButton;
     public Button ContinueButton;
@@ -15,6 +18,11 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     private MainMenuOnlineMenu previousMenu;
     private Dictionary<int, GameObject> playerObjects = new Dictionary<int, GameObject>();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -41,22 +49,29 @@ public class MainMenuLobbyMenu : MonoBehaviour
         }
     }
 
-    private void PlayerConnected(int playerId)
+    public void AddPlayer(int playerId, string playerName)
     {
         GameObject playerObject = Instantiate(PlayerInLobbyPrefab, PlayerContainer.transform);
+
+        playerObject.GetComponent<UiPlayerInLobby>().SetName(playerName);
+
         PlayerContainer.AddContent(playerObject.GetComponent<RectTransform>());
         PlayerContainer.CenterContent();
         playerObjects.Add(playerId, playerObject);
     }
 
+    private void PlayerConnected(int playerId)
+    {
+        /*
+        GameObject playerObject = Instantiate(PlayerInLobbyPrefab, PlayerContainer.transform);
+        PlayerContainer.AddContent(playerObject.GetComponent<RectTransform>());
+        PlayerContainer.CenterContent();
+        playerObjects.Add(playerId, playerObject);*/
+    }
+
     private void PlayerDisconnected(int playerId)
     {
-        GameObject playerObject = playerObjects[playerId];
-        PlayerContainer.RemoveContent(playerObject.GetComponent<RectTransform>());
-        PlayerContainer.CenterContent();
-        Destroy(playerObject);
-
-        playerObjects.Remove(playerId);
+        RemovePlayer(playerId);
     }
 
     private void BindEventListeners()
@@ -79,6 +94,16 @@ public class MainMenuLobbyMenu : MonoBehaviour
         RemoveEventListeners();
     }
 
+    public void RemovePlayer(int playerId)
+    {
+        GameObject playerObject = playerObjects[playerId];
+        PlayerContainer.RemoveContent(playerObject.GetComponent<RectTransform>());
+        PlayerContainer.CenterContent();
+        Destroy(playerObject);
+
+        playerObjects.Remove(playerId);
+    }
+
     private void Back()
     {
         if (CustomNetworkManager.Instance.isNetworkActive)
@@ -88,6 +113,13 @@ public class MainMenuLobbyMenu : MonoBehaviour
         }
 
         RemoveEventListeners();
+
+        List<int> playersToRemove = new List<int>();
+
+        foreach (int playerId in playerObjects.Keys)
+            playersToRemove.Add(playerId);
+        foreach(int playerId in playersToRemove)
+            RemovePlayer(playerId);
 
         previousMenu.gameObject.SetActive(true);
         previousMenu.Show(null);
