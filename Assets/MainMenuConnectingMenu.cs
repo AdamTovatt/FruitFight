@@ -19,7 +19,7 @@ public class MainMenuConnectingMenu : MonoBehaviour
 
     private void Connected(int id)
     {
-        CustomNetworkManager.Instance.OnConnectedClient -= Connected;
+        UnBindListeners();
 
         MainMenuLobbyMenu.gameObject.SetActive(true);
         MainMenuLobbyMenu.Show(false, CustomNetworkManager.Instance.networkAddress, previousMenu.PreviousMenu);
@@ -57,7 +57,7 @@ public class MainMenuConnectingMenu : MonoBehaviour
 
     private void ClientDisconnected(int id)
     {
-        CustomNetworkManager.Instance.OnDisconnectedClient -= ClientDisconnected;
+        UnBindListeners();
 
         AlertCreator.Instance.CreateNotification("Error when connecting to " + CustomNetworkManager.Instance.networkAddress);
 

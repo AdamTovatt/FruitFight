@@ -22,10 +22,12 @@ public class PlayerNetworkIdentity : NetworkBehaviour
             }
 
             Name = name;
-            SetName(name);
+
+            if (!CustomNetworkManager.Instance.IsServer)
+                SetName(name);
         }
 
-        if(MainMenuLobbyMenu.IsActive)
+        if (MainMenuLobbyMenu.IsActive)
         {
             Debug.Log("add player: " + Name);
             MainMenuLobbyMenu.Instance.AddPlayer((int)netId, Name);

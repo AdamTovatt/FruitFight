@@ -7,6 +7,8 @@ public class CustomNetworkManager : NetworkManager
 {
     public static CustomNetworkManager Instance { get; private set; }
 
+    public bool IsServer { get; set; }
+
     public delegate void DisconnectedHandlerClient(int id);
     public event DisconnectedHandlerClient OnDisconnectedClient;
 
@@ -32,27 +34,28 @@ public class CustomNetworkManager : NetworkManager
         OnDisconnectedClient?.Invoke(conn.connectionId);
     }
 
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+        OnConnectedClient?.Invoke(conn.connectionId);
+    }
+
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
+
         OnDisconnectedServer?.Invoke(conn.connectionId);
     }
 
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
+
         OnConnectedServer?.Invoke(conn.connectionId);
 
         if (conn.connectionId != 0)
         {
             AlertCreator.Instance.CreateNotification("Client connected: " + conn.connectionId);
         }
-    }
-
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        base.OnClientConnect(conn);
-        Debug.Log("connected: " + conn.connectionId);
-        OnConnectedClient?.Invoke(conn.connectionId);
     }
 }

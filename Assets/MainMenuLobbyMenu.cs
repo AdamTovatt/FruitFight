@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,6 +11,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
     public static MainMenuLobbyMenu Instance;
 
     public TextMeshProUGUI HostInformationText;
+    public TextMeshProUGUI ContinueButtonText;
     public Button BackButton;
     public Button ContinueButton;
     public CenterContentContainer PlayerContainer;
@@ -18,6 +20,8 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     private MainMenuOnlineMenu previousMenu;
     private Dictionary<int, GameObject> playerObjects = new Dictionary<int, GameObject>();
+
+    private Color continueButtonTextOriginalColor;
 
     private void Awake()
     {
@@ -29,7 +33,20 @@ public class MainMenuLobbyMenu : MonoBehaviour
         BackButton.onClick.AddListener(Back);
         ContinueButton.onClick.AddListener(Continue);
 
+        continueButtonTextOriginalColor = ContinueButtonText.color;
+        DisableContinueButton();
+    }
+
+    private void DisableContinueButton()
+    {
         ContinueButton.interactable = false;
+        ContinueButtonText.color = new Color(0.7f, 0.7f, 0.7f, 0.5f);
+    }
+
+    private void EnableContinueButton()
+    {
+        ContinueButton.interactable = true;
+        ContinueButtonText.color = continueButtonTextOriginalColor;
     }
 
     public void Show(bool shouldStartHost, string hostInformation, MainMenuOnlineMenu previousMenu)
@@ -45,19 +62,36 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
         if (shouldStartHost)
         {
+            CustomNetworkManager.Instance.IsServer = true;
             CustomNetworkManager.Instance.StartHost();
         }
     }
 
     public void AddPlayer(int playerId, string playerName)
     {
-        GameObject playerObject = Instantiate(PlayerInLobbyPrefab, PlayerContainer.transform);
+        if (!playerObjects.ContainsKey(playerId))
+        {
+            GameObject playerObject = Instantiate(PlayerInLobbyPrefab, PlayerContainer.transform);
 
-        playerObject.GetComponent<UiPlayerInLobby>().SetName(playerName);
+            playerObject.GetComponent<UiPlayerInLobby>().SetName(playerName);
 
-        PlayerContainer.AddContent(playerObject.GetComponent<RectTransform>());
-        PlayerContainer.CenterContent();
-        playerObjects.Add(playerId, playerObject);
+            PlayerContainer.AddContent(playerObject.GetComponent<RectTransform>());
+            PlayerContainer.CenterContent();
+            playerObjects.Add(playerId, playerObject);
+        }
+        else
+        {
+            playerObjects[playerId].GetComponent<UiPlayerInLobby>().SetName(playerName);
+        }        
+           
+        if (CustomNetworkManager.Instance.IsServer)
+        {
+            Debug.Log("connections: " + NetworkServer.connections.Count);
+            if (NetworkServer.connections.Count > 1)
+                EnableContinueButton();
+            else
+                DisableContinueButton();
+        }
     }
 
     private void PlayerConnected(int playerId)
@@ -72,6 +106,11 @@ public class MainMenuLobbyMenu : MonoBehaviour
     private void PlayerDisconnected(int playerId)
     {
         RemovePlayer(playerId);
+
+        if (NetworkServer.connections.Count < 2)
+        {
+            DisableContinueButton();
+        }
     }
 
     private void BindEventListeners()
@@ -96,12 +135,19 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     public void RemovePlayer(int playerId)
     {
-        GameObject playerObject = playerObjects[playerId];
-        PlayerContainer.RemoveContent(playerObject.GetComponent<RectTransform>());
-        PlayerContainer.CenterContent();
-        Destroy(playerObject);
+        if (playerObjects.ContainsKey(playerId))
+        {
+            GameObject playerObject = playerObjects[playerId];
+            PlayerContainer.RemoveContent(playerObject.GetComponent<RectTransform>());
+            PlayerContainer.CenterContent();
+            Destroy(playerObject);
 
-        playerObjects.Remove(playerId);
+            playerObjects.Remove(playerId);
+        }
+        else
+        {
+            Debug.LogError("no playerobject exists: " + playerId);
+        }
     }
 
     private void Back()
@@ -110,6 +156,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
         {
             CustomNetworkManager.Instance.StopClient();
             CustomNetworkManager.Instance.StopHost();
+            CustomNetworkManager.Instance.IsServer = false;
         }
 
         RemoveEventListeners();
@@ -118,7 +165,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
         foreach (int playerId in playerObjects.Keys)
             playersToRemove.Add(playerId);
-        foreach(int playerId in playersToRemove)
+        foreach (int playerId in playersToRemove)
             RemovePlayer(playerId);
 
         previousMenu.gameObject.SetActive(true);

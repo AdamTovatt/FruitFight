@@ -30,7 +30,7 @@ public class MainMenuOnlineMenu : MonoBehaviour
 
     private void Host()
     {
-        if(CustomNetworkManager.Instance.isNetworkActive)
+        if (CustomNetworkManager.Instance.isNetworkActive)
         {
             CustomNetworkManager.Instance.StopClient();
             CustomNetworkManager.Instance.StopHost();
@@ -49,8 +49,8 @@ public class MainMenuOnlineMenu : MonoBehaviour
 
     public void Show(MainMenuPlayMenu previousMenu)
     {
-        if(previousMenu != null)
-        this.previousMenu = previousMenu;
+        if (previousMenu != null)
+            this.previousMenu = previousMenu;
 
         this.previousMenu.gameObject.SetActive(false);
         JoinButton.Select();
