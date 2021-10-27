@@ -9,6 +9,9 @@ public class MainMenuOnlineMenu : MonoBehaviour
     public Button HostButton;
     public Button BackButton;
 
+    public MainMenuLobbyMenu LobbyMenu;
+    public MainMenuJoinGameMenu JoinGameMenu;
+
     private MainMenuPlayMenu previousMenu;
 
     void Start()
@@ -20,12 +23,21 @@ public class MainMenuOnlineMenu : MonoBehaviour
 
     private void Join()
     {
-        Debug.Log("Join player");
+        JoinGameMenu.gameObject.SetActive(true);
+        JoinGameMenu.Show(this);
+        gameObject.SetActive(false);
     }
 
     private void Host()
     {
-        Debug.Log("Host game");
+        if(CustomNetworkManager.Instance.isNetworkActive)
+        {
+            CustomNetworkManager.Instance.StopClient();
+            CustomNetworkManager.Instance.StopHost();
+        }
+
+        LobbyMenu.gameObject.SetActive(true);
+        LobbyMenu.Show(true, CustomNetworkManager.Instance.networkAddress, this);
     }
 
     private void Back()
@@ -37,8 +49,10 @@ public class MainMenuOnlineMenu : MonoBehaviour
 
     public void Show(MainMenuPlayMenu previousMenu)
     {
+        if(previousMenu != null)
         this.previousMenu = previousMenu;
-        previousMenu.gameObject.SetActive(false);
+
+        this.previousMenu.gameObject.SetActive(false);
         JoinButton.Select();
     }
 }

@@ -22,6 +22,22 @@ public class CenterContentContainer : MonoBehaviour
         CenterContent();
     }
 
+    public void AddContent(RectTransform transform)
+    {
+        if (Content == null)
+            Content = new List<RectTransform>();
+
+        Content.Add(transform);
+    }
+
+    public void RemoveContent(RectTransform transform)
+    {
+        if (Content == null)
+            return;
+
+        Content.Remove(transform);
+    }
+
     public void CenterContent()
     {
         if (rectTransform == null)
