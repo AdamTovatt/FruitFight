@@ -60,14 +60,14 @@ public class EditorCamera : MonoBehaviour
         moveVector = Vector2.zero;
     }
 
-    public void StartZoomIn()
+    public void StartZoomIn(float zoomSpeedMultiplier = 1)
     {
-        zoom = -ZoomSpeed;
+        zoom = -ZoomSpeed * zoomSpeedMultiplier;
     }
 
-    public void StartZoomOut()
+    public void StartZoomOut(float zoomSpeedMultiplier = 1)
     {
-        zoom = ZoomSpeed;
+        zoom = ZoomSpeed * zoomSpeedMultiplier;
     }
 
     public void EndZoomIn()

@@ -656,6 +656,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseScroll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""aa7a7cb4-7e2f-481d-ae12-0d4b10619484"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -1153,6 +1161,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63fcff15-e74e-4fee-8984-9a3c16166351"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""MouseScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1215,6 +1234,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_LevelEditor_MouseWheel = m_LevelEditor.FindAction("MouseWheel", throwIfNotFound: true);
         m_LevelEditor_Grassify = m_LevelEditor.FindAction("Grassify", throwIfNotFound: true);
         m_LevelEditor_RightClick = m_LevelEditor.FindAction("RightClick", throwIfNotFound: true);
+        m_LevelEditor_MouseScroll = m_LevelEditor.FindAction("MouseScroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1432,6 +1452,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_LevelEditor_MouseWheel;
     private readonly InputAction m_LevelEditor_Grassify;
     private readonly InputAction m_LevelEditor_RightClick;
+    private readonly InputAction m_LevelEditor_MouseScroll;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1450,6 +1471,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @MouseWheel => m_Wrapper.m_LevelEditor_MouseWheel;
         public InputAction @Grassify => m_Wrapper.m_LevelEditor_Grassify;
         public InputAction @RightClick => m_Wrapper.m_LevelEditor_RightClick;
+        public InputAction @MouseScroll => m_Wrapper.m_LevelEditor_MouseScroll;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1501,6 +1523,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @RightClick.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
                 @RightClick.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
                 @RightClick.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnRightClick;
+                @MouseScroll.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
+                @MouseScroll.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
+                @MouseScroll.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1547,6 +1572,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @RightClick.started += instance.OnRightClick;
                 @RightClick.performed += instance.OnRightClick;
                 @RightClick.canceled += instance.OnRightClick;
+                @MouseScroll.started += instance.OnMouseScroll;
+                @MouseScroll.performed += instance.OnMouseScroll;
+                @MouseScroll.canceled += instance.OnMouseScroll;
             }
         }
     }
@@ -1604,5 +1632,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMouseWheel(InputAction.CallbackContext context);
         void OnGrassify(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
+        void OnMouseScroll(InputAction.CallbackContext context);
     }
 }

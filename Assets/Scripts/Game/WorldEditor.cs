@@ -68,6 +68,7 @@ public class WorldEditor : MonoBehaviour
 
     private float lastMarkerMoveTime;
     private float lastPageSwitchTime;
+    private float zoomSpeedMultiplier = 1;
 
     private PlayerControls input;
 
@@ -497,6 +498,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MouseWheel.performed += editorCamera.ScrollWheelDown;
         input.LevelEditor.MouseWheel.canceled += editorCamera.ScrollWheelUp;
         input.LevelEditor.Grassify.performed += Grassify;
+        input.LevelEditor.MouseScroll.performed += MouseScroll;
     }
 
     public void RemoveInputEventListeners()
@@ -522,6 +524,7 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MouseWheel.canceled -= editorCamera.ScrollWheelUp;
         input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
         input.LevelEditor.Grassify.performed -= Grassify;
+        input.LevelEditor.MouseScroll.performed -= MouseScroll;
     }
 
     public void ExitLevelTest()
@@ -590,6 +593,28 @@ public class WorldEditor : MonoBehaviour
         editorCamera.EndZoomOut();
     }
 
+    private void MouseScroll(InputAction.CallbackContext context)
+    {
+        float scrollValue = context.ReadValue<float>();
+
+        if(scrollValue > 0)
+        {
+            zoomSpeedMultiplier = 10;
+            NextPage(context);
+        }
+        else if(scrollValue < 0)
+        {
+            zoomSpeedMultiplier = 10;
+            PreviousPage(context);
+        }
+        else
+        {
+            zoomSpeedMultiplier = 1;
+            editorCamera.EndZoomIn();
+            editorCamera.EndZoomOut();
+        }
+    }
+
     private void NextPage(InputAction.CallbackContext context)
     {
         if (!controlsDisabled || isTestingLevel)
@@ -606,7 +631,7 @@ public class WorldEditor : MonoBehaviour
             }
             else
             {
-                editorCamera.StartZoomIn();
+                editorCamera.StartZoomIn(zoomSpeedMultiplier);
             }
         }
     }
@@ -626,7 +651,7 @@ public class WorldEditor : MonoBehaviour
             }
             else
             {
-                editorCamera.StartZoomOut();
+                editorCamera.StartZoomOut(zoomSpeedMultiplier);
             }
         }
     }
