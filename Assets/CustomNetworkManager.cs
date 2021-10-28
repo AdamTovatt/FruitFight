@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CustomNetworkManager : NetworkManager
 {
+    public static bool IsOnlineSession { get; set; }
+
     public static CustomNetworkManager Instance { get; private set; }
 
     public bool IsServer { get; set; }

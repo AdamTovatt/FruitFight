@@ -16,6 +16,8 @@ public class MainMenuLobbyMenu : MonoBehaviour
     public Button ContinueButton;
     public CenterContentContainer PlayerContainer;
 
+    public MainMenuConnectedMenu ConnectedMenu;
+
     public GameObject PlayerInLobbyPrefab;
 
     private MainMenuOnlineMenu previousMenu;
@@ -49,6 +51,11 @@ public class MainMenuLobbyMenu : MonoBehaviour
         ContinueButtonText.color = continueButtonTextOriginalColor;
     }
 
+    public void Show()
+    {
+        Show(false, null, null);
+    }
+
     public void Show(bool shouldStartHost, string hostInformation, MainMenuOnlineMenu previousMenu)
     {
         if (previousMenu != null)
@@ -56,12 +63,15 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
         this.previousMenu.gameObject.SetActive(false);
         BackButton.Select();
-        HostInformationText.text = hostInformation;
+
+        if (hostInformation != null)
+            HostInformationText.text = hostInformation;
 
         BindEventListeners();
 
         if (shouldStartHost)
         {
+            CustomNetworkManager.IsOnlineSession = true;
             CustomNetworkManager.Instance.IsServer = true;
             CustomNetworkManager.Instance.StartHost();
         }
@@ -82,8 +92,8 @@ public class MainMenuLobbyMenu : MonoBehaviour
         else
         {
             playerObjects[playerId].GetComponent<UiPlayerInLobby>().SetName(playerName);
-        }        
-           
+        }
+
         if (CustomNetworkManager.Instance.IsServer)
         {
             Debug.Log("connections: " + NetworkServer.connections.Count);
@@ -92,15 +102,6 @@ public class MainMenuLobbyMenu : MonoBehaviour
             else
                 DisableContinueButton();
         }
-    }
-
-    private void PlayerConnected(int playerId)
-    {
-        /*
-        GameObject playerObject = Instantiate(PlayerInLobbyPrefab, PlayerContainer.transform);
-        PlayerContainer.AddContent(playerObject.GetComponent<RectTransform>());
-        PlayerContainer.CenterContent();
-        playerObjects.Add(playerId, playerObject);*/
     }
 
     private void PlayerDisconnected(int playerId)
@@ -116,21 +117,21 @@ public class MainMenuLobbyMenu : MonoBehaviour
     private void BindEventListeners()
     {
         CustomNetworkManager.Instance.OnDisconnectedServer += PlayerDisconnected;
-
-        CustomNetworkManager.Instance.OnConnectedServer += PlayerConnected;
     }
 
     private void RemoveEventListeners()
     {
         CustomNetworkManager.Instance.OnDisconnectedServer -= PlayerDisconnected;
-
-        CustomNetworkManager.Instance.OnConnectedServer -= PlayerConnected;
     }
 
     private void Continue()
     {
-        Debug.Log("Continue from lobby *le troll face*");
-        RemoveEventListeners();
+        if (CustomNetworkManager.Instance.IsServer && NetworkServer.connections.Count > 1)
+        {
+            RemoveEventListeners();
+            ConnectedMenu.gameObject.SetActive(true);
+            ConnectedMenu.Show(this);
+        }
     }
 
     public void RemovePlayer(int playerId)
@@ -157,6 +158,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
             CustomNetworkManager.Instance.StopClient();
             CustomNetworkManager.Instance.StopHost();
             CustomNetworkManager.Instance.IsServer = false;
+            CustomNetworkManager.IsOnlineSession = false;
         }
 
         RemoveEventListeners();

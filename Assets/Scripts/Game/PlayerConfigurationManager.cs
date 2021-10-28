@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PlayerConfigurationManager : MonoBehaviour
+public class PlayerConfigurationManager : NetworkBehaviour
 {
     public int MaxPlayers = 2;
     public GameObject GameManagerPrefab;
@@ -85,6 +86,30 @@ public class PlayerConfigurationManager : MonoBehaviour
             playerInput.SwitchCurrentActionMap(InputModeEnumToString(CurrentInputMode));
             PlayerConfigurations.Add(new PlayerConfiguration(playerInput));
         }
+
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcJoinPlayerOnClient();
+            }
+            else
+            {
+                JoinPlayerOnServer();
+            }
+        }
+    }
+
+    [Command]
+    public void JoinPlayerOnServer()
+    {
+        playerInputManager.JoinPlayer();
+    }
+
+    [ClientRpc]
+    public void RpcJoinPlayerOnClient()
+    {
+        playerInputManager.JoinPlayer();
     }
 
     public void SetInputMode(InputMode mode)

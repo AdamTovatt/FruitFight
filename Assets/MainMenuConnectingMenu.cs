@@ -40,6 +40,7 @@ public class MainMenuConnectingMenu : MonoBehaviour
 
         BindListeners();
 
+        CustomNetworkManager.IsOnlineSession = true;
         CustomNetworkManager.Instance.StartClient();
     }
 
@@ -68,6 +69,7 @@ public class MainMenuConnectingMenu : MonoBehaviour
     {
         UnBindListeners();
 
+        CustomNetworkManager.IsOnlineSession = false;
         CustomNetworkManager.Instance.StopClient();
 
         previousMenu.gameObject.SetActive(true);

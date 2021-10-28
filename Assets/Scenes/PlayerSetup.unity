@@ -747,5 +747,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerConfigurationManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7079808327102994792, guid: 395e21afc84ec694f8cff46d3fef329c,
+        type: 3}
+      propertyPath: sceneId
+      value: 4204708343
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 395e21afc84ec694f8cff46d3fef329c, type: 3}
