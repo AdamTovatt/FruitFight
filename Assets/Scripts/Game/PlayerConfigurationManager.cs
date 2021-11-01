@@ -6,11 +6,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PlayerConfigurationManager : NetworkBehaviour
+public class PlayerConfigurationManager : MonoBehaviour
 {
     public int MaxPlayers = 2;
     public GameObject GameManagerPrefab;
     public GameObject JoinInstructionsText;
+    public PlayerConfigurationOnlineManager OnlineManager;
 
     public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
@@ -75,6 +76,23 @@ public class PlayerConfigurationManager : NetworkBehaviour
         PlayerConfigurations[index].IsReady = false;
     }
 
+    public void PlayerSetupMenuWasCreatedLocally(GameObject menu)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            Debug.Log(menu);
+
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                NetworkServer.Spawn(menu);
+            }
+            else
+            {
+                PlayerNetworkIdentity.LocalPlayerInstance.JoinPlayerOnServer();
+            }
+        }
+    }
+
     private void HandlePlayerJoin(PlayerInput playerInput)
     {
         if (JoinInstructionsText != null)
@@ -86,30 +104,6 @@ public class PlayerConfigurationManager : NetworkBehaviour
             playerInput.SwitchCurrentActionMap(InputModeEnumToString(CurrentInputMode));
             PlayerConfigurations.Add(new PlayerConfiguration(playerInput));
         }
-
-        if(CustomNetworkManager.IsOnlineSession)
-        {
-            if(CustomNetworkManager.Instance.IsServer)
-            {
-                RpcJoinPlayerOnClient();
-            }
-            else
-            {
-                JoinPlayerOnServer();
-            }
-        }
-    }
-
-    [Command]
-    public void JoinPlayerOnServer()
-    {
-        playerInputManager.JoinPlayer();
-    }
-
-    [ClientRpc]
-    public void RpcJoinPlayerOnClient()
-    {
-        playerInputManager.JoinPlayer();
     }
 
     public void SetInputMode(InputMode mode)

@@ -6,14 +6,18 @@ using UnityEngine;
 
 public class PlayerNetworkIdentity : NetworkBehaviour
 {
+    public static PlayerNetworkIdentity LocalPlayerInstance;
+
     [SyncVar]
     public string Name;
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (isLocalPlayer)
         {
-
+            LocalPlayerInstance = this;
             string name = "Unknown user";
 
             if (ApiHelper.UserCredentials != null)
@@ -49,5 +53,11 @@ public class PlayerNetworkIdentity : NetworkBehaviour
 
         MainMenuLobbyMenu.Instance.RemovePlayer((int)netId);
         MainMenuLobbyMenu.Instance.AddPlayer((int)netId, Name);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void JoinPlayerOnServer()
+    {
+        Debug.Log("client joined");
     }
 }

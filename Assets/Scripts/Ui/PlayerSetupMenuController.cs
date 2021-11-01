@@ -23,6 +23,8 @@ public class PlayerSetupMenuController : MonoBehaviour
 
     private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->", "<- Sweat Band ->", "<- Mushroom Hat ->" };
 
+    public bool LocalPlayer { get; set; }
+
     void Update()
     {
         if (Time.time > ignoreInputTime)
@@ -34,26 +36,37 @@ public class PlayerSetupMenuController : MonoBehaviour
     private void Awake()
     {
         playerControls = new PlayerControls();
+        GameObject rootMenu = GameObject.Find("MainLayout");
+        gameObject.transform.SetParent(rootMenu.transform);
     }
 
     private void Start()
     {
         UiModelDisplay.GetComponent<RawImage>().enabled = true;
-        HatSlider.InitializeInput(playerInput);
-        HatSlider.SetText(hatTexts[0]);
-        HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
 
-        playerInput.onActionTriggered += HandleInput;
+        if (LocalPlayer)
+        {
+            HatSlider.InitializeInput(playerInput);
+            HatSlider.SetText(hatTexts[0]);
+            HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
+
+            playerInput.onActionTriggered += HandleInput;
+        }
+
         SetReadyInstructionsText(false);
     }
 
     private void SetReadyInstructionsText(bool playerIsReady)
     {
         Device device = Device.Unspecified;
-        if (playerInput.currentControlScheme == "Keyboard")
-            device = Device.Keyboard;
-        else if (playerInput.currentControlScheme == "Gamepad")
-            device = Device.Gamepad;
+
+        if (playerInput != null)
+        {
+            if (playerInput.currentControlScheme == "Keyboard")
+                device = Device.Keyboard;
+            else if (playerInput.currentControlScheme == "Gamepad")
+                device = Device.Gamepad;
+        }
 
         if (!playerIsReady)
         {
@@ -84,8 +97,9 @@ public class PlayerSetupMenuController : MonoBehaviour
         }
     }
 
-    public void SetPlayerIndex(PlayerInput input)
+    public void SetPlayerIndex(PlayerInput input, bool localPlayer)
     {
+        LocalPlayer = true;
         playerInput = input;
         TitleText.SetText(string.Format("Player {0}", (PlayerIndex + 1).ToString()));
         ignoreInputTime = Time.time + ignoreInputTime;
