@@ -10,6 +10,8 @@ public class PlayerNetworkIdentity : NetworkBehaviour
 
     [SyncVar]
     public string Name;
+    [SyncVar]
+    public uint NetId;
 
     private void Start()
     {
@@ -26,9 +28,10 @@ public class PlayerNetworkIdentity : NetworkBehaviour
             }
 
             Name = name;
+            NetId = netId;
 
             if (!CustomNetworkManager.Instance.IsServer)
-                SetName(name);
+                SetName(name, netId);
         }
 
         if (MainMenuLobbyMenu.IsActive)
@@ -47,9 +50,10 @@ public class PlayerNetworkIdentity : NetworkBehaviour
     }
 
     [Command]
-    private void SetName(string newName)
+    private void SetName(string newName, uint newNetId)
     {
         Name = newName;
+        NetId = newNetId;
 
         MainMenuLobbyMenu.Instance.RemovePlayer((int)netId);
         MainMenuLobbyMenu.Instance.AddPlayer((int)netId, Name);
@@ -58,6 +62,6 @@ public class PlayerNetworkIdentity : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void JoinPlayerOnServer()
     {
-        Debug.Log("client joined");
+        PlayerConfigurationManager.Instance.ClientJoinSetupScreen();
     }
 }

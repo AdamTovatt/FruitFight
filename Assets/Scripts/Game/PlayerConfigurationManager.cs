@@ -11,6 +11,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     public int MaxPlayers = 2;
     public GameObject GameManagerPrefab;
     public GameObject JoinInstructionsText;
+    public GameObject PlayerSetupPanelPrefab;
     public PlayerConfigurationOnlineManager OnlineManager;
 
     public InputMode CurrentInputMode { get; private set; }
@@ -80,8 +81,6 @@ public class PlayerConfigurationManager : MonoBehaviour
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
-            Debug.Log(menu);
-
             if (CustomNetworkManager.Instance.IsServer)
             {
                 NetworkServer.Spawn(menu);
@@ -91,6 +90,14 @@ public class PlayerConfigurationManager : MonoBehaviour
                 PlayerNetworkIdentity.LocalPlayerInstance.JoinPlayerOnServer();
             }
         }
+    }
+
+    public void ClientJoinSetupScreen()
+    {
+        GameObject rootMenu = GameObject.Find("MainLayout");
+        GameObject menu = Instantiate(PlayerSetupPanelPrefab, rootMenu.transform);
+        NetworkServer.Spawn(menu);
+        menu.GetComponent<PlayerSetupMenuController>().AquireControl();
     }
 
     private void HandlePlayerJoin(PlayerInput playerInput)

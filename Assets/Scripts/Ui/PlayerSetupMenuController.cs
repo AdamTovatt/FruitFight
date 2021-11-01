@@ -1,13 +1,18 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class PlayerSetupMenuController : MonoBehaviour
+public class PlayerSetupMenuController : NetworkBehaviour
 {
-    public int PlayerIndex { get { return playerInput.playerIndex; } }
+    public int PlayerIndex { get { return playerIndex; } }
+
+    [SyncVar]
+    private int playerIndex;
 
     public TextMeshProUGUI TitleText;
     public GameObject ReadyText;
@@ -46,6 +51,7 @@ public class PlayerSetupMenuController : MonoBehaviour
 
         if (LocalPlayer)
         {
+            Debug.Log("bind local player hat change");
             HatSlider.InitializeInput(playerInput);
             HatSlider.SetText(hatTexts[0]);
             HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
@@ -80,6 +86,12 @@ public class PlayerSetupMenuController : MonoBehaviour
         }
     }
 
+    private void UnbindEvents()
+    {
+        if (playerInput != null)
+            playerInput.onActionTriggered -= HandleInput;
+    }
+
     private void HandleInput(InputAction.CallbackContext context)
     {
         if (!context.performed)
@@ -99,22 +111,65 @@ public class PlayerSetupMenuController : MonoBehaviour
 
     public void SetPlayerIndex(PlayerInput input, bool localPlayer)
     {
+        if (input != null)
+            playerIndex = input.playerIndex;
+
         LocalPlayer = true;
         playerInput = input;
         TitleText.SetText(string.Format("Player {0}", (PlayerIndex + 1).ToString()));
         ignoreInputTime = Time.time + ignoreInputTime;
     }
 
+    [ClientRpc]
+    public void AquireControl()
+    {
+        if (!CustomNetworkManager.Instance.IsServer)
+        {
+            PlayerSetupMenuController[] controllers = FindObjectsOfType<PlayerSetupMenuController>();
+            Debug.Log("con: " + controllers.Length);
+            Debug.Log("loc: " + controllers.Where(x => x.LocalPlayer).Count());
+
+            PlayerSetupMenuController old = controllers.Where(x => x.LocalPlayer).FirstOrDefault();
+            if (old != null)
+            {
+                SetPlayerIndex(old.playerInput, true);
+                old.UnbindEvents();
+                Destroy(old.gameObject);
+                Debug.Log("destroyed old");
+            }
+            else
+            {
+                Debug.LogError("Could not find player setup menu controller for local player to aquire control over");
+            }
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void ClientChangedHat(int newHat)
+    {
+        HatSliderValueChanged(newHat);
+    }
+
     private void HatSliderValueChanged(int value)
     {
+        Debug.Log("hat changed: " + value);
         HatSlider.SetText(hatTexts[value]);
         SetHat(value);
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (!CustomNetworkManager.Instance.IsServer)
+            {
+                ClientChangedHat(value);
+            }
+        }
     }
 
     public void SetHat(int hat)
     {
-        PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
-        
+        if (!CustomNetworkManager.IsOnlineSession)
+            PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
+
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
 
         Prefab? hatPrefab = null;
@@ -128,7 +183,7 @@ public class PlayerSetupMenuController : MonoBehaviour
         if (!inputEnabled)
             return;
 
-        if (ReadyText != null) 
+        if (ReadyText != null)
             ReadyText.gameObject.SetActive(true);
 
         SetReadyInstructionsText(true);

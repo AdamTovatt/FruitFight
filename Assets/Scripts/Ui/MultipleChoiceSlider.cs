@@ -31,11 +31,19 @@ public class MultipleChoiceSlider : MonoBehaviour
     public void InitializeInput(PlayerInput playerInput)
     {
         this.playerInput = playerInput;
+        this.playerInput.SwitchCurrentActionMap("Ui");
         this.playerInput.onActionTriggered += HandleInput;
+    }
+
+    private void OnDestroy()
+    {
+        if (this.playerInput != null)
+            this.playerInput.onActionTriggered -= HandleInput;
     }
 
     private void HandleInput(InputAction.CallbackContext context)
     {
+        Debug.Log("input: " + InputEnabled);
         if (InputEnabled)
         {
             if (context.canceled)
@@ -80,6 +88,7 @@ public class MultipleChoiceSlider : MonoBehaviour
             sliderValue = 0;
         }
 
+        Debug.Log(sliderValue + " value changed: " + OnValueChanged);
         OnValueChanged?.Invoke(this, Choices[sliderValue]);
     }
 
