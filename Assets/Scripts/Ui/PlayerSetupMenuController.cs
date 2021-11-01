@@ -150,17 +150,28 @@ public class PlayerSetupMenuController : NetworkBehaviour
         HatSliderValueChanged(newHat);
     }
 
-    private void HatSliderValueChanged(int value)
+    [ClientRpc]
+    private void ServerChangedHat(int newHat)
     {
-        Debug.Log("hat changed: " + value);
-        HatSlider.SetText(hatTexts[value]);
-        SetHat(value);
+        HatSliderValueChanged(newHat, true);
+    }
 
-        if (CustomNetworkManager.IsOnlineSession)
+    private void HatSliderValueChanged(int value, bool isFromRpc = false)
+    {
+        if (!CustomNetworkManager.IsOnlineSession || isFromRpc)
+        {
+            HatSlider.SetText(hatTexts[value]);
+            SetHat(value);
+        }
+        else
         {
             if (!CustomNetworkManager.Instance.IsServer)
             {
                 ClientChangedHat(value);
+            }
+            else
+            {
+                ServerChangedHat(value);
             }
         }
     }
@@ -169,6 +180,8 @@ public class PlayerSetupMenuController : NetworkBehaviour
     {
         if (!CustomNetworkManager.IsOnlineSession)
             PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
+        else
+            Debug.Log("we should set the hat in the playernetworkidentity maybe");
 
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
 
