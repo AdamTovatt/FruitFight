@@ -62,13 +62,29 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
-    public void ReadyPlayer(int index, Texture2D playerPortrait)
+    public void ReadyPlayer(int index, Texture2D playerPortrait, bool isLocalPlayer)
     {
-        PlayerConfigurations[index].IsReady = true;
-        PlayerConfigurations[index].Portrait = playerPortrait;
-        if(PlayerConfigurations.All(p => p.IsReady == true))
+        if (!CustomNetworkManager.IsOnlineSession)
         {
-            SceneManager.LoadScene("GamePlay");
+            PlayerConfigurations[index].IsReady = true;
+            PlayerConfigurations[index].Portrait = playerPortrait;
+
+            if (PlayerConfigurations.All(p => p.IsReady == true))
+            {
+                SceneManager.LoadScene("GamePlay");
+            }
+        }
+        else
+        {
+            if (isLocalPlayer)
+                PlayerNetworkIdentity.LocalPlayerInstance.Portrait = playerPortrait;
+            else
+                PlayerNetworkIdentity.OtherPlayerInstance.Portrait = playerPortrait;
+
+            if(CustomNetworkManager.Instance.IsServer && PlayerNetworkIdentity.LocalPlayerInstance.Ready && PlayerNetworkIdentity.OtherPlayerInstance.Ready)
+            {
+                SceneManager.LoadScene("GamePlay");
+            }
         }
     }
 

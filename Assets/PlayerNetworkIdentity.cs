@@ -19,6 +19,10 @@ public class PlayerNetworkIdentity : NetworkBehaviour
     public uint NetId;
     [SyncVar]
     public int Hat;
+    [SyncVar]
+    public bool Ready;
+
+    public Texture2D Portrait { get; set; }
 
     private void Start()
     {

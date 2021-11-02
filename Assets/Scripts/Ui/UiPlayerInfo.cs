@@ -42,7 +42,19 @@ public class UiPlayerInfo : MonoBehaviour
         PlayerPortraitBackground.rectTransform.pivot = new Vector2(xPivot, 1);
         PlayerPortraitBackground.rectTransform.localPosition = Vector3.zero;
 
-        Texture2D image = playerInformation.Configuration.Portrait;
+        Texture2D image = null;
+        if (!CustomNetworkManager.IsOnlineSession)
+        {
+            image = playerInformation.Configuration.Portrait;
+        }
+        else
+        {
+            if(isLeft)
+                image = PlayerNetworkIdentity.LocalPlayerInstance.Portrait;
+            else
+                image = PlayerNetworkIdentity.OtherPlayerInstance.Portrait;
+        }
+
         PlayerPortrait.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
 
         for (int i = 0; i < hearts; i++)

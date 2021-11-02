@@ -25,7 +25,6 @@ public class MainMenuJoinGameMenu : MonoBehaviour
 
     public void Show(MainMenuOnlineMenu previousMenu)
     {
-        Debug.Log("show");
         if (previousMenu != null)
             PreviousMenu = previousMenu;
 

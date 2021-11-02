@@ -105,12 +105,12 @@ public class PlayerSetupMenuController : NetworkBehaviour
         if (context.action.id == playerControls.Ui.Select.id)
         {
             HatSlider.InputEnabled = false;
-            ReadyPlayer();
+            HandlePlayerWantsToReady();
         }
         else if (context.action.id == playerControls.Ui.Cancel.id)
         {
             HatSlider.InputEnabled = true;
-            UnReadyPlayer();
+            HandlePlayerWantsToUnready();
         }
     }
 
@@ -211,7 +211,7 @@ public class PlayerSetupMenuController : NetworkBehaviour
         uiBananaMan.SetHat(hatPrefab);
     }
 
-    public void ReadyPlayer()
+    private void SetPlayerReady()
     {
         if (!inputEnabled)
             return;
@@ -221,12 +221,47 @@ public class PlayerSetupMenuController : NetworkBehaviour
 
         SetReadyInstructionsText(true);
 
-        UiModelDisplay.OnImageGenerated += (Texture2D image) => { PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex, image); };
+        UiModelDisplay.OnImageGenerated += (Texture2D image) => { PlayerConfigurationManager.Instance.ReadyPlayer(PlayerIndex, image, LocalPlayer); };
         if (this != null)
             StartCoroutine(UiModelDisplay.GenerateImage());
     }
 
-    public void UnReadyPlayer()
+    [Command(requiresAuthority = false)]
+    private void CmdReadyPlayer()
+    {
+        RpcReadyPlayer();
+
+        PlayerNetworkIdentity.OtherPlayerInstance.Ready = true;
+    }
+
+    [ClientRpc]
+    private void RpcReadyPlayer()
+    {
+        SetPlayerReady();
+    }
+
+    public void HandlePlayerWantsToReady()
+    {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcReadyPlayer();
+
+                PlayerNetworkIdentity.LocalPlayerInstance.Ready = true;
+            }
+            else
+            {
+                CmdReadyPlayer();
+            }
+        }
+        else
+        {
+            SetPlayerReady();
+        }
+    }
+
+    private void SetPlayerUnready()
     {
         if (!inputEnabled)
             return;
@@ -234,5 +269,40 @@ public class PlayerSetupMenuController : NetworkBehaviour
         ReadyText.gameObject.SetActive(false);
         SetReadyInstructionsText(false);
         PlayerConfigurationManager.Instance.UnReadyPlayer(PlayerIndex);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdUnreadyPlayer()
+    {
+        RpcUnreadyPlayer();
+
+        PlayerNetworkIdentity.OtherPlayerInstance.Ready = false;
+    }
+
+    [ClientRpc]
+    private void RpcUnreadyPlayer()
+    {
+        SetPlayerUnready();
+    }
+
+    public void HandlePlayerWantsToUnready()
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcUnreadyPlayer();
+
+                PlayerNetworkIdentity.LocalPlayerInstance.Ready = false;
+            }
+            else
+            {
+                CmdUnreadyPlayer();
+            }
+        }
+        else
+        {
+            SetPlayerUnready();
+        }
     }
 }
