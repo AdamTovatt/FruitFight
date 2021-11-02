@@ -43,7 +43,6 @@ public class MultipleChoiceSlider : MonoBehaviour
 
     private void HandleInput(InputAction.CallbackContext context)
     {
-        Debug.Log("input: " + InputEnabled);
         if (InputEnabled)
         {
             if (context.canceled)
@@ -88,7 +87,6 @@ public class MultipleChoiceSlider : MonoBehaviour
             sliderValue = 0;
         }
 
-        Debug.Log(sliderValue + " value changed: " + OnValueChanged);
         OnValueChanged?.Invoke(this, Choices[sliderValue]);
     }
 

@@ -13,6 +13,8 @@ public class PlayerSetupMenuController : NetworkBehaviour
 
     [SyncVar]
     private int playerIndex;
+    [SyncVar]
+    private string title;
 
     public TextMeshProUGUI TitleText;
     public GameObject ReadyText;
@@ -51,12 +53,15 @@ public class PlayerSetupMenuController : NetworkBehaviour
 
         if (LocalPlayer)
         {
-            Debug.Log("bind local player hat change");
             HatSlider.InitializeInput(playerInput);
             HatSlider.SetText(hatTexts[0]);
             HatSlider.OnValueChanged += (sender, value) => { HatSliderValueChanged(value); };
 
             playerInput.onActionTriggered += HandleInput;
+        }
+        else
+        {
+            SetTitle(PlayerNetworkIdentity.OtherPlayerInstance.Name);
         }
 
         SetReadyInstructionsText(false);
@@ -109,7 +114,7 @@ public class PlayerSetupMenuController : NetworkBehaviour
         }
     }
 
-    public void SetPlayerIndex(PlayerInput input, bool localPlayer)
+    public void SetPlayerIndex(PlayerInput input)
     {
         if (input != null)
             playerIndex = input.playerIndex;
@@ -118,6 +123,17 @@ public class PlayerSetupMenuController : NetworkBehaviour
         playerInput = input;
         TitleText.SetText(string.Format("Player {0}", (PlayerIndex + 1).ToString()));
         ignoreInputTime = Time.time + ignoreInputTime;
+
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            SetTitle(PlayerNetworkIdentity.LocalPlayerInstance.Name + " (you)");
+        }
+    }
+
+    public void SetTitle(string newTitle)
+    {
+        title = newTitle;
+        TitleText.SetText(title);
     }
 
     [ClientRpc]
@@ -126,16 +142,13 @@ public class PlayerSetupMenuController : NetworkBehaviour
         if (!CustomNetworkManager.Instance.IsServer)
         {
             PlayerSetupMenuController[] controllers = FindObjectsOfType<PlayerSetupMenuController>();
-            Debug.Log("con: " + controllers.Length);
-            Debug.Log("loc: " + controllers.Where(x => x.LocalPlayer).Count());
 
             PlayerSetupMenuController old = controllers.Where(x => x.LocalPlayer).FirstOrDefault();
             if (old != null)
             {
-                SetPlayerIndex(old.playerInput, true);
+                SetPlayerIndex(old.playerInput);
                 old.UnbindEvents();
                 Destroy(old.gameObject);
-                Debug.Log("destroyed old");
             }
             else
             {
@@ -179,9 +192,16 @@ public class PlayerSetupMenuController : NetworkBehaviour
     public void SetHat(int hat)
     {
         if (!CustomNetworkManager.IsOnlineSession)
+        {
             PlayerConfigurationManager.Instance.SetPlayerHat(PlayerIndex, hat);
+        }
         else
-            Debug.Log("we should set the hat in the playernetworkidentity maybe");
+        {
+            if(LocalPlayer)
+            {
+                PlayerNetworkIdentity.LocalPlayerInstance.SetHat(hat);
+            }
+        }
 
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
 

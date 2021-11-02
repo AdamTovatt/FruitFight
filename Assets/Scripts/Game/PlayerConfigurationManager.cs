@@ -97,7 +97,8 @@ public class PlayerConfigurationManager : MonoBehaviour
         GameObject rootMenu = GameObject.Find("MainLayout");
         GameObject menu = Instantiate(PlayerSetupPanelPrefab, rootMenu.transform);
         NetworkServer.Spawn(menu);
-        menu.GetComponent<PlayerSetupMenuController>().AquireControl();
+        PlayerSetupMenuController menuController = menu.GetComponent<PlayerSetupMenuController>();
+        menuController.AquireControl();
     }
 
     private void HandlePlayerJoin(PlayerInput playerInput)
