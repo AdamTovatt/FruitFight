@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
         Players = new List<PlayerInformation>();
         PlayerCharacters = new List<PlayerMovement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
+
+        if (Instance == null)
+            Instance = this;
     }
 
     public void Start()
@@ -49,7 +52,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (Instance != null)
+        if (Instance != null && Instance != this)
             Destroy(Instance);
 
         Instance = this;
