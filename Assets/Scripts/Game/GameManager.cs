@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using System.Linq;
+using Mirror;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public CameraManager CameraManager;
     public int BlockSeeThroughRadius = 2;
 
+    public PlayerConfiguration LocalPlayerConfiguration { get; private set; }
     public bool Paused { get; private set; }
     public MultipleTargetCamera MultipleTargetCamera { get; set; }
     public List<PlayerInformation> Players { get; set; }
@@ -80,31 +82,57 @@ public class GameManager : MonoBehaviour
 
         if (playerSpawnpoint != null)
         {
-            PlayerConfiguration[] playerConfigurations = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray();
-            foreach (PlayerConfiguration playerConfiguration in playerConfigurations)
+            if (!CustomNetworkManager.IsOnlineSession) //only if this is an offline session
             {
-                playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
-
-                GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
-                PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
-                
-                SingleTargetCamera camera = CameraManager.AddCamera(player.transform, playerConfiguration.Input);
-                CameraViewType viewType = playerConfigurations.Length > 1 ? (addedPlayerCamera ? CameraViewType.Right : CameraViewType.Left) : CameraViewType.Full;
-                camera.SetViewType(viewType);
-                addedPlayerCamera = true;
-                WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
-
-                GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
-                if (hatPrefab != null)
+                PlayerConfiguration[] playerConfigurations = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray();
+                foreach (PlayerConfiguration playerConfiguration in playerConfigurations)
                 {
-                    GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
-                    playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
+                    playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
+
+                    GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+                    PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
+
+                    SingleTargetCamera camera = CameraManager.AddCamera(player.transform, playerConfiguration.Input);
+                    CameraViewType viewType = playerConfigurations.Length > 1 ? (addedPlayerCamera ? CameraViewType.Right : CameraViewType.Left) : CameraViewType.Full;
+                    camera.SetViewType(viewType);
+                    addedPlayerCamera = true;
+                    WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
+
+                    GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
+                    if (hatPrefab != null)
+                    {
+                        GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
+                        playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
+                    }
+
+                    playerMovement.InitializePlayerInput(playerConfiguration, camera);
+                    PlayerCharacters.Add(playerMovement);
+
+                    Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
                 }
+            }
+            else //this is an online session!
+            {
+                LocalPlayerConfiguration = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray().Where(x => x.Input != null).FirstOrDefault();
 
-                playerMovement.InitializePlayerInput(playerConfiguration, camera);
-                PlayerCharacters.Add(playerMovement);
+                if (CustomNetworkManager.Instance.IsServer)
+                {
+                    //host stuff
+                    GameObject hostPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+                    NetworkServer.Spawn(hostPlayer);
+                    PlayerNetworkCharacter hostNetworkCharacter = hostPlayer.GetComponent<PlayerNetworkCharacter>();
+                    hostNetworkCharacter.NetId = PlayerNetworkIdentity.LocalPlayerInstance.NetId;
 
-                Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
+                    hostNetworkCharacter.SetupPlayerNetworkCharacter(true);
+
+                    //client stuff
+                    GameObject clientPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+                    NetworkServer.Spawn(clientPlayer, PlayerNetworkIdentity.OtherPlayerInstance.connectionToClient);
+                    PlayerNetworkCharacter clientNetworkCharacter = clientPlayer.GetComponent<PlayerNetworkCharacter>();
+                    clientNetworkCharacter.NetId = PlayerNetworkIdentity.OtherPlayerInstance.NetId;
+
+                    clientNetworkCharacter.SetupPlayerNetworkCharacter(false);
+                }
             }
         }
         else
@@ -112,14 +140,19 @@ public class GameManager : MonoBehaviour
             CameraManager.AddCamera(transform, null, false);
         }
 
+        CreateUiForPlayers();
+
+        GameUi.Instance.HideLoadingScreen();
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void CreateUiForPlayers()
+    {
         foreach (PlayerInformation player in Players)
         {
             GameUi.Instance.CreatePlayerInfoUi(player);
             player.Movement.transform.parent = transform;
         }
-
-        GameUi.Instance.HideLoadingScreen();
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Update()

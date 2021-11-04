@@ -10,7 +10,16 @@ public class NetworkMethodCaller : NetworkBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+            Destroy(Instance.gameObject);
+
         Instance = this;
+
+    }
+
+    private void Start()
+    {
+        DontDestroyOnLoad(this);
     }
 
     [ClientRpc]
@@ -26,5 +35,28 @@ public class NetworkMethodCaller : NetworkBehaviour
     private void LoadSceneWasCompleted(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= LoadSceneWasCompleted;
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdLoadSceneForAll(string sceneName)
+    {
+        LoadSceneForAll(sceneName);
+    }
+
+    [ClientRpc]
+    private void LoadSceneOnClient(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void LoadSceneForAll(string sceneName)
+    {
+        if (!CustomNetworkManager.Instance.IsServer)
+        {
+            CmdLoadSceneForAll(sceneName);
+            return;
+        }
+
+        LoadSceneOnClient(sceneName);
     }
 }
