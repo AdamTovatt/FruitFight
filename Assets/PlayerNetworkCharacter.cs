@@ -49,6 +49,11 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             playerMovementActive = true;
             playerMovement.enabled = true;
 
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                gameObject.GetComponent<NetworkTransform>().clientAuthority = false;
+            }
+
             SingleTargetCamera camera = null;
             try
             {
