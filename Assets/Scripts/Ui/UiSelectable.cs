@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 using UnityEngine.UI;
 
 public class UiSelectable : MonoBehaviour, ISelectHandler
@@ -20,6 +21,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     private UiManager manager { get { if (_manager == null) SetupManager(); return _manager; } set { _manager = value; } }
     private UiManager _manager;
 
+    private TMP_InputField inputField;
     private Button button;
     private float lastSelectTime;
 
@@ -34,7 +36,12 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     private void Awake()
     {
         SetupManager(true);
+
         button = gameObject.GetComponent<Button>();
+
+        if (button == null)
+            inputField = gameObject.GetComponent<TMP_InputField>();
+
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
 
@@ -66,6 +73,10 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
         if (button != null)
         {
             button.Select();
+        }
+        else if (inputField != null)
+        {
+            inputField.Select();
         }
     }
 

@@ -47,6 +47,10 @@ MonoBehaviour:
   MaxPlayers: 2
   GameManagerPrefab: {fileID: 2800476988953670052, guid: de5aa8b50f222e34792cbcfd8fc64b91,
     type: 3}
+  JoinInstructionsText: {fileID: 0}
+  PlayerSetupPanelPrefab: {fileID: 8842063529549464134, guid: f7460c57e04bc2145a373f6a7a1e401e,
+    type: 3}
+  OnlineManager: {fileID: 0}
 --- !u!114 &1573996814734352970
 MonoBehaviour:
   m_ObjectHideFlags: 0

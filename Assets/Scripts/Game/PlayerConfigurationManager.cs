@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ public class PlayerConfigurationManager : MonoBehaviour
     public int MaxPlayers = 2;
     public GameObject GameManagerPrefab;
     public GameObject JoinInstructionsText;
+    public GameObject PlayerSetupPanelPrefab;
+    public PlayerConfigurationOnlineManager OnlineManager;
 
     public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
@@ -59,19 +62,59 @@ public class PlayerConfigurationManager : MonoBehaviour
         }
     }
 
-    public void ReadyPlayer(int index, Texture2D playerPortrait)
+    public void ReadyPlayer(int index, Texture2D playerPortrait, bool isLocalPlayer)
     {
-        PlayerConfigurations[index].IsReady = true;
-        PlayerConfigurations[index].Portrait = playerPortrait;
-        if(PlayerConfigurations.All(p => p.IsReady == true))
+        if (!CustomNetworkManager.IsOnlineSession)
         {
-            SceneManager.LoadScene("GamePlay");
+            PlayerConfigurations[index].IsReady = true;
+            PlayerConfigurations[index].Portrait = playerPortrait;
+
+            if (PlayerConfigurations.All(p => p.IsReady == true))
+            {
+                SceneManager.LoadScene("GamePlay");
+            }
+        }
+        else
+        {
+            if (isLocalPlayer)
+                PlayerNetworkIdentity.LocalPlayerInstance.Portrait = playerPortrait;
+            else
+                PlayerNetworkIdentity.OtherPlayerInstance.Portrait = playerPortrait;
+
+            if(CustomNetworkManager.Instance.IsServer && PlayerNetworkIdentity.LocalPlayerInstance.Ready && PlayerNetworkIdentity.OtherPlayerInstance.Ready)
+            {
+                NetworkMethodCaller.Instance.LoadSceneForAll("GamePlay");
+            }
         }
     }
 
     public void UnReadyPlayer(int index)
     {
         PlayerConfigurations[index].IsReady = false;
+    }
+
+    public void PlayerSetupMenuWasCreatedLocally(GameObject menu)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                NetworkServer.Spawn(menu);
+            }
+            else
+            {
+                PlayerNetworkIdentity.LocalPlayerInstance.JoinPlayerOnServer();
+            }
+        }
+    }
+
+    public void ClientJoinSetupScreen()
+    {
+        GameObject rootMenu = GameObject.Find("MainLayout");
+        GameObject menu = Instantiate(PlayerSetupPanelPrefab, rootMenu.transform);
+        NetworkServer.Spawn(menu);
+        PlayerSetupMenuController menuController = menu.GetComponent<PlayerSetupMenuController>();
+        menuController.AquireControl();
     }
 
     private void HandlePlayerJoin(PlayerInput playerInput)

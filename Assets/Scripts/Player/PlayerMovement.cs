@@ -87,6 +87,7 @@ public class PlayerMovement : MovingCharacter
     private SoundSource soundSource;
     private Vector2 move;
     private PlayerConfiguration playerConfiguration;
+    private PlayerNetworkCharacter playerNetworkCharacter;
 
     private Transform groundTransform;
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
@@ -101,6 +102,8 @@ public class PlayerMovement : MovingCharacter
 
     private List<float> previousDeathTimes;
 
+    private PlayerControls boundPlayerControls;
+
     private void Awake()
     {
         previousDeathTimes = new List<float>();
@@ -114,6 +117,7 @@ public class PlayerMovement : MovingCharacter
         averageVelocityKeeper = gameObject.GetComponent<AverageVelocityKeeper>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
         soundSource = gameObject.GetComponent<SoundSource>();
+        playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
 
         CurrentRunSpeed = Speed;
 
@@ -137,6 +141,9 @@ public class PlayerMovement : MovingCharacter
     private void OnDestroy()
     {
         health.OnDied -= OnDied;
+
+        if (boundPlayerControls != null)
+            UnbindInputFromPlayerControls(boundPlayerControls);
     }
 
     private void OnDied(Health sender, CauseOfDeath causeOfDeath)
@@ -180,6 +187,54 @@ public class PlayerMovement : MovingCharacter
             input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
             input.Gameplay.Enable();
         }
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            PlayerControls input = new PlayerControls();
+
+            BindInputFromPlayerControls(input);
+            boundPlayerControls = input;
+
+            input.Gameplay.Enable();
+        }
+    }
+
+    private void BindInputFromPlayerControls(PlayerControls input)
+    {
+        input.Gameplay.Attack.performed += HandleAction;
+        input.Gameplay.Move.performed += HandleAction;
+        input.Gameplay.Jump.performed += HandleAction;
+        input.Gameplay.RotateCameraLeft.performed += HandleAction;
+        input.Gameplay.RotateCameraRight.performed += HandleAction;
+        input.Gameplay.Pause.performed += HandleAction;
+        input.Gameplay.Zoom.performed += HandleAction;
+
+        input.Gameplay.Attack.canceled += HandleAction;
+        input.Gameplay.Move.canceled += HandleAction;
+        input.Gameplay.Jump.canceled += HandleAction;
+        input.Gameplay.RotateCameraLeft.canceled += HandleAction;
+        input.Gameplay.RotateCameraRight.canceled += HandleAction;
+        input.Gameplay.Pause.canceled += HandleAction;
+        input.Gameplay.Zoom.canceled += HandleAction;
+    }
+
+    private void UnbindInputFromPlayerControls(PlayerControls input)
+    {
+        input.Gameplay.Attack.performed -= HandleAction;
+        input.Gameplay.Move.performed -= HandleAction;
+        input.Gameplay.Jump.performed -= HandleAction;
+        input.Gameplay.RotateCameraLeft.performed -= HandleAction;
+        input.Gameplay.RotateCameraRight.performed -= HandleAction;
+        input.Gameplay.Pause.performed -= HandleAction;
+        input.Gameplay.Zoom.performed -= HandleAction;
+
+        input.Gameplay.Attack.canceled -= HandleAction;
+        input.Gameplay.Move.canceled -= HandleAction;
+        input.Gameplay.Jump.canceled -= HandleAction;
+        input.Gameplay.RotateCameraLeft.canceled -= HandleAction;
+        input.Gameplay.RotateCameraRight.canceled -= HandleAction;
+        input.Gameplay.Pause.canceled -= HandleAction;
+        input.Gameplay.Zoom.canceled -= HandleAction;
     }
 
     private void MouseLookCancelled(InputAction.CallbackContext context)
@@ -252,8 +307,19 @@ public class PlayerMovement : MovingCharacter
     {
         if (Camera == null)
         {
-            singleTargetCamera = GameManager.Instance.CameraManager.Cameras.Where(x => x.Input == playerConfiguration.Input).FirstOrDefault();
-            Camera = singleTargetCamera.transform;
+            if (!CustomNetworkManager.IsOnlineSession)
+            {
+                singleTargetCamera = GameManager.Instance.CameraManager.Cameras.Where(x => x.Input == playerConfiguration.Input).FirstOrDefault();
+                Camera = singleTargetCamera.transform;
+            }
+            else
+            {
+                if (playerNetworkCharacter.Camera != null)
+                    Camera = playerNetworkCharacter.Camera.transform;
+                else
+                    Debug.LogWarning("No camera in playerNetworkCharacter");
+                return;
+            }
         }
 
         Vector3 cameraForward = Camera.forward;
