@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class Spawner : MonoBehaviour
     public bool SpawnAtStart = true;
     public bool SpawnAtInterval = false;
     public float SecondsBetweenSpawning = 5f;
+    public bool SpawnOnNetwork = false;
 
     public delegate void ObjectSpawnedHandler(object sender, GameObject spawnedObject);
     public ObjectSpawnedHandler OnObjectSpawned;
@@ -46,6 +48,9 @@ public class Spawner : MonoBehaviour
 
     public GameObject SpawnObject(GameObject theObject = null)
     {
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+            return null;
+
         if (theObject == null)
             theObject = Prefab;
 
@@ -67,6 +72,10 @@ public class Spawner : MonoBehaviour
         }
 
         OnObjectSpawned?.Invoke(this, result);
+
+        if (CustomNetworkManager.IsOnlineSession && SpawnOnNetwork)
+            NetworkServer.Spawn(result);
+
         return result;
     }
 }

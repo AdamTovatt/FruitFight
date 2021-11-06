@@ -7055,6 +7055,7 @@ MonoBehaviour:
   - {fileID: 162284433614497005, guid: b5cf41ef1231d5143947063078844206, type: 3}
   - {fileID: 8842063529549464134, guid: f7460c57e04bc2145a373f6a7a1e401e, type: 3}
   - {fileID: 2012823961798305035, guid: 7a8b9f89619f22843b473f64af50bf2b, type: 3}
+  - {fileID: 4463981258025038861, guid: ef544c3c2eb2a6f46928712dd780bad4, type: 3}
 --- !u!4 &380009485
 Transform:
   m_ObjectHideFlags: 0
@@ -11122,6 +11123,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4339527687040820087, guid: ff6a711dd66649d4e8b1403e0c309eda,
+        type: 3}
+      propertyPath: sceneId
+      value: 3880064996
+      objectReference: {fileID: 0}
     - target: {fileID: 4768720915529816196, guid: ff6a711dd66649d4e8b1403e0c309eda,
         type: 3}
       propertyPath: m_Name
@@ -21940,6 +21946,7 @@ MonoBehaviour:
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+  SpawnOnNetwork: 0
 --- !u!4 &1168310155
 Transform:
   m_ObjectHideFlags: 0
@@ -24865,6 +24872,7 @@ MonoBehaviour:
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+  SpawnOnNetwork: 0
 --- !u!4 &1349644558
 Transform:
   m_ObjectHideFlags: 0

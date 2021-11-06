@@ -189,6 +189,7 @@ MonoBehaviour:
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+  SpawnOnNetwork: 1
 --- !u!1 &3122673429304505905
 GameObject:
   m_ObjectHideFlags: 0
