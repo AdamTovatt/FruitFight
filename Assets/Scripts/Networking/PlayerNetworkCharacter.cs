@@ -14,6 +14,8 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     public bool IsLocalPlayer { get; private set; }
     public SingleTargetCamera Camera { get; private set; }
 
+    public bool? IsStandingStill { get; private set; }
+
     private bool playerMovementActive;
     private PlayerMovement playerMovement;
     private Rigidbody playerRigidbody;
@@ -57,7 +59,7 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             SingleTargetCamera camera = null;
             try
             {
-                camera = GameManager.Instance.CameraManager.AddCamera(gameObject.transform, GameManager.Instance.LocalPlayerConfiguration?.Input);
+                camera = GameManager.Instance.CameraManager.AddCamera(gameObject.transform, GameManager.LocalPlayerConfiguration?.Input);
                 camera.SetViewType(CameraViewType.Full);
                 WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
                 Camera = camera;
@@ -67,7 +69,38 @@ public class PlayerNetworkCharacter : NetworkBehaviour
                 Debug.LogError(e);
             }
 
-            playerMovement.InitializePlayerInput(GameManager.Instance.LocalPlayerConfiguration, camera);
+            playerMovement.InitializePlayerInput(GameManager.LocalPlayerConfiguration, camera);
         }
+
+        GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab((IsLocalPlayer ? PlayerNetworkIdentity.LocalPlayerInstance.Hat : PlayerNetworkIdentity.OtherPlayerInstance.Hat).AsHatPrefabEnum());
+        if (hatPrefab != null)
+        {
+            GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
+            playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
+        }
+    }
+
+    public void SetStandingStill(bool newValue)
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcSetStandingStill(newValue);
+        }
+        else
+        {
+            CommandSetStandingStill(newValue);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSetStandingStill(bool newValue)
+    {
+        IsStandingStill = newValue;
+    }
+
+    [Command]
+    private void CommandSetStandingStill(bool newValue)
+    {
+        IsStandingStill = newValue;
     }
 }

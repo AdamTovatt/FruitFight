@@ -13,7 +13,7 @@ public abstract class MovingCharacter : MonoBehaviour
 
     public abstract bool StopFootSetDefault { get; }
     public abstract bool IsGrounded { get; }
-    public abstract bool StandingStill { get; }
+    public abstract bool? StandingStill { get; }
 
     public delegate void AttackHandler(object sender, Vector3 attackPoint, AttackSide attackSide);
     public abstract event AttackHandler OnAttack;

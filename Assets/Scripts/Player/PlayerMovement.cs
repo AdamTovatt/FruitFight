@@ -50,32 +50,9 @@ public class PlayerMovement : MovingCharacter
     public event OnParentUpdatedHandler OnParentUpdated;
 
     public override bool StopFootSetDefault { get { return false; } }
-    public override bool StandingStill { get { return move == Vector2.zero; } }
+    public override bool? StandingStill { get { if (!playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
 
-    public bool IsGroundedWithGameTime
-    {
-        get
-        {
-            if (_isGrounded == null)
-                CalculateIsGrounded();
-
-            return (bool)_isGrounded || Time.time - _lastGroundedTime < GameTimeLength;
-        }
-    }
-
-    public override bool IsGrounded
-    {
-        get
-        {
-            if (_isGrounded == null)
-                CalculateIsGrounded();
-
-            return (bool)_isGrounded;
-        }
-    }
-    private bool? _isGrounded = null;
-    private float _lastGroundedTime;
-    private bool previousGrounded = false;
+    public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
     private Transform Camera;
     private SingleTargetCamera singleTargetCamera;
@@ -88,8 +65,8 @@ public class PlayerMovement : MovingCharacter
     private Vector2 move;
     private PlayerConfiguration playerConfiguration;
     private PlayerNetworkCharacter playerNetworkCharacter;
+    private GroundedChecker groundedChecker;
 
-    private Transform groundTransform;
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
     private bool hasDoubleJumped;
@@ -118,6 +95,9 @@ public class PlayerMovement : MovingCharacter
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
         soundSource = gameObject.GetComponent<SoundSource>();
         playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
+        groundedChecker = gameObject.GetComponent<GroundedChecker>();
+
+        groundedChecker.OnBecameGrounded += JustLanded;
 
         CurrentRunSpeed = Speed;
 
@@ -141,6 +121,7 @@ public class PlayerMovement : MovingCharacter
     private void OnDestroy()
     {
         health.OnDied -= OnDied;
+        groundedChecker.OnBecameGrounded -= JustLanded;
 
         if (boundPlayerControls != null)
             UnbindInputFromPlayerControls(boundPlayerControls);
@@ -177,15 +158,22 @@ public class PlayerMovement : MovingCharacter
         this.singleTargetCamera = singleTargetCamera;
         Camera = singleTargetCamera.transform;
 
-        playerConfiguration.Input.onActionTriggered += HandleAction;
-
-        if (playerConfiguration.Input.currentControlScheme == "Keyboard")
+        if (playerConfiguration != null && playerConfiguration.Input != null)
         {
-            PlayerControls input = new PlayerControls();
-            input.Gameplay.Attack.performed += CheckForMouseInput;
-            input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
-            input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
-            input.Gameplay.Enable();
+            playerConfiguration.Input.onActionTriggered += HandleAction;
+
+            if (playerConfiguration.Input.currentControlScheme == "Keyboard")
+            {
+                PlayerControls input = new PlayerControls();
+                input.Gameplay.Attack.performed += CheckForMouseInput;
+                input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
+                input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
+                input.Gameplay.Enable();
+            }
+        }
+        else
+        {
+            Debug.LogError("wtf");
         }
 
         if (CustomNetworkManager.IsOnlineSession)
@@ -352,10 +340,10 @@ public class PlayerMovement : MovingCharacter
 
         if (IsGrounded)
         {
-            if (!moveOnTriggerLookup.ContainsKey(groundTransform))
-                moveOnTriggerLookup.Add(groundTransform, groundTransform.GetComponentInParent<MoveOnTrigger>());
+            if (!moveOnTriggerLookup.ContainsKey(groundedChecker.GroundTransform))
+                moveOnTriggerLookup.Add(groundedChecker.GroundTransform, groundedChecker.GroundTransform.GetComponentInParent<MoveOnTrigger>());
 
-            MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundTransform];
+            MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundedChecker.GroundTransform];
 
             if (moveOnTrigger != null && moveOnTrigger.Moving)
             {
@@ -379,9 +367,6 @@ public class PlayerMovement : MovingCharacter
         Vector3 newPosition = RigidBody.transform.position + movement;
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
-
-        previousGrounded = IsGrounded;
-        _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
     }
@@ -415,7 +400,7 @@ public class PlayerMovement : MovingCharacter
                 }
             }
 
-            if (lowerHitTransform != null && lowerHitTransform != groundTransform)
+            if (lowerHitTransform != null && lowerHitTransform != groundedChecker.GroundTransform)
             {
                 Ray ray2 = new Ray(transform.position + transform.up * ray2Height, transform.forward);
                 if (!Physics.Raycast(ray2, out RaycastHit upperHit, rayLenght + Collider.radius))
@@ -441,9 +426,19 @@ public class PlayerMovement : MovingCharacter
     private void Move(Vector2 moveValue)
     {
         if (moveValue.magnitude > MovementInputCutoff)
+        {
             move = moveValue;
+
+            if (CustomNetworkManager.IsOnlineSession)
+                playerNetworkCharacter.SetStandingStill(false);
+        }
         else
+        {
             move = Vector2.zero;
+
+            if (CustomNetworkManager.IsOnlineSession)
+                playerNetworkCharacter.SetStandingStill(true);
+        }
     }
 
     private void Interact()
@@ -534,7 +529,7 @@ public class PlayerMovement : MovingCharacter
 
     private void Jump()
     {
-        if (Time.time - lastJumpTime > GameTimeLength + 0.1f && IsGroundedWithGameTime)
+        if (Time.time - lastJumpTime > GameTimeLength + 0.1f && groundedChecker.IsGroundedWithGameTime)
         {
             PerformJump();
         }
@@ -568,30 +563,6 @@ public class PlayerMovement : MovingCharacter
         ControlsEnabled = false;
     }
 
-    private void CalculateIsGrounded()
-    {
-        Ray ray = new Ray(transform.position + Vector3.up * 0.4f, -Vector3.up);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            if (hit.transform.tag == "Ground" && hit.distance <= DistanceToGround)
-            {
-                groundTransform = hit.transform;
-
-                if (!previousGrounded)
-                    JustLanded();
-
-                _lastGroundedTime = Time.time;
-                _isGrounded = true;
-                hasDoubleJumped = false;
-                return;
-            }
-        }
-
-        groundTransform = null;
-        _isGrounded = false;
-    }
-
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
         throw new System.NotImplementedException();
@@ -616,6 +587,8 @@ public class PlayerMovement : MovingCharacter
 
     private void JustLanded()
     {
+        hasDoubleJumped = false;
+
         footStepAudioSource.PlayNext(); //there are two feet
         footStepAudioSource.PlayNext();
     }
@@ -629,11 +602,11 @@ public class PlayerMovement : MovingCharacter
     {
         if (lastGroundedPosition == null)
         {
-            lastGroundedPosition = new GroundedPositionInformation(groundTransform, Time.time, transform.position);
+            lastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position);
             return;
         }
 
-        if (groundTransform == lastGroundedPosition.Transform) //if the current ground position is on the same transform we will just update the lastGroundedPosition
+        if (groundedChecker.GroundTransform == lastGroundedPosition.Transform) //if the current ground position is on the same transform we will just update the lastGroundedPosition
         {
             lastGroundedPosition.UpdatePosition(transform.position);
         }
@@ -656,14 +629,14 @@ public class PlayerMovement : MovingCharacter
                 position.UpdatePosition(transform.position);
             }
 
-            if (previousGroundedPositions.ContainsKey(groundTransform))
+            if (previousGroundedPositions.ContainsKey(groundedChecker.GroundTransform))
             {
-                lastGroundedPosition = previousGroundedPositions[groundTransform]; //if we already have this in our list of previous groundpositions we should get that entry
+                lastGroundedPosition = previousGroundedPositions[groundedChecker.GroundTransform]; //if we already have this in our list of previous groundpositions we should get that entry
                 lastGroundedPosition.UpdatePosition(transform.position);
             }
             else
             {
-                lastGroundedPosition = new GroundedPositionInformation(groundTransform, Time.time, transform.position); //since we don't have this already we will create a new
+                lastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position); //since we don't have this already we will create a new
             }
         }
     }

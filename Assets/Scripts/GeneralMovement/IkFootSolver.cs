@@ -27,7 +27,8 @@ public class IkFootSolver : MonoBehaviour
 
     private bool inDefaultPosition = true;
 
-    AverageVelocityKeeper characterVelocity;
+    private AverageVelocityKeeper characterVelocity;
+    private GroundedChecker groundedChecker;
 
     public delegate void PositionUpdatedEventHandler(Vector3 newPosition);
     public event PositionUpdatedEventHandler PositionUpdated;
@@ -37,6 +38,7 @@ public class IkFootSolver : MonoBehaviour
     void Start()
     {
         characterVelocity = CharacterMovement.gameObject.GetComponent<AverageVelocityKeeper>();
+        groundedChecker = CharacterMovement.gameObject.GetComponent<GroundedChecker>();
         character = CharacterMovement.transform;
         appliedFootSpacing = FootSpacing * (RightFoot ? 1f : -1f);
 
@@ -59,9 +61,9 @@ public class IkFootSolver : MonoBehaviour
 
         Vector3 searchPosition = GetGroundPosition(appliedStepDistance);
 
-        if (CharacterMovement.IsGrounded)
+        if (groundedChecker == null ? CharacterMovement.IsGrounded : groundedChecker.IsGrounded)
         {
-            if (!CharacterMovement.StandingStill && characterVelocity.Velocity > 0) //character is moving
+            if (((CharacterMovement.StandingStill == null) || (CharacterMovement.StandingStill != null && !((bool)CharacterMovement.StandingStill))) && characterVelocity.Velocity > 0.01f) //character is moving
             {
                 float distance = Vector3.Distance(NewPosition, searchPosition);
                 if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))

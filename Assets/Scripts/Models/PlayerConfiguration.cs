@@ -29,16 +29,24 @@ public class PlayerConfiguration
 
     public Prefab? GetHatAsPrefabEnum()
     {
-        if (Hat == 1)
+        return Hat.AsHatPrefabEnum();
+    }
+}
+
+public static class HatEnumExtensionMethods
+{
+    public static Prefab? AsHatPrefabEnum(this int hatId)
+    {
+        if (hatId == 1)
             return Prefab.WizardHat;
 
-        if (Hat == 2)
+        if (hatId == 2)
             return Prefab.Beanie;
 
-        if (Hat == 3)
+        if (hatId == 3)
             return Prefab.SweatBand;
 
-        if (Hat == 4)
+        if (hatId == 4)
             return Prefab.MushroomHat;
 
         return null;

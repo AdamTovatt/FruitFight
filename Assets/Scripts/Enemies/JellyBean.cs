@@ -72,7 +72,7 @@ public class JellyBean : MovingCharacter
     }
     private bool? _isGrounded = null;
 
-    public override bool StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
+    public override bool? StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
 
     private Health targetHealth
     {
