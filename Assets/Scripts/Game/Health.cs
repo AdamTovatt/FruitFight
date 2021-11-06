@@ -147,6 +147,8 @@ public class Health : NetworkBehaviour
 
     private void Died(CauseOfDeath causeOfDeath)
     {
+        CanDie = false;
+
         if (SpawnOnDeathPrefab != null)
             Instantiate(SpawnOnDeathPrefab, transform.position, Quaternion.identity);
 
@@ -202,7 +204,7 @@ public class Health : NetworkBehaviour
 
     public void TakeDamage(float amount)
     {
-        if(CustomNetworkManager.IsOnlineSession)
+        if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
                 RpcApplyDamage(amount);

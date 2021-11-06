@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,25 +69,31 @@ public class Crate : MonoBehaviour
     {
         BoxCollider.enabled = false;
 
-        if (SpawnOnBreakPrefab != null)
+        if (SpawnOnBreakPrefab != null && CustomNetworkManager.HasAuthority)
         {
             for (int i = 0; i < AmountToSpawn; i++)
             {
-                SpawnPrefab();
+                GameObject spawnedObject = SpawnPrefab();
+
+                if (CustomNetworkManager.IsOnlineSession)
+                    NetworkServer.Spawn(spawnedObject);
             }
         }
 
         ActivateCrateAbove();
     }
 
-    private void SpawnPrefab()
+    private GameObject SpawnPrefab()
     {
         GameObject instantiatedObject = Instantiate(SpawnOnBreakPrefab, transform.position + (Vector3.up * 0.5f), Quaternion.identity);
         Rigidbody rigidbody = instantiatedObject.GetComponent<Rigidbody>();
+
         if (rigidbody != null)
         {
             rigidbody.velocity = Random.onUnitSphere * SpawnForceStrength + Vector3.up;
         }
+
+        return instantiatedObject;
     }
 
     private void ActivateCrateAbove()

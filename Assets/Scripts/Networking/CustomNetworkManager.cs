@@ -10,6 +10,8 @@ public class CustomNetworkManager : NetworkManager
 
     public static CustomNetworkManager Instance { get; private set; }
 
+    public static bool HasAuthority { get { return !IsOnlineSession || Instance.IsServer; } }
+
     public bool IsServer { get; set; }
 
     public delegate void DisconnectedHandlerClient(int id);
