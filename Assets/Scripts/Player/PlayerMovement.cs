@@ -34,12 +34,6 @@ public class PlayerMovement : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
-    public delegate void JellyBeansUpdatedHandler(int newAmount);
-    public event JellyBeansUpdatedHandler OnJellyBeansUpdated;
-
-    public delegate void CoinsUpdatedHandler(int newAmount);
-    public event CoinsUpdatedHandler OnCoinsUpdated;
-
     public delegate void OnPickedUpItemHandler(Holdable holdableItem);
     public event OnPickedUpItemHandler OnPickedUpItem;
 
@@ -114,8 +108,6 @@ public class PlayerMovement : MovingCharacter
     private void Start()
     {
         health.OnDied += OnDied;
-        OnJellyBeansUpdated?.Invoke(JellyBeans);
-        OnCoinsUpdated?.Invoke(Coins);
     }
 
     private void OnDestroy()
@@ -559,23 +551,6 @@ public class PlayerMovement : MovingCharacter
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
         throw new System.NotImplementedException();
-    }
-
-    public void AbsorbedItem(AbsorbableItemType itemType)
-    {
-        switch (itemType)
-        {
-            case AbsorbableItemType.JellyBean:
-                JellyBeans++;
-                OnJellyBeansUpdated?.Invoke(JellyBeans);
-                break;
-            case AbsorbableItemType.Coin:
-                Coins++;
-                OnCoinsUpdated?.Invoke(Coins);
-                break;
-            default:
-                break;
-        }
     }
 
     private void JustLanded()

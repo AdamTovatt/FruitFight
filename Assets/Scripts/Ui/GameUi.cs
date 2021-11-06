@@ -68,10 +68,10 @@ public class GameUi : UiManager
         SceneManager.sceneLoaded -= MainMenuWasEntered;
     }
 
-    public void CreatePlayerInfoUi(PlayerInformation playerInformation)
+    public void CreatePlayerInfoUi(PlayerInformation playerInformation, bool? overridePosition = null)
     {
         UiPlayerInfo uiPlayerInfo = Instantiate(PlayerInfoUiPrefab, Canvas.transform).GetComponent<UiPlayerInfo>();
-        uiPlayerInfo.Init(playerInformation, !(playerInfos.Count > 0)); //if it's the first player we will set it to be left
+        uiPlayerInfo.Init(playerInformation, overridePosition == null ? !(playerInfos.Count > 0) : (bool)overridePosition); //if it's the first player we will set it to be left
         playerInfos.Add(uiPlayerInfo);
     }
 

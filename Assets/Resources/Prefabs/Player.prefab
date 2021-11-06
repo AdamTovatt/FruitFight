@@ -577,6 +577,7 @@ GameObject:
   - component: {fileID: 45417113060765523}
   - component: {fileID: -3989594354360238983}
   - component: {fileID: 813672005823590798}
+  - component: {fileID: 4487317194565669697}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1036,6 +1037,18 @@ MonoBehaviour:
   DistanceToGround: 0.8
   RaycastStartHeight: 0.4
   GroundedGameTimeLength: 0.2
+--- !u!114 &4487317194565669697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac6890be4e2243409ddf150f5243e22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

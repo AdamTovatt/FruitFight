@@ -74,12 +74,16 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             playerMovement.InitializePlayerInput(playerConfiguration, camera);
         }
 
+        //create hat
         GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab((IsLocalPlayer ? PlayerNetworkIdentity.LocalPlayerInstance.Hat : PlayerNetworkIdentity.OtherPlayerInstance.Hat).AsHatPrefabEnum());
         if (hatPrefab != null)
         {
             GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
             playerHat.transform.SetParent(playerMovement.transform.GetComponentInChildren<HatPoint>().transform);
         }
+
+        //create ui
+        GameUi.Instance.CreatePlayerInfoUi(new PlayerInformation(null, playerMovement, playerMovement.gameObject.GetComponent<Health>()), IsLocalPlayer);
     }
 
     public void SetStandingStill(bool newValue)

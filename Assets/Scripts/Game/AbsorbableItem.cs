@@ -6,11 +6,14 @@ public class AbsorbableItem : MonoBehaviour
     public AbsorbableItemType Type;
     public float AbsorbDelay = 0f;
 
-    private PlayerMovement absorbingPlayer = null;
+    private PlayerInventory absorbingPlayer = null;
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerMovement player = other.transform.GetComponent<PlayerMovement>();
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PlayerInventory player = other.transform.GetComponent<PlayerInventory>();
         if (player != null && absorbingPlayer == null)
         {
             absorbingPlayer = player;

@@ -70,8 +70,8 @@ public class UiPlayerInfo : MonoBehaviour
         }
 
         playerInformation.Health.OnHealthUpdated += UpdateHearts;
-        playerInformation.Movement.OnJellyBeansUpdated += UpdateJellyBeans;
-        playerInformation.Movement.OnCoinsUpdated += UpdateCoins;
+        playerInformation.Inventory.OnJellyBeansUpdated += UpdateJellyBeans;
+        playerInformation.Inventory.OnCoinsUpdated += UpdateCoins;
 
         JellyBeanCounter.Initialize(!isLeft);
         CoinCounter.Initialize(!isLeft);
@@ -101,8 +101,8 @@ public class UiPlayerInfo : MonoBehaviour
     private void OnDestroy()
     {
         playerInformation.Health.OnHealthUpdated -= UpdateHearts;
-        playerInformation.Movement.OnJellyBeansUpdated -= UpdateJellyBeans;
-        playerInformation.Movement.OnCoinsUpdated -= UpdateCoins;
+        playerInformation.Inventory.OnJellyBeansUpdated -= UpdateJellyBeans;
+        playerInformation.Inventory.OnCoinsUpdated -= UpdateCoins;
     }
 
     private void Awake()

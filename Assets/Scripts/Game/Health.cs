@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class Health : NetworkBehaviour
 {
     public float StartHealth = 100f;
 
@@ -163,7 +164,7 @@ public class Health : MonoBehaviour
         CurrentHealth += amount;
     }
 
-    public void TakeDamage(float amount)
+    private void ApplyDamage(float amount)
     {
         if (CurrentlyInvincible)
             return;
@@ -185,6 +186,33 @@ public class Health : MonoBehaviour
 
         if (SoundSource != null && !string.IsNullOrEmpty(DamageSoundName))
             SoundSource.Play(DamageSoundName);
+    }
+
+    [ClientRpc]
+    private void RpcApplyDamage(float amount)
+    {
+        ApplyDamage(amount);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdApplyDamage(float amount)
+    {
+        RpcApplyDamage(amount);
+    }
+
+    public void TakeDamage(float amount)
+    {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                RpcApplyDamage(amount);
+            else
+                CmdApplyDamage(amount);
+        }
+        else
+        {
+            ApplyDamage(amount);
+        }
     }
 
     private void SetEmission(Material material, float emission)

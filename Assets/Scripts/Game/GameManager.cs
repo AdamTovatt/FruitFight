@@ -112,6 +112,8 @@ public class GameManager : MonoBehaviour
 
                     Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
                 }
+
+                CreateUiForPlayers();
             }
             else //this is an online session!
             {
@@ -139,8 +141,6 @@ public class GameManager : MonoBehaviour
         {
             CameraManager.AddCamera(transform, null, false);
         }
-
-        CreateUiForPlayers();
 
         GameUi.Instance.HideLoadingScreen();
         Cursor.lockState = CursorLockMode.Locked;
