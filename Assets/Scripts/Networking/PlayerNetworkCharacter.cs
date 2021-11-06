@@ -56,10 +56,12 @@ public class PlayerNetworkCharacter : NetworkBehaviour
                 gameObject.GetComponent<NetworkTransform>().clientAuthority = false;
             }
 
+            PlayerConfiguration playerConfiguration = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray().Where(x => x.Input != null).FirstOrDefault();
+
             SingleTargetCamera camera = null;
             try
             {
-                camera = GameManager.Instance.CameraManager.AddCamera(gameObject.transform, GameManager.LocalPlayerConfiguration?.Input);
+                camera = GameManager.Instance.CameraManager.AddCamera(gameObject.transform, playerConfiguration?.Input);
                 camera.SetViewType(CameraViewType.Full);
                 WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
                 Camera = camera;
@@ -69,7 +71,7 @@ public class PlayerNetworkCharacter : NetworkBehaviour
                 Debug.LogError(e);
             }
 
-            playerMovement.InitializePlayerInput(GameManager.LocalPlayerConfiguration, camera);
+            playerMovement.InitializePlayerInput(playerConfiguration, camera);
         }
 
         GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab((IsLocalPlayer ? PlayerNetworkIdentity.LocalPlayerInstance.Hat : PlayerNetworkIdentity.OtherPlayerInstance.Hat).AsHatPrefabEnum());

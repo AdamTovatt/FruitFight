@@ -158,22 +158,15 @@ public class PlayerMovement : MovingCharacter
         this.singleTargetCamera = singleTargetCamera;
         Camera = singleTargetCamera.transform;
 
-        if (playerConfiguration != null && playerConfiguration.Input != null)
-        {
-            playerConfiguration.Input.onActionTriggered += HandleAction;
+        playerConfiguration.Input.onActionTriggered += HandleAction;
 
-            if (playerConfiguration.Input.currentControlScheme == "Keyboard")
-            {
-                PlayerControls input = new PlayerControls();
-                input.Gameplay.Attack.performed += CheckForMouseInput;
-                input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
-                input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
-                input.Gameplay.Enable();
-            }
-        }
-        else
+        if (playerConfiguration.Input.currentControlScheme == "Keyboard")
         {
-            Debug.LogError("wtf");
+            PlayerControls input = new PlayerControls();
+            input.Gameplay.Attack.performed += CheckForMouseInput;
+            input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
+            input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
+            input.Gameplay.Enable();
         }
 
         if (CustomNetworkManager.IsOnlineSession)

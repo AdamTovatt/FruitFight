@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     public CameraManager CameraManager;
     public int BlockSeeThroughRadius = 2;
 
-    public static PlayerConfiguration LocalPlayerConfiguration { get; private set; }
     public bool Paused { get; private set; }
     public MultipleTargetCamera MultipleTargetCamera { get; set; }
     public List<PlayerInformation> Players { get; set; }
@@ -116,9 +115,6 @@ public class GameManager : MonoBehaviour
             }
             else //this is an online session!
             {
-                LocalPlayerConfiguration = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray().Where(x => x.Input != null).FirstOrDefault();
-                Debug.Log("Did set the local playerconfiguration");
-
                 if (CustomNetworkManager.Instance.IsServer)
                 {
                     //host stuff
