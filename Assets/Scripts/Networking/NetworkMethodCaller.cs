@@ -22,6 +22,32 @@ public class NetworkMethodCaller : NetworkBehaviour
         DontDestroyOnLoad(this);
     }
 
+    public GameObject Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            GameObject instantiatedObject = PerformInstantiate(prefabIndex, position, rotation);
+            NetworkServer.Spawn(instantiatedObject);
+            return instantiatedObject;
+        }
+        else
+        {
+            CmdInstaniate(prefabIndex, position, rotation);
+            return PerformInstantiate(prefabIndex, position, rotation);
+        }
+    }
+
+    private GameObject PerformInstantiate(int prefabIndex, Vector3 position, Quaternion rotation)
+    {
+        return Instantiate(CustomNetworkManager.Instance.spawnPrefabs[prefabIndex], position, rotation);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdInstaniate(int prefabIndex, Vector3 position, Quaternion rotation)
+    {
+        PerformInstantiate(prefabIndex, position, rotation);
+    }
+
     [ClientRpc]
     public void RpcClientShouldStartStoryLevel(string levelName)
     {

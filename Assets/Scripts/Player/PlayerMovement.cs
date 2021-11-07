@@ -524,7 +524,11 @@ public class PlayerMovement : MovingCharacter
             {
                 PerformJump();
                 hasDoubleJumped = true;
-                Instantiate(DoubleJumpSmokePrefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
+
+                if (!CustomNetworkManager.IsOnlineSession)
+                    Instantiate(DoubleJumpSmokePrefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
+                else
+                    NetworkMethodCaller.Instance.Instantiate(6, transform.position + Vector3.up * 0.2f, Quaternion.identity); //6 is the index of the smokepoof in the network manager's list of prefabs
             }
         }
     }
