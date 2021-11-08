@@ -578,6 +578,7 @@ GameObject:
   - component: {fileID: -3989594354360238983}
   - component: {fileID: 813672005823590798}
   - component: {fileID: 4487317194565669697}
+  - component: {fileID: -4431200645922323308}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -616,6 +617,8 @@ MonoBehaviour:
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
   RigidBody: {fileID: 2012823961798305032}
+  AngelPrefab: {fileID: 181977417639096183, guid: 7aa49ef11d6ce5c4bbc9c978e87f1fb9,
+    type: 3}
   DoubleJumpSmokePrefab: {fileID: 8706223902884326236, guid: bc07c8feeed50c648aa62f95e3b1613e,
     type: 3}
   PunchSphereTransform: {fileID: 4974615858160056374}
@@ -744,6 +747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4552327f2d3edba44836f4b195052650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   StartHealth: 100
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
@@ -1049,6 +1054,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac6890be4e2243409ddf150f5243e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  JellyBeans: 0
+  Coins: 0
+--- !u!114 &-4431200645922323308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa9f8a258c39564980e1a7c79edaccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  ReplacePrefab: {fileID: 3461713583178639962, guid: f7b8c08a3e2ac3a418852a03f6aa26c0,
+    type: 3}
+  ReplaceEffectPrefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714,
+    type: 3}
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0

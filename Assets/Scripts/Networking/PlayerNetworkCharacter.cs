@@ -109,4 +109,28 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     {
         IsStandingStill = newValue;
     }
+
+    public void SpawnAngel()
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcSpawnAngel();
+        }
+        else
+        {
+            CmdSpawnAngel();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSpawnAngel()
+    {
+        Instantiate(gameObject.GetComponent<PlayerMovement>().AngelPrefab, transform.position, transform.rotation);
+    }
+
+    [Command]
+    private void CmdSpawnAngel()
+    {
+        RpcSpawnAngel();
+    }
 }

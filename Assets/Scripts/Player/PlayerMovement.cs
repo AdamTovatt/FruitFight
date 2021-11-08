@@ -8,6 +8,7 @@ public class PlayerMovement : MovingCharacter
 {
     public Rigidbody RigidBody;
 
+    public GameObject AngelPrefab;
     public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -60,6 +61,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerConfiguration playerConfiguration;
     private PlayerNetworkCharacter playerNetworkCharacter;
     private GroundedChecker groundedChecker;
+    private TemporaryMeshReplacer meshReplacer;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -90,6 +92,7 @@ public class PlayerMovement : MovingCharacter
         soundSource = gameObject.GetComponent<SoundSource>();
         playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
+        meshReplacer = gameObject.GetComponent<TemporaryMeshReplacer>();
 
         groundedChecker.OnBecameGrounded += JustLanded;
 
@@ -141,6 +144,21 @@ public class PlayerMovement : MovingCharacter
             {
                 transform.position = lastGroundedPosition.Position;
             }
+        }
+        else
+        {
+            ControlsEnabled = false;
+
+            if(!CustomNetworkManager.IsOnlineSession)
+            {
+                Instantiate(AngelPrefab, transform.position, transform.rotation);
+            }
+            else
+            {
+                playerNetworkCharacter.SpawnAngel();
+            }
+
+            meshReplacer.ReplaceMesh();
         }
     }
 
