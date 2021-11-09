@@ -21,6 +21,10 @@ public class MainMenuConnectedMenu : MonoBehaviour
     private void StoryMode()
     {
         UnbindEventListeners();
+
+        PlayerNetworkIdentity.LocalPlayerInstance.SetReady(false);
+        PlayerNetworkIdentity.OtherPlayerInstance.SetReady(false);
+
         NetworkMethodCaller.Instance.RpcClientShouldStartStoryLevel("01");
     }
 

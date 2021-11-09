@@ -167,6 +167,9 @@ public class GameManager : MonoBehaviour
             clientNetworkCharacter.SetupPlayerNetworkCharacter(false);
 
             hasInitializedLevel = true;
+
+            PlayerNetworkIdentity.LocalPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
+            PlayerNetworkIdentity.OtherPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
         }
     }
 
