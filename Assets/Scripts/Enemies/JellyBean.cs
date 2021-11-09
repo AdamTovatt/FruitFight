@@ -78,6 +78,9 @@ public class JellyBean : MovingCharacter
     {
         get
         {
+            if (target == null)
+                return null;
+
             if (target == _targetHealthTarget && hasGottenTargetHealth)
                 return _targetHealth;
 
@@ -110,6 +113,8 @@ public class JellyBean : MovingCharacter
     private float lastAttackTime;
 
     private float personalBoundaryDistanceSquared;
+
+    private Dictionary<Transform, Health> transformHealths = new Dictionary<Transform, Health>();
 
     private void Awake()
     {
@@ -165,12 +170,16 @@ public class JellyBean : MovingCharacter
 
             if (closestPlayer != null)
             {
-                target = closestPlayer.transform;
+                Health health = GetHealthForTransform(closestPlayer.transform);
 
-                if (targetHealth != null)
-                    targetHealth.OnDied += TargetDied;
+                if (health != null && !health.IsDead)
+                {
+                    health.OnDied += TargetDied;
 
-                State = JellyBeanState.Chasing;
+                    target = closestPlayer.transform;
+
+                    State = JellyBeanState.Chasing;
+                }
             }
         }
 
@@ -321,6 +330,14 @@ public class JellyBean : MovingCharacter
 
         if (!knockBack)
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
+    }
+
+    private Health GetHealthForTransform(Transform transform)
+    {
+        if (!transformHealths.ContainsKey(transform))
+            transformHealths.Add(transform, transform.gameObject.GetComponent<Health>());
+
+        return transformHealths[transform];
     }
 
     private void Died(Health sender, CauseOfDeath causeOfDeath)

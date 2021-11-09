@@ -7,6 +7,8 @@ public class Health : NetworkBehaviour
 {
     public float StartHealth = 100f;
 
+    public bool IsDead { get; private set; }
+
     public float CurrentHealth { get { return _currentHealth; } private set { _currentHealth = value; HealthWasUpdated(); } }
     private float _currentHealth;
 
@@ -148,6 +150,7 @@ public class Health : NetworkBehaviour
     private void Died(CauseOfDeath causeOfDeath)
     {
         CanDie = false;
+        IsDead = true;
 
         if (SpawnOnDeathPrefab != null)
             Instantiate(SpawnOnDeathPrefab, transform.position, Quaternion.identity);
