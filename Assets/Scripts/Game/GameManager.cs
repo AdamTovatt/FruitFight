@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     private NavMeshSurface navMeshSurface;
     private static float currentLevel = 1;
 
+    private bool hasInitializedLevel;
+
     public void Awake()
     {
         Players = new List<PlayerInformation>();
@@ -119,22 +121,12 @@ public class GameManager : MonoBehaviour
             {
                 if (CustomNetworkManager.Instance.IsServer)
                 {
-                    //host stuff
-                    GameObject hostPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
-                    NetworkServer.Spawn(hostPlayer);
-                    PlayerNetworkCharacter hostNetworkCharacter = hostPlayer.GetComponent<PlayerNetworkCharacter>();
-                    hostNetworkCharacter.NetId = PlayerNetworkIdentity.LocalPlayerInstance.NetId;
-
-                    hostNetworkCharacter.SetupPlayerNetworkCharacter(true);
-
-                    //client stuff
-                    GameObject clientPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
-                    NetworkServer.Spawn(clientPlayer, PlayerNetworkIdentity.OtherPlayerInstance.connectionToClient);
-                    PlayerNetworkCharacter clientNetworkCharacter = clientPlayer.GetComponent<PlayerNetworkCharacter>();
-                    clientNetworkCharacter.NetId = PlayerNetworkIdentity.OtherPlayerInstance.NetId;
-
-                    clientNetworkCharacter.SetupPlayerNetworkCharacter(false);
+                    PlayerNetworkIdentity.LocalPlayerInstance.OnReadyStatusUpdated += PlayerReadyStatusWasUpdated;
+                    PlayerNetworkIdentity.OtherPlayerInstance.OnReadyStatusUpdated += PlayerReadyStatusWasUpdated;
                 }
+
+                PlayerNetworkIdentity.LocalPlayerInstance.SetReady(true);
+
             }
         }
         else
@@ -144,6 +136,38 @@ public class GameManager : MonoBehaviour
 
         GameUi.Instance.HideLoadingScreen();
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void PlayerReadyStatusWasUpdated(bool localPlayer, bool newStatus)
+    {
+        if (PlayerNetworkIdentity.OtherPlayerInstance.Ready && PlayerNetworkIdentity.LocalPlayerInstance.Ready)
+        {
+            InitializeLevelOnline(FindObjectOfType<PlayerSpawnpoint>());
+        }
+    }
+
+    public void InitializeLevelOnline(PlayerSpawnpoint playerSpawnpoint)
+    {
+        if (CustomNetworkManager.Instance.IsServer && !hasInitializedLevel)
+        {
+            //host stuff
+            GameObject hostPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+            NetworkServer.Spawn(hostPlayer);
+            PlayerNetworkCharacter hostNetworkCharacter = hostPlayer.GetComponent<PlayerNetworkCharacter>();
+            hostNetworkCharacter.NetId = PlayerNetworkIdentity.LocalPlayerInstance.NetId;
+
+            hostNetworkCharacter.SetupPlayerNetworkCharacter(true);
+
+            //client stuff
+            GameObject clientPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+            NetworkServer.Spawn(clientPlayer, PlayerNetworkIdentity.OtherPlayerInstance.connectionToClient);
+            PlayerNetworkCharacter clientNetworkCharacter = clientPlayer.GetComponent<PlayerNetworkCharacter>();
+            clientNetworkCharacter.NetId = PlayerNetworkIdentity.OtherPlayerInstance.NetId;
+
+            clientNetworkCharacter.SetupPlayerNetworkCharacter(false);
+
+            hasInitializedLevel = true;
+        }
     }
 
     public void CreateUiForPlayers()

@@ -11,6 +11,9 @@ public class PlayerNetworkIdentity : NetworkBehaviour
 
     private static PlayerNetworkIdentity otherPlayerInstance;
 
+    public delegate void ReadyStatusUpdatedHandler(bool isLocalPlayer, bool newValue);
+    public ReadyStatusUpdatedHandler OnReadyStatusUpdated;
+
     public bool IsLocalPlayer { get { return isLocalPlayer; } }
 
     [SyncVar]
@@ -102,5 +105,30 @@ public class PlayerNetworkIdentity : NetworkBehaviour
     public void JoinPlayerOnServer()
     {
         PlayerConfigurationManager.Instance.ClientJoinSetupScreen();
+    }
+
+    [ClientRpc]
+    private void RpcSetReady(bool newValue)
+    {
+        Ready = newValue;
+        OnReadyStatusUpdated?.Invoke(IsLocalPlayer, newValue);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdSetReady(bool newValue)
+    {
+        RpcSetReady(newValue);
+    }
+
+    public void SetReady(bool newValue)
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcSetReady(newValue);
+        }
+        else
+        {
+            CmdSetReady(newValue);
+        }
     }
 }
