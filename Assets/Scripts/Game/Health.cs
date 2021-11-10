@@ -7,7 +7,7 @@ public class Health : NetworkBehaviour
 {
     public float StartHealth = 100f;
 
-    public bool IsDead { get; private set; }
+    public bool IsDead { get; set; }
 
     public float CurrentHealth { get { return _currentHealth; } private set { _currentHealth = value; HealthWasUpdated(); } }
     private float _currentHealth;
@@ -139,6 +139,7 @@ public class Health : NetworkBehaviour
     {
         if (other.transform.tag == "Water")
         {
+            Debug.Log("water, can die: " + CanDie);
             if (CanDie)
             {
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));

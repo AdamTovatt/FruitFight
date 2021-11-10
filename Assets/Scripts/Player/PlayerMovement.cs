@@ -144,6 +144,9 @@ public class PlayerMovement : MovingCharacter
             {
                 transform.position = lastGroundedPosition.Position;
             }
+
+            health.CanDie = true;
+            health.IsDead = false;
         }
         else
         {
