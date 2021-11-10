@@ -18,6 +18,8 @@ public class IkArmSolver : MonoBehaviour
     public Vector3 NewPosition { get; private set; }
     public Vector3 OldPosition { get; private set; }
 
+    private PlayerNetworkCharacter networkCharacter;
+
     private float lerp = 1;
     private bool punching = false;
     private Vector3 punchStartPosition;
@@ -29,7 +31,15 @@ public class IkArmSolver : MonoBehaviour
 
     void Start()
     {
-        CharacterMovement.OnAttack += (sender, punchPosition, attackSide) => { Punch(punchPosition, attackSide); };
+        if (CharacterMovement.transform.tag == "Player")
+        {
+            networkCharacter = CharacterMovement.gameObject.GetComponent<PlayerNetworkCharacter>();
+
+            if (networkCharacter != null)
+                networkCharacter.OnAttack += Punch;
+        }
+
+        CharacterMovement.OnAttack += Punch;
 
         if (CharacterMovement.GetType() == typeof(PlayerMovement))
         {
@@ -121,5 +131,14 @@ public class IkArmSolver : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(CurrentPosition, 0.05f);
+    }
+
+    private void OnDestroy()
+    {
+        if (CharacterMovement != null)
+            CharacterMovement.OnAttack -= Punch;
+
+        if (networkCharacter != null)
+            networkCharacter.OnAttack -= Punch;
     }
 }

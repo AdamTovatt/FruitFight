@@ -13,15 +13,18 @@ public class PlayerNetworkCharacter : NetworkBehaviour
 
     public bool IsLocalPlayer { get; private set; }
     public SingleTargetCamera Camera { get; private set; }
-
     public bool? IsStandingStill { get; private set; }
+
+    public delegate void OnAttackHandler(Vector3 position, MovingCharacter.AttackSide side);
+    public OnAttackHandler OnAttack;
+
+    public SingleTargetCamera CameraPrefab;
 
     private bool playerMovementActive;
     private PlayerMovement playerMovement;
     private Rigidbody playerRigidbody;
     private uint playerNetId;
 
-    public SingleTargetCamera CameraPrefab;
 
     private void Awake()
     {
@@ -132,5 +135,30 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     private void CmdSpawnAngel()
     {
         RpcSpawnAngel();
+    }
+
+    public void Punch(Vector3 position, MovingCharacter.AttackSide side)
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcPunch(position, (int)side);
+        }
+        else
+        {
+            CmdPunch(position, (int)side);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcPunch(Vector3 position, int side)
+    {
+        if (!CustomNetworkManager.Instance.IsServer)
+            OnAttack?.Invoke(position, (MovingCharacter.AttackSide)side);
+    }
+
+    [Command]
+    private void CmdPunch(Vector3 position, int side)
+    {
+        OnAttack?.Invoke(position, (MovingCharacter.AttackSide)side);
     }
 }

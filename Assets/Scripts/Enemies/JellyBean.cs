@@ -141,7 +141,7 @@ public class JellyBean : MovingCharacter
         OnStateChanged += (sender, newState) => { JellyBeanStateWasChanged(newState); };
         State = Random.Range(1, 3) > 1 ? JellyBeanState.Idle : JellyBeanState.Roaming;
 
-        OnAttack += (sender, attackPosition, attackSide) => { };
+        OnAttack += (attackPosition, attackSide) => { };
 
         _rigidbody.isKinematic = true;
 
@@ -367,7 +367,7 @@ public class JellyBean : MovingCharacter
         AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
         Vector3 punchPosition = transform.position + transform.forward * 0.2f + transform.up * 0.5f;
         punchPosition += transform.right * 0.1f * (side == AttackSide.Right ? 1f : -1f);
-        OnAttack?.Invoke(this, punchPosition, side);
+        OnAttack?.Invoke(punchPosition, side);
 
         Instantiate(PunchSoundEffectPrefab, punchPosition, Quaternion.identity);
 

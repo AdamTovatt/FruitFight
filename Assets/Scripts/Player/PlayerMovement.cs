@@ -149,7 +149,7 @@ public class PlayerMovement : MovingCharacter
         {
             ControlsEnabled = false;
 
-            if(!CustomNetworkManager.IsOnlineSession)
+            if (!CustomNetworkManager.IsOnlineSession)
             {
                 Instantiate(AngelPrefab, transform.position, transform.rotation);
             }
@@ -495,7 +495,10 @@ public class PlayerMovement : MovingCharacter
         AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
         Vector3 punchPosition = transform.position + transform.forward * PunchDistance + transform.up * PunchHeight;
         punchPosition += transform.right * PunchWidth * (side == AttackSide.Right ? 1f : -1f);
-        OnAttack?.Invoke(this, punchPosition, side);
+        OnAttack?.Invoke(punchPosition, side);
+
+        if (CustomNetworkManager.IsOnlineSession)
+            playerNetworkCharacter.Punch(punchPosition, side);
 
         Instantiate(PunchSoundEffectPrefab, punchPosition, Quaternion.identity);
 
