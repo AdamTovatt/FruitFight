@@ -8,6 +8,7 @@ public class PlayerMovement : MovingCharacter
 {
     public Rigidbody RigidBody;
 
+    public GameObject BeamOfLightPrefab;
     public GameObject AngelPrefab;
     public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
@@ -162,7 +163,19 @@ public class PlayerMovement : MovingCharacter
             }
 
             meshReplacer.ReplaceMesh();
+
+            this.CallWithDelay(Respawn, 3);
         }
+    }
+
+    private void Respawn()
+    {
+        BeamOfLight beamOfLight = Instantiate(BeamOfLightPrefab, transform.position, transform.rotation).GetComponent<BeamOfLight>();
+        beamOfLight.OnReachedPeak += () =>
+        {
+            meshReplacer.GoBackToNormal();
+            ControlsEnabled = true;
+        };
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration, SingleTargetCamera singleTargetCamera)

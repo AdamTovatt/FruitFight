@@ -617,6 +617,8 @@ MonoBehaviour:
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
   RigidBody: {fileID: 2012823961798305032}
+  BeamOfLightPrefab: {fileID: 6640151907209280214, guid: 4e570b19af484d844a3d7298461c3b8a,
+    type: 3}
   AngelPrefab: {fileID: 181977417639096183, guid: 7aa49ef11d6ce5c4bbc9c978e87f1fb9,
     type: 3}
   DoubleJumpSmokePrefab: {fileID: 8706223902884326236, guid: bc07c8feeed50c648aa62f95e3b1613e,
