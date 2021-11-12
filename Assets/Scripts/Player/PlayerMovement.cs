@@ -8,8 +8,6 @@ public class PlayerMovement : MovingCharacter
 {
     public Rigidbody RigidBody;
 
-    public GameObject BeamOfLightPrefab;
-    public GameObject AngelPrefab;
     public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -50,6 +48,9 @@ public class PlayerMovement : MovingCharacter
 
     public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
+    public Dictionary<Transform, GroundedPositionInformation> PreviousGroundedPositions { get; set; }
+    public GroundedPositionInformation LastGroundedPosition { get; set; }
+
     private Transform Camera;
     private SingleTargetCamera singleTargetCamera;
     private PlayerControls playerControls;
@@ -62,7 +63,6 @@ public class PlayerMovement : MovingCharacter
     private PlayerConfiguration playerConfiguration;
     private PlayerNetworkCharacter playerNetworkCharacter;
     private GroundedChecker groundedChecker;
-    private TemporaryMeshReplacer meshReplacer;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -71,17 +71,11 @@ public class PlayerMovement : MovingCharacter
     private Collision lastCollision;
     private float rotateCamera;
 
-    private Dictionary<Transform, GroundedPositionInformation> previousGroundedPositions;
-    private GroundedPositionInformation lastGroundedPosition;
-
-    private List<float> previousDeathTimes;
-
     private PlayerControls boundPlayerControls;
 
     private void Awake()
     {
-        previousDeathTimes = new List<float>();
-        previousGroundedPositions = new Dictionary<Transform, GroundedPositionInformation>();
+        PreviousGroundedPositions = new Dictionary<Transform, GroundedPositionInformation>();
         ControlsEnabled = true;
         inputActions = new Dictionary<System.Guid, PlayerInputAction>();
         playerControls = new PlayerControls();
@@ -93,7 +87,6 @@ public class PlayerMovement : MovingCharacter
         soundSource = gameObject.GetComponent<SoundSource>();
         playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
-        meshReplacer = gameObject.GetComponent<TemporaryMeshReplacer>();
 
         groundedChecker.OnBecameGrounded += JustLanded;
 
@@ -111,71 +104,15 @@ public class PlayerMovement : MovingCharacter
 
     private void Start()
     {
-        health.OnDied += OnDied;
+
     }
 
     private void OnDestroy()
     {
-        health.OnDied -= OnDied;
         groundedChecker.OnBecameGrounded -= JustLanded;
 
         if (boundPlayerControls != null)
             UnbindInputFromPlayerControls(boundPlayerControls);
-    }
-
-    private void OnDied(Health sender, CauseOfDeath causeOfDeath)
-    {
-        if (causeOfDeath == CauseOfDeath.Water)
-        {
-            previousDeathTimes.Add(Time.time);
-            if (previousDeathTimes.Count > 5)
-                previousDeathTimes.RemoveAt(0);
-
-            if (previousDeathTimes.Count >= 5 && previousDeathTimes.Max() - previousDeathTimes.Min() < 10) //if we have died 5 times within 10 seconds
-            {
-                if (previousGroundedPositions.Keys.Count > 1)
-                {
-                    previousGroundedPositions.Remove(previousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
-                    previousDeathTimes.Clear();
-                }
-
-                transform.position = previousGroundedPositions[previousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
-            }
-            else
-            {
-                transform.position = lastGroundedPosition.Position;
-            }
-
-            health.CanDie = true;
-            health.IsDead = false;
-        }
-        else
-        {
-            ControlsEnabled = false;
-
-            if (!CustomNetworkManager.IsOnlineSession)
-            {
-                Instantiate(AngelPrefab, transform.position, transform.rotation);
-            }
-            else
-            {
-                playerNetworkCharacter.SpawnAngel();
-            }
-
-            meshReplacer.ReplaceMesh();
-
-            this.CallWithDelay(Respawn, 3);
-        }
-    }
-
-    private void Respawn()
-    {
-        BeamOfLight beamOfLight = Instantiate(BeamOfLightPrefab, transform.position, transform.rotation).GetComponent<BeamOfLight>();
-        beamOfLight.OnReachedPeak += () =>
-        {
-            meshReplacer.GoBackToNormal();
-            ControlsEnabled = true;
-        };
     }
 
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration, SingleTargetCamera singleTargetCamera)
@@ -609,43 +546,43 @@ public class PlayerMovement : MovingCharacter
 
     private void UpdateGroundedPosition()
     {
-        if (lastGroundedPosition == null)
+        if (LastGroundedPosition == null)
         {
-            lastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position);
+            LastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position);
             return;
         }
 
-        if (groundedChecker.GroundTransform == lastGroundedPosition.Transform) //if the current ground position is on the same transform we will just update the lastGroundedPosition
+        if (groundedChecker.GroundTransform == LastGroundedPosition.Transform) //if the current ground position is on the same transform we will just update the lastGroundedPosition
         {
-            lastGroundedPosition.UpdatePosition(transform.position);
+            LastGroundedPosition.UpdatePosition(transform.position);
         }
         else //if we are now on another transform we should store the previous in the dictionary for previous ground positions so we can go back to it later
         {
             GroundedPositionInformation position = null;
-            if (!previousGroundedPositions.ContainsKey(lastGroundedPosition.Transform))
+            if (!PreviousGroundedPositions.ContainsKey(LastGroundedPosition.Transform))
             { //create entry if it doesn't exist
-                position = new GroundedPositionInformation(lastGroundedPosition.Transform, Time.time, transform.position);
-                previousGroundedPositions.Add(position.Transform, position);
+                position = new GroundedPositionInformation(LastGroundedPosition.Transform, Time.time, transform.position);
+                PreviousGroundedPositions.Add(position.Transform, position);
 
-                if (previousGroundedPositions.Keys.Count > 10)
+                if (PreviousGroundedPositions.Keys.Count > 10)
                 {
-                    previousGroundedPositions.Remove(previousGroundedPositions.OrderBy(x => x.Value.Time).First().Key);
+                    PreviousGroundedPositions.Remove(PreviousGroundedPositions.OrderBy(x => x.Value.Time).First().Key);
                 }
             }
             else
             { //update entry if it does exist
-                position = previousGroundedPositions[lastGroundedPosition.Transform];
+                position = PreviousGroundedPositions[LastGroundedPosition.Transform];
                 position.UpdatePosition(transform.position);
             }
 
-            if (previousGroundedPositions.ContainsKey(groundedChecker.GroundTransform))
+            if (PreviousGroundedPositions.ContainsKey(groundedChecker.GroundTransform))
             {
-                lastGroundedPosition = previousGroundedPositions[groundedChecker.GroundTransform]; //if we already have this in our list of previous groundpositions we should get that entry
-                lastGroundedPosition.UpdatePosition(transform.position);
+                LastGroundedPosition = PreviousGroundedPositions[groundedChecker.GroundTransform]; //if we already have this in our list of previous groundpositions we should get that entry
+                LastGroundedPosition.UpdatePosition(transform.position);
             }
             else
             {
-                lastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position); //since we don't have this already we will create a new
+                LastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position); //since we don't have this already we will create a new
             }
         }
     }

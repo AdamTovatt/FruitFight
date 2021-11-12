@@ -97,6 +97,13 @@ public class Health : NetworkBehaviour
         }
     }
 
+    public void Resurrect()
+    {
+        CanDie = true;
+        IsDead = false;
+        CurrentHealth = StartHealth;
+    }
+
     private void StartWobble()
     {
         wobbleIsOn = true;
@@ -139,7 +146,6 @@ public class Health : NetworkBehaviour
     {
         if (other.transform.tag == "Water")
         {
-            Debug.Log("water, can die: " + CanDie);
             if (CanDie)
             {
                 Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));

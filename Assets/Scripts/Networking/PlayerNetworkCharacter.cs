@@ -19,6 +19,7 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     public OnAttackHandler OnAttack;
 
     public SingleTargetCamera CameraPrefab;
+    public Player Player;
 
     private bool playerMovementActive;
     private PlayerMovement playerMovement;
@@ -128,7 +129,7 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     [ClientRpc]
     private void RpcSpawnAngel()
     {
-        Instantiate(gameObject.GetComponent<PlayerMovement>().AngelPrefab, transform.position, transform.rotation);
+        Instantiate(Player.AngelPrefab, transform.position, transform.rotation);
     }
 
     [Command]

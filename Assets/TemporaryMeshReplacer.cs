@@ -95,7 +95,7 @@ public class TemporaryMeshReplacer : NetworkBehaviour
                 _collider.enabled = false;
         }
 
-        foreach(Rigidbody _rigidbody in rigidbodies)
+        foreach (Rigidbody _rigidbody in rigidbodies)
         {
             if (_rigidbody != null)
                 _rigidbody.isKinematic = true;
@@ -138,26 +138,29 @@ public class TemporaryMeshReplacer : NetworkBehaviour
 
     private void PerformGoBackToNormal()
     {
-        foreach (Renderer _renderer in renderers)
+        if (instantiatedReplacePrefab != null)
         {
-            if (_renderer != null)
-                _renderer.enabled = true;
-        }
+            foreach (Renderer _renderer in renderers)
+            {
+                if (_renderer != null)
+                    _renderer.enabled = true;
+            }
 
-        foreach (Collider _collider in colliders)
-        {
-            if (_collider != null)
-                _collider.enabled = true;
-        }
+            foreach (Collider _collider in colliders)
+            {
+                if (_collider != null)
+                    _collider.enabled = true;
+            }
 
-        foreach (Rigidbody _rigidbody in rigidbodies)
-        {
-            if (_rigidbody != null)
-                _rigidbody.isKinematic = false;
-        }
+            foreach (Rigidbody _rigidbody in rigidbodies)
+            {
+                if (_rigidbody != null)
+                    _rigidbody.isKinematic = false;
+            }
 
-        Destroy(instantiatedReplacePrefab);
-        instantiatedReplacePrefab = null;
+            Destroy(instantiatedReplacePrefab);
+            instantiatedReplacePrefab = null;
+        }
     }
 
     [ClientRpc]

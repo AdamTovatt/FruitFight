@@ -577,8 +577,8 @@ GameObject:
   - component: {fileID: 45417113060765523}
   - component: {fileID: -3989594354360238983}
   - component: {fileID: 813672005823590798}
-  - component: {fileID: 4487317194565669697}
   - component: {fileID: -4431200645922323308}
+  - component: {fileID: 4143436102440095783}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -617,10 +617,6 @@ MonoBehaviour:
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
   RigidBody: {fileID: 2012823961798305032}
-  BeamOfLightPrefab: {fileID: 6640151907209280214, guid: 4e570b19af484d844a3d7298461c3b8a,
-    type: 3}
-  AngelPrefab: {fileID: 181977417639096183, guid: 7aa49ef11d6ce5c4bbc9c978e87f1fb9,
-    type: 3}
   DoubleJumpSmokePrefab: {fileID: 8706223902884326236, guid: bc07c8feeed50c648aa62f95e3b1613e,
     type: 3}
   PunchSphereTransform: {fileID: 4974615858160056374}
@@ -983,6 +979,7 @@ MonoBehaviour:
   NetId: 0
   CameraPrefab: {fileID: 1045888554365478220, guid: de517d1fff8dbf24ca31ac2d72b1b16e,
     type: 3}
+  Player: {fileID: 4143436102440095783}
 --- !u!114 &45417113060765523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,22 +1041,6 @@ MonoBehaviour:
   DistanceToGround: 0.8
   RaycastStartHeight: 0.4
   GroundedGameTimeLength: 0.2
---- !u!114 &4487317194565669697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2012823961798305035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac6890be4e2243409ddf150f5243e22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  JellyBeans: 0
-  Coins: 0
 --- !u!114 &-4431200645922323308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,6 +1059,30 @@ MonoBehaviour:
     type: 3}
   ReplaceEffectPrefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714,
     type: 3}
+--- !u!114 &4143436102440095783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0338e12942441c94381cec0abfa4eca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  JellyBeans: 0
+  Coins: 0
+  BeamOfLightPrefab: {fileID: 6640151907209280214, guid: 4e570b19af484d844a3d7298461c3b8a,
+    type: 3}
+  AngelPrefab: {fileID: 181977417639096183, guid: 7aa49ef11d6ce5c4bbc9c978e87f1fb9,
+    type: 3}
+  MeshReplacer: {fileID: -4431200645922323308}
+  Health: {fileID: -1100488477938289283}
+  Movement: {fileID: 2012823961798305031}
+  NetworkCharacter: {fileID: -2575217878474552036}
 --- !u!1 &2012823961827835532
 GameObject:
   m_ObjectHideFlags: 0
