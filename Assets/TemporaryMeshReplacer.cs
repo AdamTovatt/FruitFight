@@ -50,26 +50,26 @@ public class TemporaryMeshReplacer : NetworkBehaviour
         }
     }
 
-    public void ReplaceMesh()
+    public void ReplaceMesh(bool spawnNew)
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcReplaceMesh();
+                RpcReplaceMesh(spawnNew);
             }
             else
             {
-                CmdReplaceMesh();
+                CmdReplaceMesh(spawnNew);
             }
         }
         else
         {
-            PerformMeshReplace();
+            PerformMeshReplace(spawnNew);
         }
     }
 
-    private void PerformMeshReplace()
+    private void PerformMeshReplace(bool spawnNew)
     {
         if (renderers.Count == 0)
             SetRenderers();
@@ -101,20 +101,23 @@ public class TemporaryMeshReplacer : NetworkBehaviour
                 _rigidbody.isKinematic = true;
         }
 
-        Instantiate(ReplaceEffectPrefab, transform.position, transform.rotation);
-        instantiatedReplacePrefab = Instantiate(ReplacePrefab, transform.position, transform.rotation);
+        if (spawnNew)
+        {
+            Instantiate(ReplaceEffectPrefab, transform.position, transform.rotation);
+            instantiatedReplacePrefab = Instantiate(ReplacePrefab, transform.position, transform.rotation);
+        }
     }
 
     [ClientRpc]
-    private void RpcReplaceMesh()
+    private void RpcReplaceMesh(bool spawnNew)
     {
-        PerformMeshReplace();
+        PerformMeshReplace(spawnNew);
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdReplaceMesh()
+    private void CmdReplaceMesh(bool spawnNew)
     {
-        RpcReplaceMesh();
+        RpcReplaceMesh(spawnNew);
     }
 
     public void GoBackToNormal()
@@ -138,26 +141,26 @@ public class TemporaryMeshReplacer : NetworkBehaviour
 
     private void PerformGoBackToNormal()
     {
+        foreach (Renderer _renderer in renderers)
+        {
+            if (_renderer != null)
+                _renderer.enabled = true;
+        }
+
+        foreach (Collider _collider in colliders)
+        {
+            if (_collider != null)
+                _collider.enabled = true;
+        }
+
+        foreach (Rigidbody _rigidbody in rigidbodies)
+        {
+            if (_rigidbody != null)
+                _rigidbody.isKinematic = false;
+        }
+
         if (instantiatedReplacePrefab != null)
         {
-            foreach (Renderer _renderer in renderers)
-            {
-                if (_renderer != null)
-                    _renderer.enabled = true;
-            }
-
-            foreach (Collider _collider in colliders)
-            {
-                if (_collider != null)
-                    _collider.enabled = true;
-            }
-
-            foreach (Rigidbody _rigidbody in rigidbodies)
-            {
-                if (_rigidbody != null)
-                    _rigidbody.isKinematic = false;
-            }
-
             Destroy(instantiatedReplacePrefab);
             instantiatedReplacePrefab = null;
         }

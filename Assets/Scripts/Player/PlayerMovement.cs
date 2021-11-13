@@ -24,7 +24,8 @@ public class PlayerMovement : MovingCharacter
     public float GameTimeLength = 0.2f;
 
     public float CurrentRunSpeed { get; set; }
-    public bool ControlsEnabled { get; set; }
+    public bool ControlsEnabled { get { return _controlsEnabled; } set { if (!value) move = Vector2.zero; _controlsEnabled = value; } }
+    private bool _controlsEnabled;
     public Holdable HeldItem { get; private set; }
 
     public CapsuleCollider Collider { get; set; }

@@ -12,6 +12,9 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public int Coins;
 
+    public float PlayerRespawnTime = 5;
+    public int DeathCost = 5;
+
     public delegate void JellyBeansUpdatedHandler(int newAmount);
     public event JellyBeansUpdatedHandler OnJellyBeansUpdated;
 
@@ -43,86 +46,87 @@ public class Player : NetworkBehaviour
 
     private void OnDied(Health sender, CauseOfDeath causeOfDeath)
     {
+        Vector3 newPosition = Vector3.zero;
+
         if (!CustomNetworkManager.IsOnlineSession || NetworkCharacter.IsLocalPlayer)
         {
-            if (causeOfDeath == CauseOfDeath.Water)
+            previousDeathTimes.Add(Time.time);
+            if (previousDeathTimes.Count > 5)
+                previousDeathTimes.RemoveAt(0);
+
+            if (previousDeathTimes.Count >= 5 && (previousDeathTimes.Max() - previousDeathTimes.Min()) - PlayerRespawnTime * 5 < 10) //if we have died 5 times within 10 seconds
             {
-                previousDeathTimes.Add(Time.time);
-                if (previousDeathTimes.Count > 5)
-                    previousDeathTimes.RemoveAt(0);
-
-                if (previousDeathTimes.Count >= 5 && previousDeathTimes.Max() - previousDeathTimes.Min() < 10) //if we have died 5 times within 10 seconds
+                if (Movement.PreviousGroundedPositions.Keys.Count > 1)
                 {
-                    if (Movement.PreviousGroundedPositions.Keys.Count > 1)
-                    {
-                        Movement.PreviousGroundedPositions.Remove(Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
-                        previousDeathTimes.Clear();
-                    }
-
-                    transform.position = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
-                }
-                else
-                {
-                    transform.position = Movement.LastGroundedPosition.Position;
+                    Movement.PreviousGroundedPositions.Remove(Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
+                    previousDeathTimes.Clear();
                 }
 
-                Health.CanDie = true;
-                Health.IsDead = false;
+                newPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
             }
             else
             {
-                Movement.ControlsEnabled = false;
-
-                if (!CustomNetworkManager.IsOnlineSession)
+                if (causeOfDeath == CauseOfDeath.Water)
                 {
-                    Instantiate(AngelPrefab, transform.position, transform.rotation);
+                    newPosition = Movement.LastGroundedPosition.Position;
                 }
-                else
-                {
-                    NetworkCharacter.SpawnAngel();
-                }
-
-                MeshReplacer.ReplaceMesh();
-
-                this.CallWithDelay(Respawn, 3);
             }
+
+            Movement.ControlsEnabled = false;
+
+            if (!CustomNetworkManager.IsOnlineSession)
+            {
+                Instantiate(AngelPrefab, transform.position, transform.rotation);
+            }
+            else
+            {
+                NetworkCharacter.SpawnAngel();
+            }
+
+            MeshReplacer.ReplaceMesh(causeOfDeath != CauseOfDeath.Water);
+
+            RemoveItem(AbsorbableItemType.JellyBean, JellyBeans >= DeathCost ? DeathCost : JellyBeans);
+            RemoveItem(AbsorbableItemType.Coin, Coins >= DeathCost * 2 ? DeathCost * 2 : Coins);
+
+            this.CallWithDelay(() => { Respawn(newPosition); }, PlayerRespawnTime);
         }
     }
 
-    public void Respawn()
+    public void Respawn(Vector3 newPosition)
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcRespawn();
+                RpcRespawn(newPosition);
             }
             else
             {
-                CmdRespawn();
+                CmdRespawn(newPosition);
             }
         }
         else
         {
-            PerformRespawn();
+            PerformRespawn(newPosition);
         }
     }
 
     [Command]
-    private void CmdRespawn()
+    private void CmdRespawn(Vector3 newPosition)
     {
-        RpcRespawn();
+        RpcRespawn(newPosition);
     }
 
     [ClientRpc]
-    private void RpcRespawn()
+    private void RpcRespawn(Vector3 newPosition)
     {
-        PerformRespawn();
+        PerformRespawn(newPosition);
     }
 
-    private void PerformRespawn()
+    private void PerformRespawn(Vector3 newPosition)
     {
-        BeamOfLight beamOfLight = Instantiate(BeamOfLightPrefab, transform.position, transform.rotation).GetComponent<BeamOfLight>();
+        transform.position = newPosition;
+        BeamOfLight beamOfLight = Instantiate(BeamOfLightPrefab, newPosition, transform.rotation).GetComponent<BeamOfLight>();
 
         beamOfLight.OnReachedPeak += () =>
         {
@@ -152,16 +156,36 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public void LostItem(AbsorbableItemType itemType)
+    public void RemoveItem(AbsorbableItemType itemType, int amount)
     {
-        switch (itemType)
+        if (CustomNetworkManager.HasAuthority)
+        {
+            PerformRemoveItem((int)itemType, amount);
+        }
+        else
+        {
+            CmdRemoveItem((int)itemType, amount);
+        }
+    }
+
+    [Command]
+    private void CmdRemoveItem(int itemType, int amount)
+    {
+        PerformRemoveItem(itemType, amount);
+    }
+
+    private void PerformRemoveItem(int itemType, int amount)
+    {
+        AbsorbableItemType itemTypeEnum = (AbsorbableItemType)itemType;
+
+        switch (itemTypeEnum)
         {
             case AbsorbableItemType.JellyBean:
-                JellyBeans--;
+                JellyBeans -= amount;
                 InvokeJellyBeansUpdated(JellyBeans);
                 break;
             case AbsorbableItemType.Coin:
-                Coins--;
+                Coins -= amount;
                 InvokeCoinsUpdated(Coins);
                 break;
             default:
