@@ -6,6 +6,8 @@ public class Holdable : MonoBehaviour
 {
     public float Radius = 0.2f;
     public string Id;
+    public GameObject DummyPrefab;
+
     public bool Held { get; private set; }
     public bool HasDetailColor { get; private set; }
     public DetailColor DetailColor { get; private set; }
