@@ -512,7 +512,11 @@ public class JellyBean : MovingCharacter
     {
         if(SceneManager.GetActiveScene().name == "MainMenuScene")
         {
-            GameObject.FindObjectOfType<MainMenuManager>().ActivateObjectWithDelay(gameObject, 0.2f);
+            try
+            {
+                FindObjectOfType<MainMenuManager>().ActivateObjectWithDelay(gameObject, 0.2f);
+            }
+            catch { } //we wont do anything here
         }
     }
 }

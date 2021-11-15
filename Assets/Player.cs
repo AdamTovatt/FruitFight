@@ -46,7 +46,7 @@ public class Player : NetworkBehaviour
 
     private void OnDied(Health sender, CauseOfDeath causeOfDeath)
     {
-        Vector3 newPosition = Vector3.zero;
+        Vector3 newPosition = transform.position;
 
         if (!CustomNetworkManager.IsOnlineSession || NetworkCharacter.IsLocalPlayer)
         {
