@@ -32,4 +32,9 @@ public class MainMenuManager : MonoBehaviour
             skyboxCamera.SetMainCamera(mainCameraInstance);
         }
     }
+
+    public void ActivateObjectWithDelay(GameObject theObject, float delay)
+    {
+        this.CallWithDelay(() => { theObject.SetActive(true); }, delay);
+    }
 }

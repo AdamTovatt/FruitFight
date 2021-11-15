@@ -1,8 +1,9 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class JellyBean : MovingCharacter
 {
@@ -504,6 +505,14 @@ public class JellyBean : MovingCharacter
         if (uniqueSoundSource.Active)
         {
             footStepAudioSource.PlayNext();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(SceneManager.GetActiveScene().name == "MainMenuScene")
+        {
+            GameObject.FindObjectOfType<MainMenuManager>().ActivateObjectWithDelay(gameObject, 0.2f);
         }
     }
 }
