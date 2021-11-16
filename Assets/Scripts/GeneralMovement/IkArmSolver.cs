@@ -29,6 +29,8 @@ public class IkArmSolver : MonoBehaviour
     private bool holdingItem = false;
     private Holdable heldItem = null;
 
+    private Player player;
+
     void Start()
     {
         if (CharacterMovement.transform.tag == "Player")
@@ -43,8 +45,9 @@ public class IkArmSolver : MonoBehaviour
 
         if (CharacterMovement.GetType() == typeof(PlayerMovement))
         {
-            ((PlayerMovement)CharacterMovement).OnPickedUpItem += PickUpItem;
-            ((PlayerMovement)CharacterMovement).OnDroppedItem += DropItem;
+            player = CharacterMovement.gameObject.GetComponent<Player>();
+            player.OnPickedUpItem += PickUpItem;
+            player.OnDroppedItem += DropItem;
         }
 
         if (Trail != null)
@@ -93,7 +96,7 @@ public class IkArmSolver : MonoBehaviour
         }
         else
         {
-            transform.position = heldItem.transform.position + CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody) * heldItem.Radius;
+            transform.position = heldItem.HeldPosition + CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody) * heldItem.Radius;
         }
     }
 
@@ -140,5 +143,11 @@ public class IkArmSolver : MonoBehaviour
 
         if (networkCharacter != null)
             networkCharacter.OnAttack -= Punch;
+
+        if(player != null)
+        {
+            player.OnPickedUpItem -= PickUpItem;
+            player.OnDroppedItem -= DropItem;
+        }
     }
 }

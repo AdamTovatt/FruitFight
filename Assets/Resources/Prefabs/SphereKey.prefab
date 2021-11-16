@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: -3893581062892130781}
   - component: {fileID: 9188700265388075572}
   - component: {fileID: -780201314048325877}
+  - component: {fileID: 840168390219121600}
   - component: {fileID: 8840417760018238090}
   - component: {fileID: -1857965499231579436}
   m_Layer: 0
@@ -223,6 +224,7 @@ MonoBehaviour:
   Id: 
   DummyPrefab: {fileID: 3664600246569946297, guid: f93b70899c88c4546a70106922461f1e,
     type: 3}
+  MeshReplacer: {fileID: 840168390219121600}
 --- !u!114 &6882824420146053202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +391,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &840168390219121600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3664600246569946297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa9f8a258c39564980e1a7c79edaccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  ReplacePrefab: {fileID: 0}
+  ReplaceEffectPrefab: {fileID: 0}
 --- !u!114 &8840417760018238090
 MonoBehaviour:
   m_ObjectHideFlags: 0

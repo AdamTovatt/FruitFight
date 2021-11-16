@@ -21,6 +21,12 @@ public class Player : NetworkBehaviour
     public delegate void CoinsUpdatedHandler(int newAmount);
     public event CoinsUpdatedHandler OnCoinsUpdated;
 
+    public delegate void OnPickedUpItemHandler(Holdable holdableItem);
+    public event OnPickedUpItemHandler OnPickedUpItem;
+
+    public delegate void OnDroppedItemHandler();
+    public event OnDroppedItemHandler OnDroppedItem;
+
     public GameObject BeamOfLightPrefab;
     public GameObject AngelPrefab;
 
@@ -90,6 +96,16 @@ public class Player : NetworkBehaviour
 
             this.CallWithDelay(() => { Respawn(newPosition); }, PlayerRespawnTime);
         }
+    }
+
+    public void PickedUpItem(Holdable item)
+    {
+        OnPickedUpItem?.Invoke(item);
+    }
+
+    public void DroppedItem()
+    {
+        OnDroppedItem?.Invoke();
     }
 
     public void Respawn(Vector3 newPosition)

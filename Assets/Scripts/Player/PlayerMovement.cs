@@ -8,6 +8,7 @@ public class PlayerMovement : MovingCharacter
 {
     public Rigidbody RigidBody;
 
+    public Player Player;
     public GameObject DoubleJumpSmokePrefab;
     public Transform PunchSphereTransform;
     public Transform SpineTransform;
@@ -23,6 +24,8 @@ public class PlayerMovement : MovingCharacter
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
 
+    public float InteractCooldownTime = 0.2f;
+
     public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get { return _controlsEnabled; } set { if (!value) move = Vector2.zero; _controlsEnabled = value; } }
     private bool _controlsEnabled;
@@ -34,12 +37,6 @@ public class PlayerMovement : MovingCharacter
     public int Coins { get; set; }
 
     public override event AttackHandler OnAttack;
-
-    public delegate void OnPickedUpItemHandler(Holdable holdableItem);
-    public event OnPickedUpItemHandler OnPickedUpItem;
-
-    public delegate void OnDroppedItemHandler();
-    public event OnDroppedItemHandler OnDroppedItem;
 
     public delegate void OnParentUpdatedHandler(MoveOnTrigger moveOnTriggerParent);
     public event OnParentUpdatedHandler OnParentUpdated;
@@ -71,6 +68,7 @@ public class PlayerMovement : MovingCharacter
     private float lastJumpTime;
     private Collision lastCollision;
     private float rotateCamera;
+    private float lastInteractTime;
 
     private PlayerControls boundPlayerControls;
 
@@ -400,8 +398,13 @@ public class PlayerMovement : MovingCharacter
 
     private void Interact()
     {
+        if (Time.time - lastInteractTime < InteractCooldownTime)
+            return;
+
         bool shouldPunch = true;
 
+        Debug.Log("interact: " + this.enabled.ToString() + " is local: " + playerNetworkCharacter.IsLocalPlayer.ToString());
+        Debug.Log(HeldItem);
         if (HeldItem == null)
         {
             Vector3 pickupPosition = transform.position + (transform.up * 0.4f) + (transform.forward * 0.5f); //the center point of the spehere which we will use for pick up detection
@@ -425,23 +428,28 @@ public class PlayerMovement : MovingCharacter
             if (holdable != null)
             {
                 shouldPunch = false;
-                holdable.WasPickedUp(SpineTransform, transform.position + transform.up * PunchHeight + transform.forward * PunchDistance * 1.1f); //1.1 is the multiplier for how far forward we should hold the item
+                holdable.WasPickedUp(SpineTransform, CalculateHoldPosition());
                 HeldItem = holdable;
                 CurrentRunSpeed = Speed * 0.8f;
-                OnPickedUpItem?.Invoke(holdable);
             }
         }
         else
         {
-            HeldItem.WasDropped(RigidBody, averageVelocityKeeper.Velocity);
+            HeldItem.WasDropped(RigidBody.velocity, averageVelocityKeeper.Velocity);
             HeldItem = null;
             CurrentRunSpeed = Speed;
-            OnDroppedItem?.Invoke();
             shouldPunch = false;
         }
 
         if (shouldPunch)
             Punch();
+
+        lastInteractTime = Time.time;
+    }
+
+    private Vector3 CalculateHoldPosition()
+    {
+        return transform.position + transform.up * PunchHeight + transform.forward * PunchDistance * 1.1f; //1.1 is the multiplier for how far forward we should hold the item
     }
 
     private void Punch()

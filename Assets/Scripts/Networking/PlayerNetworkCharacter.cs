@@ -8,13 +8,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerNetworkCharacter : NetworkBehaviour
 {
+    public static PlayerNetworkCharacter LocalPlayer;
+    public static PlayerNetworkCharacter OtherPlayer;
+
     [SyncVar]
     public uint NetId;
 
     public bool IsLocalPlayer { get; private set; }
     public SingleTargetCamera Camera { get; private set; }
     public bool? IsStandingStill { get; private set; }
-
+    public PlayerMovement PlayerMovement { get { return playerMovement; } }
+    
     public delegate void OnAttackHandler(Vector3 position, MovingCharacter.AttackSide side);
     public OnAttackHandler OnAttack;
 
@@ -76,6 +80,12 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             }
 
             playerMovement.InitializePlayerInput(playerConfiguration, camera);
+
+            LocalPlayer = this;
+        }
+        else
+        {
+            OtherPlayer = this;
         }
 
         //create hat

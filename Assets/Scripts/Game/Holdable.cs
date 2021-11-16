@@ -1,13 +1,16 @@
+using Mirror;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Holdable : MonoBehaviour
+public class Holdable : NetworkBehaviour
 {
     public float Radius = 0.2f;
     public string Id;
     public GameObject DummyPrefab;
+    public TemporaryMeshReplacer MeshReplacer;
 
+    public Vector3 HeldPosition { get { if (instantiatedDummyObject != null) return instantiatedDummyObject.transform.position; return transform.position; } }
     public bool Held { get; private set; }
     public bool HasDetailColor { get; private set; }
     public DetailColor DetailColor { get; private set; }
@@ -20,6 +23,12 @@ public class Holdable : MonoBehaviour
 
     private SoundSource soundSource;
     private Vector3 lastCollisionPoint;
+
+    private GameObject instantiatedDummyObject;
+
+    private Transform lastPickingTransform;
+    private Transform holdingTransform;
+    private Player holdingPlayer;
 
     private void Start()
     {
@@ -34,7 +43,7 @@ public class Holdable : MonoBehaviour
 
     public void PlacedInHolder(Transform newParent)
     {
-        if(_rigidbody == null)
+        if (_rigidbody == null)
             _rigidbody = gameObject.GetComponent<Rigidbody>();
 
         _rigidbody.isKinematic = true;
@@ -45,41 +54,161 @@ public class Holdable : MonoBehaviour
 
     public void WasPickedUp(Transform pickingTransform, Vector3 holdPoint, bool setLayer = true)
     {
+        lastPickingTransform = pickingTransform;
+
+        if (!CustomNetworkManager.IsOnlineSession) //this is an offline session
+        {
+            PerformPickUp(false, holdPoint, transform.rotation, setLayer);
+        }
+        else //this is an online session
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcPickup(false, holdPoint, transform.rotation, setLayer);
+            }
+            else
+            {
+                CmdPickup(true, holdPoint, transform.rotation, setLayer);
+            }
+        }
+
+        MeshReplacer.ReplaceMesh(false);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdPickup(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    {
+        RpcPickup(pickedByClient, holdPoint, rotation, setLayer);
+    }
+
+    [ClientRpc]
+    private void RpcPickup(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    {
+        PerformPickUp(pickedByClient, holdPoint, rotation, setLayer);
+    }
+
+    private void PerformPickUp(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    {
         lastCollisionPoint = Vector3.zero;
         _rigidbody.isKinematic = true;
         _collider.enabled = false;
-        transform.position = holdPoint;
-        transform.parent = pickingTransform;
         Held = true;
+
+        if (instantiatedDummyObject != null)
+        {
+            Destroy(instantiatedDummyObject);
+        }
+
+        Transform pickingTransform = GetPickingTransform(pickedByClient);
+        holdingTransform = pickingTransform;
+
+        holdingPlayer = holdingTransform.gameObject.GetComponentInParent<Player>();
+
+        instantiatedDummyObject = Instantiate(DummyPrefab, holdPoint, rotation);
+        instantiatedDummyObject.transform.parent = pickingTransform;
+
+        if (setLayer)
+            SetLayerForObject(instantiatedDummyObject, 8);
 
         OnWasPickedUp?.Invoke(pickingTransform);
         OnWasPickedUp = null;
 
-        if (setLayer)
-            SetLayer(8);
+        holdingPlayer.PickedUpItem(this);
+
+        Debug.Log("perform pickup: " + instantiatedDummyObject);
     }
 
-    public void WasDropped(Rigidbody holdingBody, float holdingBodyMovingVelocity, bool setLayer = true)
+    public void WasDropped(Vector3 holderVelocity, float holdingBodyMovingVelocity)
     {
-        _rigidbody.isKinematic = false;
-        _rigidbody.velocity = holdingBody.velocity;
-        _rigidbody.AddForce(holdingBody.transform.forward * holdingBodyMovingVelocity, ForceMode.Impulse);
-        _collider.enabled = true;
+        if (!CustomNetworkManager.IsOnlineSession) //this is an offline session
+        {
+            PerformDrop(holderVelocity, holdingBodyMovingVelocity);
+        }
+        else //this is an online session
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcDrop(holderVelocity, holdingBodyMovingVelocity);
+            }
+            else
+            {
+                CmdDrop(holderVelocity, holdingBodyMovingVelocity);
+            }
+        }
+
+        MeshReplacer.ReplaceMesh(false);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdDrop(Vector3 holderVelocity, float holdingBodyMovingVelocity)
+    {
+        RpcDrop(holderVelocity, holdingBodyMovingVelocity);
+    }
+
+    [ClientRpc]
+    private void RpcDrop(Vector3 holderVelocity, float holdingBodyMovingVelocity)
+    {
+        PerformDrop(holderVelocity, holdingBodyMovingVelocity);
+    }
+
+    public void PerformDrop(Vector3 holderVelocity, float holdingBodyMovingVelocity)
+    {
+        Debug.Log("was dropped");
+        transform.position = instantiatedDummyObject.transform.position;
         transform.parent = null;
+        _rigidbody.isKinematic = false;
+        _rigidbody.velocity = holderVelocity;
+        _rigidbody.AddForce(holdingTransform.forward * holdingBodyMovingVelocity, ForceMode.Impulse);
+        _collider.enabled = true;
         Held = false;
 
-        if (setLayer)
-            SetLayer(0);
+        MeshReplacer.GoBackToNormal();
+        Destroy(instantiatedDummyObject);
+
+        holdingPlayer.DroppedItem();
     }
 
-    private void SetLayer(int layerIndex)
+    private void SetLayerForObject(GameObject theObject, int layerIndex)
     {
-        List<GameObject> family = new List<GameObject>() { gameObject };
-        gameObject.GetComponentsInChildren<Transform>().ToList().ForEach(x => family.Add(x.gameObject));
+        List<GameObject> family = new List<GameObject>() { theObject };
+        theObject.GetComponentsInChildren<Transform>().ToList().ForEach(x => family.Add(x.gameObject));
 
         foreach (GameObject member in family)
         {
             member.layer = layerIndex;
+        }
+    }
+
+    private Transform GetPickingTransform(bool pickedByClient)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (pickedByClient)
+            {
+                if (CustomNetworkManager.Instance.IsServer)
+                {
+                    return PlayerNetworkCharacter.OtherPlayer.PlayerMovement.SpineTransform;
+                }
+                else
+                {
+                    return PlayerNetworkCharacter.LocalPlayer.PlayerMovement.SpineTransform;
+                }
+            }
+            else
+            {
+                if (CustomNetworkManager.Instance.IsServer)
+                {
+                    return PlayerNetworkCharacter.LocalPlayer.PlayerMovement.SpineTransform;
+                }
+                else
+                {
+                    return PlayerNetworkCharacter.OtherPlayer.PlayerMovement.SpineTransform;
+                }
+            }
+        }
+        else
+        {
+            return lastPickingTransform;
         }
     }
 
