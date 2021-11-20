@@ -41,6 +41,15 @@ public class Holdable : NetworkBehaviour
             DetailColor = gameObject.GetComponent<DetailColorController>().Color;
     }
 
+    private void Update()
+    {
+        if (Held && CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
+        {
+            if (instantiatedDummyObject != null)
+                transform.position = instantiatedDummyObject.transform.position;
+        }
+    }
+
     public void PlacedInHolder(Transform newParent)
     {
         if (_rigidbody == null)
@@ -62,7 +71,7 @@ public class Holdable : NetworkBehaviour
         }
         else //this is an online session
         {
-            if(CustomNetworkManager.Instance.IsServer)
+            if (CustomNetworkManager.Instance.IsServer)
             {
                 RpcPickup(false, holdPoint, transform.rotation, setLayer);
             }
@@ -120,6 +129,7 @@ public class Holdable : NetworkBehaviour
 
     public void WasDropped(Vector3 holderVelocity, float holdingBodyMovingVelocity)
     {
+        Debug.Log("Wass dropped");
         if (!CustomNetworkManager.IsOnlineSession) //this is an offline session
         {
             PerformDrop(holderVelocity, holdingBodyMovingVelocity);
@@ -135,8 +145,6 @@ public class Holdable : NetworkBehaviour
                 CmdDrop(holderVelocity, holdingBodyMovingVelocity);
             }
         }
-
-        MeshReplacer.ReplaceMesh(false);
     }
 
     [Command(requiresAuthority = false)]
