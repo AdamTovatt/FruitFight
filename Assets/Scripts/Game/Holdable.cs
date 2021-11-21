@@ -12,6 +12,7 @@ public class Holdable : NetworkBehaviour
 
     public Vector3 HeldPosition { get { if (instantiatedDummyObject != null) return instantiatedDummyObject.transform.position; return transform.position; } }
     public bool Held { get; private set; }
+    public bool InHolder { get; private set; }
     public bool HasDetailColor { get; private set; }
     public DetailColor DetailColor { get; private set; }
 
@@ -29,6 +30,7 @@ public class Holdable : NetworkBehaviour
     private Transform lastPickingTransform;
     private Transform holdingTransform;
     private Player holdingPlayer;
+    private Transform holderTransform;
 
     private void Start()
     {
@@ -48,16 +50,22 @@ public class Holdable : NetworkBehaviour
             if (instantiatedDummyObject != null)
                 transform.position = instantiatedDummyObject.transform.position;
         }
+
+        if (InHolder)
+        {
+            if (holderTransform != null)
+                transform.position = holderTransform.position;
+        }
     }
 
-    public void PlacedInHolder(Transform newParent)
+    public void PlacedInHolder(Transform holder)
     {
         if (_rigidbody == null)
             _rigidbody = gameObject.GetComponent<Rigidbody>();
 
         _rigidbody.isKinematic = true;
-        transform.parent = newParent;
-        transform.localPosition = Vector3.zero;
+        holderTransform = holder;
+        InHolder = true;
         Held = true;
     }
 
@@ -102,6 +110,8 @@ public class Holdable : NetworkBehaviour
         _rigidbody.isKinematic = true;
         _collider.enabled = false;
         Held = true;
+        InHolder = false;
+        holderTransform = null;
 
         if (instantiatedDummyObject != null)
         {
@@ -233,5 +243,10 @@ public class Holdable : NetworkBehaviour
                 }
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("Holdable was destoryed");
     }
 }
