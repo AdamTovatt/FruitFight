@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     private bool hasInitializedLevel;
 
+    private List<Spawner> spawners = new List<Spawner>();
+
     public void Awake()
     {
         Players = new List<PlayerInformation>();
@@ -146,6 +148,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddSpawner(Spawner spawner)
+    {
+        spawners.Add(spawner);
+    }
+
     public void InitializeLevelOnline(PlayerSpawnpoint playerSpawnpoint)
     {
         if (CustomNetworkManager.Instance.IsServer && !hasInitializedLevel)
@@ -170,6 +177,12 @@ public class GameManager : MonoBehaviour
 
             PlayerNetworkIdentity.LocalPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
             PlayerNetworkIdentity.OtherPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
+
+            //spawn
+            foreach(Spawner spawner in spawners)
+            {
+                spawner.SpawnObject();
+            }
         }
     }
 

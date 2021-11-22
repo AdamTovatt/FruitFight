@@ -34,7 +34,19 @@ public class Spawner : MonoBehaviour
         if (!WorldBuilder.IsInEditor || SpawnInEditor)
         {
             if (SpawnAtStart)
-                SpawnObject();
+            {
+                if (CustomNetworkManager.IsOnlineSession)
+                {
+                    if(CustomNetworkManager.Instance.IsServer)
+                    {
+                        GameManager.Instance.AddSpawner(this);
+                    }
+                }
+                else
+                {
+                    SpawnObject();
+                }
+            }
 
             if (SpawnAtInterval)
                 InvokeRepeating("SpawnOneInstance", SecondsBetweenSpawning, SecondsBetweenSpawning);
