@@ -33,6 +33,8 @@ public class PlayerMovement : MovingCharacter
 
     public CapsuleCollider Collider { get; set; }
 
+    public Vector3 HoldPoint { get { return CalculateHoldPosition(); } }
+
     public int JellyBeans { get; set; }
     public int Coins { get; set; }
 
@@ -428,7 +430,7 @@ public class PlayerMovement : MovingCharacter
             if (holdable != null)
             {
                 shouldPunch = false;
-                holdable.WasPickedUp(SpineTransform, CalculateHoldPosition());
+                holdable.WasPickedUp(SpineTransform);
                 HeldItem = holdable;
                 CurrentRunSpeed = Speed * 0.8f;
             }

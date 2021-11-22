@@ -72,23 +72,23 @@ public class Holdable : NetworkBehaviour
         Held = true;
     }
 
-    public void WasPickedUp(Transform pickingTransform, Vector3 holdPoint, bool setLayer = true)
+    public void WasPickedUp(Transform pickingTransform, bool setLayer = true)
     {
         lastPickingTransform = pickingTransform;
 
         if (!CustomNetworkManager.IsOnlineSession) //this is an offline session
         {
-            PerformPickUp(false, holdPoint, transform.rotation, setLayer);
+            PerformPickUp(false, transform.rotation, setLayer);
         }
         else //this is an online session
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcPickup(false, holdPoint, transform.rotation, setLayer);
+                RpcPickup(false, transform.rotation, setLayer);
             }
             else
             {
-                CmdPickup(true, holdPoint, transform.rotation, setLayer);
+                CmdPickup(true, transform.rotation, setLayer);
             }
         }
 
@@ -96,18 +96,18 @@ public class Holdable : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdPickup(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    private void CmdPickup(bool pickedByClient, Quaternion rotation, bool setLayer)
     {
-        RpcPickup(pickedByClient, holdPoint, rotation, setLayer);
+        RpcPickup(pickedByClient, rotation, setLayer);
     }
 
     [ClientRpc]
-    private void RpcPickup(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    private void RpcPickup(bool pickedByClient, Quaternion rotation, bool setLayer)
     {
-        PerformPickUp(pickedByClient, holdPoint, rotation, setLayer);
+        PerformPickUp(pickedByClient, rotation, setLayer);
     }
 
-    private void PerformPickUp(bool pickedByClient, Vector3 holdPoint, Quaternion rotation, bool setLayer)
+    private void PerformPickUp(bool pickedByClient, Quaternion rotation, bool setLayer)
     {
         lastCollisionPoint = Vector3.zero;
         _rigidbody.isKinematic = true;
@@ -126,7 +126,7 @@ public class Holdable : NetworkBehaviour
 
         holdingPlayer = holdingTransform.gameObject.GetComponentInParent<Player>();
 
-        instantiatedDummyObject = Instantiate(DummyPrefab, holdPoint, rotation);
+        instantiatedDummyObject = Instantiate(DummyPrefab, holdingPlayer.Movement.HoldPoint, rotation);
         instantiatedDummyObject.transform.parent = pickingTransform;
 
         if(HasDetailColor)
