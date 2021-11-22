@@ -22,6 +22,8 @@ public class Holdable : NetworkBehaviour
     public delegate void WasPickedUpHandler(Transform pickingTransform);
     public event WasPickedUpHandler OnWasPickedUp;
 
+    private DetailColorController detailColorController;
+
     private SoundSource soundSource;
     private Vector3 lastCollisionPoint;
 
@@ -38,9 +40,10 @@ public class Holdable : NetworkBehaviour
         _rigidbody = gameObject.GetComponent<Rigidbody>();
         soundSource = gameObject.GetComponent<SoundSource>();
 
-        HasDetailColor = gameObject.GetComponent<DetailColorController>() != null;
+        detailColorController = gameObject.GetComponent<DetailColorController>();
+        HasDetailColor = detailColorController != null;
         if (HasDetailColor)
-            DetailColor = gameObject.GetComponent<DetailColorController>().Color;
+            DetailColor = detailColorController.Color;
     }
 
     private void Update()
@@ -125,6 +128,16 @@ public class Holdable : NetworkBehaviour
 
         instantiatedDummyObject = Instantiate(DummyPrefab, holdPoint, rotation);
         instantiatedDummyObject.transform.parent = pickingTransform;
+
+        if(HasDetailColor)
+        {
+            DetailColorController dummyDetailColor = instantiatedDummyObject.GetComponent<DetailColorController>();
+            if(dummyDetailColor != null)
+            {
+                dummyDetailColor.Color = DetailColor;
+                dummyDetailColor.SetTextureFromColor();
+            }
+        }
 
         if (setLayer)
             SetLayerForObject(instantiatedDummyObject, 8);
