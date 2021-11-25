@@ -70,7 +70,7 @@ public class WorldBuilder : MonoBehaviour
         }
         else
         {
-            foreach(AlwaysFaceCamera faceCamera in FindObjectsOfType<AlwaysFaceCamera>())
+            foreach (AlwaysFaceCamera faceCamera in FindObjectsOfType<AlwaysFaceCamera>())
             {
                 faceCamera.Activate();
             }
@@ -78,7 +78,7 @@ public class WorldBuilder : MonoBehaviour
 
         CurrentWorld = world;
 
-        if(DaylightController.Instance != null)
+        if (DaylightController.Instance != null)
         {
             DaylightController.Instance.Initialize(world.NorthRotation, world.TimeOfDay);
         }
@@ -167,7 +167,7 @@ public class WorldBuilder : MonoBehaviour
                 }
 
                 TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
-                if(triggerZone != null)
+                if (triggerZone != null)
                 {
                     block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
                     block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
@@ -175,7 +175,7 @@ public class WorldBuilder : MonoBehaviour
                 }
 
                 NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
-                if(notificationBlock != null)
+                if (notificationBlock != null)
                 {
                     block.BehaviourProperties.NotificationPropertyCollection = new NotificationPropertyCollection();
                 }
@@ -193,7 +193,7 @@ public class WorldBuilder : MonoBehaviour
                 propertyExposer.Behaviours.Add(moveOnTrigger);
             }
 
-            if(block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues) //init trigger zone
+            if (block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues) //init trigger zone
             {
                 TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
 
@@ -203,7 +203,7 @@ public class WorldBuilder : MonoBehaviour
                 triggerZoneObjectsToBind.Add(triggerZone);
             }
 
-            if(block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
+            if (block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
             {
                 NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
 
@@ -212,6 +212,11 @@ public class WorldBuilder : MonoBehaviour
             }
 
             propertyExposer.WasLoaded(block.BehaviourProperties);
+        }
+
+        if(block.Instance != null)
+        {
+            block.Instance.AddComponent<BlockInformationHolder>().Block = block;
         }
     }
 
@@ -227,7 +232,7 @@ public class WorldBuilder : MonoBehaviour
             activatedByStateSwitcher.BindStateSwitcher();
         }
 
-        foreach(TriggerZone zone in triggerZoneObjectsToBind)
+        foreach (TriggerZone zone in triggerZoneObjectsToBind)
         {
             zone.Bind();
         }
