@@ -700,7 +700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9154bd7944e467b4a9b637027abfe405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotatePoint: {fileID: 701465668554247748}
+  AnimationSpeed: 1
+  RotateAxisOffsetLength: 0.85
   Collider: {fileID: 8837926835533131744}
   UpTime: 0.2
   DownTime: 2

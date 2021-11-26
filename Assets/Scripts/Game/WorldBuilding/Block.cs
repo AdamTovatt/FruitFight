@@ -119,8 +119,8 @@ public class Block
 
         return new NeighborSet()
         {
-            Positive = positiveBlocks.Where(b => b.Info.BlockType == _info.BlockType).ToList(),
-            Negative = negativeBlocks.Where(b => b.Info.BlockType == _info.BlockType).ToList(),
+            Positive = positiveBlocks.Where(b => _info.BlockType == BlockType.Block ? b.Info.BlockType == _info.BlockType : true).ToList(), //if the current block is BlockType.Block
+            Negative = negativeBlocks.Where(b => _info.BlockType == BlockType.Block ? b.Info.BlockType == _info.BlockType : true).ToList(), //only return blocks of same type, else return all blocks
         };
     }
 
