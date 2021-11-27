@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BoardPlatform : MonoBehaviour
 {
+    private const float downAnimationTime = 2f;
+    private const float upAnimationTime = 1f;
+
     public float AnimationSpeed = 1f;
     public float RotateAxisOffsetLength = 0.9f;
     public Collider Collider;
@@ -117,7 +120,7 @@ public class BoardPlatform : MonoBehaviour
         {
             goingDownProgress += Time.deltaTime * AnimationSpeed;
 
-            if (goingDownProgress < 2)
+            if (goingDownProgress < downAnimationTime)
             {
                 transform.rotation = Quaternion.identity;
                 float rotateValue = Mathf.Abs(Mathf.Sin(Mathf.Pow((goingDownProgress + 0.4f) * 2, 1.75f))) * Mathf.Pow(2.718f, -1.7f * goingDownProgress * 2) * 1.6f;
@@ -137,9 +140,9 @@ public class BoardPlatform : MonoBehaviour
         {
             goingUpProgress += Time.deltaTime * AnimationSpeed;
 
-            if (goingUpProgress < 1)
+            if (goingUpProgress < upAnimationTime)
             {
-                float rotateValue = goingUpProgress;
+                float rotateValue = (Mathf.Sin(Mathf.PI * goingUpProgress - (Mathf.PI / 2f)) + 1f) / 2f;
 
                 Vector3 newPosition = Vector3.zero;
                 Quaternion newRotation = RotateAround(rotatePoint, rotateAxis, (90f - (rotateValue * 90f)) * rotateDirectionMultiplier, out newPosition);
@@ -170,7 +173,16 @@ public class BoardPlatform : MonoBehaviour
             StopPressure();
             isDown = true;
             goingDown = true;
-            goingDownProgress = 0;
+            goingUp = false;
+
+            if (goingUpProgress != 1 && goingUpProgress != 0)
+            {
+                goingDownProgress = (downAnimationTime / upAnimationTime) * (upAnimationTime - goingUpProgress) * 0.5f;
+            }
+            else
+            {
+                goingDownProgress = 0;
+            }
         }
     }
 
