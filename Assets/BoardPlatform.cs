@@ -10,6 +10,7 @@ public class BoardPlatform : MonoBehaviour
     public float AnimationSpeed = 1f;
     public float RotateAxisOffsetLength = 0.9f;
     public Collider Collider;
+    public SoundSource Sound;
 
     public float UpTime = 0.4f;
     public float DownTime = 2f;
@@ -183,6 +184,9 @@ public class BoardPlatform : MonoBehaviour
             {
                 goingDownProgress = 0;
             }
+
+            Sound.Play("Fall");
+            Sound.StopPlaying("Rise");
         }
     }
 
@@ -195,6 +199,8 @@ public class BoardPlatform : MonoBehaviour
             isDown = false;
             goingUp = true;
             goingUpProgress = 0;
+
+            Sound.Play("Rise");
         }
     }
 
