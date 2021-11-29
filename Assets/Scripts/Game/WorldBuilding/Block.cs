@@ -25,6 +25,8 @@ public class Block
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
     public Vector3 CenterPoint { get { return Position + new Vector3(Info.Width / 2f, Info.Height / 2f, Info.Width / 2f); } }
 
+    public bool EnforceEdge { get; set; }
+
     public BlockInfo Info
     {
         get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; }
@@ -76,6 +78,20 @@ public class Block
     {
         World.LastBlockId++;
         return World.LastBlockId;
+    }
+
+    public void MakeEnforceEdges()
+    {
+        EnforceEdge = true;
+
+        foreach (Block neighbor in NeighborX.SameTypesPositive)
+            neighbor.EnforceEdge = true;
+        foreach (Block neighbor in NeighborX.SameTypesNegative)
+            neighbor.EnforceEdge = true;
+        foreach (Block neighbor in NeighborY.SameTypesPositive)
+            neighbor.EnforceEdge = true;
+        foreach (Block neighbor in NeighborY.SameTypesNegative)
+            neighbor.EnforceEdge = true;
     }
 
     public void CalculateNeighbors(World world)
