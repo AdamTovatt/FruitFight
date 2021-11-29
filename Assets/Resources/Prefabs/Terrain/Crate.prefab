@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4463981258025038861, guid: ef544c3c2eb2a6f46928712dd780bad4, type: 3}
-  SpawnInEditor: 1
+  SpawnInEditor: 0
   SpawnAtStart: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
