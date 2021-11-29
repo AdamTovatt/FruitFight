@@ -118,24 +118,24 @@ public class WorldBuilder : MonoBehaviour
 
             float halfSideLenght = (float)block.Info.Width / 2f;
 
-            if (block.NeighborX.Positive == null || block.NeighborX.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1) //if we don't have a neighbor we should create an edge
+            if (block.NeighborX.SameTypesPositive == null || block.NeighborX.SameTypesPositive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1) //if we don't have a neighbor we should create an edge
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 90, 0), block.Instance.transform));
             }
 
-            if (block.NeighborX.Negative == null || block.NeighborX.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
+            if (block.NeighborX.SameTypesNegative == null || block.NeighborX.SameTypesNegative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, -90, 0), block.Instance.transform));
             }
 
-            if (block.NeighborZ.Positive == null || block.NeighborZ.Positive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
+            if (block.NeighborZ.SameTypesPositive == null || block.NeighborZ.SameTypesPositive.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 0, 0), block.Instance.transform));
             }
-            if (block.NeighborZ.Negative == null || block.NeighborZ.Negative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
+            if (block.NeighborZ.SameTypesNegative == null || block.NeighborZ.SameTypesNegative.Where(b => b.Info.Width >= block.Info.Width).Count() < 1)
             {
                 Vector3 edgePosition = new Vector3(block.Position.X + halfSideLenght, block.Position.Y - 0.001f, block.Position.Z + halfSideLenght);
                 previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab(block.Info.EdgePrefabs, random), edgePosition, Quaternion.Euler(0, 180, 0), block.Instance.transform));
@@ -214,7 +214,7 @@ public class WorldBuilder : MonoBehaviour
             propertyExposer.WasLoaded(block.BehaviourProperties);
         }
 
-        if(block.Instance != null)
+        if (block.Instance != null)
         {
             block.Instance.AddComponent<BlockInformationHolder>().Block = block;
         }
@@ -230,6 +230,27 @@ public class WorldBuilder : MonoBehaviour
         foreach (ActivatedByStateSwitcher activatedByStateSwitcher in activatedByStateSwitcherObjectsToBind)
         {
             activatedByStateSwitcher.BindStateSwitcher();
+
+            Debug.Log(activatedByStateSwitcher.GetType());
+            if (activatedByStateSwitcher.GetType() == typeof(MoveOnTrigger)) //to make objects on top of moving objects also move
+            {
+                BlockInformationHolder blockInformationHolder = activatedByStateSwitcher.GetComponent<BlockInformationHolder>();
+                if (blockInformationHolder != null)
+                {
+                    foreach (Block neighbor in blockInformationHolder.Block.NeighborY.AllTypesNegative)
+                    {
+                        if (neighbor.Info.BlockType == BlockType.Detail || neighbor.Info.BlockType == BlockType.Prop)
+                        {
+                            neighbor.Instance.transform.parent = blockInformationHolder.transform;
+                            Debug.Log(neighbor.Instance.transform.name);
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Missing BlockInformationHolder on MoveOnTrigger object");
+                }
+            }
         }
 
         foreach (TriggerZone zone in triggerZoneObjectsToBind)

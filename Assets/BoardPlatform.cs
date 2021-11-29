@@ -51,25 +51,25 @@ public class BoardPlatform : MonoBehaviour
         {
             block = gameObject.GetComponentInParent<BlockInformationHolder>().Block;
 
-            if (block.NeighborX.Positive.Count > 0)
+            if (block.NeighborX.AllTypesPositive.Count > 0)
             {
                 rotateAxisOffset += new Vector3(RotateAxisOffsetLength, 0, 0);
                 rotateAxis = transform.forward;
                 rotateDirectionMultiplier = 1;
             }
-            else if (block.NeighborX.Negative.Count > 0)
+            else if (block.NeighborX.AllTypesNegative.Count > 0)
             {
                 rotateAxisOffset -= new Vector3(RotateAxisOffsetLength, 0, 0);
                 rotateAxis = transform.forward;
                 rotateDirectionMultiplier = -1;
             }
-            else if (block.NeighborZ.Positive.Count > 0)
+            else if (block.NeighborZ.AllTypesPositive.Count > 0)
             {
                 rotateAxisOffset += new Vector3(0, 0, RotateAxisOffsetLength);
                 rotateAxis = transform.right;
                 rotateDirectionMultiplier = -1;
             }
-            else if (block.NeighborZ.Negative.Count > 0)
+            else if (block.NeighborZ.AllTypesNegative.Count > 0)
             {
                 rotateAxisOffset -= new Vector3(0, 0, RotateAxisOffsetLength);
                 rotateAxis = transform.right;

@@ -340,7 +340,7 @@ public class WorldEditor : MonoBehaviour
         {
             if (grassifyConfiguration.GrowBlocks.Contains(growBlock.Info.Id))
             {
-                if (growBlock.NeighborY.Positive.Count == 0)
+                if (growBlock.NeighborY.SameTypesPositive.Count == 0)
                 {
                     foreach (GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
                     {

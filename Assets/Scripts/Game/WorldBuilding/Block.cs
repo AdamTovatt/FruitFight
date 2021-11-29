@@ -26,7 +26,7 @@ public class Block
     public Vector3 CenterPoint { get { return Position + new Vector3(Info.Width / 2f, Info.Height / 2f, Info.Width / 2f); } }
 
     public BlockInfo Info
-    { 
+    {
         get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; }
         set { BlockInfoId = value.Id; _info = value; }
     }
@@ -95,9 +95,11 @@ public class Block
             sideLength = Info.Width;
 
         Vector3Int otherAxis = new Vector3Int(Math.Abs(axis.X - 1), 0, Math.Abs(axis.Z - 1));
+        Vector3Int xUnit = new Vector3Int(1, 0, 0);
+        Vector3Int zUnit = new Vector3Int(0, 0, 1);
 
         Vector3Int distance = axis * sideLength;
-        Vector3Int positive = position + distance + axis; //(why do we add axis and distance, effectively adding axis twice??? And why don't I comment when I write code like this?? This needs to be fixed sometime)
+        Vector3Int positive = position + distance + axis; //add axis since origin point is at bottom of block and we want to start looking for neighbors at the top of the block
         Vector3Int negative = position - axis;
 
         List<Block> positiveBlocks = new List<Block>();
@@ -113,14 +115,22 @@ public class Block
         }
         else
         {
-            positiveBlocks.AddRange(world.GetBlocksAtPosition(position + distance)); //(we don't add axis twice here but it seems to work fine)
-            negativeBlocks.AddRange(world.GetBlocksAtPosition(position - distance));
+            for (int x = 0; x < Info.Width; x++)
+            {
+                for (int z = 0; z < Info.Width; z++)
+                {
+                    positiveBlocks.AddRange(world.GetBlocksAtPosition(positive + xUnit * x + zUnit * z));
+                    negativeBlocks.AddRange(world.GetBlocksAtPosition(negative + xUnit * x + zUnit * z));
+                }
+            }
         }
 
         return new NeighborSet()
         {
-            Positive = positiveBlocks.Where(b => _info.BlockType == BlockType.Block ? b.Info.BlockType == _info.BlockType : true).ToList(), //if the current block is BlockType.Block
-            Negative = negativeBlocks.Where(b => _info.BlockType == BlockType.Block ? b.Info.BlockType == _info.BlockType : true).ToList(), //only return blocks of same type, else return all blocks
+            SameTypesPositive = positiveBlocks.Where(b => b.Info.BlockType == _info.BlockType && b.Id != Id).ToList(), //if the current block is BlockType.Block
+            SameTypesNegative = negativeBlocks.Where(b => b.Info.BlockType == _info.BlockType && b.Id != Id).ToList(), //only return blocks of same type, else return all blocks
+            AllTypesPositive = positiveBlocks.Where(b => b.Id != Id).ToList(),
+            AllTypesNegative = negativeBlocks.Where(b => b.Id != Id).ToList(),
         };
     }
 
@@ -132,6 +142,8 @@ public class Block
 
 public class NeighborSet
 {
-    public List<Block> Positive { get; set; }
-    public List<Block> Negative { get; set; }
+    public List<Block> SameTypesPositive { get; set; }
+    public List<Block> SameTypesNegative { get; set; }
+    public List<Block> AllTypesPositive { get; set; }
+    public List<Block> AllTypesNegative { get; set; }
 }
