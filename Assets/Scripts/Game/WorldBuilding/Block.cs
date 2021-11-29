@@ -135,8 +135,11 @@ public class Block
             {
                 for (int z = 0; z < Info.Width; z++)
                 {
-                    positiveBlocks.AddRange(world.GetBlocksAtPosition(positive + xUnit * x + zUnit * z));
-                    negativeBlocks.AddRange(world.GetBlocksAtPosition(negative + xUnit * x + zUnit * z));
+                    for (int y = 0; y < Info.Height; y++)
+                    {
+                        positiveBlocks.AddRange(world.GetBlocksAtPosition(position + distance + xUnit * x + zUnit * z + axis * y));
+                        negativeBlocks.AddRange(world.GetBlocksAtPosition(negative + xUnit * x + zUnit * z - axis * y));
+                    }
                 }
             }
         }
