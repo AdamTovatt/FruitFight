@@ -30,7 +30,7 @@ public class MainMenuConnectedMenu : MonoBehaviour
 
     private void BrowseLevels()
     {
-
+        MainMenuUi.Instance.BrowseLevelsButtonWasPressed();
     }
 
     private void BindEventListeners()

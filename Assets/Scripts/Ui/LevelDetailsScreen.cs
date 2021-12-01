@@ -199,14 +199,29 @@ public class LevelDetailsScreen : MonoBehaviour
             }
 
             world = World.FromJson(currentGetLevelResponse.WorldData);
+            world.Metadata = currentGetLevelResponse.Metadata;
         }
 
-        DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
-        MainMenuUi.Instance.MouseOverSelectableChecker.Disable();
-        MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(true);
-        WorldBuilder.NextLevel = world;
-        SceneManager.sceneLoaded += SceneLoaded;
-        SceneManager.LoadScene("GamePlay");
+        if (!CustomNetworkManager.IsOnlineSession)
+        {
+            DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
+            MainMenuUi.Instance.MouseOverSelectableChecker.Disable();
+            MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(true);
+            WorldBuilder.NextLevel = world;
+            SceneManager.sceneLoaded += SceneLoaded;
+            SceneManager.LoadScene("GamePlay");
+        }
+        else
+        {
+            if (world.Metadata.Id == 0)
+            {
+                AlertCreator.Instance.CreateNotification("Only levels from the online library can be played in online multiplayer");
+            }
+            else
+            {
+                NetworkMethodCaller.Instance.RpcClientShouldStartLevel(world.Metadata.Id);
+            }
+        }
     }
 
     private void SceneLoaded(Scene scene, LoadSceneMode mode)

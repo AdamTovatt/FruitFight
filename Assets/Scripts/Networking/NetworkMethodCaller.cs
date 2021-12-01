@@ -49,9 +49,24 @@ public class NetworkMethodCaller : NetworkBehaviour
     }
 
     [ClientRpc]
+    public async void RpcClientShouldStartLevel(long levelId)
+    {
+        GetLevelResponse response = await ApiLevelManager.GetLevel(levelId);
+        World world = World.FromJson(response.WorldData);
+        world.Metadata = response.Metadata;
+
+        StartLevel(world);
+    }
+
+    [ClientRpc]
     public void RpcClientShouldStartStoryLevel(string levelName)
     {
-        WorldBuilder.NextLevel = World.FromWorldName(levelName);
+        StartLevel(World.FromWorldName(levelName));
+    }
+
+    private void StartLevel(World world)
+    {
+        WorldBuilder.NextLevel = world;
         MainMenuUi.Instance.MouseOverSelectableChecker.Disable();
         MainMenuUi.Instance.LoadingScreen.Show();
         SceneManager.LoadScene("GamePlay");
