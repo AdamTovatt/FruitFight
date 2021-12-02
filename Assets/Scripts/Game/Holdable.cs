@@ -43,7 +43,12 @@ public class Holdable : NetworkBehaviour
         detailColorController = gameObject.GetComponent<DetailColorController>();
         HasDetailColor = detailColorController != null;
         if (HasDetailColor)
+        {
             DetailColor = detailColorController.Color;
+
+            if(!CustomNetworkManager.Instance.IsServer)
+                CmdRequestDetailColorUpdate();
+        }
     }
 
     private void Update()
@@ -59,6 +64,20 @@ public class Holdable : NetworkBehaviour
             if (holderTransform != null)
                 transform.position = holderTransform.position;
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdRequestDetailColorUpdate()
+    {
+        RpcUpdateDetailColor((int)DetailColor);
+    }
+
+    [ClientRpc]
+    private void RpcUpdateDetailColor(int newColor)
+    {
+        DetailColor = (DetailColor)newColor;
+        detailColorController.Color = DetailColor;
+        detailColorController.SetTextureFromColor();
     }
 
     public void PlacedInHolder(Transform holder)
@@ -131,6 +150,7 @@ public class Holdable : NetworkBehaviour
 
         if(HasDetailColor)
         {
+            Debug.Log("Detail color: " + DetailColor);
             DetailColorController dummyDetailColor = instantiatedDummyObject.GetComponent<DetailColorController>();
             if(dummyDetailColor != null)
             {
