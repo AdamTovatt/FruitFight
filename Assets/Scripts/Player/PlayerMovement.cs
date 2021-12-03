@@ -405,8 +405,6 @@ public class PlayerMovement : MovingCharacter
 
         bool shouldPunch = true;
 
-        Debug.Log("interact: " + this.enabled.ToString() + " is local: " + playerNetworkCharacter.IsLocalPlayer.ToString());
-        Debug.Log(HeldItem);
         if (HeldItem == null)
         {
             Vector3 pickupPosition = transform.position + (transform.up * 0.4f) + (transform.forward * 0.5f); //the center point of the spehere which we will use for pick up detection

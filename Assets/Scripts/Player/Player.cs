@@ -211,7 +211,7 @@ public class Player : NetworkBehaviour
 
     public void InvokeJellyBeansUpdated(int jellyBeans)
     {
-        if (CustomNetworkManager.IsOnlineSession)
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
             RpcInvokeJellyBeansUpdated(jellyBeans);
         else
             OnJellyBeansUpdated?.Invoke(jellyBeans);
@@ -219,7 +219,7 @@ public class Player : NetworkBehaviour
 
     public void InvokeCoinsUpdated(int coins)
     {
-        if (CustomNetworkManager.IsOnlineSession)
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
             RpcInvokeCoinsUpdated(coins);
         else
             OnCoinsUpdated?.Invoke(coins);

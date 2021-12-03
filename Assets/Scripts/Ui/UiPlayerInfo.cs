@@ -55,7 +55,14 @@ public class UiPlayerInfo : MonoBehaviour
                 image = PlayerNetworkIdentity.OtherPlayerInstance.Portrait;
         }
 
-        PlayerPortrait.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
+        try
+        {
+            PlayerPortrait.sprite = Sprite.Create(image, new Rect(new Vector2(0, 0), new Vector2(image.width, image.height)), new Vector2(image.width / 2, image.height / 2));
+        }
+        catch
+        {
+            Debug.LogError("Failed to create player portrait sprite");
+        }
 
         for (int i = 0; i < hearts; i++)
         {

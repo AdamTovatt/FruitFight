@@ -1,4 +1,5 @@
-    using System.Collections;
+using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -378,7 +379,20 @@ public class JellyBean : MovingCharacter
         lastAttackTime = Time.time;
     }
 
-    public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
+    [ClientRpc]
+    private void RpcWasAttacked(Vector3 attackOrigin, float attackStrength)
+    {
+        if (!CustomNetworkManager.Instance.IsServer)
+            PerformWasAttacked(attackOrigin, attackStrength); //we should only do this as a client since the server has already done it locally
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdWasAttacked(Vector3 attackOrigin, float attackStrength)
+    {
+        PerformWasAttacked(attackOrigin, attackStrength); //only do this as a server since the client has aldready done it locally
+    }
+
+    private void PerformWasAttacked(Vector3 attackOrigin, float attackStrength)
     {
         if (!knockBack)
         {
@@ -391,6 +405,23 @@ public class JellyBean : MovingCharacter
             knockBack = true;
             knockBackTime = Time.time;
         }
+    }
+
+    public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcWasAttacked(attackOrigin, attackStrength); //tell the other player to perform attack
+            }
+            else
+            {
+                CmdWasAttacked(attackOrigin, attackStrength); //tell the other player to perform attack
+            }
+        }
+
+        PerformWasAttacked(attackOrigin, attackStrength); //we should do this locally regardless of if it's an online session or not
     }
 
     public void Die()
@@ -510,7 +541,7 @@ public class JellyBean : MovingCharacter
 
     private void OnDisable()
     {
-        if(SceneManager.GetActiveScene().name == "MainMenuScene")
+        if (SceneManager.GetActiveScene().name == "MainMenuScene")
         {
             try
             {

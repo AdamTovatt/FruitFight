@@ -123,6 +123,7 @@ public class Health : NetworkBehaviour
 
     private void HealthWasUpdated()
     {
+        Debug.Log("Health updated: " + _currentHealth + " " + CurrentHealth);
         if (_currentHealth <= 0)
         {
             if (CanDie)
