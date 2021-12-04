@@ -19,8 +19,6 @@ public class Block
     public bool HasPropertyExposer;
     public BehaviourPropertyContainer BehaviourProperties;
 
-    private static int lastId = 1;
-
     public Vector3 AppliedPosition { get { return new Vector3(X, Y, Z) + RotationOffset; } }
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
     public Vector3 CenterPoint { get { return Position + new Vector3(Info.Width / 2f, Info.Height / 2f, Info.Width / 2f); } }

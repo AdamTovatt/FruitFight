@@ -183,6 +183,9 @@ public class GameManager : MonoBehaviour
             {
                 spawner.SpawnObject();
             }
+
+            PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
+            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
         }
     }
 

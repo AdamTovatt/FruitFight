@@ -36,8 +36,6 @@ public class BoardPlatform : MonoBehaviour
     private float goingDownProgress;
     private float goingUpProgress;
 
-    private float lastRotationValue = -1;
-
     Block block;
 
     private void Start()
