@@ -244,7 +244,6 @@ public class WorldBuilder : MonoBehaviour
                         if (neighbor.Info.BlockType == BlockType.Detail || neighbor.Info.BlockType == BlockType.Prop)
                         {
                             neighbor.Instance.transform.parent = blockInformationHolder.transform;
-                            Debug.Log(neighbor.Instance.transform.name);
                         }
                     }
                 }

@@ -118,6 +118,11 @@ public class JellyBean : MovingCharacter
 
     private Dictionary<Transform, Health> transformHealths = new Dictionary<Transform, Health>();
 
+    private Dictionary<uint, Transform> netIdToPlayerDictionary = new Dictionary<uint, Transform>();
+    private Dictionary<Transform, uint> playerToNetIdDictionary = new Dictionary<Transform, uint>();
+
+    private float setTargetTime;
+
     private void Awake()
     {
         uniqueSoundSource = gameObject.GetComponent<UniqueSoundSource>();
@@ -152,35 +157,34 @@ public class JellyBean : MovingCharacter
 
     void Update()
     {
-        if (target == null && GameManager.Instance != null)
+        if (CustomNetworkManager.HasAuthority) //is offline or is server
         {
-            PlayerMovement closestPlayer = null;
-            float closestPlayerDistance = 100000;
-
-            foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
+            if ((target == null || Time.time - setTargetTime > 3) && GameManager.Instance != null)
             {
-                float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
-                if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
+                PlayerMovement closestPlayer = null;
+                float closestPlayerDistance = 100000;
+
+                foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
                 {
-                    if (closestPlayerDistance > distanceSquared)
+                    float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+                    if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
                     {
-                        closestPlayer = player;
-                        closestPlayerDistance = distanceSquared;
+                        if (closestPlayerDistance > distanceSquared)
+                        {
+                            closestPlayer = player;
+                            closestPlayerDistance = distanceSquared;
+                        }
                     }
                 }
-            }
 
-            if (closestPlayer != null)
-            {
-                Health health = GetHealthForTransform(closestPlayer.transform);
-
-                if (health != null && !health.IsDead)
+                if (closestPlayer != null)
                 {
-                    health.OnDied += TargetDied;
+                    Health health = GetHealthForTransform(closestPlayer.transform);
 
-                    target = closestPlayer.transform;
-
-                    State = JellyBeanState.Chasing;
+                    if (health != null && !health.IsDead)
+                    {
+                        SetTarget(health, closestPlayer.transform, JellyBeanState.Chasing);
+                    }
                 }
             }
         }
@@ -193,12 +197,16 @@ public class JellyBean : MovingCharacter
             }
             else //target was lost
             {
-                targetLastSeenPosition = target.position;
+                if (CustomNetworkManager.HasAuthority) //only do this if we are offline or if we are the server
+                {
+                    if (targetHealth != null)
+                        targetHealth.OnDied -= TargetDied;
 
-                if (targetHealth != null)
-                    targetHealth.OnDied -= TargetDied;
+                    if (CustomNetworkManager.IsOnlineSession)
+                        RpcTargetLost(); //send to client
 
-                TargetLost();
+                    TargetLost(); //perform ourselves
+                }
             }
         }
 
@@ -249,8 +257,6 @@ public class JellyBean : MovingCharacter
                     {
                         targetDistance = new Vector3(targetDistance.x, Mathf.Min(Mathf.Abs(targetDistance.y - Collider.height), Mathf.Abs(targetDistance.y)), targetDistance.z);
                     }
-                    //else
-                    //    targetDistance = new Vector3(targetDistance.x, targetDistance.y + Collider.height, targetDistance.z);
 
                     if (targetDistance.sqrMagnitude < personalBoundaryDistanceSquared)
                     {
@@ -334,6 +340,40 @@ public class JellyBean : MovingCharacter
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
     }
 
+    private void SetTarget(Health healthOfTarget, Transform newTarget, JellyBeanState newState)
+    {
+        healthOfTarget.OnDied += TargetDied;
+        setTargetTime = Time.time;
+
+        if (!playerToNetIdDictionary.ContainsKey(newTarget))
+            playerToNetIdDictionary.Add(newTarget, newTarget.GetComponent<NetworkIdentity>().netId);
+
+        if (CustomNetworkManager.IsOnlineSession)
+            RpcSetTarget(playerToNetIdDictionary[newTarget], (int)newState);
+
+        PerformSetTarget(newTarget, newState);
+    }
+
+    private void PerformSetTarget(Transform newTarget, JellyBeanState newState)
+    {
+        target = newTarget;
+        State = newState;
+    }
+
+    [ClientRpc]
+    private void RpcSetTarget(uint netId, int newState)
+    {
+        Debug.Log("RpcSetTarget");
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        if (!netIdToPlayerDictionary.ContainsKey(netId))
+            netIdToPlayerDictionary.Add(netId, NetworkClient.spawned[netId].transform);
+
+        Debug.Log("Did set target: " + netId);
+        PerformSetTarget(netIdToPlayerDictionary[netId], (JellyBeanState)newState);
+    }
+
     private Health GetHealthForTransform(Transform transform)
     {
         if (!transformHealths.ContainsKey(transform))
@@ -348,10 +388,20 @@ public class JellyBean : MovingCharacter
             Die();
     }
 
+    [ClientRpc]
+    private void RpcTargetLost()
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        TargetLost();
+    }
+
     private void TargetLost()
     {
         if (this != null)
         {
+            targetLastSeenPosition = target.position;
             target = null;
             targetPosition = transform.position;
             searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
@@ -479,6 +529,9 @@ public class JellyBean : MovingCharacter
 
     public void JellyBeanStateWasChanged(JellyBeanState newState)
     {
+        if (!CustomNetworkManager.HasAuthority)
+            return;
+
         lastStateChange = Time.time;
         randomTimeAddition = Random.Range(randomTimeMin, randomTimeMax);
 
@@ -489,30 +542,74 @@ public class JellyBean : MovingCharacter
             switch (newState)
             {
                 case JellyBeanState.Roaming:
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.speed = RoamSpeed;
-                    targetPosition = GetNewTargetPosition(RoamNewTargetRange);
+                    UpdateStateProperties(newState, GetNewTargetPosition(RoamNewTargetRange));
                     break;
                 case JellyBeanState.Idle:
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.SetDestination(transform.position);
+                    UpdateStateProperties(newState, Vector3.zero);
                     break;
                 case JellyBeanState.Chasing:
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.speed = ChaseSpeed;
+                    UpdateStateProperties(newState, Vector3.zero);
                     break;
                 case JellyBeanState.Confused:
-                    navMeshAgent.isStopped = false;
+                    UpdateStateProperties(newState, Vector3.zero);
                     break;
                 case JellyBeanState.Searching:
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.speed = SearchSpeed;
-                    targetPosition = targetLastSeenPosition;
-                    navMeshAgent.SetDestination(targetPosition);
+                    UpdateStateProperties(newState, targetLastSeenPosition);
                     break;
                 default:
                     throw new System.Exception("No such state for: " + ToString());
             }
+        }
+    }
+
+    private void UpdateStateProperties(JellyBeanState newState, Vector3 position)
+    {
+        if (!CustomNetworkManager.HasAuthority)
+            return;
+
+        PerformUpdateStateProperties(newState, position);
+
+        if (CustomNetworkManager.IsOnlineSession)
+            RpcUpdateStateProperties((int)newState, position);
+    }
+
+    private void RpcUpdateStateProperties(int newState, Vector3 position)
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        State = (JellyBeanState)newState;
+        PerformUpdateStateProperties((JellyBeanState)newState, position);
+    }
+
+    private void PerformUpdateStateProperties(JellyBeanState newState, Vector3 position)
+    {
+        switch (newState)
+        {
+            case JellyBeanState.Roaming:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.speed = RoamSpeed;
+                targetPosition = position;
+                break;
+            case JellyBeanState.Idle:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.SetDestination(transform.position);
+                break;
+            case JellyBeanState.Chasing:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.speed = ChaseSpeed;
+                break;
+            case JellyBeanState.Confused:
+                navMeshAgent.isStopped = false;
+                break;
+            case JellyBeanState.Searching:
+                navMeshAgent.isStopped = false;
+                navMeshAgent.speed = SearchSpeed;
+                targetPosition = position;
+                navMeshAgent.SetDestination(targetPosition);
+                break;
+            default:
+                throw new System.Exception("No such state for: " + ToString());
         }
     }
 
