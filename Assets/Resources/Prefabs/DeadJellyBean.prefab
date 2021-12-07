@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 6685402637311709371}
   - component: {fileID: 6685402637311709368}
   - component: {fileID: 1743792567914784870}
+  - component: {fileID: 5044309534728470535}
+  - component: {fileID: -3347100568633076059}
   m_Layer: 0
   m_Name: DeadJellyBean
   m_TagString: Untagged
@@ -62,9 +64,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714, type: 3}
   SpawnInEditor: 1
-  SpawnAtStart: 1
+  SpawnAtStart: 0
+  SpawnOnObjectCreated: 1
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+  SpawnOnNetwork: 0
 --- !u!114 &6685402637311709368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +100,38 @@ MonoBehaviour:
     type: 3}
   Type: 0
   AbsorbDelay: 0.14
+--- !u!114 &5044309534728470535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6685402637311709369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33856f27545a50498a081f53a238ca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  BeanRenderer: {fileID: 6685402638136929811}
+--- !u!114 &-3347100568633076059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6685402637311709369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 10adf5ca9b835cc4fab62d42d267d53e
+  hasSpawned: 0
 --- !u!1 &6685402638136929823
 GameObject:
   m_ObjectHideFlags: 0

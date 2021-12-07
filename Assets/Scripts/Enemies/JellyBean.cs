@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class JellyBean : MovingCharacter
 {
+    public static List<Texture2D> JellyBeanCoatings;
+
     public TextMeshPro StatusText;
     public GameObject DeadPrefab;
 
@@ -101,9 +103,13 @@ public class JellyBean : MovingCharacter
     private UniqueSoundSource uniqueSoundSource;
     private FootStepAudioSource footStepAudioSource;
 
+    [SyncVar]
     private Vector3 targetPosition;
     private Transform target;
+    [SyncVar]
     private Vector3 targetLastSeenPosition;
+    [SyncVar]
+    private float currentSpeed;
 
     private int searchTargetReachedCount = 0;
 
@@ -123,8 +129,15 @@ public class JellyBean : MovingCharacter
 
     private float setTargetTime;
 
+    private float syncPositionTime;
+
     private void Awake()
     {
+        if(JellyBeanCoatings == null)
+        {
+            JellyBeanCoatings = CoatingTextures;
+        }
+
         uniqueSoundSource = gameObject.GetComponent<UniqueSoundSource>();
         footStepAudioSource = gameObject.GetComponent<FootStepAudioSource>();
         soundSource = gameObject.GetComponent<SoundSource>();
@@ -153,6 +166,9 @@ public class JellyBean : MovingCharacter
         _rigidbody.isKinematic = true;
 
         personalBoundaryDistanceSquared = PersonalBoundaryDistance * PersonalBoundaryDistance;
+
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+            CmdInvokeSyncTexture();
     }
 
     void Update()
@@ -187,7 +203,17 @@ public class JellyBean : MovingCharacter
                     }
                 }
             }
+
+            syncPositionTime += Time.deltaTime;
+
+            if(syncPositionTime > 5)
+            {
+                //ForceSyncPosition();
+                syncPositionTime = 0;
+            }
         }
+
+        navMeshAgent.speed = currentSpeed; //for some reason it gets the wrong value sometime so we force it to be the right value
 
         if (target != null) //has target
         {
@@ -340,6 +366,18 @@ public class JellyBean : MovingCharacter
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
     }
 
+    private void ForceSyncPosition()
+    {
+        RpcSetPosition(transform.position, targetPosition);
+    }
+
+    [ClientRpc]
+    private void RpcSetPosition(Vector3 position, Vector3 targetPosition)
+    {
+        navMeshAgent.Warp(position);
+        this.targetPosition = targetPosition;
+    }
+
     private void SetTarget(Health healthOfTarget, Transform newTarget, JellyBeanState newState)
     {
         healthOfTarget.OnDied += TargetDied;
@@ -476,9 +514,16 @@ public class JellyBean : MovingCharacter
 
     public void Die()
     {
-        Debug.Log("jelly bean died");
-        GameObject deadJellyBean = Instantiate(DeadPrefab, transform.position + new Vector3(0, 0.7f, 0), transform.rotation);
-        SetMaterialSettings(deadJellyBean.GetComponentInChildren<Renderer>(), MaterialSettings);
+        if (CustomNetworkManager.HasAuthority)
+        {
+            GameObject deadJellyBean = Instantiate(DeadPrefab, transform.position + new Vector3(0, 0.7f, 0), transform.rotation);
+            DeadJellyBean deadBean = deadJellyBean.GetComponent<DeadJellyBean>();
+            deadBean.AssignTexture(SetMaterialSettings(deadBean.BeanRenderer, MaterialSettings).MainTexture);
+
+            if (CustomNetworkManager.IsOnlineSession)
+                NetworkServer.Spawn(deadJellyBean);
+        }
+
         Destroy(gameObject);
     }
 
@@ -502,6 +547,21 @@ public class JellyBean : MovingCharacter
         }
 
         return result;
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdInvokeSyncTexture()
+    {
+        RpcSetTextureFromServer(MaterialSettings.MainTexture);
+    }
+
+    [ClientRpc]
+    private void RpcSetTextureFromServer(int texture)
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        SetMaterialSettings(_renderer, new JellyBeanMaterialSettings(texture));
     }
 
     private JellyBeanMaterialSettings SetMaterialSettings(Renderer renderer, JellyBeanMaterialSettings materialSettings = null)
@@ -589,6 +649,7 @@ public class JellyBean : MovingCharacter
             case JellyBeanState.Roaming:
                 navMeshAgent.isStopped = false;
                 navMeshAgent.speed = RoamSpeed;
+                currentSpeed = RoamSpeed;
                 targetPosition = position;
                 break;
             case JellyBeanState.Idle:
@@ -598,6 +659,7 @@ public class JellyBean : MovingCharacter
             case JellyBeanState.Chasing:
                 navMeshAgent.isStopped = false;
                 navMeshAgent.speed = ChaseSpeed;
+                currentSpeed = ChaseSpeed;
                 break;
             case JellyBeanState.Confused:
                 navMeshAgent.isStopped = false;

@@ -7060,6 +7060,7 @@ MonoBehaviour:
   - {fileID: 3664600246569946297, guid: 55279e945ee90674a853144697926b4d, type: 3}
   - {fileID: 8706223902884326236, guid: bc07c8feeed50c648aa62f95e3b1613e, type: 3}
   - {fileID: 4768720915529816196, guid: ff6a711dd66649d4e8b1403e0c309eda, type: 3}
+  - {fileID: 6685402637311709369, guid: 10adf5ca9b835cc4fab62d42d267d53e, type: 3}
 --- !u!4 &380009485
 Transform:
   m_ObjectHideFlags: 0
@@ -38818,6 +38819,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12364517872520a42a6185118b8380c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 1d5724034b3fc65499230cc1c37e4f88,
     type: 3}
   StatusText: {fileID: 4768720915699425936}

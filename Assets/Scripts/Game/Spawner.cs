@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour
     public GameObject Prefab;
     public bool SpawnInEditor = true;
     public bool SpawnAtStart = true;
+    public bool SpawnOnObjectCreated = false;
     public bool SpawnAtInterval = false;
     public float SecondsBetweenSpawning = 5f;
     public bool SpawnOnNetwork = false;
@@ -46,6 +47,10 @@ public class Spawner : MonoBehaviour
                 {
                     SpawnObject();
                 }
+            }
+            else if(SpawnOnObjectCreated)
+            {
+                SpawnObject();
             }
 
             if (SpawnAtInterval)
@@ -87,6 +92,8 @@ public class Spawner : MonoBehaviour
 
         if (CustomNetworkManager.IsOnlineSession && SpawnOnNetwork)
             NetworkServer.Spawn(result);
+
+        Debug.Log("spawned: " + result.transform.name);
 
         return result;
     }
