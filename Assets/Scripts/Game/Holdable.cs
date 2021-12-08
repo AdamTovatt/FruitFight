@@ -46,7 +46,7 @@ public class Holdable : NetworkBehaviour
         {
             DetailColor = detailColorController.Color;
 
-            if(!CustomNetworkManager.Instance.IsServer)
+            if(CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
                 CmdRequestDetailColorUpdate();
         }
     }
@@ -276,10 +276,5 @@ public class Holdable : NetworkBehaviour
                 }
             }
         }
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("Holdable was destoryed");
     }
 }

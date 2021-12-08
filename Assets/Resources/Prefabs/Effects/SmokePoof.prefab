@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2299341346678157142}
   - component: {fileID: -421398316893370825}
   - component: {fileID: -7457062282694341763}
+  - component: {fileID: 6236123957881640248}
   m_Layer: 0
   m_Name: SmokePoof
   m_TagString: Untagged
@@ -4991,4 +4992,23 @@ MonoBehaviour:
   SoundClips:
   - {fileID: 8300000, guid: 14e0580ec5f06474eaf51403999b055d, type: 3}
   AudioSource: {fileID: -421398316893370825}
+  PlayOnAwake: 1
+  PlayOnCollision: 0
   PitchVariation: 0.106
+--- !u!114 &6236123957881640248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8706223902884326236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 702ef5130f0a4b74a8f42c99333f8714
+  hasSpawned: 0

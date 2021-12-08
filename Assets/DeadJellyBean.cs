@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class DeadJellyBean : NetworkBehaviour
 {
+    public Glow BeanGlow;
     public Renderer BeanRenderer;
     private int texture;
 
     private void Start()
     {
-        if (!CustomNetworkManager.HasAuthority)
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.HasAuthority)
         {
             BeanRenderer.enabled = false;
             CmdRequestTextureUpdate();
@@ -30,6 +31,7 @@ public class DeadJellyBean : NetworkBehaviour
         this.texture = texture;
         SetMaterialSettings(BeanRenderer, texture);
         BeanRenderer.enabled = true;
+        BeanGlow.UpdateGlowColor();
     }
 
     private void SetMaterialSettings(Renderer renderer, int texture)

@@ -114,6 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  BeanGlow: {fileID: 8837426829589413788}
   BeanRenderer: {fileID: 6685402638136929811}
 --- !u!114 &-3347100568633076059
 MonoBehaviour:

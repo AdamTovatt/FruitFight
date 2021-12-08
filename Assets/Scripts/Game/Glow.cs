@@ -10,6 +10,11 @@ public class Glow : MonoBehaviour
 
     private void Start()
     {
+        UpdateGlowColor();
+    }
+
+    public void UpdateGlowColor()
+    {
         if (glowColors == null)
             glowColors = new Dictionary<Texture, Color>();
 

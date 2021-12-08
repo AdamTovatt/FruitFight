@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour
             {
                 if (CustomNetworkManager.IsOnlineSession)
                 {
-                    if(CustomNetworkManager.Instance.IsServer)
+                    if (CustomNetworkManager.Instance.IsServer)
                     {
                         GameManager.Instance.AddSpawner(this);
                     }
@@ -48,9 +48,19 @@ public class Spawner : MonoBehaviour
                     SpawnObject();
                 }
             }
-            else if(SpawnOnObjectCreated)
+            else if (SpawnOnObjectCreated)
             {
-                SpawnObject();
+                if (CustomNetworkManager.IsOnlineSession)
+                {
+                    if (CustomNetworkManager.Instance.IsServer)
+                    {
+                        NetworkServer.Spawn(SpawnObject());
+                    }
+                }
+                else
+                {
+                    SpawnObject();
+                }
             }
 
             if (SpawnAtInterval)
@@ -60,14 +70,12 @@ public class Spawner : MonoBehaviour
 
     public void SpawnOneInstance()
     {
+        Debug.Log("Spawn!!!!!!!!!");
         SpawnObject();
     }
 
     public GameObject SpawnObject(GameObject theObject = null)
     {
-        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
-            return null;
-
         if (theObject == null)
             theObject = Prefab;
 
