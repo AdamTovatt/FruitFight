@@ -43,6 +43,9 @@ public class PlayerMovement : MovingCharacter
     public delegate void OnParentUpdatedHandler(MoveOnTrigger moveOnTriggerParent);
     public event OnParentUpdatedHandler OnParentUpdated;
 
+    public delegate void OnLandedOnBouncyObjectHandler();
+    public event OnLandedOnBouncyObjectHandler OnLandedOnBouncyObject;
+
     public override bool StopFootSetDefault { get { return false; } }
     public override bool? StandingStill { get { if (!playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
 
@@ -540,9 +543,16 @@ public class PlayerMovement : MovingCharacter
         throw new System.NotImplementedException();
     }
 
+    public void LandedOnBouncyObject()
+    {
+        hasDoubleJumped = false; //if we landed and did not bounce we should reset the player has double jumped value
+        OnLandedOnBouncyObject?.Invoke();
+    }
+
     private void JustLanded()
     {
-        hasDoubleJumped = false;
+        if (!groundedChecker.GroundTransformIsBouncy)
+            hasDoubleJumped = false;
 
         footStepAudioSource.PlayNext(); //there are two feet
         footStepAudioSource.PlayNext();

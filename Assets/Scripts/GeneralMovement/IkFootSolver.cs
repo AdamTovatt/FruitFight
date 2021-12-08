@@ -45,12 +45,23 @@ public class IkFootSolver : MonoBehaviour
         if (CharacterMovement.GetType() == typeof(PlayerMovement))
         {
             ((PlayerMovement)CharacterMovement).OnParentUpdated += ParentUpdated;
+            ((PlayerMovement)CharacterMovement).OnLandedOnBouncyObject += LandedOnBouncyObject;
         }
 
         CharacterMovement.RegisterFoot(this);
 
         CurrentPosition = GetGroundPosition(0);
         lerp = 1;
+    }
+
+    private void OnDestroy()
+    {
+        if (CharacterMovement.GetType() == typeof(PlayerMovement))
+        {
+            ((PlayerMovement)CharacterMovement).OnParentUpdated -= ParentUpdated;
+            ((PlayerMovement)CharacterMovement).OnLandedOnBouncyObject -= LandedOnBouncyObject;
+        }
+
     }
 
     void Update()
@@ -105,6 +116,11 @@ public class IkFootSolver : MonoBehaviour
             if (!CharacterMovement.StopFootSetDefault)
                 inDefaultPosition = false;
         }
+    }
+
+    private void LandedOnBouncyObject()
+    {
+        SetDefaultPosition();
     }
 
     private void ParentUpdated(MoveOnTrigger newParent)

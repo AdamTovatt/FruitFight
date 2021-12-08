@@ -18,6 +18,8 @@ public class GroundedChecker : MonoBehaviour
         }
     }
 
+    public bool GroundTransformIsBouncy { get { return bouncyObjects.Contains(GroundTransform); } }
+
     public delegate void BecameGroundedHandler();
     public event BecameGroundedHandler OnBecameGrounded;
 
@@ -25,9 +27,16 @@ public class GroundedChecker : MonoBehaviour
     private float lastGroundedTime;
     private bool isGrounded;
 
+    private List<Transform> bouncyObjects = new List<Transform>();
+
     private void Start()
     {
         CalculateIsGrounded();
+
+        foreach(BouncyObject bouncyObject in FindObjectsOfType<BouncyObject>())
+        {
+            bouncyObjects.Add(bouncyObject.transform);
+        }
     }
 
     private void Update()
