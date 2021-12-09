@@ -38,9 +38,6 @@ public class BeamOfLight : MonoBehaviour
         Inner.material.color = color;
         Outer.material.color = color;
 
-        if (yValue < 0)
-            Destroy(gameObject);
-
         if (!reachedPeak && yValue == 1)
         {
             OnReachedPeak?.Invoke();

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SoundSource : MonoBehaviour
 {
     public AudioSource AudioSourceSettings;
     public List<Sound> Sounds;
-    public bool PlayOnAwake = false;
+    public bool PlayOnStart = false;
 
     private Dictionary<string, Sound> soundDictionary;
 
@@ -18,6 +19,17 @@ public class SoundSource : MonoBehaviour
         {
             sound.SetSource(gameObject.AddComponent<AudioSource>(), AudioSourceSettings);
             soundDictionary.Add(sound.Name, sound);
+        }
+    }
+
+    private void Start()
+    {
+        if(PlayOnStart)
+        {
+            if(soundDictionary.Keys.Count > 0)
+            {
+                Play(soundDictionary.Keys.First());
+            }
         }
     }
 
