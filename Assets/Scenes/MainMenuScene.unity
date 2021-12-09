@@ -7277,6 +7277,7 @@ MonoBehaviour:
   JoinButton: {fileID: 1831238324}
   HostButton: {fileID: 132358305}
   BackButton: {fileID: 1297470672}
+  LoginScreen: {fileID: 793732611}
   LobbyMenu: {fileID: 575372713}
   JoinGameMenu: {fileID: 665496493}
 --- !u!114 &401928043

@@ -380,6 +380,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "UseController",
+                    "type": "Button",
+                    "id": "593a5e91-eed1-4bff-a1f7-baab3dca8f3b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -523,6 +531,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "EnterText",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02004fa9-9e16-4441-b6a1-b7fc969803b7",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "UseController",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4260449c-cb56-46a6-8205-3c29e10fcf11",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "UseController",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

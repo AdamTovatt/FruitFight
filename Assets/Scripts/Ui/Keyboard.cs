@@ -107,11 +107,65 @@ public class Keyboard : MonoBehaviour
         inputActions = new PlayerControls();
         inputActions.Enable();
         inputActions.Ui.EnterText.performed += EnterWasPressed;
+        inputActions.Ui.UseController.performed += EnterTextWithController;
+
+        CheckIfShouldEnterWithKeyboard();
+    }
+
+    private void OnDestroy()
+    {
+        inputActions.Ui.EnterText.performed -= EnterWasPressed;
+        inputActions.Ui.UseController.performed -= EnterTextWithController;
     }
 
     public void SetToPassword()
     {
         TextField.contentType = TMP_InputField.ContentType.Password;
+    }
+
+    private void CheckIfShouldEnterWithKeyboard()
+    {
+        if (WorldEditorUi.Instance != null)
+        {
+            if (WorldEditorUi.Instance.KeyboardExists != null && (bool)WorldEditorUi.Instance.KeyboardExists)
+            {
+                WorldEditorUi.Instance.DisableUiInput();
+                WorldEditor.Instance.DisableControls();
+                TextField.Select();
+                isEnteringTextWithKeyboard = true;
+            }
+        }
+        else if (MainMenuUi.Instance != null)
+        {
+            MainMenuUi.Instance.DisableUiInput();
+            TextField.Select();
+            isEnteringTextWithKeyboard = true;
+        }
+    }
+
+    private void EnterTextWithController(InputAction.CallbackContext obj)
+    {
+        if (WorldEditorUi.Instance != null)
+        {
+            if (WorldEditorUi.Instance.KeyboardExists != null && (bool)WorldEditorUi.Instance.KeyboardExists)
+            {
+                WorldEditorUi.Instance.EnableUiInput();
+                buttons[0][0].Button.Select();
+                isEnteringTextWithKeyboard = false;
+            }
+        }
+        else if (MainMenuUi.Instance != null)
+        {
+            MainMenuUi.Instance.EnableUiInput();
+            buttons[0][0].Button.Select();
+            isEnteringTextWithKeyboard = false;
+        }
+        else
+        {
+            Debug.LogError("Error when switching to controller text input");
+        }
+
+        currentText = new StringBuilder(TextField.text);
     }
 
     private void EnterWasPressed(InputAction.CallbackContext obj)

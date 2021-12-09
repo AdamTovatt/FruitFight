@@ -393,6 +393,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""UseController"",
+                    ""type"": ""Button"",
+                    ""id"": ""593a5e91-eed1-4bff-a1f7-baab3dca8f3b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -536,6 +544,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""EnterText"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02004fa9-9e16-4441-b6a1-b7fc969803b7"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseController"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4260449c-cb56-46a6-8205-3c29e10fcf11"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UseController"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1218,6 +1248,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Ui_Move = m_Ui.FindAction("Move", throwIfNotFound: true);
         m_Ui_MouseMove = m_Ui.FindAction("MouseMove", throwIfNotFound: true);
         m_Ui_EnterText = m_Ui.FindAction("EnterText", throwIfNotFound: true);
+        m_Ui_UseController = m_Ui.FindAction("UseController", throwIfNotFound: true);
         // LevelEditor
         m_LevelEditor = asset.FindActionMap("LevelEditor", throwIfNotFound: true);
         m_LevelEditor_MoveMarker = m_LevelEditor.FindAction("MoveMarker", throwIfNotFound: true);
@@ -1378,6 +1409,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Ui_Move;
     private readonly InputAction m_Ui_MouseMove;
     private readonly InputAction m_Ui_EnterText;
+    private readonly InputAction m_Ui_UseController;
     public struct UiActions
     {
         private @PlayerControls m_Wrapper;
@@ -1387,6 +1419,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Ui_Move;
         public InputAction @MouseMove => m_Wrapper.m_Ui_MouseMove;
         public InputAction @EnterText => m_Wrapper.m_Ui_EnterText;
+        public InputAction @UseController => m_Wrapper.m_Ui_UseController;
         public InputActionMap Get() { return m_Wrapper.m_Ui; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1411,6 +1444,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @EnterText.started -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
                 @EnterText.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
                 @EnterText.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnEnterText;
+                @UseController.started -= m_Wrapper.m_UiActionsCallbackInterface.OnUseController;
+                @UseController.performed -= m_Wrapper.m_UiActionsCallbackInterface.OnUseController;
+                @UseController.canceled -= m_Wrapper.m_UiActionsCallbackInterface.OnUseController;
             }
             m_Wrapper.m_UiActionsCallbackInterface = instance;
             if (instance != null)
@@ -1430,6 +1466,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @EnterText.started += instance.OnEnterText;
                 @EnterText.performed += instance.OnEnterText;
                 @EnterText.canceled += instance.OnEnterText;
+                @UseController.started += instance.OnUseController;
+                @UseController.performed += instance.OnUseController;
+                @UseController.canceled += instance.OnUseController;
             }
         }
     }
@@ -1615,6 +1654,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnMouseMove(InputAction.CallbackContext context);
         void OnEnterText(InputAction.CallbackContext context);
+        void OnUseController(InputAction.CallbackContext context);
     }
     public interface ILevelEditorActions
     {

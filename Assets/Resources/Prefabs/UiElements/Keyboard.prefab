@@ -398,7 +398,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 73}
-  m_SizeDelta: {x: 600, y: 50}
+  m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7644831128198906602
 CanvasRenderer:
@@ -441,7 +441,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press enter to edit text with keyboard
+  m_Text: Press select/start to edit text with controller
 --- !u!1 &6589476093646075090
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,5 +861,7 @@ MonoBehaviour:
   Prefab: {fileID: 6974424038377042378, guid: 8035de2c5962dd2478f2028c7c514af6, type: 3}
   SpawnInEditor: 0
   SpawnAtStart: 1
+  SpawnOnObjectCreated: 0
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
+  SpawnOnNetwork: 0
