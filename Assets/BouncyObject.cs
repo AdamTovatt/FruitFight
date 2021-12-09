@@ -12,6 +12,7 @@ public class BouncyObject : MonoBehaviour
     public float AnimationSpeedMultiplier = 1f;
     public float AnimationLength = 2f;
 
+    private float temporaryAmplitudeModifier = 1f;
     private float animationValue = 0;
     private bool animating = false;
 
@@ -22,7 +23,7 @@ public class BouncyObject : MonoBehaviour
         if (animating)
         {
             animationValue += Time.deltaTime * AnimationSpeedMultiplier;
-            float bounceValue = BounceAmplitude * Mathf.Sin(animationValue * 2 * Mathf.PI * BounceFrequency) * Mathf.Pow(2.718f, -1 * animationValue * BounceFalloff) * -1 + 1;
+            float bounceValue = temporaryAmplitudeModifier * BounceAmplitude * Mathf.Sin(animationValue * 2 * Mathf.PI * BounceFrequency) * Mathf.Pow(2.718f, -1 * animationValue * BounceFalloff) * -1 + 1;
             transform.localScale = new Vector3(1, bounceValue, 1);
 
             if (animationValue > 2f)
@@ -34,8 +35,9 @@ public class BouncyObject : MonoBehaviour
         }
     }
 
-    public void PlayBounceAnimation()
+    public void PlayBounceAnimation(float temporaryAmplitudeModifier = 1f)
     {
+        this.temporaryAmplitudeModifier = temporaryAmplitudeModifier;
         animationValue = 0;
         animating = true;
     }
@@ -57,7 +59,9 @@ public class BouncyObject : MonoBehaviour
                 Rigidbody rigidbody = playerDictionary[collision.transform].RigidBody;
                 rigidbody.velocity = new Vector3(rigidbody.velocity.x, collision.relativeVelocity.y * -1, rigidbody.velocity.z);
 
-                PlayBounceAnimation();
+                float bounceAmplitudeModifier = Mathf.Clamp(0.083f * Mathf.Abs(collision.relativeVelocity.y) + 0.343f, 0.8f, 1.4f);
+
+                PlayBounceAnimation(bounceAmplitudeModifier);
                 PlayBounceSound();
             }
             else

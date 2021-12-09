@@ -204,6 +204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5798877717066705865}
+  - component: {fileID: 8546256910104810589}
   m_Layer: 0
   m_Name: MushroomStem2
   m_TagString: Untagged
@@ -227,3 +228,17 @@ Transform:
   m_Father: {fileID: 3646138170282484080}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8546256910104810589
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6571332552269771123}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 2.084953
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.9497539, z: 0}
