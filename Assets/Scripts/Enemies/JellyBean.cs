@@ -133,7 +133,7 @@ public class JellyBean : MovingCharacter
 
     private void Awake()
     {
-        if(JellyBeanCoatings == null)
+        if (JellyBeanCoatings == null)
         {
             JellyBeanCoatings = CoatingTextures;
         }
@@ -206,7 +206,7 @@ public class JellyBean : MovingCharacter
 
             syncPositionTime += Time.deltaTime;
 
-            if(syncPositionTime > 5)
+            if (syncPositionTime > 5)
             {
                 //ForceSyncPosition();
                 syncPositionTime = 0;
@@ -401,14 +401,12 @@ public class JellyBean : MovingCharacter
     [ClientRpc]
     private void RpcSetTarget(uint netId, int newState)
     {
-        Debug.Log("RpcSetTarget");
         if (CustomNetworkManager.Instance.IsServer)
             return;
 
         if (!netIdToPlayerDictionary.ContainsKey(netId))
             netIdToPlayerDictionary.Add(netId, NetworkClient.spawned[netId].transform);
 
-        Debug.Log("Did set target: " + netId);
         PerformSetTarget(netIdToPlayerDictionary[netId], (JellyBeanState)newState);
     }
 
@@ -439,7 +437,11 @@ public class JellyBean : MovingCharacter
     {
         if (this != null)
         {
-            targetLastSeenPosition = target.position;
+            if (target != null)
+                targetLastSeenPosition = target.position;
+            else
+                targetLastSeenPosition = transform.position;
+
             target = null;
             targetPosition = transform.position;
             searchTargetReachedCount = 0; //needed later to stop searching for player at last seen position
