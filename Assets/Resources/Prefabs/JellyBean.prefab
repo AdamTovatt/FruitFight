@@ -1255,7 +1255,7 @@ MonoBehaviour:
     Pitch: 1
     PitchVariation: 0.1
     Delay: 0
-  PlayOnAwake: 0
+  PlayOnStart: 0
 --- !u!82 &2418385293123236190
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1907,7 +1907,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5687078456380948813}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
   m_Name: 

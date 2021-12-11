@@ -12,6 +12,9 @@ public abstract class MovingCharacter : NetworkBehaviour
 
     public GameObject PunchSoundEffectPrefab;
 
+    /// <summary>
+    /// Should the feet be stopped from going to default position?
+    /// </summary>
     public abstract bool StopFootSetDefault { get; }
     public abstract bool IsGrounded { get; }
     public abstract bool? StandingStill { get; }

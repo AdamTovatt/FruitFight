@@ -713,6 +713,15 @@
       "Name": "Mushroom Stem 2",
       "Prefab": "MushroomStem2",
       "RotatableX": true
+    },
+    {
+      "Id": 70,
+      "BlockType": 1,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Hard Candy",
+      "Prefab": "HardCandySpawner"
     }
   ]
 }
