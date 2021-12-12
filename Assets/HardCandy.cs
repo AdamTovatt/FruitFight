@@ -11,6 +11,7 @@ public class HardCandy : MovingCharacter
     public float RoamNewTargetRange = 5f;
     public float RoamSpeed = 1f;
     public float ChargeSpeed = 2f;
+    public float RotationSpeedMultiplier = 0.5f;
 
     public float DistanceToGround = 0.1f;
 
@@ -19,8 +20,9 @@ public class HardCandy : MovingCharacter
     public SoundSource Sound;
     public Health Health;
 
+    public float DistanceToTargetSquared { get { return (TargetPosition - transform.position).sqrMagnitude; } }
     public float CurrentMaxSpeed { get; set; }
-    public Vector3 TargetPosition { get { return _targetPosition; } set { if (Navigation.isActiveAndEnabled) Navigation.SetDestination(value); _targetPosition = value; } }
+    public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
     private Vector3 _targetPosition;
 
     public override bool StopFootSetDefault { get { return false; } }
@@ -40,6 +42,8 @@ public class HardCandy : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
+    private bool isFacingTarget = false;
+    private float rotationLerpTime = 0;
     private float personalBoundaryDistanceSquared;
 
     private void Awake()
@@ -57,12 +61,50 @@ public class HardCandy : MovingCharacter
     {
         Navigation.speed = CurrentMaxSpeed;
 
-        if ((TargetPosition - transform.position).sqrMagnitude < personalBoundaryDistanceSquared)
+        if (DistanceToTargetSquared < personalBoundaryDistanceSquared)
         {
             ReachedTarget();
         }
 
+        if (!isFacingTarget)
+        {
+            if ((bool)StandingStill)
+            {
+                Vector3 targetLocation = new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), rotationLerpTime);
+                rotationLerpTime += Time.deltaTime * RotationSpeedMultiplier;
+
+                if (Quaternion.Angle(Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared)
+                {
+                    StartedFacingTarget();
+                }
+            }
+        }
+
         _isGrounded = null; //reset so it will be calculated the next frame if needed
+    }
+
+    private void TargetWasUpdated()
+    {
+        Vector3 targetLocation = new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z);
+
+        if (Quaternion.Angle(Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), transform.rotation) > 1 && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+        {
+            isFacingTarget = false;
+            rotationLerpTime = 0;
+        }
+        else
+        {
+            StartedFacingTarget();
+        }
+    }
+
+    private void StartedFacingTarget() //the character has rotated towards the target and will now start to move towards it
+    {
+        isFacingTarget = true;
+
+        if (Navigation.isActiveAndEnabled)
+            Navigation.SetDestination(TargetPosition);
     }
 
     private void OnDestroy()

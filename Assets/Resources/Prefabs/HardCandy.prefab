@@ -1272,7 +1272,7 @@ MonoBehaviour:
   CharacterMovement: {fileID: 8551069110806626982}
   Trail: {fileID: 0}
   RightArm: 1
-  ArmDistanceToBody: 0.3
+  ArmDistanceToBody: 0.75
   ArmHeight: 0.34
   ArmSwingSpeed: 12
   ArmForward: 0.05
@@ -1323,7 +1323,7 @@ MonoBehaviour:
   CharacterMovement: {fileID: 8551069110806626982}
   Trail: {fileID: 0}
   RightArm: 0
-  ArmDistanceToBody: 0.3
+  ArmDistanceToBody: 0.75
   ArmHeight: 0.34
   ArmSwingSpeed: 12
   ArmForward: 0.05
@@ -1849,8 +1849,11 @@ MonoBehaviour:
   Navigation: {fileID: 8551069110806626989}
   PersonalBoundaryDistance: 0.7
   RoamNewTargetRange: 5
-  RoamSpeed: 2
+  RoamSpeed: 1
   ChargeSpeed: 4
+  RotationSpeedMultiplier: 0.02
+  Acceleration: 6
+  Deceleration: 60
   DistanceToGround: 0.2
   UniqueSoundSource: {fileID: 8551069110806626987}
   FootStepAudio: {fileID: 8551069110806626988}
@@ -1883,10 +1886,10 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 25
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
