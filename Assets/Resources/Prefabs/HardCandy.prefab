@@ -1809,6 +1809,7 @@ GameObject:
   - component: {fileID: 8551069110806626983}
   - component: {fileID: 6650073471048254112}
   - component: {fileID: 427967640613405057}
+  - component: {fileID: -252050167680699444}
   m_Layer: 0
   m_Name: HardCandy
   m_TagString: Untagged
@@ -1849,16 +1850,29 @@ MonoBehaviour:
   Navigation: {fileID: 8551069110806626989}
   PersonalBoundaryDistance: 0.7
   RoamNewTargetRange: 5
-  RoamSpeed: 1
-  ChargeSpeed: 4
-  RotationSpeedMultiplier: 0.02
-  Acceleration: 6
-  Deceleration: 60
+  DiscoveryRadius: 5
+  SpeedSettings:
+  - State: 0
+    RotateSpeedMultiplier: 2
+    RunSpeed: 1
+  - State: 1
+    RotateSpeedMultiplier: 1
+    RunSpeed: 0.5
+  - State: 2
+    RotateSpeedMultiplier: 5
+    RunSpeed: 2
+  - State: 3
+    RotateSpeedMultiplier: 6
+    RunSpeed: 4.5
+  - State: 4
+    RotateSpeedMultiplier: 8
+    RunSpeed: 5
   DistanceToGround: 0.2
   UniqueSoundSource: {fileID: 8551069110806626987}
   FootStepAudio: {fileID: 8551069110806626988}
   Sound: {fileID: 8551069110806626984}
   Health: {fileID: 8551069110806626986}
+  CurrentState: 0
 --- !u!54 &8551069110806626990
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2187,3 +2201,32 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.79, y: 0.26617223, z: 0.46}
   m_Center: {x: 0, y: 0.42490873, z: 0}
+--- !u!114 &-252050167680699444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8551069110806626980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}

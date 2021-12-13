@@ -1,7 +1,10 @@
+using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class HardCandy : MovingCharacter
 {
@@ -9,9 +12,8 @@ public class HardCandy : MovingCharacter
 
     public float PersonalBoundaryDistance = 0.7f;
     public float RoamNewTargetRange = 5f;
-    public float RoamSpeed = 1f;
-    public float ChargeSpeed = 2f;
-    public float RotationSpeedMultiplier = 0.5f;
+    public float DiscoveryRadius = 5f;
+    public List<HardCandySpeedSettings> SpeedSettings;
 
     public float DistanceToGround = 0.1f;
 
@@ -20,6 +22,7 @@ public class HardCandy : MovingCharacter
     public SoundSource Sound;
     public Health Health;
 
+    public HardCandyState CurrentState = HardCandyState.Roaming;
     public float DistanceToTargetSquared { get { return (TargetPosition - transform.position).sqrMagnitude; } }
     public float CurrentMaxSpeed { get; set; }
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
@@ -42,12 +45,25 @@ public class HardCandy : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
+    private Dictionary<HardCandyState, HardCandySpeedSettings> speedLookup = new Dictionary<HardCandyState, HardCandySpeedSettings>();
+    private Dictionary<Transform, Health> healthLookup = new Dictionary<Transform, Health>();
+    private Dictionary<Transform, uint> playerNetIdLookup = new Dictionary<Transform, uint>();
+    private Dictionary<uint, Transform> netIdPlayerLookup = new Dictionary<uint, Transform>();
+
     private bool isFacingTarget = false;
     private float rotationLerpTime = 0;
     private float personalBoundaryDistanceSquared;
+    private float standingStillTime;
+    private Transform victim;
+    private float setVictimTime;
 
     private void Awake()
     {
+        foreach (HardCandySpeedSettings speedSetting in SpeedSettings)
+        {
+            speedLookup.Add(speedSetting.State, speedSetting);
+        }
+
         BindEvents();
         personalBoundaryDistanceSquared = PersonalBoundaryDistance * PersonalBoundaryDistance;
     }
@@ -59,12 +75,10 @@ public class HardCandy : MovingCharacter
 
     private void Update()
     {
-        Navigation.speed = CurrentMaxSpeed;
+        Navigation.speed = speedLookup[CurrentState].RunSpeed;
 
-        if (DistanceToTargetSquared < personalBoundaryDistanceSquared)
-        {
-            ReachedTarget();
-        }
+        if (CustomNetworkManager.HasAuthority)
+            Think();
 
         if (!isFacingTarget)
         {
@@ -72,7 +86,7 @@ public class HardCandy : MovingCharacter
             {
                 Vector3 targetLocation = new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z);
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), rotationLerpTime);
-                rotationLerpTime += Time.deltaTime * RotationSpeedMultiplier;
+                rotationLerpTime += Time.deltaTime * speedLookup[CurrentState].RotateSpeedMultiplier * 0.01f;
 
                 if (Quaternion.Angle(Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared)
                 {
@@ -82,6 +96,78 @@ public class HardCandy : MovingCharacter
         }
 
         _isGrounded = null; //reset so it will be calculated the next frame if needed
+    }
+
+    private void Think()
+    {
+        if ((victim == null || Time.time - setVictimTime > 3) && GameManager.Instance != null)
+        {
+            PlayerMovement player = FindClosestPlayer();
+            if (player != null)
+            {
+                Health health = GetHealthForTransform(player.transform);
+
+                if (health != null && !health.IsDead && health.CanDie)
+                {
+                    health.OnDied += VictimDied;
+                    SetNewVictim(player);
+                }
+            }
+        }
+
+        if (DistanceToTargetSquared < personalBoundaryDistanceSquared)
+        {
+            ReachedTarget();
+        }
+
+        if ((bool)StandingStill)
+        {
+            standingStillTime += Time.deltaTime;
+        }
+        else
+        {
+            standingStillTime = 0;
+        }
+
+        if (standingStillTime > 2.5f && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+        {
+            standingStillTime = 0;
+            ReachedTarget();
+        }
+    }
+
+    private void VictimDied(Health sender, CauseOfDeath causeOfDeath)
+    {
+        SetNewVictim(null);
+    }
+
+    private PlayerMovement FindClosestPlayer()
+    {
+        PlayerMovement closestPlayer = null;
+        float closestPlayerDistance = 100000;
+
+        foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
+        {
+            float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+            if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
+            {
+                if (closestPlayerDistance > distanceSquared)
+                {
+                    closestPlayer = player;
+                    closestPlayerDistance = distanceSquared;
+                }
+            }
+        }
+
+        return closestPlayer;
+    }
+
+    private Health GetHealthForTransform(Transform transform)
+    {
+        if (!healthLookup.ContainsKey(transform))
+            healthLookup.Add(transform, transform.gameObject.GetComponent<Health>());
+
+        return healthLookup[transform];
     }
 
     private void TargetWasUpdated()
@@ -124,9 +210,47 @@ public class HardCandy : MovingCharacter
 
     private void ReachedTarget()
     {
-        //if(roaming) {
-        SetNewRoamTarget();
-        //} later maybe
+        if (CurrentState == HardCandyState.Roaming)
+        {
+            SetNewRoamTarget();
+        }
+    }
+
+    private void SetNewVictim(PlayerMovement player)
+    {
+        setVictimTime = Time.time;
+
+        if (player != null)
+        {
+            if (!playerNetIdLookup.ContainsKey(player.transform))
+                playerNetIdLookup.Add(player.transform, player.transform.GetComponent<NetworkIdentity>().netId);
+        }
+
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
+            RpcSetVictim(player == null ? 0 : playerNetIdLookup[player.transform]);
+
+        PerformSetVictim(victim);
+    }
+
+    [ClientRpc]
+    private void RpcSetVictim(uint netId)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        if (netId != 0)
+        {
+            if (!netIdPlayerLookup.ContainsKey(netId))
+                netIdPlayerLookup.Add(netId, NetworkClient.spawned[netId].transform);
+        }
+
+        PerformSetVictim(netId == 0 ? null : netIdPlayerLookup[netId]);
+    }
+
+    private void PerformSetVictim(Transform victim)
+    {
+        this.victim = victim;
+        Debug.Log("Has new victim: " + victim?.name);
     }
 
     private void SetNewRoamTarget()
@@ -135,13 +259,36 @@ public class HardCandy : MovingCharacter
 
         if (newPosition != null)
         {
-            TargetPosition = (Vector3)newPosition;
-            CurrentMaxSpeed = RoamSpeed;
+            SetNewTarget((Vector3)newPosition);
         }
         else
         {
             Debug.LogError("Hard Candy could not find new target position");
         }
+    }
+
+    private void SetNewTarget(Vector3 position)
+    {
+        PerformSetNewTarget(position);
+
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
+        {
+            RpcSetNewTarget(position);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSetNewTarget(Vector3 position)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformSetNewTarget(position);
+    }
+
+    private void PerformSetNewTarget(Vector3 position)
+    {
+        TargetPosition = position;
     }
 
     private void Died(Health sender, CauseOfDeath causeOfDeath)
@@ -193,7 +340,16 @@ public class HardCandy : MovingCharacter
             {
                 foundValue = true;
                 result = groundHit.point;
-                Debug.Log("Groundray hit: " + groundHit.transform.name);
+            }
+        }
+
+        if (foundValue) //we have found a target position, now we want to check if we can see it
+        {
+            Ray visionRay = new Ray(transform.position + Vector3.up * 0.3f, (Vector3)result - transform.position + Vector3.up * 0.3f);
+            if (Physics.Raycast(visionRay, out RaycastHit visionHit))
+            {
+                if (Vector3.SqrMagnitude(visionHit.point - (Vector3)result) > 0.5f)
+                    foundValue = false;
             }
         }
 
@@ -213,4 +369,17 @@ public class HardCandy : MovingCharacter
         Gizmos.color = Color.red;
         Gizmos.DrawCube(TargetPosition, new Vector3(0.4f, 0.2f, 0.4f));
     }
+}
+
+public enum HardCandyState
+{
+    Roaming, Idle, Searching, Charging, Fleeing
+}
+
+[Serializable]
+public class HardCandySpeedSettings
+{
+    public HardCandyState State;
+    public float RotateSpeedMultiplier;
+    public float RunSpeed;
 }
