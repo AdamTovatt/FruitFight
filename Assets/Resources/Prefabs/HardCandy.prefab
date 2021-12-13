@@ -1850,7 +1850,7 @@ MonoBehaviour:
   Navigation: {fileID: 8551069110806626989}
   PersonalBoundaryDistance: 0.7
   RoamNewTargetRange: 5
-  DiscoveryRadius: 5
+  DiscoveryRadius: 10
   SpeedSettings:
   - State: 0
     RotateSpeedMultiplier: 2
@@ -1867,6 +1867,9 @@ MonoBehaviour:
   - State: 4
     RotateSpeedMultiplier: 8
     RunSpeed: 5
+  - State: 5
+    RotateSpeedMultiplier: 3
+    RunSpeed: 1
   DistanceToGround: 0.2
   UniqueSoundSource: {fileID: 8551069110806626987}
   FootStepAudio: {fileID: 8551069110806626988}
@@ -1905,7 +1908,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: -0.05
