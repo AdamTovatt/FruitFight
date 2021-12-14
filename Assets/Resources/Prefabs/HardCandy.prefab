@@ -1848,9 +1848,10 @@ MonoBehaviour:
   syncInterval: 0.1
   PunchSoundEffectPrefab: {fileID: 0}
   Navigation: {fileID: 8551069110806626989}
+  ChargeDamage: 10
   PersonalBoundaryDistance: 0.7
   RoamNewTargetRange: 5
-  DiscoveryRadius: 10
+  DiscoveryRadius: 7
   SpeedSettings:
   - State: 0
     RotateSpeedMultiplier: 2
@@ -2022,7 +2023,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  StartHealth: 50
+  StartHealth: 30
+  SpawnDeathObjectOffset: {x: 0, y: 0.2, z: 0}
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
   SpawnOnDeathPrefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714,

@@ -18,6 +18,7 @@ public class Health : NetworkBehaviour
     public delegate void OnHealthUpdatedHandler();
     public event OnHealthUpdatedHandler OnHealthUpdated;
 
+    public Vector3 SpawnDeathObjectOffset;
     public GameObject WaterSplash;
     public GameObject SpawnOnDeathPrefab;
     public SoundSource SoundSource;
@@ -161,7 +162,7 @@ public class Health : NetworkBehaviour
         IsDead = true;
 
         if (SpawnOnDeathPrefab != null)
-            Instantiate(SpawnOnDeathPrefab, transform.position, Quaternion.identity);
+            Instantiate(SpawnOnDeathPrefab, transform.position + SpawnDeathObjectOffset, Quaternion.identity);
 
         OnDied?.Invoke(this, causeOfDeath);
     }
