@@ -39657,6 +39657,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   StartHealth: 10
+  SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
   SpawnOnDeathPrefab: {fileID: 0}

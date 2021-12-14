@@ -722,6 +722,16 @@
       "ShowInEditor": true,
       "Name": "Hard Candy",
       "Prefab": "HardCandySpawner"
+    },
+    {
+      "Id": 71,
+      "BlockType": 3,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": true,
+      "Name": "Torch",
+      "Prefab": "Torch",
+      "RotatableX": true
     }
   ]
 }

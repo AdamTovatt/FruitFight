@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1614945328786695203}
   - component: {fileID: 5012555743377881225}
   - component: {fileID: 398416627336267633}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SphereCollectionArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 2528646861064739601}
   - component: {fileID: 2438744520671805653}
   - component: {fileID: 2439972634601723385}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Particles_Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4901,7 +4901,7 @@ GameObject:
   - component: {fileID: 5495829281924269562}
   - component: {fileID: 7755740432702222640}
   - component: {fileID: 8115786303346708708}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SphereHolder
   m_TagString: Interactable
   m_Icon: {fileID: 0}
@@ -5002,7 +5002,7 @@ GameObject:
   - component: {fileID: 3419581084718283417}
   - component: {fileID: 8077996500768765640}
   - component: {fileID: 1125096089999504350}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SphereHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5222,7 +5222,7 @@ GameObject:
   - component: {fileID: 5361228869395385491}
   - component: {fileID: 331625588041296427}
   - component: {fileID: 8269083479377607675}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SpherePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
