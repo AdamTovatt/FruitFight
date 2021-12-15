@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        NetworkMethodCaller.Instance.ClearBouncyObjects(); //clear the dictionary with bouncy objects so it can be filled again with the ones from this level
+
         WorldBuilder.IsInEditor = false;
         WorldBuilder.Instance.BuildNext();
         navMeshSurface.BuildNavMesh();

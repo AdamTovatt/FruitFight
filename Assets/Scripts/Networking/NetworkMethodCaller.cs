@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class NetworkMethodCaller : NetworkBehaviour
 {
     public static NetworkMethodCaller Instance;
+    private Dictionary<Vector3, BouncyObject> bouncyObjects = new Dictionary<Vector3, BouncyObject>();
 
     private void Awake()
     {
@@ -99,5 +100,47 @@ public class NetworkMethodCaller : NetworkBehaviour
         }
 
         LoadSceneOnClient(sceneName);
+    }
+
+    public void ClearBouncyObjects()
+    {
+        bouncyObjects.Clear();
+    }
+
+    public void RegisterBouncyObject(BouncyObject bouncyObject)
+    {
+        bouncyObjects.Add(bouncyObject.transform.position, bouncyObject);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdBouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
+    {
+        PerformBouncyObjectBounced(position, bounceAmplitudeModifier);
+    }
+
+    [ClientRpc]
+    private void RpcBouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformBouncyObjectBounced(position, bounceAmplitudeModifier);
+    }
+
+    private void PerformBouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
+    {
+        bouncyObjects[position].Bounce(bounceAmplitudeModifier);
+    }
+
+    public void BouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcBouncyObjectBounced(position, bounceAmplitudeModifier);
+        }
+        else
+        {
+            CmdBouncyObjectBounced(position, bounceAmplitudeModifier);
+        }
     }
 }

@@ -142,7 +142,7 @@ MonoBehaviour:
     Pitch: 1
     PitchVariation: 0.017
     Delay: 0
-  PlayOnAwake: 0
+  PlayOnStart: 0
 --- !u!82 &3559786560757192319
 AudioSource:
   m_ObjectHideFlags: 0

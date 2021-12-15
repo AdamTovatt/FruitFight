@@ -18,6 +18,12 @@ public class BouncyObject : MonoBehaviour
 
     private static Dictionary<Transform, PlayerMovement> playerDictionary = new Dictionary<Transform, PlayerMovement>();
 
+    private void Start()
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+            NetworkMethodCaller.Instance.RegisterBouncyObject(this);
+    }
+
     private void Update()
     {
         if (animating)
@@ -47,6 +53,12 @@ public class BouncyObject : MonoBehaviour
         Sound.Play("Bounce");
     }
 
+    public void Bounce(float bounceAmplitudeModifier)
+    {
+        PlayBounceAnimation(bounceAmplitudeModifier);
+        PlayBounceSound();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.tag == "Player")
@@ -61,8 +73,13 @@ public class BouncyObject : MonoBehaviour
 
                 float bounceAmplitudeModifier = Mathf.Clamp(0.083f * Mathf.Abs(collision.relativeVelocity.y) + 0.343f, 0.8f, 1.4f);
 
-                PlayBounceAnimation(bounceAmplitudeModifier);
-                PlayBounceSound();
+                if (CustomNetworkManager.IsOnlineSession)
+                {
+                    if (playerDictionary[collision.transform].PlayerNetworkCharacter.IsLocalPlayer)
+                        NetworkMethodCaller.Instance.BouncyObjectBounced(transform.position, bounceAmplitudeModifier);
+                }
+
+                Bounce(bounceAmplitudeModifier);
             }
             else
             {

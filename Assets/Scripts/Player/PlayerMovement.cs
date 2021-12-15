@@ -34,7 +34,7 @@ public class PlayerMovement : MovingCharacter
     public CapsuleCollider Collider { get; set; }
 
     public Vector3 HoldPoint { get { return CalculateHoldPosition(); } }
-
+    public PlayerNetworkCharacter PlayerNetworkCharacter { get { return playerNetworkCharacter; } }
     public int JellyBeans { get; set; }
     public int Coins { get; set; }
 
