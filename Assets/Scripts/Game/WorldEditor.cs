@@ -239,7 +239,7 @@ public class WorldEditor : MonoBehaviour
     {
         WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
         WorldEditorUi.Instance.EnableUiInput();
-        controlsDisabled = true;
+        DisableControls();
         isPickingActivator = false;
         activatorPickingMenu.gameObject.SetActive(true);
 

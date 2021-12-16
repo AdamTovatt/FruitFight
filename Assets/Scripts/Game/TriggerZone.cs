@@ -41,15 +41,36 @@ public class TriggerZone : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (WorldBuilder.IsInEditor)
+        {
+            if (!IsParent && IconGraphic.enabled)
+            {
+                IconGraphic.enabled = false;
+            }
+            else
+            {
+                if (IsParent && !IconGraphic.enabled)
+                    IconGraphic.enabled = true;
+            }
+        }
+    }
+
     public void Bind()
     {
         if (!IsParent)
         {
             Parent = parentBlock.Instance.GetComponent<TriggerZone>();
             if (Parent != null)
+            {
                 Parent.AddChild(this);
+                IconGraphic.enabled = false;
+            }
             else
+            {
                 Debug.Log("Parent was null");
+            }
         }
     }
 

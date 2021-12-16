@@ -1,38 +1,6 @@
 {
   "Icons": [
     {
-      "Name": "Button Up",
-      "FileName": "ButtonIcon_Up"
-    },
-    {
-      "Name": "Button Right",
-      "FileName": "ButtonIcon_Right"
-    },
-    {
-      "Name": "Button Left",
-      "FileName": "ButtonIcon_Left"
-    },
-    {
-      "Name": "Button Down",
-      "FileName": "ButtonIcon_Down"
-    },
-    {
-      "Name": "Trigger Right",
-      "FileName": "TriggerIcon_Right_Generic"
-    },
-    {
-      "Name": "Trigger Left",
-      "FileName": "TriggerIcon_Left_Generic"
-    },
-    {
-      "Name": "Stick Right",
-      "FileName": "StickIcon_Right"
-    },
-    {
-      "Name": "Stick Left",
-      "FileName": "StickIcon_Left"
-    },
-    {
       "Name": "Select",
       "VaryByDevice": true,
       "FileNameKeyboard": "KeyboardButton_E",
@@ -55,6 +23,18 @@
       "VaryByDevice": true,
       "FileNameKeyboard": "Mouse_Left",
       "FileNameController": "ButtonIcon_Left"
+    },
+    {
+      "Name": "Jump",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "KeyboardButton_Space",
+      "FileNameController": "ButtonIcon_Down"
+    },
+    {
+      "Name": "RotateCamera",
+      "VaryByDevice": true,
+      "FileNameKeyboard": "Mouse_Move",
+      "FileNameController": "StickIcon_Right"
     }
   ]
 }

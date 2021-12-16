@@ -288,7 +288,7 @@ public class HardCandy : MovingCharacter
     {
         Health.OnDied -= Died;
 
-        if (victim != null)
+        if (victim != null && healthLookup.ContainsKey(victim))
             healthLookup[victim].OnDied -= VictimDied;
     }
 
