@@ -1851,7 +1851,7 @@ MonoBehaviour:
   ChargeDamage: 10
   PersonalBoundaryDistance: 0.7
   RoamNewTargetRange: 5
-  DiscoveryRadius: 7
+  DiscoveryRadius: 8
   SpeedSettings:
   - State: 0
     RotateSpeedMultiplier: 2
@@ -1864,7 +1864,7 @@ MonoBehaviour:
     RunSpeed: 2
   - State: 3
     RotateSpeedMultiplier: 6
-    RunSpeed: 4.5
+    RunSpeed: 5.5
   - State: 4
     RotateSpeedMultiplier: 8
     RunSpeed: 5
