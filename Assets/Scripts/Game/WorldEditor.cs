@@ -595,6 +595,9 @@ public class WorldEditor : MonoBehaviour
 
     private void MouseScroll(InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         float scrollValue = context.ReadValue<float>();
 
         if(scrollValue > 0)
@@ -658,6 +661,9 @@ public class WorldEditor : MonoBehaviour
 
     private void ToggleRotateObject(InputAction.CallbackContext context)
     {
+        if (controlsDisabled)
+            return;
+
         if (!isRotatingObject)
         {
             if (selectedWorldObject != null)
@@ -765,6 +771,9 @@ public class WorldEditor : MonoBehaviour
 
     private void OpenBehaviourMenu(InputAction.CallbackContext context)
     {
+        if (controlsDisabled || IsTestingLevel)
+            return;
+
         Block block = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList().FirstOrDefault();
 
         if (block == null)

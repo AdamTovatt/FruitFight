@@ -181,6 +181,9 @@ public class NotificationMenu : MonoBehaviour
         WorldEditorUi.Instance.OnScreenKeyboard.OnGotText += GotTextInput;
 
         WorldEditorUi.Instance.OnScreenKeyboard.OpenKeyboard();
+        Debug.Log("Disable input");
+        WorldEditor.Instance.DisableControls();
+        WorldEditorUi.Instance.EnableUiInput();
     }
 
     private void Close()
