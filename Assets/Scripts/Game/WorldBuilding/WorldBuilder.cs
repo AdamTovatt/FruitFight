@@ -233,7 +233,6 @@ public class WorldBuilder : MonoBehaviour
         {
             activatedByStateSwitcher.BindStateSwitcher();
 
-            Debug.Log(activatedByStateSwitcher.GetType());
             if (activatedByStateSwitcher.GetType() == typeof(MoveOnTrigger)) //to make objects on top of moving objects also move
             {
                 BlockInformationHolder blockInformationHolder = activatedByStateSwitcher.GetComponent<BlockInformationHolder>();

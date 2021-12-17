@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        Debug.Log("player characters count: " + PlayerCharacters.Count);
         NetworkMethodCaller.Instance.ClearBouncyObjects(); //clear the dictionary with bouncy objects so it can be filled again with the ones from this level
 
         WorldBuilder.IsInEditor = false;
@@ -159,6 +160,9 @@ public class GameManager : MonoBehaviour
     {
         if (CustomNetworkManager.Instance.IsServer && !hasInitializedLevel)
         {
+            if (PlayerNetworkCharacter.LocalPlayer != null)
+                NetworkServer.Destroy(PlayerNetworkCharacter.LocalPlayer.gameObject);
+
             //host stuff
             GameObject hostPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
             NetworkServer.Spawn(hostPlayer);
@@ -181,7 +185,7 @@ public class GameManager : MonoBehaviour
             PlayerNetworkIdentity.OtherPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
 
             //spawn
-            foreach(Spawner spawner in spawners)
+            foreach (Spawner spawner in spawners)
             {
                 spawner.SpawnObject();
             }
@@ -223,6 +227,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadGamePlay()
     {
         yield return new WaitForSeconds(5);
+
+        if (Paused)
+            GameUi.Instance.PauseMenuWasClosed();
+
         SceneManager.LoadScene("GamePlay");
     }
 

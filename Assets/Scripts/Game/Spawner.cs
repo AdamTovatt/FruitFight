@@ -101,8 +101,6 @@ public class Spawner : MonoBehaviour
         if (CustomNetworkManager.IsOnlineSession && SpawnOnNetwork)
             NetworkServer.Spawn(result);
 
-        Debug.Log("spawned: " + result.transform.name);
-
         return result;
     }
 }
