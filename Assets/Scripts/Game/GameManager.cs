@@ -79,7 +79,9 @@ public class GameManager : MonoBehaviour
     public void StartLevel()
     {
         Debug.Log("player characters count: " + PlayerCharacters.Count);
-        NetworkMethodCaller.Instance.ClearBouncyObjects(); //clear the dictionary with bouncy objects so it can be filled again with the ones from this level
+
+        if (CustomNetworkManager.IsOnlineSession && NetworkMethodCaller.Instance != null)
+            NetworkMethodCaller.Instance.ClearBouncyObjects(); //clear the dictionary with bouncy objects so it can be filled again with the ones from this level
 
         WorldBuilder.IsInEditor = false;
         WorldBuilder.Instance.BuildNext();
