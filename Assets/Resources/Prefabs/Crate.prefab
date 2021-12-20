@@ -116,7 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  StartHealth: 15
+  StartHealth: 10
+  SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
   WaterSplash: {fileID: 0}
   SpawnOnDeathPrefab: {fileID: 8492701523010468686, guid: 6859a4bf69d03c949a52f3133ca8bf18,
     type: 3}
@@ -152,7 +153,7 @@ MonoBehaviour:
     Pitch: 1
     PitchVariation: 0.119
     Delay: 0
-  PlayOnAwake: 0
+  PlayOnStart: 0
 --- !u!82 &5397543335059246091
 AudioSource:
   m_ObjectHideFlags: 0
@@ -298,5 +299,5 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 1c81c1f075b914248a3a8cac91bd9c42
+  m_AssetId: ef544c3c2eb2a6f46928712dd780bad4
   hasSpawned: 0
