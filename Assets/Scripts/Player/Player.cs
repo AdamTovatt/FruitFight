@@ -249,10 +249,80 @@ public class Player : NetworkBehaviour
 
     public void TurnOnRunParticles()
     {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                PerformTurnOnRunParticles();
+                RpcTurnOnRunParticles();
+            }
+            else
+            {
+                CmdTurnOnRunParticles();
+            }
+        }
+        else
+        {
+            PerformTurnOnRunParticles();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcTurnOnRunParticles()
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        PerformTurnOnRunParticles();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdTurnOnRunParticles()
+    {
+        PerformTurnOnRunParticles();
+    }
+
+    private void PerformTurnOnRunParticles()
+    {
         RunParticles.Play(true);
     }
 
     public void TurnOffRunParticles()
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                PerformTurnOffRunParticles();
+                RpcTurnOffRunParticles();
+            }
+            else
+            {
+                CmdTurnOffRunParticles();
+            }
+        }
+        else
+        {
+            PerformTurnOffRunParticles();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcTurnOffRunParticles()
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        PerformTurnOffRunParticles();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdTurnOffRunParticles()
+    {
+        PerformTurnOffRunParticles();
+    }
+
+    private void PerformTurnOffRunParticles()
     {
         RunParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
