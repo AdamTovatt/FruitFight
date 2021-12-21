@@ -77,6 +77,8 @@ public class PlayerMovement : MovingCharacter
 
     private PlayerControls boundPlayerControls;
 
+    private List<ContactPoint> contactPoints = new List<ContactPoint>();
+
     private void Awake()
     {
         PreviousGroundedPositions = new Dictionary<Transform, GroundedPositionInformation>();
@@ -203,7 +205,10 @@ public class PlayerMovement : MovingCharacter
         if (ControlsEnabled)
         {
             if (!inputActions.ContainsKey(context.action.id))
-                throw new System.Exception("Unknown action: " + context.action.name);
+            {
+                Debug.LogWarning("Unknown action: " + context.action.name + " context: " + context.ToString());
+                return;
+            }
 
             PlayerInputAction action = inputActions[context.action.id];
 
@@ -244,7 +249,8 @@ public class PlayerMovement : MovingCharacter
                 case PlayerInputAction.Zoom:
                     break;
                 default:
-                    throw new System.Exception("Unknown action: " + context.action.name);
+                    Debug.LogWarning("Unknown action: " + context.action.name + " context: " + context.ToString());
+                    return;
             }
         }
     }
@@ -294,6 +300,22 @@ public class PlayerMovement : MovingCharacter
             debugHits.Add(hit.point);
             Vector3 wallDirection = new Vector3(hit.normal.z, hit.normal.y, hit.normal.x * -1).normalized;
             movement = Vector3.Dot(wallDirection, movement) * wallDirection;
+        }
+
+        foreach(ContactPoint contactPoint in contactPoints.Where(x => x.point.y > transform.position.y + 0.3f))
+        {
+            debugHits.Add(contactPoint.point);
+
+            if (contactPoint.otherCollider == null || contactPoint.otherCollider.attachedRigidbody == null || contactPoint.otherCollider.attachedRigidbody.isKinematic)
+            {
+                Vector3 collisionDirection = (contactPoint.point - transform.position).normalized;
+
+                if (Vector3.Angle(collisionDirection, transform.forward) < 90)
+                {
+                    Vector3 wallDirection = new Vector3(contactPoint.normal.z, contactPoint.normal.y, contactPoint.normal.x * -1).normalized;
+                    movement = Vector3.Dot(wallDirection, movement) * wallDirection;
+                }
+            }
         }
 
         Vector3 groundVelocity = Vector3.zero;
@@ -398,6 +420,29 @@ public class PlayerMovement : MovingCharacter
 
             if (CustomNetworkManager.IsOnlineSession)
                 playerNetworkCharacter.SetStandingStill(true);
+        }
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        ContactPoint[] contacts = new ContactPoint[collision.contactCount];
+        collision.GetContacts(contacts);
+        contactPoints.Clear();
+        foreach(ContactPoint contactPoint in contacts)
+        {
+            contactPoints.Add(contactPoint);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        ContactPoint[] contacts = new ContactPoint[collision.contactCount];
+        collision.GetContacts(contacts);
+        contactPoints.Clear();
+        foreach (ContactPoint contactPoint in contacts)
+        {
+            contactPoints.Add(contactPoint);
         }
     }
 

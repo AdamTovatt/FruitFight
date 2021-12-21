@@ -150,7 +150,6 @@ public class Holdable : NetworkBehaviour
 
         if(HasDetailColor)
         {
-            Debug.Log("Detail color: " + DetailColor);
             DetailColorController dummyDetailColor = instantiatedDummyObject.GetComponent<DetailColorController>();
             if(dummyDetailColor != null)
             {
@@ -166,13 +165,10 @@ public class Holdable : NetworkBehaviour
         OnWasPickedUp = null;
 
         holdingPlayer.PickedUpItem(this);
-
-        Debug.Log("perform pickup: " + instantiatedDummyObject);
     }
 
     public void WasDropped(Vector3 holderVelocity, float holdingBodyMovingVelocity)
     {
-        Debug.Log("Wass dropped");
         if (!CustomNetworkManager.IsOnlineSession) //this is an offline session
         {
             PerformDrop(holderVelocity, holdingBodyMovingVelocity);

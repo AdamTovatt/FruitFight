@@ -292,7 +292,6 @@ public class JellyBean : MovingCharacter
                         {
                             lastAttackTime = Time.time;
                             inRangeForAttack = true;
-                            Debug.Log("Now in range");
                         }
                         else
                         {
