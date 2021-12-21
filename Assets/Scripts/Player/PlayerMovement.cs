@@ -95,6 +95,7 @@ public class PlayerMovement : MovingCharacter
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
 
         groundedChecker.OnBecameGrounded += JustLanded;
+        groundedChecker.OnNewGroundWasEntered += NewGroundWasEntered;
 
         CurrentRunSpeed = Speed;
 
@@ -116,6 +117,7 @@ public class PlayerMovement : MovingCharacter
     private void OnDestroy()
     {
         groundedChecker.OnBecameGrounded -= JustLanded;
+        groundedChecker.OnNewGroundWasEntered -= NewGroundWasEntered;
 
         if (boundPlayerControls != null)
             UnbindInputFromPlayerControls(boundPlayerControls);
@@ -224,9 +226,18 @@ public class PlayerMovement : MovingCharacter
                     break;
                 case PlayerInputAction.Move:
                     if (context.performed)
+                    {
                         Move(context.ReadValue<Vector2>());
+
+                        if (GetShouldTurnOnRunParticles(groundedChecker.GroundBlock))
+                            Player.TurnOnRunParticles();
+                    }
                     else
+                    {
                         Move(Vector2.zero);
+
+                        Player.TurnOffRunParticles();
+                    }
                     break;
                 case PlayerInputAction.RotateCameraLeft:
                     if (context.performed)
@@ -302,7 +313,7 @@ public class PlayerMovement : MovingCharacter
             movement = Vector3.Dot(wallDirection, movement) * wallDirection;
         }
 
-        foreach(ContactPoint contactPoint in contactPoints.Where(x => x.point.y > transform.position.y + 0.3f))
+        foreach (ContactPoint contactPoint in contactPoints.Where(x => x.point.y > transform.position.y + 0.3f))
         {
             debugHits.Add(contactPoint.point);
 
@@ -429,7 +440,7 @@ public class PlayerMovement : MovingCharacter
         ContactPoint[] contacts = new ContactPoint[collision.contactCount];
         collision.GetContacts(contacts);
         contactPoints.Clear();
-        foreach(ContactPoint contactPoint in contacts)
+        foreach (ContactPoint contactPoint in contacts)
         {
             contactPoints.Add(contactPoint);
         }
@@ -592,6 +603,37 @@ public class PlayerMovement : MovingCharacter
     {
         hasDoubleJumped = false; //if we landed and did not bounce we should reset the player has double jumped value
         OnLandedOnBouncyObject?.Invoke();
+    }
+
+    private void NewGroundWasEntered(Block newBlock)
+    {
+        if (GetShouldTurnOnRunParticles(newBlock))
+            TurnOnRunParticles();
+        else
+            TurnOffRunParticles();
+    }
+
+    private bool GetShouldTurnOnRunParticles(Block block)
+    {
+        bool turnOn = false;
+
+        if (block != null)
+        {
+            if (block.Info != null && block.Info.BlockMaterial == BlockMaterial.Grass)
+                turnOn = true;
+        }
+
+        return turnOn;
+    }
+
+    private void TurnOnRunParticles()
+    {
+        Player.TurnOnRunParticles();
+    }
+
+    private void TurnOffRunParticles()
+    {
+        Player.TurnOffRunParticles();
     }
 
     private void JustLanded()

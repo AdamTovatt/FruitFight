@@ -20,20 +20,27 @@ public class GroundedChecker : MonoBehaviour
 
     public bool GroundTransformIsBouncy { get { return bouncyObjects.Contains(GroundTransform); } }
 
+    public Block GroundBlock { get { return GetBlock(); } }
+
     public delegate void BecameGroundedHandler();
     public event BecameGroundedHandler OnBecameGrounded;
+
+    public delegate void NewGroundWasEnteredHandler(Block newGround);
+    public event NewGroundWasEnteredHandler OnNewGroundWasEntered;
 
     private bool previousGrounded;
     private float lastGroundedTime;
     private bool isGrounded;
+    private Block lastBlock;
 
     private List<Transform> bouncyObjects = new List<Transform>();
+    private Dictionary<Transform, Block> blockDictionary = new Dictionary<Transform, Block>();
 
     private void Start()
     {
         CalculateIsGrounded();
 
-        foreach(BouncyObject bouncyObject in FindObjectsOfType<BouncyObject>())
+        foreach (BouncyObject bouncyObject in FindObjectsOfType<BouncyObject>())
         {
             bouncyObjects.Add(bouncyObject.transform);
         }
@@ -43,6 +50,7 @@ public class GroundedChecker : MonoBehaviour
     {
         previousGrounded = IsGrounded;
         CalculateIsGrounded();
+        GetBlock();
     }
 
     private void CalculateIsGrounded()
@@ -66,5 +74,36 @@ public class GroundedChecker : MonoBehaviour
 
         GroundTransform = null;
         isGrounded = false;
+    }
+
+    private Block GetBlock()
+    {
+        Block currentBlock;
+        if (GroundTransform != null)
+        {
+            if (!blockDictionary.ContainsKey(GroundTransform))
+            {
+                BlockInformationHolder blockInformationHolder = GroundTransform.GetComponentInParent<BlockInformationHolder>();
+                if (blockInformationHolder == null)
+                    blockInformationHolder = GroundTransform.GetComponent<BlockInformationHolder>();
+
+                blockDictionary.Add(GroundTransform, blockInformationHolder == null ? null : blockInformationHolder.Block);
+            }
+
+            currentBlock = blockDictionary[GroundTransform];
+        }
+        else
+        {
+            currentBlock = null;
+        }
+
+        if(currentBlock != lastBlock)
+        {
+            OnNewGroundWasEntered?.Invoke(currentBlock);
+        }
+
+        lastBlock = currentBlock;
+
+        return currentBlock;
     }
 }

@@ -13,7 +13,8 @@
         "RockPanel02_4",
         "RockPanel03_4",
         "RockPanel04_4"
-      ]
+      ],
+      "BlockMaterial": 1
     },
     {
       "Id": 5,
@@ -28,14 +29,15 @@
         "RockPanel02_2",
         "RockPanel03_2",
         "RockPanel04_2"
-      ]
+      ],
+      "BlockMaterial": 1
     },
     {
       "Id": 6,
       "BlockType": 0,
       "Width": 1,
       "Height": 1,
-      "ShowInEditor": true,
+      "ShowInEditor": false,
       "Name": "Small Block",
       "Prefab": "BuildingCubeGrass_1",
       "EdgePrefabs": [
@@ -43,7 +45,8 @@
         "RockPanel02_1",
         "RockPanel03_1",
         "RockPanel04_1"
-      ]
+      ],
+      "BlockMaterial": 1
     },
     {
       "Id": 2,

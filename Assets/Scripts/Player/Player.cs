@@ -14,6 +14,9 @@ public class Player : NetworkBehaviour
 
     public float PlayerRespawnTime = 5;
     public int DeathCost = 5;
+    public float RunParticlesEmissionRate = 30f;
+
+    public ParticleSystem RunParticles;
 
     public delegate void JellyBeansUpdatedHandler(int newAmount);
     public event JellyBeansUpdatedHandler OnJellyBeansUpdated;
@@ -30,6 +33,7 @@ public class Player : NetworkBehaviour
     public GameObject BeamOfLightPrefab;
     public GameObject AngelPrefab;
 
+    public AverageVelocityKeeper VelocityKeeper;
     public TemporaryMeshReplacer MeshReplacer;
     public Health Health;
     public PlayerMovement Movement;
@@ -43,6 +47,12 @@ public class Player : NetworkBehaviour
         InvokeCoinsUpdated(Coins);
 
         Health.OnDied += OnDied;
+    }
+
+    private void Update()
+    {
+        ParticleSystem.EmissionModule emission = RunParticles.emission;
+        emission.rateOverTime = RunParticlesEmissionRate * VelocityKeeper.Velocity;
     }
 
     private void OnDestroy()
@@ -235,5 +245,15 @@ public class Player : NetworkBehaviour
     private void RpcInvokeCoinsUpdated(int coins)
     {
         OnCoinsUpdated?.Invoke(coins);
+    }
+
+    public void TurnOnRunParticles()
+    {
+        RunParticles.Play(true);
+    }
+
+    public void TurnOffRunParticles()
+    {
+        RunParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 }

@@ -16,6 +16,7 @@ public class BlockInfo
     public bool RotatableX;
     public bool RotatableY;
     public bool StartWithPropertyExposer;
+    public BlockMaterial BlockMaterial;
 
     public BlockInfo()
     {
@@ -26,6 +27,11 @@ public class BlockInfo
 public enum BlockType
 {
     Block, Invisible, Ocean, Prop, Detail
+}
+
+public enum BlockMaterial
+{
+    NotSpecified, Grass, Wood, Stone
 }
 
 [Serializable]
