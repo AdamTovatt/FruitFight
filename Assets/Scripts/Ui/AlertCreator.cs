@@ -70,7 +70,7 @@ public class AlertCreator : MonoBehaviour
         return Icons.Where(x => x.Name == name).FirstOrDefault();
     }
 
-    private Notification CreateNotification(string text, float displayTime, string iconName, bool keyboard)
+    private Notification CreateNotification(string text, float displayTime, string iconName, bool controller)
     {
         Sprite iconImage = null;
 
@@ -79,7 +79,7 @@ public class AlertCreator : MonoBehaviour
             UiIcon icon = GetIcon(iconName);
             if (icon != null)
             {
-                iconImage = icon.GetSpriteByDevice(keyboard ? Device.Keyboard : Device.Gamepad);
+                iconImage = icon.GetSpriteByDevice(controller ? Device.Gamepad : Device.Keyboard);
             }
             else
             {
@@ -140,7 +140,7 @@ public class AlertCreator : MonoBehaviour
         }
         else
         {
-            createdNotifications.Add(CreateNotification(text, displayTime, iconName, keyboard));
+            createdNotifications.Add(CreateNotification(text, displayTime, iconName, controller));
         }
 
         return createdNotifications;
