@@ -199,7 +199,10 @@ public class HardCandy : MovingCharacter
         {
             if (path.status != NavMeshPathStatus.PathComplete)
             {
-                CurrentState = HardCandyState.Observing;
+                if (DistanceToTargetSquared < personalBoundaryDistanceSquared * 2)
+                    Flee();
+                else
+                    CurrentState = HardCandyState.Observing;
             }
             else if (canRedirect)
             {
@@ -303,7 +306,10 @@ public class HardCandy : MovingCharacter
         }
         else if (CurrentState == HardCandyState.Charging)
         {
-            Flee();
+            if (DistanceToTargetSquared < personalBoundaryDistanceSquared * 2)
+                Flee();
+            else
+                ThinkAboutVictim();
         }
         else if (CurrentState == HardCandyState.Fleeing)
         {
@@ -321,7 +327,9 @@ public class HardCandy : MovingCharacter
     private void Flee()
     {
         CurrentState = HardCandyState.Fleeing;
-        Vector3? fleePosition = GetRandomPositionWithinDistance(RoamNewTargetRange);
+
+        Vector3 offset = victim.position - transform.position * -1;
+        Vector3? fleePosition = GetRandomPositionWithinDistance(RoamNewTargetRange, offset: offset);
         if (fleePosition == null)
         {
             TargetPosition = transform.position;
@@ -401,10 +409,6 @@ public class HardCandy : MovingCharacter
         {
             SetNewTarget((Vector3)newPosition);
         }
-        else
-        {
-            Debug.LogError("Hard Candy could not find new target position");
-        }
     }
 
     private void SetNewTarget(Vector3 position)
@@ -456,7 +460,7 @@ public class HardCandy : MovingCharacter
         return position;
     }
 
-    private Vector3? GetRandomPositionWithinDistance(float distance, int attempt = 0)
+    private Vector3? GetRandomPositionWithinDistance(float distance, int attempt = 0, Vector3 offset = default(Vector3))
     {
         bool foundValue = false;
 
@@ -464,6 +468,8 @@ public class HardCandy : MovingCharacter
         randomPosition.y = transform.position.y;
 
         Vector3? result = transform.position + randomPosition;
+        if (offset != default(Vector3))
+            result += offset;
 
         result += Vector3.up * 0.05f;
 

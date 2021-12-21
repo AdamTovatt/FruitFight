@@ -117,7 +117,7 @@ public class SingleTargetCamera : MonoBehaviour
 
     private void Update()
     {
-        if (AllowInput)
+        if (AllowInput && Target != null)
         {
             rotationX += currentCameraRotation.x * Time.deltaTime * 20f * gamepadSensitivityMultiplier;
             rotationY -= currentCameraRotation.y * Time.deltaTime * 20f * gamepadSensitivityMultiplier;
@@ -150,6 +150,10 @@ public class SingleTargetCamera : MonoBehaviour
                     blockerIsActive = false;
                 }
             }
+        }
+        else if(AllowInput && Target == null)
+        {
+            Debug.LogWarning("Single target camera is null");
         }
     }
 
