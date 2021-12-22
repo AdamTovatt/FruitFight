@@ -99,6 +99,9 @@ public class MainMenuOnlineMenu : MonoBehaviour
         if (previousMenu != null)
             this.previousMenu = previousMenu;
 
+        if (this.previousMenu == null)
+            this.previousMenu = MainMenuUi.Instance.StartMenu.PlayMenu;
+
         this.previousMenu.gameObject.SetActive(false);
         JoinButton.Select();
     }

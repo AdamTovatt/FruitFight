@@ -50,8 +50,13 @@ public class PlayerNetworkIdentity : NetworkBehaviour
 
         if (MainMenuLobbyMenu.IsActive)
         {
-            MainMenuLobbyMenu.Instance.AddPlayer((int)netId, Name);
+            AddSelfToMainMenuLobbyMenu();
         }
+    }
+
+    public void AddSelfToMainMenuLobbyMenu()
+    {
+        MainMenuLobbyMenu.Instance.AddPlayer((int)netId, Name);
     }
 
     private static PlayerNetworkIdentity GetOtherPlayerInstance()

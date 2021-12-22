@@ -145,6 +145,14 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void CleanLevel()
+    {
+        foreach(PlayerMovement player in PlayerCharacters)
+        {
+            Destroy(player.gameObject);
+        }
+    }
+
     private void PlayerReadyStatusWasUpdated(bool localPlayer, bool newStatus)
     {
         if (PlayerNetworkIdentity.OtherPlayerInstance.Ready && PlayerNetworkIdentity.LocalPlayerInstance.Ready)

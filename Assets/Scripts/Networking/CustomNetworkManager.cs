@@ -26,6 +26,17 @@ public class CustomNetworkManager : NetworkManager
     public delegate void ConnectedHandlerServer(int id);
     public event ConnectedHandlerServer OnConnectedServer;
 
+    public override void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        base.Awake();
+    }
+
     public override void Start()
     {
         base.Start();
@@ -37,6 +48,8 @@ public class CustomNetworkManager : NetworkManager
     {
         base.OnClientDisconnect(conn);
         OnDisconnectedClient?.Invoke(conn.connectionId);
+
+        Debug.Log("Client disconnect");
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -50,6 +63,8 @@ public class CustomNetworkManager : NetworkManager
         base.OnServerDisconnect(conn);
 
         OnDisconnectedServer?.Invoke(conn.connectionId);
+
+        Debug.Log("Server disconnect");
     }
 
     public override void OnServerConnect(NetworkConnection conn)

@@ -41,13 +41,31 @@ public class GameUi : UiManager
             EventSystem.enabled = false;
         }
 
-        PauseMenu.OnExitLevel += ExitLevel;
+        PauseMenu.OnExitLevel += ExitLevelButton;
     }
 
-    private void ExitLevel()
+    private void OnDestroy()
+    {
+        PauseMenu.OnExitLevel -= ExitLevelButton;
+    }
+
+    private void ExitLevelButton()
+    {
+        if(!CustomNetworkManager.IsOnlineSession)
+        {
+            ExitLevel();
+        }
+        else
+        {
+            NetworkMethodCaller.Instance.ExitLevel();
+        }
+    }
+
+    public void ExitLevel()
     {
         MouseOverSelectableChecker.Disable();
 
+        GameManager.Instance.CleanLevel();
 
         if (WorldEditor.IsTestingLevel)
         {
@@ -62,6 +80,8 @@ public class GameUi : UiManager
 
     private void MainMenuWasEntered(Scene scene, LoadSceneMode mode)
     {
+        Cursor.lockState = CursorLockMode.None;
+
         if (MainMenuUi.Instance != null)
             MainMenuUi.Instance.WasReentered();
 

@@ -143,4 +143,37 @@ public class NetworkMethodCaller : NetworkBehaviour
             CmdBouncyObjectBounced(position, bounceAmplitudeModifier);
         }
     }
+
+    public void ExitLevel()
+    {
+        if(CustomNetworkManager.Instance.IsServer)
+        {
+            RpcExitLevel();
+            PerformExitLevel();
+        }
+        else
+        {
+            CmdExitLevel();
+            PerformExitLevel();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcExitLevel()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+        PerformExitLevel();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdExitLevel()
+    {
+        PerformExitLevel();
+    }
+
+    private void PerformExitLevel()
+    {
+        GameUi.Instance.ExitLevel();
+    }
 }

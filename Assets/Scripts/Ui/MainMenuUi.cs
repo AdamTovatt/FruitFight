@@ -21,9 +21,11 @@ public class MainMenuUi : UiManager
 
     private InputSystemUIInputModule uiInput;
 
+    private bool cameBackFromMultiplayer;
+
     private void Awake()
     {
-        if(Instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
@@ -40,7 +42,9 @@ public class MainMenuUi : UiManager
     private void Start()
     {
         MouseOverSelectableChecker.Enable();
-        StartCoroutine(ShowMenuWithDelay());
+
+        if (!cameBackFromMultiplayer)
+            StartCoroutine(ShowMenuWithDelay());
 
         ApiHelper.PingServer();
     }
@@ -58,25 +62,50 @@ public class MainMenuUi : UiManager
 
         MouseOverSelectableChecker.eventSystem = EventSystem;
 
-        if(BrowseLevelsScreen.LevelDetailsScreen.gameObject.activeSelf)
+        uiInput = EventSystem.GetComponent<InputSystemUIInputModule>();
+        uiInput.enabled = false;
+        uiInput.enabled = true;
+
+        if (BrowseLevelsScreen.LevelDetailsScreen.gameObject.activeSelf)
         {
             Debug.Log("It's active");
             BrowseLevelsScreen.LevelDetailsScreen.SelectDefaultButton();
         }
 
         gameObject.transform.parent = null;
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.isNetworkActive)
+            {
+                Debug.Log("This is an online session and we got back from a level");
+                cameBackFromMultiplayer = true;
+                StartMenu.gameObject.SetActive(false);
+                LoadingScreen.Hide();
+                StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.gameObject.SetActive(true);
+                StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.Show(false, CustomNetworkManager.Instance.networkAddress, StartMenu.PlayMenu.OnlinePlayMenu);
+                StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.FindExistingPlayerIdentities();
+                //StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.EnableContinueButton();
+            }
+        }
     }
 
     private IEnumerator ShowMenuWithDelay()
     {
         yield return new WaitForSeconds(0.2f);
-        StartMenu.gameObject.SetActive(true);
-        LoadingScreen.Hide();
-        StartMenu.PlayButton.Select();
+
+        if (!cameBackFromMultiplayer)
+        {
+            StartMenu.gameObject.SetActive(true);
+            LoadingScreen.Hide();
+            StartMenu.PlayButton.Select();
+        }
     }
 
     public void LevelEditorButtonWasPressed()
     {
+        cameBackFromMultiplayer = false;
+
         MouseOverSelectableChecker.Disable();
         LoadingScreen.Show();
 
@@ -88,6 +117,8 @@ public class MainMenuUi : UiManager
 
     public void PlayButtonWasPressed()
     {
+        cameBackFromMultiplayer = false;
+
         MouseOverSelectableChecker.Disable();
         LoadingScreen.Show();
         SceneManager.LoadScene("GamePlay");
@@ -96,6 +127,8 @@ public class MainMenuUi : UiManager
 
     public void BrowseLevelsButtonWasPressed()
     {
+        cameBackFromMultiplayer = false;
+
         StartMenu.gameObject.SetActive(false);
         BrowseLevelsScreen.gameObject.SetActive(true);
         BrowseLevelsScreen.Show();
@@ -103,6 +136,8 @@ public class MainMenuUi : UiManager
 
     public void ExitBrowseLevelsScreen()
     {
+        cameBackFromMultiplayer = false;
+
         StartMenu.gameObject.SetActive(true);
         BrowseLevelsScreen.gameObject.SetActive(false);
         StartMenu.BrowseLevelsButton.Select();

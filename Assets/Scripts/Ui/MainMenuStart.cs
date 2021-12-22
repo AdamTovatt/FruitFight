@@ -25,6 +25,7 @@ public class MainMenuStart : MonoBehaviour
 
     private void Play()
     {
+        transform.SetParent(null);
         PlayMenu.gameObject.SetActive(true);
         PlayMenu.Show(this);
         gameObject.SetActive(false);

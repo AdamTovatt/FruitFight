@@ -16,14 +16,14 @@ public class MainMenuLobbyMenu : MonoBehaviour
     public Button ContinueButton;
     public CenterContentContainer PlayerContainer;
 
+    public Color ContinueButtonActiveColor;
+
     public MainMenuConnectedMenu ConnectedMenu;
 
     public GameObject PlayerInLobbyPrefab;
 
     private MainMenuOnlineMenu previousMenu;
     private Dictionary<int, GameObject> playerObjects = new Dictionary<int, GameObject>();
-
-    private Color continueButtonTextOriginalColor;
 
     private void Awake()
     {
@@ -34,9 +34,6 @@ public class MainMenuLobbyMenu : MonoBehaviour
     {
         BackButton.onClick.AddListener(Back);
         ContinueButton.onClick.AddListener(Continue);
-
-        continueButtonTextOriginalColor = ContinueButtonText.color;
-        DisableContinueButton();
     }
 
     private void DisableContinueButton()
@@ -45,10 +42,19 @@ public class MainMenuLobbyMenu : MonoBehaviour
         ContinueButtonText.color = new Color(0.7f, 0.7f, 0.7f, 0.5f);
     }
 
-    private void EnableContinueButton()
+    public void EnableContinueButton()
     {
+        Debug.Log("Enable continue");
         ContinueButton.interactable = true;
-        ContinueButtonText.color = continueButtonTextOriginalColor;
+        ContinueButtonText.color = ContinueButtonActiveColor;
+    }
+
+    public void FindExistingPlayerIdentities()
+    {
+        foreach (PlayerNetworkIdentity player in FindObjectsOfType<PlayerNetworkIdentity>())
+        {
+            player.AddSelfToMainMenuLobbyMenu();
+        }
     }
 
     public void Show()
@@ -62,6 +68,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
             this.previousMenu = previousMenu;
 
         this.previousMenu.gameObject.SetActive(false);
+
         BackButton.Select();
 
         if (hostInformation != null)
@@ -75,6 +82,8 @@ public class MainMenuLobbyMenu : MonoBehaviour
             CustomNetworkManager.Instance.IsServer = true;
             CustomNetworkManager.Instance.StartHost();
         }
+
+        DisableContinueButton();
     }
 
     public void AddPlayer(int playerId, string playerName)
