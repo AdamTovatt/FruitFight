@@ -12,9 +12,12 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     public TextMeshProUGUI HostInformationText;
     public TextMeshProUGUI ContinueButtonText;
+    public TextMeshProUGUI TitleText;
     public Button BackButton;
     public Button ContinueButton;
     public CenterContentContainer PlayerContainer;
+
+    public GameObject NetworkMethodCallerPrefab;
 
     public Color ContinueButtonActiveColor;
 
@@ -44,7 +47,6 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     public void EnableContinueButton()
     {
-        Debug.Log("Enable continue");
         ContinueButton.interactable = true;
         ContinueButtonText.color = ContinueButtonActiveColor;
     }
@@ -54,6 +56,11 @@ public class MainMenuLobbyMenu : MonoBehaviour
         foreach (PlayerNetworkIdentity player in FindObjectsOfType<PlayerNetworkIdentity>())
         {
             player.AddSelfToMainMenuLobbyMenu();
+        }
+
+        if(playerObjects.Count > 1)
+        {
+            TitleText.text = CustomNetworkManager.HasAuthority ? "Waiting for you to continue..." : "Waiting for host to continue...";
         }
     }
 
@@ -83,7 +90,11 @@ public class MainMenuLobbyMenu : MonoBehaviour
             CustomNetworkManager.Instance.StartHost();
         }
 
-        DisableContinueButton();
+        if (playerObjects.Count < 2)
+        {
+            DisableContinueButton();
+            TitleText.text = "Waiting for players to join...";
+        }
     }
 
     public void AddPlayer(int playerId, string playerName)
@@ -137,6 +148,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
     {
         if (CustomNetworkManager.Instance.IsServer && NetworkServer.connections.Count > 1)
         {
+            NetworkServer.Spawn(Instantiate(NetworkMethodCallerPrefab)); //create network method caller
             RemoveEventListeners();
             ConnectedMenu.gameObject.SetActive(true);
             ConnectedMenu.Show(this);

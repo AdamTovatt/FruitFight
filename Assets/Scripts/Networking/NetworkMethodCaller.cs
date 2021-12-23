@@ -15,7 +15,6 @@ public class NetworkMethodCaller : NetworkBehaviour
             Destroy(Instance.gameObject);
 
         Instance = this;
-
     }
 
     private void Start()

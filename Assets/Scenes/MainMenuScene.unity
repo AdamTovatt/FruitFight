@@ -11460,9 +11460,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HostInformationText: {fileID: 1153740892}
   ContinueButtonText: {fileID: 70902893}
+  TitleText: {fileID: 1653869921}
   BackButton: {fileID: 833824207}
   ContinueButton: {fileID: 134818716}
   PlayerContainer: {fileID: 668588107}
+  NetworkMethodCallerPrefab: {fileID: 5126637512256253266, guid: 09cdf82d56ab50742afd4f80de5398c7,
+    type: 3}
   ContinueButtonActiveColor: {r: 1, g: 1, b: 1, a: 1}
   ConnectedMenu: {fileID: 718466470}
   PlayerInLobbyPrefab: {fileID: 162284433614497005, guid: b5cf41ef1231d5143947063078844206,
@@ -39611,80 +39614,6 @@ MonoBehaviour:
   WobbleAmplitude: 0.5
   WobbleSpeed: 20
   WobbleDuration: 1
---- !u!1001 &5126637512032669047
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5126637512256253264, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: sceneId
-      value: 3159911100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253266, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_Name
-      value: NetworkMethodCaller
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1060.5116
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 595.08813
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -336.18567
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5126637512256253279, guid: 09cdf82d56ab50742afd4f80de5398c7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 09cdf82d56ab50742afd4f80de5398c7, type: 3}
 --- !u!1 &5469537219575280888
 GameObject:
   m_ObjectHideFlags: 0
