@@ -15,6 +15,8 @@ public class BoardPlatform : MonoBehaviour
     public float UpTime = 0.4f;
     public float DownTime = 2f;
 
+    public float YDistanceMargin = 0.3f;
+
     private bool isUnderPressure;
     private float upTimeLeft;
 
@@ -216,7 +218,8 @@ public class BoardPlatform : MonoBehaviour
     {
         if (collision.transform.tag == "Player")
         {
-            StartPressure();
+            if (collision.transform.position.y + YDistanceMargin > transform.position.y || goingUp)
+                StartPressure();
         }
     }
 
