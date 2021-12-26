@@ -21,11 +21,13 @@ public class MainMenuLocalMenu : MonoBehaviour
     private void BrowseLevels()
     {
         MainMenuUi.Instance.BrowseLevelsButtonWasPressed();
+        gameObject.SetActive(false);
     }
 
     private void Story()
     {
         MainMenuUi.Instance.PlayButtonWasPressed();
+        gameObject.SetActive(false);
     }
 
     private void Back()
