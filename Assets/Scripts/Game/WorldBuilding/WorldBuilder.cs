@@ -14,6 +14,7 @@ public class WorldBuilder : MonoBehaviour
     public IReadOnlyList<GameObject> CurrentPlacedObjects { get { return previousWorldObjects; } }
 
     private List<GameObject> previousWorldObjects;
+    private List<Block> currentBlocks = new List<Block>();
 
     private World upcommingWorld;
     private List<ActivatedByStateSwitcher> activatedByStateSwitcherObjectsToBind = new List<ActivatedByStateSwitcher>();
@@ -52,6 +53,7 @@ public class WorldBuilder : MonoBehaviour
         upcommingWorld = world;
 
         debugCubes.Clear();
+        currentBlocks.Clear();
 
         foreach (GameObject gameObject in previousWorldObjects)
         {
@@ -67,6 +69,7 @@ public class WorldBuilder : MonoBehaviour
         if (!IsInEditor)
         {
             BindObjects();
+            //OptimizeObjects(); //doesn't work
         }
         else
         {
@@ -218,13 +221,57 @@ public class WorldBuilder : MonoBehaviour
 
         if (block.Instance != null)
         {
-            block.Instance.AddComponent<BlockInformationHolder>().Block = block;
+            block.InformationHolder = block.Instance.AddComponent<BlockInformationHolder>();
+            block.InformationHolder.Block = block;
+            currentBlocks.Add(block);
         }
     }
 
     private Block GetBlockInUpcommingWorld(int blockId)
     {
         return upcommingWorld.Blocks.Where(b => b.Id == blockId).FirstOrDefault();
+    }
+
+    private void OptimizeObjects() //an attempt at making a method that optimizes the objects by static batching, for some reason some of the objects get a yellowish tint
+    {
+        Dictionary<int, List<Block>> blocksByTypes = new Dictionary<int, List<Block>>();
+        foreach(Block block in currentBlocks)
+        {
+            if (!block.InformationHolder.CanMove && (block.Info.Id == 18 || block.Info.Id == 22 || block.Info.Id == 33))
+            {
+                if (!blocksByTypes.ContainsKey(block.Info.Id))
+                {
+                    blocksByTypes.Add(block.Info.Id, new List<Block>());
+                }
+
+                blocksByTypes[block.Info.Id].Add(block);
+            }
+        }
+
+        foreach(List<Block> blocks in blocksByTypes.Values)
+        {
+            Debug.Log("Blocks to combine: " + blocks.Count);
+
+            if(blocks.Count > 1)
+            {
+                List<GameObject> gameObjects = new List<GameObject>();
+                foreach(Block block in blocks)
+                {
+                    foreach (Transform childTransform in block.Instance.GetComponentsInChildren<Transform>())
+                    {
+                        gameObjects.Add(childTransform.gameObject);
+                        childTransform.gameObject.isStatic = true;
+                    }
+                }
+
+                foreach(GameObject child in gameObjects)
+                {
+                    child.transform.SetParent(blocks.First().Instance.transform);
+                }
+
+                StaticBatchingUtility.Combine(blocks.First().Instance);
+            }
+        }
     }
 
     private void BindObjects()
@@ -236,10 +283,19 @@ public class WorldBuilder : MonoBehaviour
             if (activatedByStateSwitcher.GetType() == typeof(MoveOnTrigger)) //to make objects on top of moving objects also move
             {
                 BlockInformationHolder blockInformationHolder = activatedByStateSwitcher.GetComponent<BlockInformationHolder>();
+
                 if (blockInformationHolder != null)
                 {
+                    blockInformationHolder.CanMove = true;
+
                     foreach (Block neighbor in blockInformationHolder.Block.NeighborY.AllTypesNegative)
                     {
+                        BlockInformationHolder neighborInformationHolder = neighbor.Instance.transform.GetComponent<BlockInformationHolder>();
+                        if(neighborInformationHolder != null)
+                        {
+                            neighborInformationHolder.CanMove = true;
+                        }
+
                         if (neighbor.Info.BlockType == BlockType.Detail || neighbor.Info.BlockType == BlockType.Prop)
                         {
                             neighbor.Instance.transform.parent = blockInformationHolder.transform;

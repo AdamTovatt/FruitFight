@@ -38,6 +38,7 @@ public class Block
     public NeighborSet NeighborZ { get; set; }
 
     public GameObject Instance { get; set; }
+    public BlockInformationHolder InformationHolder { get; set; }
     public SeeThroughBlock SeeThroughBlock { get; set; }
 
     public List<Vector3Int> ObscuredPositions { get; set; }
