@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Health : NetworkBehaviour
@@ -64,7 +65,7 @@ public class Health : NetworkBehaviour
         if (meshRenderer != null)
             meshRenderers.Add(meshRenderer);
 
-        meshRenderers.AddRange(gameObject.GetComponentsInChildren<Renderer>());
+        meshRenderers.AddRange(gameObject.GetComponentsInChildren<Renderer>().Where(x => x.GetType() != typeof(ParticleSystemRenderer)));
         originalSize = transform.localScale;
     }
 
