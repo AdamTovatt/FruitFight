@@ -21,6 +21,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     private UiManager manager { get { if (_manager == null) SetupManager(); return _manager; } set { _manager = value; } }
     private UiManager _manager;
 
+    private Toggle toggle;
     private TMP_InputField inputField;
     private Button button;
     private float lastSelectTime;
@@ -41,6 +42,8 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
 
         if (button == null)
             inputField = gameObject.GetComponent<TMP_InputField>();
+        if (inputField == null)
+            toggle = gameObject.GetComponent<Toggle>();
 
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
@@ -77,6 +80,10 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
         else if (inputField != null)
         {
             inputField.Select();
+        }
+        else if(toggle != null)
+        {
+            toggle.Select();
         }
     }
 

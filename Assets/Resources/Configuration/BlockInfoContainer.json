@@ -581,8 +581,8 @@
       "Width": 1,
       "Height": 1,
       "ShowInEditor": true,
-      "Name": "Camera Hint",
-      "Prefab": "CameraHint",
+      "Name": "Camera",
+      "Prefab": "Camera",
       "EdgePrefabs": []
     },
     {
