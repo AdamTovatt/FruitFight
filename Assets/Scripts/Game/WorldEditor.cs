@@ -145,7 +145,7 @@ public class WorldEditor : MonoBehaviour
         GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
     }
 
-    public void PickMoveFinalPosition(MoveMenu menu, Block block)
+    public void PickPosition(MonoBehaviour menu, Block block)
     {
         menu.gameObject.SetActive(false);
         activatorPickingMenu = menu;
@@ -158,14 +158,21 @@ public class WorldEditor : MonoBehaviour
         currentMovePropertiesBlock = block;
     }
 
-    public void PickedMoveFinalPosition(Vector3Int position)
+    public void PickedPosition(Vector3Int position)
     {
         WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
         WorldEditorUi.Instance.EnableUiInput();
         controlsDisabled = true;
         isPickingFinalPosition = false;
         activatorPickingMenu.gameObject.SetActive(true);
-        ((MoveMenu)activatorPickingMenu).FinalPositionWasSet(position);
+
+        if (activatorPickingMenu.GetType() == typeof(MoveMenu))
+            ((MoveMenu)activatorPickingMenu).PositionWasPicked(position);
+        else if (activatorPickingMenu.GetType() == typeof(EventCameraMenu))
+            ((EventCameraMenu)activatorPickingMenu).PositionWasPicked(position);
+        else
+            throw new Exception("Unsupported menu type for picking position");
+
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
@@ -247,6 +254,8 @@ public class WorldEditor : MonoBehaviour
             ((MoveMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else if (activatorPickingMenu.GetType() == typeof(NotificationMenu))
             ((NotificationMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
+        else if (activatorPickingMenu.GetType() == typeof(EventCameraMenu))
+            ((EventCameraMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else
             Debug.LogError(activatorPickingMenu.GetType().ToString() + " is not supported as a activator picking menu");
 
@@ -600,12 +609,12 @@ public class WorldEditor : MonoBehaviour
 
         float scrollValue = context.ReadValue<float>();
 
-        if(scrollValue > 0)
+        if (scrollValue > 0)
         {
             zoomSpeedMultiplier = 10;
             NextPage(context);
         }
-        else if(scrollValue < 0)
+        else if (scrollValue < 0)
         {
             zoomSpeedMultiplier = 10;
             PreviousPage(context);
@@ -826,7 +835,7 @@ public class WorldEditor : MonoBehaviour
 
         if (isPickingFinalPosition)
         {
-            PickedMoveFinalPosition(MarkerPosition);
+            PickedPosition(MarkerPosition);
             return;
         }
 

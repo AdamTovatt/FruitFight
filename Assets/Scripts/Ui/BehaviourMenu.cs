@@ -125,6 +125,8 @@ public class BehaviourMenu : MonoBehaviour
         EventCameraMenu.OnClosed += () =>
         {
             WorldEditorUi.Instance.CloseBehaviourMenu();
+            EventCameraMenu.gameObject.SetActive(false);
+            BehaviourPanel.gameObject.SetActive(true);
         };
     }
 
@@ -148,7 +150,7 @@ public class BehaviourMenu : MonoBehaviour
         currentNotificationBlock = block.Instance.GetComponent<NotificationBlock>();
         currentEventCamera = block.Instance.GetComponent<EventCamera>();
 
-        if(currentEventCamera) //if this is an event camera we will show the event camera menu straight away
+        if(currentEventCamera != null) //if this is an event camera we will show the event camera menu straight away
         {
             EventCamera();
             return;

@@ -17,6 +17,7 @@ public class SingleTargetCamera : MonoBehaviour
     public Transform Target { get; private set; }
     public PlayerInput Input { get; private set; }
     public bool AllowInput { get; set; }
+    public bool ControlledByEventCamera { get; private set; }
     public CameraViewType CameraViewType { get; private set; }
     public float Distance { get; private set; }
 
@@ -37,6 +38,9 @@ public class SingleTargetCamera : MonoBehaviour
     private float gamepadScrollMultiplier = 0.1f;
 
     private bool blockerIsActive = false;
+
+    private Vector3 savedPosition;
+    private Quaternion savedRotation;
 
     private void Awake()
     {
@@ -117,7 +121,7 @@ public class SingleTargetCamera : MonoBehaviour
 
     private void Update()
     {
-        if (AllowInput && Target != null)
+        if (!ControlledByEventCamera && AllowInput && Target != null)
         {
             rotationX += currentCameraRotation.x * Time.deltaTime * 20f * gamepadSensitivityMultiplier;
             rotationY -= currentCameraRotation.y * Time.deltaTime * 20f * gamepadSensitivityMultiplier;
@@ -134,9 +138,9 @@ public class SingleTargetCamera : MonoBehaviour
             transform.position = truePosition;
             transform.rotation = Quaternion.LookRotation(targetPoint - transform.position);
 
-            if(IsInsideObject())
+            if (IsInsideObject())
             {
-                if(!blockerIsActive)
+                if (!blockerIsActive)
                 {
                     GameUi.Instance.CameraViewBlocker.ActivateBlocker(CameraViewType);
                     blockerIsActive = true;
@@ -144,17 +148,57 @@ public class SingleTargetCamera : MonoBehaviour
             }
             else
             {
-                if(blockerIsActive)
+                if (blockerIsActive)
                 {
                     GameUi.Instance.CameraViewBlocker.DeactivateBlocker(CameraViewType);
                     blockerIsActive = false;
                 }
             }
         }
-        else if(AllowInput && Target == null)
+        else if (AllowInput && Target == null)
         {
             Debug.LogWarning("Single target camera is null");
         }
+    }
+
+    public void StartControlByEventCamera()
+    {
+        savedPosition = transform.position;
+        savedRotation = transform.rotation;
+        ControlledByEventCamera = true;
+
+        Health targetHealth = Target.GetComponent<Health>();
+        if (targetHealth != null)
+        {
+            targetHealth.InvincibleOverride = true;
+
+            PlayerMovement playerMovement = Target.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
+                playerMovement.ControlsEnabled = false;
+        }
+    }
+
+    public void StopControlByEventCamera()
+    {
+        transform.position = savedPosition;
+        transform.rotation = savedRotation;
+        ControlledByEventCamera = false;
+
+        Health targetHealth = Target.GetComponent<Health>();
+        if (targetHealth != null)
+        {
+            targetHealth.InvincibleOverride = false;
+
+            PlayerMovement playerMovement = Target.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
+                playerMovement.ControlsEnabled = true;
+        }
+    }
+
+    public void GetPositionFromEventCamera(EventCamera eventCamera)
+    {
+        transform.position = eventCamera.CameraOverridePosition;
+        transform.rotation = eventCamera.CameraOverrideRotation;
     }
 
     public bool IsInsideObject()

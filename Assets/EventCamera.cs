@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class EventCamera : ActivatedByStateSwitcher
 {
+    public GameObject EventCameraGraphic;
+
+    public Vector3 CameraOverridePosition { get { return EventCameraGraphic.transform.position; } }
+    public Quaternion CameraOverrideRotation { get { return EventCameraGraphic.transform.rotation; } }
+
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; LookAtTarget(); } }
     private Vector3 _targetPosition;
     public bool DeactivateAutomatically { get; set; }
@@ -11,6 +16,8 @@ public class EventCamera : ActivatedByStateSwitcher
     public bool ActivateMultipleTimes { get; set; }
 
     private bool hasBeenActivated;
+    private bool isActive;
+    private float activateTime;
 
     private void Start()
     {
@@ -18,16 +25,31 @@ public class EventCamera : ActivatedByStateSwitcher
             LookAtTarget();
     }
 
-    private void LookAtTarget()
+    private void Update()
     {
-        transform.LookAt(TargetPosition, Vector3.up);
+        if (isActive && DeactivateAutomatically)
+        {
+            if (Time.time - activateTime > ActiveTime)
+            {
+                Deactivated();
+            }
+        }
+    }
+
+    public void LookAtTarget()
+    {
+        EventCameraGraphic.transform.LookAt(TargetPosition, Vector3.up);
     }
 
     public override void Activated()
     {
         if (!hasBeenActivated || ActivateMultipleTimes)
         {
+            isActive = true;
             hasBeenActivated = true;
+            activateTime = Time.time;
+            LookAtTarget();
+            GameManager.Instance.CameraManager.ShowEventCamera(this);
             Debug.Log("Event Camera was activated");
         }
     }
@@ -51,7 +73,12 @@ public class EventCamera : ActivatedByStateSwitcher
 
     public override void Deactivated()
     {
-        Debug.Log("Event camera was activated");
+        if (isActive)
+        {
+            isActive = false;
+            GameManager.Instance.CameraManager.StopShowingEventCamera();
+            Debug.Log("Event camera was deactivated");
+        }
     }
 
     public override void Init(Block thisBlock, Block activatorBlock)

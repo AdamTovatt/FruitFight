@@ -583,7 +583,8 @@
       "ShowInEditor": true,
       "Name": "Camera",
       "Prefab": "Camera",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "StartWithPropertyExposer": true
     },
     {
       "Id": 57,

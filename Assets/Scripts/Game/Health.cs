@@ -37,7 +37,8 @@ public class Health : NetworkBehaviour
     public float WobbleSpeed;
     public float WobbleDuration;
 
-    public bool CurrentlyInvincible { get { return BecomeInvincibleAfterHit && (Time.time - lastHitTime < InvincibleTime); } }
+    public bool InvincibleOverride { get; set; }
+    public bool CurrentlyInvincible { get { return InvincibleOverride || (BecomeInvincibleAfterHit && (Time.time - lastHitTime < InvincibleTime)); } }
 
     private bool IsPlayer { get { playerMovement = gameObject.GetComponent<PlayerMovement>(); return playerMovement != null; } }
     private PlayerMovement playerMovement;

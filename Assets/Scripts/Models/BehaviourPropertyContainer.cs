@@ -12,6 +12,7 @@ namespace Assets.Scripts.Models
         public MovePropertyCollection MovePropertyCollection;
         public TriggerZonePropertyCollection TriggerZonePropertyCollection;
         public NotificationPropertyCollection NotificationPropertyCollection;
+        public EventCameraPropertyCollection EventCameraPropertyCollection;
 
         private Dictionary<Type, BehaviourPropertyCollection> properties;
 
@@ -32,6 +33,10 @@ namespace Assets.Scripts.Models
             else if(behaviour == typeof(NotificationBlock))
             {
                 return NotificationPropertyCollection;
+            }
+            else if(behaviour == typeof(EventCamera))
+            {
+                return EventCameraPropertyCollection;
             }
             else
                 throw new Exception("Unsupported behaviour type");

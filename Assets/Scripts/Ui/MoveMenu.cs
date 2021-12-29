@@ -127,7 +127,7 @@ public class MoveMenu : MonoBehaviour
         WorldEditor.Instance.PickActivator(this, currentBlock);
     }
 
-    public void FinalPositionWasSet(Vector3Int position)
+    public void PositionWasPicked(Vector3Int position)
     {
         currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition = position;
         currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
@@ -137,7 +137,7 @@ public class MoveMenu : MonoBehaviour
 
     private void SetFinalPosition()
     {
-        WorldEditor.Instance.PickMoveFinalPosition(this, currentBlock);
+        WorldEditor.Instance.PickPosition(this, currentBlock);
     }
 
     private void Close()
