@@ -8,6 +8,7 @@ public class MagicProjectile : MonoBehaviour
     public Rigidbody Rigidbody;
 
     private Transform shootingTransform;
+    private Vector3 origin;
     private float shootTime;
 
     public void Shoot(Vector3 shootOrigin, Transform shooter)
@@ -18,7 +19,7 @@ public class MagicProjectile : MonoBehaviour
         if (GameManager.Instance != null)
         {
             Ray sphereCastRay = new Ray(shootOrigin, transform.forward);
-            foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 2))
+            foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 4))
             {
                 if (hit.transform != shooter)
                 {
@@ -40,6 +41,8 @@ public class MagicProjectile : MonoBehaviour
         }
 
         shootingTransform = shooter;
+        origin = shootOrigin;
+
         Rigidbody.velocity = shootDirection * 20f;
         shootTime = Time.time;
     }
@@ -54,7 +57,8 @@ public class MagicProjectile : MonoBehaviour
 
     private void Hit(Collision collision)
     {
-        GameObject impact = Instantiate(ImpactPrefab, collision == null ? transform.position : collision.GetContact(0).point, transform.rotation);
+        Vector3 impactPoint = collision == null ? transform.position : collision.GetContact(0).point;
+        GameObject impact = Instantiate(ImpactPrefab, impactPoint, transform.rotation);
 
         if (collision != null)
         {
@@ -63,6 +67,11 @@ public class MagicProjectile : MonoBehaviour
             if (health != null)
             {
                 health.TakeDamage(40);
+                
+                if(health.MovingCharacter != null)
+                {
+                    health.MovingCharacter.WasAttacked(impactPoint + (shootingTransform.position - health.transform.position).normalized * 0.5f, shootingTransform, 5);
+                }
             }
         }
 

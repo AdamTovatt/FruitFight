@@ -37,6 +37,7 @@ public class Health : NetworkBehaviour
     public float WobbleSpeed;
     public float WobbleDuration;
 
+    public MovingCharacter MovingCharacter { get; set; }
     public bool InvincibleOverride { get; set; }
     public bool CurrentlyInvincible { get { return InvincibleOverride || (BecomeInvincibleAfterHit && (Time.time - lastHitTime < InvincibleTime)); } }
 
@@ -57,6 +58,7 @@ public class Health : NetworkBehaviour
     private void Awake()
     {
         meshRenderers = new List<Renderer>();
+        MovingCharacter = gameObject.GetComponent<MovingCharacter>();
         _currentHealth = StartHealth;
     }
 
