@@ -23,6 +23,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
+    public GameObject MagicProjectilePrefab;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -107,6 +108,7 @@ public class PlayerMovement : MovingCharacter
         inputActions.Add(playerControls.Gameplay.Pause.id, PlayerInputAction.Pause);
         inputActions.Add(playerControls.Gameplay.RotateCameraWithMouse.id, PlayerInputAction.MouseLook);
         inputActions.Add(playerControls.Gameplay.Zoom.id, PlayerInputAction.Zoom);
+        inputActions.Add(playerControls.Gameplay.SecondaryAttack.id, PlayerInputAction.SecondaryAttack);
     }
 
     private void Start()
@@ -135,6 +137,8 @@ public class PlayerMovement : MovingCharacter
         {
             PlayerControls input = new PlayerControls();
             input.Gameplay.Attack.performed += CheckForMouseInput;
+            input.Gameplay.SecondaryAttack.performed += CheckForMouseInput;
+            input.Gameplay.SecondaryAttack.canceled += CheckForMouseInput;
             input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
             input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
             input.Gameplay.Enable();
@@ -160,6 +164,7 @@ public class PlayerMovement : MovingCharacter
         input.Gameplay.RotateCameraRight.performed += HandleAction;
         input.Gameplay.Pause.performed += HandleAction;
         input.Gameplay.Zoom.performed += HandleAction;
+        input.Gameplay.SecondaryAttack.performed += HandleAction;
 
         input.Gameplay.Attack.canceled += HandleAction;
         input.Gameplay.Move.canceled += HandleAction;
@@ -168,6 +173,7 @@ public class PlayerMovement : MovingCharacter
         input.Gameplay.RotateCameraRight.canceled += HandleAction;
         input.Gameplay.Pause.canceled += HandleAction;
         input.Gameplay.Zoom.canceled += HandleAction;
+        input.Gameplay.SecondaryAttack.canceled += HandleAction;
     }
 
     private void UnbindInputFromPlayerControls(PlayerControls input)
@@ -179,6 +185,7 @@ public class PlayerMovement : MovingCharacter
         input.Gameplay.RotateCameraRight.performed -= HandleAction;
         input.Gameplay.Pause.performed -= HandleAction;
         input.Gameplay.Zoom.performed -= HandleAction;
+        input.Gameplay.SecondaryAttack.performed -= HandleAction;
 
         input.Gameplay.Attack.canceled -= HandleAction;
         input.Gameplay.Move.canceled -= HandleAction;
@@ -187,6 +194,7 @@ public class PlayerMovement : MovingCharacter
         input.Gameplay.RotateCameraRight.canceled -= HandleAction;
         input.Gameplay.Pause.canceled -= HandleAction;
         input.Gameplay.Zoom.canceled -= HandleAction;
+        input.Gameplay.SecondaryAttack.canceled -= HandleAction;
     }
 
     private void MouseLookCancelled(InputAction.CallbackContext context)
@@ -219,6 +227,10 @@ public class PlayerMovement : MovingCharacter
                 case PlayerInputAction.Attack:
                     if (context.performed)
                         Interact();
+                    break;
+                case PlayerInputAction.SecondaryAttack:
+                    if (context.canceled)
+                        ShootProjectile();
                     break;
                 case PlayerInputAction.Jump:
                     if (context.performed)
@@ -367,6 +379,12 @@ public class PlayerMovement : MovingCharacter
     private void FixedUpdate()
     {
         ClimbStep(0.1f, 0.6f, 0.5f, 0.1f);
+    }
+
+    private void ShootProjectile()
+    {
+        MagicProjectile projectile = Instantiate(MagicProjectilePrefab, transform.position + transform.forward * 0.5f + transform.up * PunchHeight, transform.rotation).GetComponent<MagicProjectile>();
+        projectile.Shoot(transform);
     }
 
     private void ClimbStep(float ray1Height, float ray2Height, float rayLenght, float stepHeight)
@@ -696,5 +714,5 @@ public class PlayerMovement : MovingCharacter
 
 public enum PlayerInputAction
 {
-    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause, MouseLook, Zoom
+    Attack, Jump, Move, RotateCameraRight, RotateCameraLeft, Pause, MouseLook, Zoom, SecondaryAttack
 }

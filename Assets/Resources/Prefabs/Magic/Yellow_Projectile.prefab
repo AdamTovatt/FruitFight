@@ -1326,7 +1326,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.15095036, b: 0.07352942, a: 1}
+        key0: {r: 1, g: 0.7409023, b: 0.07352942, a: 1}
         key1: {r: 0, g: 0, b: 0, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
@@ -1355,7 +1355,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.15095034, b: 0.07352942, a: 1}
+        key0: {r: 1, g: 0.72750866, b: 0.07352942, a: 1}
         key1: {r: 0, g: 0, b: 0, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
@@ -5062,7 +5062,7 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 0.15095034, b: 0.07352942, a: 1}
+      minColor: {r: 1, g: 0.72750866, b: 0.07352942, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
@@ -14477,7 +14477,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 471fd056a7163294b9459fc0c7c272c3, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14638,8 +14637,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.15
-      minScalar: 0.1
+      scalar: 0.2
+      minScalar: 0.15
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14745,7 +14744,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.4174791, b: 0.125, a: 1}
-      maxColor: {r: 1, g: 0.15095036, b: 0.07352942, a: 1}
+      maxColor: {r: 1, g: 0.7409023, b: 0.07352942, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -15389,7 +15388,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 40
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -19318,7 +19317,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 471fd056a7163294b9459fc0c7c272c3, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19373,10 +19371,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4117384310806112}
-  - component: {fileID: 114870959075142876}
   - component: {fileID: 65132404271668706}
   - component: {fileID: 54189310121592036}
   - component: {fileID: 114729152062613146}
+  - component: {fileID: 4883364593430935571}
   m_Layer: 0
   m_Name: Yellow_Projectile
   m_TagString: Untagged
@@ -19402,33 +19400,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114870959075142876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1979048356021752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12ba759cd568c0e47a7018ab70867a0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotate: 0
-  rotateAmount: 45
-  bounce: 0
-  bounceForce: 10
-  speed: 35
-  accuracy: 95
-  fireRate: 4
-  muzzlePrefab: {fileID: 1252424093267096, guid: fede7bedd0d852844a42392d0db8e8a7,
-    type: 3}
-  hitPrefab: {fileID: 1312591640859010, guid: b4473bf379aa11541848b07fcf1b6a1f, type: 3}
-  trails:
-  - {fileID: 1859662828525494}
-  - {fileID: 1890649862769804}
-  - {fileID: 1210068337201960}
-  - {fileID: 1615150988019640}
 --- !u!65 &65132404271668706
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19478,11 +19449,26 @@ MonoBehaviour:
   lights: 0
   trails: 0
   changeColor: 1
-  newMaxColor: {r: 1, g: 0.7411765, b: 0.07352942, a: 1}
-  newMinColor: {r: 0.71323526, g: 0.5176471, b: 0.047199395, a: 1}
+  newMaxColor: {r: 0.70199996, g: 0.5203059, b: 0.052305877, a: 1}
+  newMinColor: {r: 0.376, g: 0.2727033, b: 0.024791207, a: 1}
   ParticleSystems:
   - {fileID: 1859662828525494}
   - {fileID: 1890649862769804}
   - {fileID: 1210068337201960}
   - {fileID: 1615150988019640}
   ActiveParticleSystems: 01010101
+--- !u!114 &4883364593430935571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979048356021752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e110459512e822644a7446ebebd61f86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ImpactPrefab: {fileID: 1312591640859010, guid: 28929e0cd45ba80428cb46f5cf223003,
+    type: 3}
+  Rigidbody: {fileID: 54189310121592036}

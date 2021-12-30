@@ -718,6 +718,8 @@ MonoBehaviour:
   PunchStrength: 5
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
+  MagicProjectilePrefab: {fileID: 1962646870923850, guid: c4fdbb7e46645ed479c3bf3c39edaad0,
+    type: 3}
   InteractCooldownTime: 0.2
 --- !u!54 &2012823961798305032
 Rigidbody:
