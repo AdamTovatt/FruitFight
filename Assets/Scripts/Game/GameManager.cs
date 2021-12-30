@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public bool Paused { get; private set; }
     public MultipleTargetCamera MultipleTargetCamera { get; set; }
     public List<PlayerInformation> Players { get; set; }
+    public Dictionary<Transform, Health> TransformsWithHealth { get; set; } = new Dictionary<Transform, Health>();
 
     public delegate void IsDebugChangedHandler(object sender, bool newState);
     public event IsDebugChangedHandler OnDebugStateChanged;
@@ -82,6 +83,8 @@ public class GameManager : MonoBehaviour
 
         if (CustomNetworkManager.IsOnlineSession && NetworkMethodCaller.Instance != null)
             NetworkMethodCaller.Instance.ClearBouncyObjects(); //clear the dictionary with bouncy objects so it can be filled again with the ones from this level
+
+        TransformsWithHealth.Clear();
 
         WorldBuilder.IsInEditor = false;
         WorldBuilder.Instance.BuildNext();

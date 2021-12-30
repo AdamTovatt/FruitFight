@@ -10,10 +10,37 @@ public class MagicProjectile : MonoBehaviour
     private Transform shootingTransform;
     private float shootTime;
 
-    public void Shoot(Transform shooter)
+    public void Shoot(Vector3 shootOrigin, Transform shooter)
     {
+        Health targetHealth = null;
+        float closestTargetHealhtDistance = 10000f;
+
+        if (GameManager.Instance != null)
+        {
+            Ray sphereCastRay = new Ray(shootOrigin, transform.forward);
+            foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 2))
+            {
+                if (hit.transform != shooter)
+                {
+                    if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
+                    {
+                        if (hit.distance < closestTargetHealhtDistance)
+                            targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
+                    }
+                }
+            }
+        }
+
+        Vector3 shootDirection = shooter.forward;
+
+        if (targetHealth != null)
+        {
+            Vector3 targetPosition = new Vector3(targetHealth.transform.position.x, shootOrigin.y, targetHealth.transform.position.z);
+            shootDirection = (targetPosition - shootOrigin).normalized;
+        }
+
         shootingTransform = shooter;
-        Rigidbody.velocity = shooter.forward * 20f;
+        Rigidbody.velocity = shootDirection * 20f;
         shootTime = Time.time;
     }
 

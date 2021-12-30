@@ -383,8 +383,9 @@ public class PlayerMovement : MovingCharacter
 
     private void ShootProjectile()
     {
-        MagicProjectile projectile = Instantiate(MagicProjectilePrefab, transform.position + transform.forward * 0.5f + transform.up * PunchHeight, transform.rotation).GetComponent<MagicProjectile>();
-        projectile.Shoot(transform);
+        Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
+        MagicProjectile projectile = Instantiate(MagicProjectilePrefab, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
+        projectile.Shoot(shootOrigin, transform);
     }
 
     private void ClimbStep(float ray1Height, float ray2Height, float rayLenght, float stepHeight)

@@ -68,6 +68,12 @@ public class Health : NetworkBehaviour
 
         meshRenderers.AddRange(gameObject.GetComponentsInChildren<Renderer>().Where(x => x.GetType() != typeof(ParticleSystemRenderer)));
         originalSize = transform.localScale;
+
+        if (GameManager.Instance != null)
+        {
+            if (!GameManager.Instance.TransformsWithHealth.ContainsKey(transform))
+                GameManager.Instance.TransformsWithHealth.Add(transform, this);
+        }
     }
 
     private void Update()
@@ -97,6 +103,15 @@ public class Health : NetworkBehaviour
                 wobbleIsOn = false;
                 transform.localScale = originalSize;
             }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            if (GameManager.Instance.TransformsWithHealth.ContainsKey(transform))
+                GameManager.Instance.TransformsWithHealth.Remove(transform);
         }
     }
 
