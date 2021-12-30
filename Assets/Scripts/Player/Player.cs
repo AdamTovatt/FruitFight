@@ -47,6 +47,11 @@ public class Player : NetworkBehaviour
         InvokeCoinsUpdated(Coins);
 
         Health.OnDied += OnDied;
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            this.CallWithDelay(ForceSyncPosition, 2);
+        }
     }
 
     private void Update()
@@ -106,6 +111,39 @@ public class Player : NetworkBehaviour
 
             this.CallWithDelay(() => { Respawn(newPosition); }, PlayerRespawnTime);
         }
+    }
+
+    public void ForceSyncPosition()
+    {
+        Debug.Log("Sync position");
+        if (NetworkCharacter.IsLocalPlayer)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcForceSyncPosition(transform.position);
+                transform.position = transform.position += new Vector3(0, 0.1f, 0);
+            }
+            else
+            {
+                CmdForceSyncPosition(transform.position);
+                transform.position = transform.position += new Vector3(0, 0.1f, 0);
+            }
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdForceSyncPosition(Vector3 newPosition)
+    {
+        Debug.Log("command from client on server");
+        transform.position = newPosition;
+    }
+
+    [ClientRpc]
+    private void RpcForceSyncPosition(Vector3 newPosition)
+    {
+        Debug.Log("rpc from server: " + newPosition.ToString());
+        Debug.Log("Current pos: " + transform.position.ToString());
+        transform.position = newPosition;
     }
 
     public void PickedUpItem(Holdable item)
