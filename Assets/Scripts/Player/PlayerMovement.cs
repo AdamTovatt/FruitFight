@@ -23,7 +23,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
-    public GameObject MagicProjectilePrefab;
+    public int MagicProjectileId;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -67,6 +67,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerConfiguration playerConfiguration;
     private PlayerNetworkCharacter playerNetworkCharacter;
     private GroundedChecker groundedChecker;
+    private GameObject magicProjectilePrefab;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -113,7 +114,7 @@ public class PlayerMovement : MovingCharacter
 
     private void Start()
     {
-
+        magicProjectilePrefab = ProjectileConfiguration.Projectiles[MagicProjectileId].Prefab;
     }
 
     private void OnDestroy()
@@ -384,7 +385,7 @@ public class PlayerMovement : MovingCharacter
     private void ShootProjectile()
     {
         Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
-        MagicProjectile projectile = Instantiate(MagicProjectilePrefab, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
+        MagicProjectile projectile = Instantiate(magicProjectilePrefab, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
         projectile.Shoot(shootOrigin, transform);
     }
 

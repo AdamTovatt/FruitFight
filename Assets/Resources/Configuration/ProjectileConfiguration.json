@@ -1,0 +1,12 @@
+{
+  "ProjectileList": [
+    {
+      "Id": 0,
+      "PrefabName": "Yellow_Projectile"
+    },
+    {
+      "Id": 1,
+      "PrefabName": "BlueTriangle_Projectile"
+    }
+  ]
+}
