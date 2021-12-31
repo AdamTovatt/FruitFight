@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
                     addedPlayerCamera = true;
                     WorldBuilder.Instance.AddPreviousWorldObjects(camera.gameObject);
 
-                    GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab(playerConfiguration.GetHatAsPrefabEnum());
+                    GameObject hatPrefab = HatConfiguration.GetHatPrefab(playerConfiguration.Hat);
                     if (hatPrefab != null)
                     {
                         GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);
@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     playerMovement.InitializePlayerInput(playerConfiguration, camera);
+                    playerMovement.MagicProjectileId = HatConfiguration.Hats[playerConfiguration.Hat].MagicProjectileId;
                     PlayerCharacters.Add(playerMovement);
 
                     Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));

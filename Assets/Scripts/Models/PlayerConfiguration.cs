@@ -26,29 +26,4 @@ public class PlayerConfiguration
             IsLocal = true;
         }
     }
-
-    public Prefab? GetHatAsPrefabEnum()
-    {
-        return Hat.AsHatPrefabEnum();
-    }
-}
-
-public static class HatEnumExtensionMethods
-{
-    public static Prefab? AsHatPrefabEnum(this int hatId)
-    {
-        if (hatId == 1)
-            return Prefab.WizardHat;
-
-        if (hatId == 2)
-            return Prefab.Beanie;
-
-        if (hatId == 3)
-            return Prefab.SweatBand;
-
-        if (hatId == 4)
-            return Prefab.MushroomHat;
-
-        return null;
-    }
 }

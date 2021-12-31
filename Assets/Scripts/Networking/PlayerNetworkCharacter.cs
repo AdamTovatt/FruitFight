@@ -82,6 +82,8 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             playerMovement.InitializePlayerInput(playerConfiguration, camera);
 
             LocalPlayer = this;
+
+            playerMovement.MagicProjectileId = HatConfiguration.Hats[PlayerNetworkIdentity.LocalPlayerInstance.Hat].MagicProjectileId;
         }
         else
         {
@@ -89,7 +91,7 @@ public class PlayerNetworkCharacter : NetworkBehaviour
         }
 
         //create hat
-        GameObject hatPrefab = PrefabKeeper.Instance.GetPrefab((IsLocalPlayer ? PlayerNetworkIdentity.LocalPlayerInstance.Hat : PlayerNetworkIdentity.OtherPlayerInstance.Hat).AsHatPrefabEnum());
+        GameObject hatPrefab = HatConfiguration.GetHatPrefab(IsLocalPlayer ? PlayerNetworkIdentity.LocalPlayerInstance.Hat : PlayerNetworkIdentity.OtherPlayerInstance.Hat);
         if (hatPrefab != null)
         {
             GameObject playerHat = Instantiate(hatPrefab, playerMovement.GetComponentInChildren<HatPoint>().transform.position, playerMovement.transform.rotation);

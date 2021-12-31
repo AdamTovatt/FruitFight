@@ -62,6 +62,7 @@ public class MagicProjectile : MonoBehaviour
 
         if (collision != null)
         {
+            Debug.Log(collision.transform.name);
             impact.transform.up = collision.GetContact(0).normal;
             Health health = collision.transform.GetComponent<Health>();
             if (health != null)

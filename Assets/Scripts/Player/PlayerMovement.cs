@@ -23,10 +23,10 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
-    public int MagicProjectileId;
 
     public float InteractCooldownTime = 0.2f;
 
+    public int MagicProjectileId { get; set; }
     public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get { return _controlsEnabled; } set { if (!value) move = Vector2.zero; _controlsEnabled = value; } }
     private bool _controlsEnabled;
@@ -114,7 +114,10 @@ public class PlayerMovement : MovingCharacter
 
     private void Start()
     {
-        magicProjectilePrefab = ProjectileConfiguration.Projectiles[MagicProjectileId].Prefab;
+        if (ProjectileConfiguration.Projectiles.ContainsKey(MagicProjectileId))
+            magicProjectilePrefab = ProjectileConfiguration.Projectiles[MagicProjectileId].Prefab;
+        else
+            Debug.LogError("Missing magic projectile! Id: " + MagicProjectileId);
     }
 
     private void OnDestroy()
@@ -136,16 +139,19 @@ public class PlayerMovement : MovingCharacter
 
         if (playerConfiguration.Input.currentControlScheme == "Keyboard")
         {
-            PlayerControls input = new PlayerControls();
-            input.Gameplay.Attack.performed += CheckForMouseInput;
-            input.Gameplay.SecondaryAttack.performed += CheckForMouseInput;
-            input.Gameplay.SecondaryAttack.canceled += CheckForMouseInput;
-            input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
-            input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
-            input.Gameplay.Enable();
+            if (!CustomNetworkManager.IsOnlineSession)
+            {
+                PlayerControls input = new PlayerControls();
+                input.Gameplay.Attack.performed += CheckForMouseInput;
+                input.Gameplay.SecondaryAttack.performed += CheckForMouseInput;
+                input.Gameplay.SecondaryAttack.canceled += CheckForMouseInput;
+                input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
+                input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
+                input.Gameplay.Enable();
+            }
         }
 
-        if (CustomNetworkManager.IsOnlineSession)
+        if (CustomNetworkManager.IsOnlineSession && playerNetworkCharacter.IsLocalPlayer)
         {
             PlayerControls input = new PlayerControls();
 
@@ -384,6 +390,7 @@ public class PlayerMovement : MovingCharacter
 
     private void ShootProjectile()
     {
+        Debug.Log("Shoot projectile: " + playerNetworkCharacter.IsLocalPlayer);
         Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
         MagicProjectile projectile = Instantiate(magicProjectilePrefab, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
         projectile.Shoot(shootOrigin, transform);
@@ -616,7 +623,7 @@ public class PlayerMovement : MovingCharacter
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
-        throw new System.NotImplementedException();
+        //player movement was attacked is handeled by health
     }
 
     public void LandedOnBouncyObject()

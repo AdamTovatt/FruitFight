@@ -1,0 +1,34 @@
+{
+  "HatList": [
+    {
+      "Id": 0,
+      "DisplayName": "No Hat",
+      "PrefabName": "",
+      "MagicProjectileId": 0
+    },
+    {
+      "Id": 1,
+      "DisplayName": "Wizard Hat",
+      "PrefabName": "HatWizard",
+      "MagicProjectileId": 1
+    },
+    {
+      "Id": 2,
+      "DisplayName": "Beanie",
+      "PrefabName": "HatBeanie",
+      "MagicProjectileId": 0
+    },
+    {
+      "Id": 3,
+      "DisplayName": "Sweat Band",
+      "PrefabName": "HatSweatBand",
+      "MagicProjectileId": 0
+    },
+    {
+      "Id": 4,
+      "DisplayName": "Mushroom",
+      "PrefabName": "MushroomHat",
+      "MagicProjectileId": 2
+    }
+  ]
+}
