@@ -7,6 +7,10 @@
     {
       "Id": 1,
       "PrefabName": "BlueTriangle_Projectile"
+    },
+    {
+      "Id": 2,
+      "PrefabName": "Water_Projectile"
     }
   ]
 }
