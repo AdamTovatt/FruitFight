@@ -170,7 +170,7 @@ MonoBehaviour:
   - Name: Resurrect
     Clips:
     - {fileID: 8300000, guid: 958b56808b5239c47a2827019a383f02, type: 3}
-    Volume: 1
+    Volume: 0.29
     Pitch: 1
     PitchVariation: 0
     Delay: 0
@@ -187,7 +187,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.645
+  m_Volume: 0.357
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -231,7 +231,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
