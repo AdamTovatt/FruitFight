@@ -19334,7 +19334,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -19467,6 +19467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e110459512e822644a7446ebebd61f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scale: 0.6
   ImpactPrefab: {fileID: 1423167456353516, guid: 66dd4d97861ef884b9c6e3c272d7e88d,
     type: 3}
   Rigidbody: {fileID: 54394676346946918}

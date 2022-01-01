@@ -4795,7 +4795,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ffd93b0c159b9234daa329ec89d537bb, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4815,7 +4814,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -19469,6 +19468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e110459512e822644a7446ebebd61f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scale: 0.7
   ImpactPrefab: {fileID: 1312591640859010, guid: 28929e0cd45ba80428cb46f5cf223003,
     type: 3}
   Rigidbody: {fileID: 54189310121592036}

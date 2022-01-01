@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MagicProjectile : MonoBehaviour
 {
+    public float Scale = 1f;
     public GameObject ImpactPrefab;
     public Rigidbody Rigidbody;
 
@@ -13,6 +14,12 @@ public class MagicProjectile : MonoBehaviour
 
     public void Shoot(Vector3 shootOrigin, Transform shooter)
     {
+        Transform[] children = gameObject.GetComponentsInChildren<Transform>();
+        foreach(Transform childTransform in children)
+        {
+            childTransform.localScale = new Vector3(Scale, Scale, Scale);
+        }
+
         Health targetHealth = null;
         float closestTargetHealhtDistance = 10000f;
 
@@ -49,6 +56,8 @@ public class MagicProjectile : MonoBehaviour
 
     private void Update()
     {
+        Rigidbody.velocity += ((Rigidbody.velocity * 0.1f) * Time.deltaTime);
+
         if (Time.time - shootTime > 5f)
         {
             Hit(null);

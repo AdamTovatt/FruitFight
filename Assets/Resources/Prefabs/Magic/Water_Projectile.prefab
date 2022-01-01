@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e110459512e822644a7446ebebd61f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scale: 0.6
   ImpactPrefab: {fileID: 1607111504653374, guid: b8adffe926bd79c439d861edfa6f8123,
     type: 3}
   Rigidbody: {fileID: 54873829185623922}

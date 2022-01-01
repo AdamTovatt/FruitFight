@@ -30,6 +30,12 @@ public class Player : NetworkBehaviour
     public delegate void OnDroppedItemHandler();
     public event OnDroppedItemHandler OnDroppedItem;
 
+    public delegate void OnStartedCastingHandler(Vector3 castingPosition, float castingRadius);
+    public event OnStartedCastingHandler OnStartedCasting;
+
+    public delegate void OnStoppedCastingHandler();
+    public event OnStoppedCastingHandler OnStoppedCasting;
+
     public GameObject BeamOfLightPrefab;
     public GameObject AngelPrefab;
 
@@ -363,5 +369,15 @@ public class Player : NetworkBehaviour
     private void PerformTurnOffRunParticles()
     {
         RunParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    public void StartCasting(Vector3 castingPosition, float castingSize)
+    {
+        OnStartedCasting?.Invoke(castingPosition, castingSize);
+    }
+
+    public void StopCasting()
+    {
+        OnStoppedCasting?.Invoke();
     }
 }

@@ -2,15 +2,21 @@
   "ProjectileList": [
     {
       "Id": 0,
-      "PrefabName": "Yellow_Projectile"
+      "ProjectilePrefabName": "Yellow_Projectile",
+      "ChargePrefabName": "Yellow_Charge",
+      "HitPrefabName": "Yellow_Hit"
     },
     {
       "Id": 1,
-      "PrefabName": "BlueTriangle_Projectile"
+      "ProjectilePrefabName": "BlueTriangle_Projectile",
+      "ChargePrefabName": "BlueTriangle_Charge",
+      "HitPrefabName": "BlueTriangle_Hit"
     },
     {
       "Id": 2,
-      "PrefabName": "Water_Projectile"
+      "ProjectilePrefabName": "Water_Projectile",
+      "ChargePrefabName": "Water_Charge",
+      "HitPrefabName": "Water_Hit"
     }
   ]
 }

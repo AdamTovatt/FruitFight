@@ -23,6 +23,7 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
+    public float ProjectileChargeTime = 1f;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -67,7 +68,7 @@ public class PlayerMovement : MovingCharacter
     private PlayerConfiguration playerConfiguration;
     private PlayerNetworkCharacter playerNetworkCharacter;
     private GroundedChecker groundedChecker;
-    private GameObject magicProjectilePrefab;
+    private ProjectileConfigurationEntry magicProjectileConfiguration;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -76,6 +77,9 @@ public class PlayerMovement : MovingCharacter
     private Collision lastCollision;
     private float rotateCamera;
     private float lastInteractTime;
+    private float projectileChargeAmount;
+    private bool isChargingProjectile;
+    private MagicCharge currentMagicCharge;
 
     private PlayerControls boundPlayerControls;
 
@@ -115,7 +119,7 @@ public class PlayerMovement : MovingCharacter
     private void Start()
     {
         if (ProjectileConfiguration.Projectiles.ContainsKey(MagicProjectileId))
-            magicProjectilePrefab = ProjectileConfiguration.Projectiles[MagicProjectileId].Prefab;
+            magicProjectileConfiguration = ProjectileConfiguration.Projectiles[MagicProjectileId];
         else
             Debug.LogError("Missing magic projectile! Id: " + MagicProjectileId);
     }
@@ -236,8 +240,19 @@ public class PlayerMovement : MovingCharacter
                         Interact();
                     break;
                 case PlayerInputAction.SecondaryAttack:
-                    if (context.canceled)
-                        ShootProjectile();
+                    if(context.performed)
+                    {
+                        StartChargeProjectile();
+                    }
+                    else if (context.canceled)
+                    {
+                        if (isChargingProjectile && projectileChargeAmount > ProjectileChargeTime)
+                        {
+                            ShootProjectile();
+                        }
+
+                        StopChargeProjectile();
+                    }
                     break;
                 case PlayerInputAction.Jump:
                     if (context.performed)
@@ -380,6 +395,9 @@ public class PlayerMovement : MovingCharacter
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
 
+        if (isChargingProjectile)
+            projectileChargeAmount += Time.deltaTime / ProjectileChargeTime;
+
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
     }
 
@@ -388,11 +406,30 @@ public class PlayerMovement : MovingCharacter
         ClimbStep(0.1f, 0.6f, 0.5f, 0.1f);
     }
 
+    private void StopChargeProjectile()
+    {
+        CurrentRunSpeed = Speed;
+        Destroy(currentMagicCharge.gameObject);
+        projectileChargeAmount = 0;
+        isChargingProjectile = false;
+        Player.StopCasting();
+    }
+
+    private void StartChargeProjectile()
+    {
+        CurrentRunSpeed = Speed * 0.6f;
+        isChargingProjectile = true;
+        projectileChargeAmount = 0;
+        Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
+        currentMagicCharge = Instantiate(magicProjectileConfiguration.Charge, shootOrigin, Quaternion.Euler(90, 0, 0), transform).GetComponent<MagicCharge>();
+        currentMagicCharge.Initialize(ProjectileChargeTime);
+        Player.StartCasting(transform.up * PunchHeight, 0.4f);
+    }
+
     private void ShootProjectile()
     {
-        Debug.Log("Shoot projectile: " + playerNetworkCharacter.IsLocalPlayer);
         Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
-        MagicProjectile projectile = Instantiate(magicProjectilePrefab, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
+        MagicProjectile projectile = Instantiate(magicProjectileConfiguration.Projectile, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
         projectile.Shoot(shootOrigin, transform);
     }
 
