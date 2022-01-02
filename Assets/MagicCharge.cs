@@ -36,7 +36,7 @@ public class MagicCharge : MonoBehaviour
         if (time >= timeToFullScale)
             return new Vector3(1, 1, 1);
 
-        float scale = Mathf.Sin((time) * Mathf.PI * 0.5f / timeToFullScale);
+        float scale = Mathf.Clamp(Mathf.Sin((time * Mathf.PI * 0.5f / timeToFullScale) - Mathf.PI / 2f) + 1, 0, 1);
         return new Vector3(scale, scale, scale);
     }
 
