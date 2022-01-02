@@ -14,7 +14,7 @@ public class MagicProjectile : MonoBehaviour
     private Transform target;
     private Vector3 targetPositionHeightOffset;
 
-    public void Shoot(Vector3 shootOrigin, Transform shooter)
+    public void Shoot(Vector3 shootOrigin, Transform shooter, Vector3 shooterForward, Vector3 shooterPosition)
     {
         Transform[] children = gameObject.GetComponentsInChildren<Transform>();
         foreach (Transform childTransform in children)
@@ -27,26 +27,40 @@ public class MagicProjectile : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
-            Ray sphereCastRay = new Ray(shootOrigin, transform.forward);
+            Ray sphereCastRay = new Ray(shootOrigin, shooterForward);
             foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 6))
             {
                 if (hit.transform.tag != "Player" && hit.transform != shooter)
                 {
                     if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
                     {
-                        float angle = Vector3.Angle(shooter.forward, (hit.point - shooter.position).normalized);
-                        if (angle < smallestAngle)
+                        float angle = Vector3.Angle(shooterForward, (hit.transform.position - transform.position).normalized);
+                        if (angle < 45f)
                         {
-                            targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
-                            target = targetHealth.transform;
-                            smallestAngle = angle;
+                            Ray visibleRay = new Ray(shootOrigin, (hit.transform.position + Vector3.up * 0.1f) - shootOrigin);
+                            bool targetVisible = true;
+
+                            if (Physics.Raycast(visibleRay, out RaycastHit visibleCheckHit, 10000, ~(1 << 2), QueryTriggerInteraction.Ignore))
+                            {
+                                if (visibleCheckHit.transform != hit.transform)
+                                {
+                                    targetVisible = false;
+                                }
+                            }
+
+                            if (targetVisible && angle < smallestAngle) //if nothing seems to be hit targetVisible check could be removed
+                            {
+                                targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
+                                target = targetHealth.transform;
+                                smallestAngle = angle;
+                            }
                         }
                     }
                 }
             }
         }
 
-        Vector3 shootDirection = shooter.forward;
+        Vector3 shootDirection = shooterForward;
 
         if (targetHealth != null)
         {
@@ -60,7 +74,7 @@ public class MagicProjectile : MonoBehaviour
         Rigidbody.velocity = shootDirection * 20f;
         shootTime = Time.time;
 
-        if(target != null)
+        if (target != null)
         {
             targetPositionHeightOffset = target.GetComponent<Collider>().bounds.center - target.position;
         }
@@ -93,7 +107,6 @@ public class MagicProjectile : MonoBehaviour
 
         if (collision != null)
         {
-            Debug.Log(collision.transform.name);
             impact.transform.up = collision.GetContact(0).normal;
             Health health = collision.transform.GetComponent<Health>();
             if (health != null)

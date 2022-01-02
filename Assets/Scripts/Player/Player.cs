@@ -448,6 +448,45 @@ public class Player : NetworkBehaviour
         OnStoppedCasting?.Invoke();
     }
 
+    public void ShootProjectile(float punchHeight)
+    {
+        Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * punchHeight;
+
+        Vector3 shooterForward = transform.forward; //we take the numerical values here and send them to the other player so the projectiles will take the same trajectory
+        Vector3 shooterPosition = transform.position;
+
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                RpcShootProjectile(shootOrigin, shooterForward, shooterPosition);
+            else
+                CmdShootProjectile(shootOrigin, shooterForward, shooterPosition);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    {
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+    }
+
+    private void PerformShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    {
+        MagicProjectile projectile = Instantiate(magicProjectileConfigurationEntry.Projectile, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
+        projectile.Shoot(shootOrigin, transform, shooterForward, shooterPosition);
+    }
+
     public void SetMagicProjectileId(int projectileId)
     {
         if (CustomNetworkManager.IsOnlineSession)
