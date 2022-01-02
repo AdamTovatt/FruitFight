@@ -30,7 +30,7 @@ public class MagicProjectile : MonoBehaviour
             Ray sphereCastRay = new Ray(shootOrigin, transform.forward);
             foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 6))
             {
-                if (hit.transform != shooter)
+                if (hit.transform.tag != "Player" && hit.transform != shooter)
                 {
                     if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
                     {

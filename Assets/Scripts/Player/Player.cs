@@ -45,6 +45,10 @@ public class Player : NetworkBehaviour
     public PlayerMovement Movement;
     public PlayerNetworkCharacter NetworkCharacter;
 
+    private int magicProjectileId;
+    private ProjectileConfigurationEntry magicProjectileConfigurationEntry;
+    private MagicCharge currentMagicCharge;
+
     private List<float> previousDeathTimes = new List<float>();
 
     private void Start()
@@ -371,13 +375,110 @@ public class Player : NetworkBehaviour
         RunParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
-    public void StartCasting(Vector3 castingPosition, float castingSize)
+    public void StartCasting(float projectileChargeTime, float punchHeight, float castingSize)
     {
-        OnStartedCasting?.Invoke(castingPosition, castingSize);
+        PerformStartCasting(projectileChargeTime, punchHeight, castingSize);
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                RpcStartCasting(projectileChargeTime, punchHeight, castingSize);
+            else
+                CmdStartCasting(projectileChargeTime, punchHeight, castingSize);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcStartCasting(float projectileChargeTime, float punchHeight, float castingSize)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformStartCasting(projectileChargeTime, punchHeight, castingSize);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdStartCasting(float projectileChargeTime, float punchHeight, float castingSize)
+    {
+        PerformStartCasting(projectileChargeTime, punchHeight, castingSize);
+    }
+
+    private void PerformStartCasting(float projectileChargeTime, float punchHeight, float castingSize)
+    {
+        Vector3 shootOriginHeightOffset = transform.up * punchHeight;
+        currentMagicCharge = Instantiate(magicProjectileConfigurationEntry.Charge, transform.position + transform.forward * 0.5f + shootOriginHeightOffset, Quaternion.Euler(90, 0, 0), transform).GetComponent<MagicCharge>();
+        currentMagicCharge.Initialize(projectileChargeTime);
+
+        OnStartedCasting?.Invoke(shootOriginHeightOffset, castingSize);
     }
 
     public void StopCasting()
     {
+        PerformStopCasting();
+
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                RpcStopCasting();
+            else
+                CmdStopCasting();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcStopCasting()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformStopCasting();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdStopCasting()
+    {
+        PerformStopCasting();
+    }
+
+    private void PerformStopCasting()
+    {
+        if (currentMagicCharge != null)
+            currentMagicCharge.Cancel();
+
         OnStoppedCasting?.Invoke();
+    }
+
+    public void SetMagicProjectileId(int projectileId)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                RpcSetMagicProjectileId(projectileId);
+            else
+                CmdSetMagicProjectileId(projectileId);
+        }
+
+        PerformSetMagicProjectileId(projectileId);
+    }
+
+    [ClientRpc]
+    private void RpcSetMagicProjectileId(int projectileId)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformSetMagicProjectileId(projectileId);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdSetMagicProjectileId(int projectileId)
+    {
+        PerformSetMagicProjectileId(projectileId);
+    }
+
+    private void PerformSetMagicProjectileId(int projectileId)
+    {
+        magicProjectileId = projectileId;
+        magicProjectileConfigurationEntry = ProjectileConfiguration.Projectiles[magicProjectileId];
     }
 }

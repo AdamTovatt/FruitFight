@@ -119,7 +119,10 @@ public class PlayerMovement : MovingCharacter
     private void Start()
     {
         if (ProjectileConfiguration.Projectiles.ContainsKey(MagicProjectileId))
+        {
             magicProjectileConfiguration = ProjectileConfiguration.Projectiles[MagicProjectileId];
+            Player.SetMagicProjectileId(MagicProjectileId);
+        }
         else
             Debug.LogError("Missing magic projectile! Id: " + MagicProjectileId);
     }
@@ -409,7 +412,6 @@ public class PlayerMovement : MovingCharacter
     private void StopChargeProjectile()
     {
         CurrentRunSpeed = Speed;
-        Destroy(currentMagicCharge.gameObject);
         projectileChargeAmount = 0;
         isChargingProjectile = false;
         Player.StopCasting();
@@ -420,10 +422,7 @@ public class PlayerMovement : MovingCharacter
         CurrentRunSpeed = Speed * 0.6f;
         isChargingProjectile = true;
         projectileChargeAmount = 0;
-        Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * PunchHeight;
-        currentMagicCharge = Instantiate(magicProjectileConfiguration.Charge, shootOrigin, Quaternion.Euler(90, 0, 0), transform).GetComponent<MagicCharge>();
-        currentMagicCharge.Initialize(ProjectileChargeTime);
-        Player.StartCasting(transform.up * PunchHeight, 0.4f);
+        Player.StartCasting(ProjectileChargeTime, PunchHeight, 0.4f);
     }
 
     private void ShootProjectile()

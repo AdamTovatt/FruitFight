@@ -108,7 +108,7 @@ public class IkArmSolver : MonoBehaviour
         }
         else
         {
-            transform.position = CharacterMovement.transform.position + CharacterMovement.transform.forward * 0.5f + castPosition + CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody) * castingSize;
+            transform.position = CharacterMovement.transform.position + transform.forward * 0.5f + castPosition + CharacterMovement.transform.right * (RightArm ? ArmDistanceToBody : -1f * ArmDistanceToBody) * castingSize;
         }
     }
 
@@ -168,7 +168,7 @@ public class IkArmSolver : MonoBehaviour
         if (networkCharacter != null)
             networkCharacter.OnAttack -= Punch;
 
-        if(player != null)
+        if (player != null)
         {
             player.OnPickedUpItem -= PickUpItem;
             player.OnDroppedItem -= DropItem;

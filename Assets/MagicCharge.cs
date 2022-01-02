@@ -30,6 +30,11 @@ public class MagicCharge : MonoBehaviour
         }
     }
 
+    public void Cancel()
+    {
+        Destroy(gameObject);
+    }
+
     private Vector3 GetScale()
     {
         float time = Time.time - startTime;
