@@ -243,18 +243,20 @@ public class PlayerMovement : MovingCharacter
                         Interact();
                     break;
                 case PlayerInputAction.SecondaryAttack:
-                    if(context.performed)
+                    if (context.performed)
                     {
                         StartChargeProjectile();
                     }
                     else if (context.canceled)
                     {
+                        bool didShoot = false;
                         if (isChargingProjectile && projectileChargeAmount > ProjectileChargeTime)
                         {
                             ShootProjectile();
+                            didShoot = true;
                         }
 
-                        StopChargeProjectile();
+                        StopChargeProjectile(didShoot); //if we did shoot the charge should dissappear instantly
                     }
                     break;
                 case PlayerInputAction.Jump:
@@ -409,12 +411,12 @@ public class PlayerMovement : MovingCharacter
         ClimbStep(0.1f, 0.6f, 0.5f, 0.1f);
     }
 
-    private void StopChargeProjectile()
+    private void StopChargeProjectile(bool disappearInstantly)
     {
         CurrentRunSpeed = Speed;
         projectileChargeAmount = 0;
         isChargingProjectile = false;
-        Player.StopCasting();
+        Player.StopCasting(disappearInstantly);
     }
 
     private void StartChargeProjectile()

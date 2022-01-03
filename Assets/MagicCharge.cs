@@ -5,12 +5,30 @@ using UnityEngine;
 public class MagicCharge : MonoBehaviour
 {
     public float Scale = 1f;
+    public Light Light;
 
     private float timeToFullScale;
     private float startTime;
     private Vector3 startPosition;
+    private Vector3 currentScale;
+
+    private Vector3 cancelScale;
+    private Vector3 cancelPosition;
+    private bool cancelled;
 
     private Transform[] children;
+
+    private float maxLightIntensity;
+    private float maxLightRange;
+
+    private void Awake()
+    {
+        maxLightIntensity = Light.intensity;
+        maxLightRange = Light.range;
+
+        Light.intensity = 0;
+        Light.range = 0;
+    }
 
     public void Initialize(float timeToFullScale)
     {
@@ -22,26 +40,66 @@ public class MagicCharge : MonoBehaviour
 
     private void Update()
     {
-        transform.localPosition = startPosition + GetShakePosition(Time.time, 25, 0.1f);
-        Vector3 scale = GetScale();
+        Vector3 shakeOffset = GetShakePosition(Time.time, 25, 0.1f);
+
+        if (!cancelled)
+        {
+            currentScale = GetScaleVector();
+            transform.localPosition = startPosition + shakeOffset;
+        }
+        else
+        {
+            transform.position = cancelPosition + shakeOffset;
+            currentScale = ClampVector(cancelScale - GetScaleVector(), 0, 1);
+        }
+
+        Light.intensity = maxLightIntensity * currentScale.x;
+        Light.range = maxLightRange * currentScale.x;
+
         foreach (Transform childTransform in children)
         {
-            childTransform.localScale = scale * Scale;
+            childTransform.localScale = currentScale * Scale;
+        }
+
+        if (cancelled && Time.time - startTime >= timeToFullScale)
+        {
+            Destroy(gameObject);
         }
     }
 
-    public void Cancel()
+    public void Cancel(bool disappearInstantly)
     {
-        Destroy(gameObject);
+        if(disappearInstantly)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        timeToFullScale = timeToFullScale * currentScale.x;
+        startTime = Time.time;
+        cancelled = true;
+        cancelScale = currentScale;
+        transform.SetParent(null);
+        cancelPosition = transform.position;
     }
 
-    private Vector3 GetScale()
+    private float GetScale()
     {
         float time = Time.time - startTime;
         if (time >= timeToFullScale)
-            return new Vector3(1, 1, 1);
+            return 1;
 
-        float scale = Mathf.Clamp(Mathf.Sin((time * Mathf.PI * 0.5f / timeToFullScale) - Mathf.PI / 2f) + 1, 0, 1);
+        return Mathf.Clamp(Mathf.Sin((time * Mathf.PI * 0.5f / timeToFullScale) - Mathf.PI / 2f) + 1, 0, 1);
+    }
+
+    private Vector3 ClampVector(Vector3 vector, float min, float max)
+    {
+        return new Vector3(Mathf.Clamp(vector.x, min, max), Mathf.Clamp(vector.y, min, max), Mathf.Clamp(vector.z, min, max));
+    }
+
+    private Vector3 GetScaleVector()
+    {
+        float scale = GetScale();
         return new Vector3(scale, scale, scale);
     }
 

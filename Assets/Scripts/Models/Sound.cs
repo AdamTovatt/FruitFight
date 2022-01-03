@@ -31,6 +31,7 @@ public class Sound
             source.spatialBlend = settings.spatialBlend;
             source.spread = settings.spread;
             source.rolloffMode = settings.rolloffMode;
+            source.loop = settings.loop;
         }
 
         Source = source;

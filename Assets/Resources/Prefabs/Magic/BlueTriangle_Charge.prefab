@@ -19439,6 +19439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Scale: 0.6
+  Light: {fileID: 6211942210941651328}
 --- !u!108 &6211942210941651328
 Light:
   m_ObjectHideFlags: 0

@@ -412,38 +412,38 @@ public class Player : NetworkBehaviour
         OnStartedCasting?.Invoke(shootOriginHeightOffset, castingSize);
     }
 
-    public void StopCasting()
+    public void StopCasting(bool disappearInstantly)
     {
-        PerformStopCasting();
+        PerformStopCasting(disappearInstantly);
 
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
-                RpcStopCasting();
+                RpcStopCasting(disappearInstantly);
             else
-                CmdStopCasting();
+                CmdStopCasting(disappearInstantly);
         }
     }
 
     [ClientRpc]
-    private void RpcStopCasting()
+    private void RpcStopCasting(bool disappearInstantly)
     {
         if (CustomNetworkManager.Instance.IsServer)
             return;
 
-        PerformStopCasting();
+        PerformStopCasting(disappearInstantly);
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdStopCasting()
+    private void CmdStopCasting(bool disappearInstantly)
     {
-        PerformStopCasting();
+        PerformStopCasting(disappearInstantly);
     }
 
-    private void PerformStopCasting()
+    private void PerformStopCasting(bool disappearInstantly)
     {
         if (currentMagicCharge != null)
-            currentMagicCharge.Cancel();
+            currentMagicCharge.Cancel(disappearInstantly);
 
         OnStoppedCasting?.Invoke();
     }
