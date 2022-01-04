@@ -718,7 +718,8 @@ MonoBehaviour:
   PunchStrength: 5
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
-  MagicProjectileId: 1
+  ProjectileChargeTime: 1
+  TimeToFullSpeed: 0.15
   InteractCooldownTime: 0.2
 --- !u!54 &2012823961798305032
 Rigidbody:

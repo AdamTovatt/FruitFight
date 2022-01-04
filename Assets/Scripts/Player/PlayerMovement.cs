@@ -24,6 +24,7 @@ public class PlayerMovement : MovingCharacter
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
     public float ProjectileChargeTime = 1f;
+    public float TimeToFullSpeed = 1f;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -80,6 +81,8 @@ public class PlayerMovement : MovingCharacter
     private float projectileChargeAmount;
     private bool isChargingProjectile;
     private MagicCharge currentMagicCharge;
+    private float startMoveTime;
+    private float currentMovementSpeedMultiplier;
 
     private PlayerControls boundPlayerControls;
 
@@ -266,6 +269,12 @@ public class PlayerMovement : MovingCharacter
                 case PlayerInputAction.Move:
                     if (context.performed)
                     {
+                        if (move == Vector2.zero)
+                        {
+                            Debug.Log("Start move");
+                            startMoveTime = Time.time;
+                        }
+
                         Move(context.ReadValue<Vector2>());
 
                         if (GetShouldTurnOnRunParticles(groundedChecker.GroundBlock))
@@ -393,7 +402,13 @@ public class PlayerMovement : MovingCharacter
             transform.parent = null; //this is a bit wierd tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
         }
 
-        Vector3 newVelocity = movement * CurrentRunSpeed;
+        float moveTime = Time.time - startMoveTime;
+        if (moveTime < TimeToFullSpeed)
+            currentMovementSpeedMultiplier = (Mathf.Sin(moveTime * Mathf.PI * (1 / TimeToFullSpeed) - (Mathf.PI / 2)) + 1f) / 2f;
+        else
+            currentMovementSpeedMultiplier = 1f;
+
+        Vector3 newVelocity = movement * CurrentRunSpeed * currentMovementSpeedMultiplier;
         RigidBody.velocity = new Vector3(newVelocity.x + groundVelocity.x, RigidBody.velocity.y, newVelocity.z + groundVelocity.z);
 
         Vector3 newPosition = RigidBody.transform.position + movement;
