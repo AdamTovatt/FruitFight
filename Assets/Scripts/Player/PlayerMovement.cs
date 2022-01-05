@@ -437,6 +437,9 @@ public class PlayerMovement : MovingCharacter
 
     private void StartChargeProjectile()
     {
+        if (HeldItem != null) //cannot start charing magic while holding something
+            return;
+
         CurrentRunSpeed = Speed * 0.6f;
         isChargingProjectile = true;
         projectileChargeAmount = 0;
@@ -539,6 +542,9 @@ public class PlayerMovement : MovingCharacter
     private void Interact()
     {
         if (Time.time - lastInteractTime < InteractCooldownTime)
+            return;
+
+        if (isChargingProjectile) //cannot interact while charging projectile
             return;
 
         bool shouldPunch = true;

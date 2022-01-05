@@ -19558,7 +19558,7 @@ MonoBehaviour:
   - Name: MagicExplosion
     Clips:
     - {fileID: 8300000, guid: 60b95b6ae16f51043b46bebfba2b7ca4, type: 3}
-    Volume: 0.25
+    Volume: 0.2
     Pitch: 1
     PitchVariation: 0.1
     Delay: 0
