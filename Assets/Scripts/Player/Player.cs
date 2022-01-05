@@ -47,7 +47,7 @@ public class Player : NetworkBehaviour
 
     private int magicProjectileId;
     private ProjectileConfigurationEntry magicProjectileConfigurationEntry;
-    private MagicCharge currentMagicCharge;
+    private List<MagicCharge> currentMagicCharges = new List<MagicCharge>();
 
     private List<float> previousDeathTimes = new List<float>();
 
@@ -409,8 +409,9 @@ public class Player : NetworkBehaviour
     private void PerformStartCasting(float projectileChargeTime, float punchHeight, float castingSize)
     {
         Vector3 shootOriginHeightOffset = transform.up * punchHeight;
-        currentMagicCharge = Instantiate(magicProjectileConfigurationEntry.Charge, transform.position + transform.forward * 0.5f + shootOriginHeightOffset, Quaternion.Euler(90, 0, 0), transform).GetComponent<MagicCharge>();
-        currentMagicCharge.Initialize(projectileChargeTime);
+        MagicCharge magicCharge = Instantiate(magicProjectileConfigurationEntry.Charge, transform.position + transform.forward * 0.5f + shootOriginHeightOffset, Quaternion.Euler(90, 0, 0), transform).GetComponent<MagicCharge>();
+        magicCharge.Initialize(projectileChargeTime);
+        currentMagicCharges.Add(magicCharge);
 
         OnStartedCasting?.Invoke(shootOriginHeightOffset, castingSize);
     }
@@ -445,8 +446,11 @@ public class Player : NetworkBehaviour
 
     private void PerformStopCasting(bool disappearInstantly)
     {
-        if (currentMagicCharge != null)
-            currentMagicCharge.Cancel(disappearInstantly);
+        foreach (MagicCharge charge in currentMagicCharges)
+        {
+            charge.Cancel(disappearInstantly);
+        }
+        currentMagicCharges.Clear();
 
         OnStoppedCasting?.Invoke();
     }

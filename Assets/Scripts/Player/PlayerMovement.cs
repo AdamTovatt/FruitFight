@@ -148,20 +148,6 @@ public class PlayerMovement : MovingCharacter
 
         playerConfiguration.Input.onActionTriggered += HandleAction;
 
-        if (playerConfiguration.Input.currentControlScheme == "Keyboard")
-        {
-            if (!CustomNetworkManager.IsOnlineSession)
-            {
-                PlayerControls input = new PlayerControls();
-                input.Gameplay.Attack.performed += CheckForMouseInput;
-                input.Gameplay.SecondaryAttack.performed += CheckForMouseInput;
-                input.Gameplay.SecondaryAttack.canceled += CheckForMouseInput;
-                input.Gameplay.RotateCameraWithMouse.performed += CheckForMouseInput;
-                input.Gameplay.RotateCameraWithMouse.canceled += MouseLookCancelled;
-                input.Gameplay.Enable();
-            }
-        }
-
         if (CustomNetworkManager.IsOnlineSession && playerNetworkCharacter.IsLocalPlayer)
         {
             PlayerControls input = new PlayerControls();
@@ -215,19 +201,6 @@ public class PlayerMovement : MovingCharacter
         input.Gameplay.SecondaryAttack.canceled -= HandleAction;
     }
 
-    private void MouseLookCancelled(InputAction.CallbackContext context)
-    {
-        rotateCamera = 0;
-    }
-
-    private void CheckForMouseInput(InputAction.CallbackContext context)
-    {
-        if (context.control.ToString().ToLower().Contains("mouse"))
-        {
-            HandleAction(context);
-        }
-    }
-
     private void HandleAction(InputAction.CallbackContext context)
     {
         if (ControlsEnabled)
@@ -239,6 +212,7 @@ public class PlayerMovement : MovingCharacter
             }
 
             PlayerInputAction action = inputActions[context.action.id];
+            Debug.Log(action);
 
             switch (action)
             {
