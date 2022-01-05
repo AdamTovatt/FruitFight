@@ -28,6 +28,7 @@ public class PlayerMovement : MovingCharacter
 
     public float InteractCooldownTime = 0.2f;
 
+    public bool ChargingProjectile { get { return isChargingProjectile; } }
     public int MagicProjectileId { get; set; }
     public float CurrentRunSpeed { get; set; }
     public bool ControlsEnabled { get { return _controlsEnabled; } set { if (!value) move = Vector2.zero; _controlsEnabled = value; } }
@@ -426,7 +427,7 @@ public class PlayerMovement : MovingCharacter
         ClimbStep(0.1f, 0.6f, 0.5f, 0.1f);
     }
 
-    private void StopChargeProjectile(bool disappearInstantly)
+    public void StopChargeProjectile(bool disappearInstantly)
     {
         CurrentRunSpeed = Speed;
         projectileChargeAmount = 0;

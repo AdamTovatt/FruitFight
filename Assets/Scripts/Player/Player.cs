@@ -79,6 +79,9 @@ public class Player : NetworkBehaviour
     {
         Vector3 newPosition = transform.position;
 
+        if (Movement.isActiveAndEnabled && Movement.ChargingProjectile)
+            Movement.StopChargeProjectile(false);
+
         if (!CustomNetworkManager.IsOnlineSession || NetworkCharacter.IsLocalPlayer)
         {
             previousDeathTimes.Add(Time.time);
