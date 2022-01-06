@@ -129,6 +129,8 @@ public class PlayerMovement : MovingCharacter
         }
         else
             Debug.LogError("Missing magic projectile! Id: " + MagicProjectileId);
+
+        Player.TurnOffRunParticles();
     }
 
     private void OnDestroy()
@@ -146,7 +148,8 @@ public class PlayerMovement : MovingCharacter
         this.singleTargetCamera = singleTargetCamera;
         Camera = singleTargetCamera.transform;
 
-        playerConfiguration.Input.onActionTriggered += HandleAction;
+        if (!CustomNetworkManager.IsOnlineSession)
+            playerConfiguration.Input.onActionTriggered += HandleAction;
 
         if (CustomNetworkManager.IsOnlineSession && playerNetworkCharacter.IsLocalPlayer)
         {
@@ -156,6 +159,7 @@ public class PlayerMovement : MovingCharacter
             boundPlayerControls = input;
 
             input.Gameplay.Enable();
+            input.Ui.Disable();
         }
     }
 
