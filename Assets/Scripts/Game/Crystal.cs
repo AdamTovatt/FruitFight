@@ -9,8 +9,11 @@ public class Crystal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Instantiate(Confetti, ConfettiSpawnPoint.transform.position + Vector3.up * 0.5f, Quaternion.identity);
-        GameManager.Instance.LevelFinished();
-        gameObject.SetActive(false);
+        if (other.transform.tag == "Player")
+        {
+            Instantiate(Confetti, ConfettiSpawnPoint.transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            GameManager.Instance.LevelFinished();
+            gameObject.SetActive(false);
+        }
     }
 }
