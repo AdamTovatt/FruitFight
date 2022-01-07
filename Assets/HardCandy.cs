@@ -328,15 +328,25 @@ public class HardCandy : MovingCharacter
     {
         CurrentState = HardCandyState.Fleeing;
 
-        Vector3 offset = victim.position - transform.position * -1;
-        Vector3? fleePosition = GetRandomPositionWithinDistance(RoamNewTargetRange, offset: offset);
-        if (fleePosition == null)
+        if (victim != null && transform != null)
         {
-            TargetPosition = transform.position;
+            Vector3 offset = victim.position - transform.position * -1;
+            Vector3? fleePosition = GetRandomPositionWithinDistance(RoamNewTargetRange, offset: offset);
+            if (fleePosition == null)
+            {
+                TargetPosition = transform.position;
+            }
+            else
+            {
+                TargetPosition = (Vector3)fleePosition;
+            }
         }
         else
         {
-            TargetPosition = (Vector3)fleePosition;
+            if(transform == null && gameObject != null)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

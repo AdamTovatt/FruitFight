@@ -216,7 +216,6 @@ public class PlayerMovement : MovingCharacter
             }
 
             PlayerInputAction action = inputActions[context.action.id];
-            Debug.Log(action);
 
             switch (action)
             {
