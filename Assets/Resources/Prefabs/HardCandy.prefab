@@ -2073,11 +2073,9 @@ MonoBehaviour:
   Sounds:
   - Name: hurt
     Clips:
-    - {fileID: 8300000, guid: 9cb1a810eee2df548a793dd3fce697bc, type: 3}
-    - {fileID: 8300000, guid: 8bc700eef037006409d306e790291b00, type: 3}
-    - {fileID: 8300000, guid: 4277d480e7db13341b1301974aa1db23, type: 3}
-    - {fileID: 8300000, guid: b461ead2c42892a479d6311eabc35bd7, type: 3}
-    - {fileID: 8300000, guid: de61256550be18440ac4ce76aef93e0b, type: 3}
+    - {fileID: 8300000, guid: e6121309a281b454daab33fdf0cb4e33, type: 3}
+    - {fileID: 8300000, guid: 6d195962b6910ac49b6364cea3906cf7, type: 3}
+    - {fileID: 8300000, guid: b5233bfadb79c324b8bc38ca9e04d56a, type: 3}
     Volume: 0.49
     Pitch: 1
     PitchVariation: 0.012
