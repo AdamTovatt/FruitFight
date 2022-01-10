@@ -1014,7 +1014,7 @@ Transform:
   m_GameObject: {fileID: 6127016122437689832}
   m_LocalRotation: {x: 0.00017505884, y: -0.0000001241902, z: -0.000000004960036,
     w: 1}
-  m_LocalPosition: {x: 0, y: -0.0032986845, z: -0}
+  m_LocalPosition: {x: -0, y: -0.00342, z: -0}
   m_LocalScale: {x: 0.01, y: 0.010000001, z: 0.010000001}
   m_Children: []
   m_Father: {fileID: 1826149999959934060}
@@ -1871,6 +1871,8 @@ MonoBehaviour:
   - State: 5
     RotateSpeedMultiplier: 3
     RunSpeed: 1
+  HappyMouth: {fileID: 1268307521923845851}
+  AngryMouth: {fileID: 6127016122437689832}
   DistanceToGround: 0.2
   UniqueSoundSource: {fileID: 8551069110806626987}
   FootStepAudio: {fileID: 8551069110806626988}

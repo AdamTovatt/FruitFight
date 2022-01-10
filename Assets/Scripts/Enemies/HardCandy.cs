@@ -16,6 +16,9 @@ public class HardCandy : MovingCharacter
     public float DiscoveryRadius = 5f;
     public List<HardCandySpeedSettings> SpeedSettings;
 
+    public GameObject HappyMouth;
+    public GameObject AngryMouth;
+
     public float DistanceToGround = 0.1f;
 
     public UniqueSoundSource UniqueSoundSource;
@@ -206,6 +209,7 @@ public class HardCandy : MovingCharacter
             }
             else if (canRedirect)
             {
+                SetMouthState(false);
                 hasRedirectedCharge = false;
                 CurrentState = HardCandyState.Charging;
                 TargetPosition = GetChargePosition();
@@ -317,8 +321,21 @@ public class HardCandy : MovingCharacter
         }
     }
 
+    private void SetMouthState(bool happy)
+    {
+        if(HappyMouth == null || AngryMouth == null)
+        {
+            Destroy(this);
+            return;
+        }
+
+        HappyMouth.SetActive(happy);
+        AngryMouth.SetActive(!happy);
+    }
+
     private void SetIdle()
     {
+        SetMouthState(true);
         idleTime = 0;
         idleGoalTime = Random.Range(0.2f, 2f);
         CurrentState = HardCandyState.Idle;
@@ -326,6 +343,7 @@ public class HardCandy : MovingCharacter
 
     private void Flee()
     {
+        SetMouthState(false);
         CurrentState = HardCandyState.Fleeing;
 
         if (victim != null && transform != null)
@@ -405,6 +423,7 @@ public class HardCandy : MovingCharacter
 
     private void SetRoaming()
     {
+        SetMouthState(true);
         idleGoalTime = 0;
         idleTime = 0;
         CurrentState = HardCandyState.Roaming;

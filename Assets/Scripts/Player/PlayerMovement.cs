@@ -249,7 +249,6 @@ public class PlayerMovement : MovingCharacter
                     {
                         if (move == Vector2.zero)
                         {
-                            Debug.Log("Start move");
                             startMoveTime = Time.time;
                         }
 
