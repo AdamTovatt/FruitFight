@@ -455,43 +455,43 @@ public class Player : NetworkBehaviour
         OnStoppedCasting?.Invoke();
     }
 
-    public void ShootProjectile(float punchHeight)
+    public void ShootProjectile(float punchHeight, float projectileLifeTime)
     {
         Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * punchHeight;
 
         Vector3 shooterForward = transform.forward; //we take the numerical values here and send them to the other player so the projectiles will take the same trajectory
         Vector3 shooterPosition = transform.position;
 
-        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition, projectileLifeTime);
 
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
-                RpcShootProjectile(shootOrigin, shooterForward, shooterPosition);
+                RpcShootProjectile(shootOrigin, shooterForward, shooterPosition, projectileLifeTime);
             else
-                CmdShootProjectile(shootOrigin, shooterForward, shooterPosition);
+                CmdShootProjectile(shootOrigin, shooterForward, shooterPosition, projectileLifeTime);
         }
     }
 
     [ClientRpc]
-    private void RpcShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    private void RpcShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime)
     {
         if (CustomNetworkManager.Instance.IsServer)
             return;
 
-        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition, projectileLifeTime);
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    private void CmdShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime)
     {
-        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition);
+        PerformShootProjectile(shootOrigin, shooterForward, shooterPosition, projectileLifeTime);
     }
 
-    private void PerformShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition)
+    private void PerformShootProjectile(Vector3 shootOrigin, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime)
     {
         MagicProjectile projectile = Instantiate(magicProjectileConfigurationEntry.Projectile, shootOrigin, transform.rotation).GetComponent<MagicProjectile>();
-        projectile.Shoot(shootOrigin, transform, shooterForward, shooterPosition);
+        projectile.Shoot(shootOrigin, transform, shooterForward, shooterPosition, projectileLifeTime);
     }
 
     public void SetMagicProjectileId(int projectileId)

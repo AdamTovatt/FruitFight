@@ -23,11 +23,12 @@ public class PlayerMovement : MovingCharacter
     public float PunchStrength = 5f;
     public float RotateCameraSpeed = 5f;
     public float GameTimeLength = 0.2f;
-    public float ProjectileChargeTime = 1f;
+    public int MagicLevel;
     public float TimeToFullSpeed = 1f;
 
     public float InteractCooldownTime = 0.2f;
 
+    public MagicLevelSettingsEntry MagicSettings { get; set; }
     public bool ChargingProjectile { get { return isChargingProjectile; } }
     public int MagicProjectileId { get; set; }
     public float CurrentRunSpeed { get; set; }
@@ -103,6 +104,9 @@ public class PlayerMovement : MovingCharacter
         soundSource = gameObject.GetComponent<SoundSource>();
         playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
+
+        MagicLevelSettings.Load();
+        MagicSettings = MagicLevelSettings.GetSettingsForLevel(MagicLevel);
 
         groundedChecker.OnBecameGrounded += JustLanded;
         groundedChecker.OnNewGroundWasEntered += NewGroundWasEntered;
@@ -231,7 +235,7 @@ public class PlayerMovement : MovingCharacter
                     else if (context.canceled)
                     {
                         bool didShoot = false;
-                        if (isChargingProjectile && projectileChargeAmount > ProjectileChargeTime)
+                        if (isChargingProjectile && projectileChargeAmount > MagicSettings.ChargeTime)
                         {
                             ShootProjectile();
                             didShoot = true;
@@ -393,7 +397,7 @@ public class PlayerMovement : MovingCharacter
             RigidBody.MoveRotation(Quaternion.LookRotation(movementX + movementY, Vector3.up));
 
         if (isChargingProjectile)
-            projectileChargeAmount += Time.deltaTime / ProjectileChargeTime;
+            projectileChargeAmount += Time.deltaTime / MagicSettings.ChargeTime;
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
     }
@@ -413,18 +417,18 @@ public class PlayerMovement : MovingCharacter
 
     private void StartChargeProjectile()
     {
-        if (HeldItem != null) //cannot start charing magic while holding something
+        if (HeldItem != null || MagicSettings.Number == 0) //cannot start charing magic while holding something, and cannot charge if level 0
             return;
 
         CurrentRunSpeed = Speed * 0.6f;
         isChargingProjectile = true;
         projectileChargeAmount = 0;
-        Player.StartCasting(ProjectileChargeTime, PunchHeight, 0.4f);
+        Player.StartCasting(MagicSettings.ChargeTime, PunchHeight, 0.4f);
     }
 
     private void ShootProjectile()
     {
-        Player.ShootProjectile(PunchHeight);
+        Player.ShootProjectile(PunchHeight, MagicSettings.ProjectileLifeTime);
     }
 
     private void ClimbStep(float ray1Height, float ray2Height, float rayLenght, float stepHeight)

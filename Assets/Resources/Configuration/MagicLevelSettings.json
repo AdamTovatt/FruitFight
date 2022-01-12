@@ -1,0 +1,39 @@
+{
+  "MagicLevels": [
+    {
+      "Number": 0,
+      "RequiredXp": 0,
+      "ChargeTime": 0,
+      "ProjectileLifeTime": 0,
+      "Damage": 0
+    },
+    {
+      "Number": 1,
+      "RequiredXp": 1,
+      "ChargeTime": 1,
+      "ProjectileLifeTime": 0.01,
+      "Damage": 30
+    },
+    {
+      "Number": 2,
+      "RequiredXp": 100,
+      "ChargeTime": 0.9,
+      "ProjectileLifeTime": 0.3,
+      "Damage": 35
+    },
+    {
+      "Number": 3,
+      "RequiredXp": 300,
+      "ChargeTime": 0.8,
+      "ProjectileLifeTime": 1,
+      "Damage": 40
+    },
+    {
+      "Number": 4,
+      "RequiredXp": 900,
+      "ChargeTime": 0.7,
+      "ProjectileLifeTime": 5,
+      "Damage": 45
+    }
+  ]
+}

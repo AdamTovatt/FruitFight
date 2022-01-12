@@ -13,9 +13,13 @@ public class MagicProjectile : MonoBehaviour
     private float shootTime;
     private Transform target;
     private Vector3 targetPositionHeightOffset;
+    private float lifeTime;
+    private Vector3 forward;
 
-    public void Shoot(Vector3 shootOrigin, Transform shooter, Vector3 shooterForward, Vector3 shooterPosition)
+    public void Shoot(Vector3 shootOrigin, Transform shooter, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime)
     {
+        lifeTime = projectileLifeTime;
+
         Transform[] children = gameObject.GetComponentsInChildren<Transform>();
         foreach (Transform childTransform in children)
         {
@@ -70,6 +74,7 @@ public class MagicProjectile : MonoBehaviour
         }
 
         Vector3 shootDirection = shooterForward;
+        forward = shootDirection;
 
         if (targetHealth == null && backupTargethealth != null)
         {
@@ -109,7 +114,7 @@ public class MagicProjectile : MonoBehaviour
 
         Rigidbody.velocity += ((Rigidbody.velocity * 0.1f) * Time.deltaTime);
 
-        if (Time.time - shootTime > 5f)
+        if (Time.time - shootTime > lifeTime)
         {
             Hit(null);
         }
@@ -133,6 +138,10 @@ public class MagicProjectile : MonoBehaviour
                     health.MovingCharacter.WasAttacked(impactPoint + (shootingTransform.position - health.transform.position).normalized * 0.5f, shootingTransform, 5);
                 }
             }
+        }
+        else
+        {
+            impact.transform.up = forward;
         }
 
         Debug.Log("Did hit");
