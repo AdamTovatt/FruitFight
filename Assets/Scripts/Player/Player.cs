@@ -62,6 +62,8 @@ public class Player : NetworkBehaviour
         {
             this.CallWithDelay(ForceSyncPosition, 2);
         }
+
+        magicProjectileConfigurationEntry.Load();
     }
 
     private void Update()

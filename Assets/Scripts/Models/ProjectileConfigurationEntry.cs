@@ -20,7 +20,7 @@ public class ProjectileConfigurationEntry
     public GameObject Hit { get { if (_hit == null) Load(); return _hit; } }
     private GameObject _hit;
 
-    private void Load()
+    public void Load()
     {
         _projectile = Resources.Load<GameObject>(string.Format("Prefabs/Magic/{0}", ProjectilePrefabName));
         _charge = Resources.Load<GameObject>(string.Format("Prefabs/Magic/{0}", ChargePrefabName));
