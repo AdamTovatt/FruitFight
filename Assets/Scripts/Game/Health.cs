@@ -166,11 +166,8 @@ public class Health : NetworkBehaviour
     {
         if (other.transform.tag == "Water")
         {
-            if (CanDie)
-            {
-                Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
-                Died(CauseOfDeath.Water);
-            }
+            Instantiate(WaterSplash, transform.position, Quaternion.Euler(-90, 0, 0));
+            Died(CauseOfDeath.Water);
         }
     }
 
