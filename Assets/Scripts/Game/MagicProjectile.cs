@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MagicProjectile : MonoBehaviour
 {
+    private const float maxTargetAngle = 60f;
+
     public float Scale = 1f;
     public GameObject ImpactPrefab;
     public Rigidbody Rigidbody;
@@ -28,7 +30,7 @@ public class MagicProjectile : MonoBehaviour
 
         Health backupTargethealth = null;
         Health targetHealth = null;
-        float smallestAngle = 10000f;
+        float greatestRelevance = 0;
 
         if (GameManager.Instance != null)
         {
@@ -41,31 +43,26 @@ public class MagicProjectile : MonoBehaviour
                     if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
                     {
                         float angle = Vector3.Angle(shooterForward, (hit.transform.position - transform.position).normalized);
-                        if (angle < 45f)
+                        if (angle < maxTargetAngle) //if the angle is greater than (or equal to) maxTargetAngle we wont target the hit
                         {
-                            Ray visibleRay = new Ray(shootOrigin, (hit.transform.position + hit.collider.bounds.center) - shootOrigin);
-                            bool targetVisible = true;
+                            float relevance = 1 - angle / maxTargetAngle; //relevance starts of as this value, we will add to it later
 
+                            Ray visibleRay = new Ray(shootOrigin, (hit.transform.position + hit.collider.bounds.center) - shootOrigin);
                             if (Physics.Raycast(visibleRay, out RaycastHit visibleCheckHit, 10000, ~(1 << 2), QueryTriggerInteraction.Ignore))
                             {
-                                if (visibleCheckHit.transform != hit.transform)
+                                if (visibleCheckHit.transform == hit.transform) //the target is visible, add relevance
                                 {
-                                    targetVisible = false;
+                                    relevance += 0.5f;
                                 }
                             }
 
-                            if (angle < smallestAngle) //if nothing seems to be hit targetVisible check could be removed
+                            relevance += 1.5f / (0.5f * hit.distance + 0.5f); //add the distance to the relevance
+
+                            if (relevance > greatestRelevance) //if our current relevance is greater than the previously greatest relevance we want this hit to be our new target
                             {
-                                if (targetVisible)
-                                {
-                                    targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
-                                    target = targetHealth.transform;
-                                    smallestAngle = angle;
-                                }
-                                else
-                                {
-                                    backupTargethealth = GameManager.Instance.TransformsWithHealth[hit.transform];
-                                }
+                                targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
+                                target = targetHealth.transform;
+                                greatestRelevance = relevance;
                             }
                         }
                     }
