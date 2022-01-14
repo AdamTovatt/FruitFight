@@ -37,7 +37,6 @@ public class MagicProjectile : MonoBehaviour
             Ray sphereCastRay = new Ray(shootOrigin, shooterForward);
             foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 6))
             {
-                Debug.Log(hit.transform.name);
                 if (hit.transform.tag != "Player" && hit.transform != shooter)
                 {
                     if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
@@ -141,7 +140,6 @@ public class MagicProjectile : MonoBehaviour
             impact.transform.up = forward;
         }
 
-        Debug.Log("Did hit");
         Destroy(gameObject);
     }
 

@@ -63,7 +63,8 @@ public class Player : NetworkBehaviour
             this.CallWithDelay(ForceSyncPosition, 2);
         }
 
-        magicProjectileConfigurationEntry.Load();
+        if (magicProjectileConfigurationEntry != null)
+            magicProjectileConfigurationEntry.Load();
     }
 
     private void Update()

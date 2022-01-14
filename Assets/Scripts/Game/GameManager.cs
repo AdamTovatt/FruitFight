@@ -235,6 +235,13 @@ public class GameManager : MonoBehaviour
             currentLevel++;
             WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
             StartCoroutine(LoadGamePlay());
+
+            Debug.Log("Player characters: " + PlayerCharacters.Count);
+            foreach(PlayerMovement playerMovement in PlayerCharacters)
+            {
+                Debug.Log("Player coins: " + playerMovement.Player.Coins);
+                Debug.Log("Player jellybeans: " + playerMovement.Player.JellyBeans);
+            }
         }
     }
 
