@@ -83,6 +83,14 @@ public class PlayerConfigurationManager : MonoBehaviour
 
             if(CustomNetworkManager.Instance.IsServer && PlayerNetworkIdentity.LocalPlayerInstance.Ready && PlayerNetworkIdentity.OtherPlayerInstance.Ready)
             {
+                for (int i = 0; i < PlayerConfigurations.Count; i++)
+                {
+                    UnReadyPlayer(i);
+                }
+
+                PlayerNetworkIdentity.LocalPlayerInstance.SetReady(false);
+                PlayerNetworkIdentity.OtherPlayerInstance.SetReady(false);
+
                 NetworkMethodCaller.Instance.LoadSceneForAll("GamePlay");
             }
         }

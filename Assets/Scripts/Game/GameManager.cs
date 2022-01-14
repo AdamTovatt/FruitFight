@@ -197,6 +197,8 @@ public class GameManager : MonoBehaviour
 
             PlayerNetworkIdentity.LocalPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
             PlayerNetworkIdentity.OtherPlayerInstance.OnReadyStatusUpdated -= PlayerReadyStatusWasUpdated;
+            PlayerNetworkIdentity.LocalPlayerInstance.Ready = false;
+            PlayerNetworkIdentity.OtherPlayerInstance.Ready = false;
 
             //spawn
             foreach (Spawner spawner in spawners)
@@ -205,7 +207,7 @@ public class GameManager : MonoBehaviour
             }
 
             PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
-            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
+            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement); 
         }
     }
 

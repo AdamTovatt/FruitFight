@@ -19559,8 +19559,8 @@ MonoBehaviour:
     Clips:
     - {fileID: 8300000, guid: 60b95b6ae16f51043b46bebfba2b7ca4, type: 3}
     Volume: 0.2
-    Pitch: 1
-    PitchVariation: 0.1
+    Pitch: 1.5
+    PitchVariation: 0
     Delay: 0
   PlayOnStart: 1
 --- !u!1 &1606952932865348

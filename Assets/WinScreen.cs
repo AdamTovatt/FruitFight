@@ -38,7 +38,7 @@ public class WinScreen : MonoBehaviour
         XpText.StartAnimation(0, earnedXp);
 
         CoinsText.OnFinishedAnimating += () => { CoinsIncreasedText.gameObject.SetActive(true); CoinsIncreasedText.text = GetIncreaseText(earnedCoins); };
-        JellyBeansText.OnFinishedAnimating += () => { JellyBeansIncreasedText.gameObject.SetActive(true); JellyBeansIncreasedText.text = GetIncreaseText(earnedXp); };
+        JellyBeansText.OnFinishedAnimating += () => { JellyBeansIncreasedText.gameObject.SetActive(true); JellyBeansIncreasedText.text = GetIncreaseText(earnedJellyBeans); };
         XpText.OnFinishedAnimating += () => { XpIncreasedText.gameObject.SetActive(true); XpIncreasedText.text = GetIncreaseText(earnedXp); };
 
         ContinueButton.Select();
