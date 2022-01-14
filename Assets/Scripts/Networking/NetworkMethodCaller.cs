@@ -24,7 +24,7 @@ public class NetworkMethodCaller : NetworkBehaviour
 
     public GameObject Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
     {
-        if(CustomNetworkManager.Instance.IsServer)
+        if (CustomNetworkManager.Instance.IsServer)
         {
             GameObject instantiatedObject = PerformInstantiate(prefabIndex, position, rotation);
             NetworkServer.Spawn(instantiatedObject);
@@ -128,12 +128,13 @@ public class NetworkMethodCaller : NetworkBehaviour
 
     private void PerformBouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
     {
-        bouncyObjects[position].Bounce(bounceAmplitudeModifier);
+        if (bouncyObjects.ContainsKey(position))
+            bouncyObjects[position].Bounce(bounceAmplitudeModifier);
     }
 
     public void BouncyObjectBounced(Vector3 position, float bounceAmplitudeModifier)
     {
-        if(CustomNetworkManager.Instance.IsServer)
+        if (CustomNetworkManager.Instance.IsServer)
         {
             RpcBouncyObjectBounced(position, bounceAmplitudeModifier);
         }
@@ -143,9 +144,90 @@ public class NetworkMethodCaller : NetworkBehaviour
         }
     }
 
+    public void ShowWinScreen(int earnedCoins, int earnedJellyBeans, int earnedXp)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcShowWinScreen(earnedCoins, earnedJellyBeans, earnedXp);
+                PerformShowWinScreen(earnedCoins, earnedJellyBeans, earnedXp);
+            }
+            else
+            {
+                throw new System.Exception("ShowWinScreen should only be called from the server");
+            }
+        }
+        else
+        {
+            PerformShowWinScreen(earnedCoins, earnedJellyBeans, earnedXp);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcShowWinScreen(int earnedCoins, int earnedJellyBeans, int earnedXp)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformShowWinScreen(earnedCoins, earnedJellyBeans, earnedXp);
+    }
+
+    private void PerformShowWinScreen(int earnedCoins, int earnedJellyBeans, int earnedXp)
+    {
+        GameUi.Instance.ShowWinScreen(earnedCoins, earnedJellyBeans, earnedXp);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdContinueFromLevel()
+    {
+        GameManager.Instance.ContinueFromLevel();
+    }
+
+    public void GoToNextStoryLevel()
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcGoToNextStoryLevel();
+                PerformGoToNextStoryLevel();
+            }
+            else
+            {
+                CmdGoToNextStoryLevel();
+                PerformGoToNextStoryLevel();
+            }
+        }
+        else
+        {
+            PerformGoToNextStoryLevel();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcGoToNextStoryLevel()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformGoToNextStoryLevel();
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdGoToNextStoryLevel()
+    {
+        PerformGoToNextStoryLevel();
+    }
+
+    private void PerformGoToNextStoryLevel()
+    {
+        GameManager.Instance.LoadNextLevel();
+    }
+
     public void ExitLevel()
     {
-        if(CustomNetworkManager.Instance.IsServer)
+        if (CustomNetworkManager.Instance.IsServer)
         {
             RpcExitLevel();
             PerformExitLevel();

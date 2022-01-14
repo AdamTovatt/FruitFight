@@ -5,26 +5,29 @@
       "RequiredXp": 0,
       "ChargeTime": 0,
       "ProjectileLifeTime": 0,
-      "Damage": 0
+      "Damage": 0,
+      "ConsumeJellyBeans": true
     },
     {
       "Number": 1,
       "RequiredXp": 1,
-      "ChargeTime": 1,
+      "ChargeTime": 1.2,
       "ProjectileLifeTime": 0.01,
-      "Damage": 30
+      "Damage": 30,
+      "ConsumeJellyBeans": true
+
     },
     {
       "Number": 2,
-      "RequiredXp": 100,
-      "ChargeTime": 0.9,
+      "RequiredXp": 20,
+      "ChargeTime": 1.1,
       "ProjectileLifeTime": 0.3,
       "Damage": 35
     },
     {
       "Number": 3,
-      "RequiredXp": 300,
-      "ChargeTime": 0.8,
+      "RequiredXp": 100,
+      "ChargeTime": 1,
       "ProjectileLifeTime": 1,
       "Damage": 40
     },

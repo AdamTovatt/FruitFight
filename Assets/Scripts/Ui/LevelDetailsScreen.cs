@@ -185,6 +185,7 @@ public class LevelDetailsScreen : MonoBehaviour
 
     private async void PlayLevel()
     {
+        GameStateManager.SetGameState(GameState.Free);
         World world = null;
 
         if (currentLocalLevel)

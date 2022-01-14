@@ -460,6 +460,9 @@ public class Player : NetworkBehaviour
 
     public void ShootProjectile(float punchHeight, float projectileLifeTime)
     {
+        if (Movement.MagicSettings.ConsumeJellyBeans)
+            RemoveItem(AbsorbableItemType.JellyBean, 1);
+
         Vector3 shootOrigin = transform.position + transform.forward * 0.5f + transform.up * punchHeight;
 
         Vector3 shooterForward = transform.forward; //we take the numerical values here and send them to the other player so the projectiles will take the same trajectory

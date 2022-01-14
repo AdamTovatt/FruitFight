@@ -26,6 +26,7 @@ public class MainMenuLocalMenu : MonoBehaviour
 
     private void Story()
     {
+        GameStateManager.SetGameState(GameState.Story);
         MainMenuUi.Instance.PlayButtonWasPressed();
         gameObject.SetActive(false);
     }

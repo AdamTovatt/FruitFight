@@ -14,6 +14,7 @@ public class GameUi : UiManager
     public InputSystemUIInputModule UiInput;
     public EventSystem EventSystem;
     public InGamePauseMenu PauseMenu;
+    public WinScreen WinScreen;
     public LoadingScreen LoadingScreen;
     public CameraViewBlocker CameraViewBlocker;
 
@@ -47,6 +48,37 @@ public class GameUi : UiManager
     private void OnDestroy()
     {
         PauseMenu.OnExitLevel -= ExitLevelButton;
+    }
+
+    public void ShowWinScreen(int earnedCoins, int earnedJellyBeans, int earnedXp)
+    {
+        if(PauseMenu.gameObject.activeSelf)
+        {
+            PauseMenu.Close();
+        }
+
+        GameManager.Instance.DisablePlayerControls();
+
+        UiInput.enabled = true;
+        Cursor.lockState = CursorLockMode.None;
+        MouseOverSelectableChecker.Enable();
+        EventSystem.enabled = true;
+
+        WinScreen.gameObject.SetActive(true);
+        WinScreen.Show(earnedCoins, earnedJellyBeans, earnedXp);
+    }
+
+    public void CloseWinScreen()
+    {
+        if (UiInput == null)
+        {
+            Destroy(this);
+            return;
+        }
+
+        UiInput.enabled = false;
+        GameManager.Instance.GameWasResumed();
+        MouseOverSelectableChecker.Disable();
     }
 
     private void ExitLevelButton()

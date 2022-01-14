@@ -40,8 +40,6 @@ public class PlayerMovement : MovingCharacter
 
     public Vector3 HoldPoint { get { return CalculateHoldPosition(); } }
     public PlayerNetworkCharacter PlayerNetworkCharacter { get { return playerNetworkCharacter; } }
-    public int JellyBeans { get; set; }
-    public int Coins { get; set; }
 
     public override event AttackHandler OnAttack;
 
@@ -418,6 +416,9 @@ public class PlayerMovement : MovingCharacter
     private void StartChargeProjectile()
     {
         if (HeldItem != null || MagicSettings.Number == 0) //cannot start charing magic while holding something, and cannot charge if level 0
+            return;
+
+        if (MagicSettings.ConsumeJellyBeans && Player.JellyBeans <= 0) //can't start charging magic if no jelly beans are available
             return;
 
         CurrentRunSpeed = Speed * 0.6f;

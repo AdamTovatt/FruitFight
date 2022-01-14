@@ -21,6 +21,8 @@ public class MainMenuConnectedMenu : MonoBehaviour
 
     private void StoryMode()
     {
+        GameStateManager.SetGameState(GameState.Story);
+
         UnbindEventListeners();
 
         PlayerNetworkIdentity.LocalPlayerInstance.SetReady(false);
@@ -30,7 +32,7 @@ public class MainMenuConnectedMenu : MonoBehaviour
     }
 
     private void BrowseLevels()
-    {
+    {       
         MainMenuUi.Instance.BrowseLevelsButtonWasPressed();
     }
 

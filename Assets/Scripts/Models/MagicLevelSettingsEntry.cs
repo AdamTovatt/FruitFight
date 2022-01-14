@@ -11,4 +11,5 @@ public class MagicLevelSettingsEntry
     public float ChargeTime;
     public float ProjectileLifeTime;
     public float Damage;
+    public bool ConsumeJellyBeans;
 }

@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
 
     public void CleanLevel()
     {
-        foreach(PlayerMovement player in PlayerCharacters)
+        foreach (PlayerMovement player in PlayerCharacters)
         {
             Destroy(player.gameObject);
         }
@@ -232,31 +232,86 @@ public class GameManager : MonoBehaviour
     {
         if (WorldEditor.Instance == null || !WorldEditor.IsTestingLevel)
         {
-            currentLevel++;
-            WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
-            StartCoroutine(LoadGamePlay());
+            int totalCoinsEarned = 0;
+            int totalJellyBeansEarned = 0;
 
-            Debug.Log("Player characters: " + PlayerCharacters.Count);
-            foreach(PlayerMovement playerMovement in PlayerCharacters)
+            foreach (PlayerMovement playerMovement in PlayerCharacters)
             {
-                Debug.Log("Player coins: " + playerMovement.Player.Coins);
-                Debug.Log("Player jellybeans: " + playerMovement.Player.JellyBeans);
+                totalCoinsEarned += playerMovement.Player.Coins;
+                totalJellyBeansEarned += playerMovement.Player.JellyBeans;
+            }
+
+            int totalXpEarned = (totalCoinsEarned + totalJellyBeansEarned) * 2;
+
+            if (CustomNetworkManager.IsOnlineSession)
+            {
+                if (CustomNetworkManager.Instance.IsServer)
+                    NetworkMethodCaller.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
+            }
+            else
+            {
+                GameUi.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
             }
         }
     }
 
-    private IEnumerator LoadGamePlay()
+    public void ContinueFromLevel()
     {
-        yield return new WaitForSeconds(5);
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+        {
+            NetworkMethodCaller.Instance.CmdContinueFromLevel();
+            return;
+        }
 
+        if (GameStateManager.State == GameState.Story)
+        {
+            if (CustomNetworkManager.IsOnlineSession)
+            {
+                NetworkMethodCaller.Instance.GoToNextStoryLevel();
+            }
+            else
+            {
+                LoadNextLevel();
+            }
+        }
+        else
+        {
+            if (!CustomNetworkManager.IsOnlineSession)
+            {
+                GameUi.Instance.ExitLevel();
+            }
+            else
+            {
+                NetworkMethodCaller.Instance.ExitLevel();
+            }
+        }
+    }
+
+    public void LoadNextLevel()
+    {
+        currentLevel++;
+        WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
+        LoadGamePlay();
+    }
+
+    private void LoadGamePlay()
+    {
         if (Paused)
             GameUi.Instance.PauseMenuWasClosed();
+        if (GameUi.Instance.WinScreen.gameObject.activeSelf)
+            GameUi.Instance.CloseWinScreen();
 
         SceneManager.LoadScene("GamePlay");
     }
 
     public void Pause(InputAction.CallbackContext context)
     {
+        if (GameStateManager.State == GameState.Free || GameStateManager.State == GameState.Story)
+        {
+            if (GameUi.Instance.WinScreen.gameObject.activeSelf) //can't pause while win screen is active
+                return;
+        }
+
         if (!Paused)
         {
             DisablePlayerControls();

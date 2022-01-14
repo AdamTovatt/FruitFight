@@ -37,6 +37,11 @@ public class InGamePauseMenu : MonoBehaviour
         OnExitLevel = null;
     }
 
+    public void Close()
+    {
+        Closed();
+    }
+
     private void Closed()
     {
         OnClosed?.Invoke();
