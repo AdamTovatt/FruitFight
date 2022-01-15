@@ -207,7 +207,7 @@ public class GameManager : MonoBehaviour
             }
 
             PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
-            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement); 
+            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
         }
     }
 
@@ -245,15 +245,21 @@ public class GameManager : MonoBehaviour
 
             int totalXpEarned = (totalCoinsEarned + totalJellyBeansEarned) * 2;
 
-            if (CustomNetworkManager.IsOnlineSession)
-            {
-                if (CustomNetworkManager.Instance.IsServer)
-                    NetworkMethodCaller.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
-            }
-            else
-            {
-                GameUi.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
-            }
+            if (CustomNetworkManager.HasAuthority)
+                this.CallWithDelay(() => { ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned); }, 1.5f);
+        }
+    }
+
+    private void ShowWinScreen(int totalCoinsEarned, int totalJellyBeansEarned, int totalXpEarned)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+                NetworkMethodCaller.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
+        }
+        else
+        {
+            GameUi.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
         }
     }
 

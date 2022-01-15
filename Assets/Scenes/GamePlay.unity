@@ -4379,7 +4379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TweenScale: 1
-  TweenSpeed: 8
+  TweenSpeed: 6
   StartScale: 0.6
   EndScale: 1
   DestoryOnFinished: 0
