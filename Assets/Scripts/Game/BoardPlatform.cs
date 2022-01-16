@@ -17,6 +17,8 @@ public class BoardPlatform : MonoBehaviour
 
     public float YDistanceMargin = 0.3f;
 
+    public bool IsMoving { get { return goingUp || goingDown; } }
+
     private bool isUnderPressure;
     private float upTimeLeft;
 
@@ -31,6 +33,7 @@ public class BoardPlatform : MonoBehaviour
 
     private Quaternion startRotation;
     private Vector3 startPosition;
+    private Vector3 originalStartPosition;
 
     private bool goingDown = false;
     private bool goingUp = false;
@@ -39,10 +42,16 @@ public class BoardPlatform : MonoBehaviour
     private float goingUpProgress;
 
     Block block;
+    MoveOnTrigger moveOnTrigger;
+
+    private bool queuedActivate;
+    private bool queuedDeactivate;
+    private Vector3 moveOnTriggerOffset;
 
     private void Start()
     {
         startPosition = transform.position;
+        originalStartPosition = startPosition;
         startRotation = transform.rotation;
         upTimeLeft = UpTime;
         downTimeLeft = DownTime;
@@ -50,6 +59,10 @@ public class BoardPlatform : MonoBehaviour
         if (!WorldBuilder.IsInEditor)
         {
             block = gameObject.GetComponentInParent<BlockInformationHolder>().Block;
+            moveOnTrigger = gameObject.GetComponentInParent<MoveOnTrigger>();
+
+            if (moveOnTrigger != null)
+                moveOnTriggerOffset = moveOnTrigger.FinalPosition - moveOnTrigger.transform.position;
 
             if (block.NeighborX.AllTypesPositive.Count > 0)
             {
@@ -154,6 +167,53 @@ public class BoardPlatform : MonoBehaviour
             {
                 goingUp = false;
                 goingUpProgress = 1;
+                CompletedRise();
+            }
+        }
+    }
+
+    public void QueueActivate()
+    {
+        if (moveOnTrigger.Active)
+        {
+            queuedActivate = false;
+            queuedDeactivate = false;
+        }
+        else
+        {
+            queuedActivate = true;
+            queuedDeactivate = false;
+        }
+    }
+
+    public void QueueDeactivate()
+    {
+        if (moveOnTrigger.Active)
+        {
+            queuedDeactivate = true;
+            queuedActivate = false;
+        }
+        else
+        {
+            queuedActivate = false;
+            queuedDeactivate = false;
+        }
+    }
+
+    private void CompletedRise()
+    {
+        if (moveOnTrigger != null)
+        {
+            if (queuedActivate && queuedDeactivate)
+                Debug.LogError("Both activate and deactivate are queued at the same time! This should not be possible");
+
+            if (queuedActivate)
+            {
+                moveOnTrigger.DoActivate();
+            }
+            else if (queuedDeactivate)
+            {
+                moveOnTrigger.DoDeActivate();
             }
         }
     }
@@ -169,8 +229,26 @@ public class BoardPlatform : MonoBehaviour
 
     public void GoDown()
     {
+        if (moveOnTrigger != null && moveOnTrigger.Moving)
+            return;
+
         if (!isDown)
         {
+            if (moveOnTrigger != null)
+            {
+                Debug.Log("did set start posittion");
+                startPosition = transform.position;
+            }
+
+            /*
+            if (moveOnTrigger != null)
+            {
+                if (moveOnTrigger.Active)
+                    startPosition = originalStartPosition + moveOnTriggerOffset;
+                else
+                    startPosition = originalStartPosition;
+            }*/
+
             StopPressure();
             isDown = true;
             goingDown = true;
@@ -192,6 +270,9 @@ public class BoardPlatform : MonoBehaviour
 
     public void GoUp()
     {
+        if (moveOnTrigger != null && moveOnTrigger.Moving)
+            return;
+
         if (isDown)
         {
             downTimeLeft = DownTime;
@@ -202,6 +283,16 @@ public class BoardPlatform : MonoBehaviour
 
             Sound.Play("Rise");
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(rotatePoint, 0.2f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(rotatePoint, 0.1f);
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position, 0.1f);
     }
 
     public void StartPressure()

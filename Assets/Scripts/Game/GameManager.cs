@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
     {
         if (GameStateManager.State == GameState.Free || GameStateManager.State == GameState.Story)
         {
-            if (GameUi.Instance.WinScreen.gameObject.activeSelf) //can't pause while win screen is active
+            if (GameUi.Instance.WinScreen != null && GameUi.Instance.WinScreen.gameObject.activeSelf) //can't pause while win screen is active
                 return;
         }
 

@@ -10,6 +10,9 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
     public bool PingPong { get; set; }
     public bool LinearMovement { get; set; }
 
+    public Vector3 CurrentPosition { get; set; }
+    public bool Active { get { return active; } }
+
     public bool Moving { get { return lerping; } }
 
     public Vector3 CurrentMovement { get; private set; }
@@ -17,6 +20,7 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
     public AverageVelocityKeeper AverageVelocityKeeper { get; set; }
 
     private LoopingAudioSource loopingAudio;
+    private BoardPlatform boardPlatform;
 
     private bool active = false;
     private bool lerping { get { return _lerping; } set { _lerping = value; LerpingWasSet(value); } }
@@ -42,6 +46,9 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
         lastPosition = transform.position;
 
         loopingAudio = gameObject.GetComponent<LoopingAudioSource>();
+        boardPlatform = gameObject.GetComponentInChildren<BoardPlatform>();
+
+        CurrentPosition = transform.position;
     }
 
     public override void BindStateSwitcher()
@@ -99,14 +106,26 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
         DoActivate();
     }
 
-    private void DoDeActivate()
+    public void DoDeActivate()
     {
+        if(boardPlatform != null && boardPlatform.IsMoving)
+        {
+            boardPlatform.QueueDeactivate();
+            return;
+        }
+
         active = false;
         lerping = true;
     }
 
-    private void DoActivate()
+    public void DoActivate()
     {
+        if(boardPlatform != null && boardPlatform.IsMoving)
+        {
+            boardPlatform.QueueActivate();
+            return;
+        }
+
         active = true;
         lerping = true;
 
@@ -149,6 +168,7 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
                 Vector3 newPosition = Vector3.Lerp(block.Position + block.RotationOffset, FinalPosition + block.RotationOffset, lerpValue);
                 CurrentMovement = newPosition - lastPosition;
                 transform.position = newPosition;
+                CurrentPosition = newPosition;
                 lastPosition = transform.position;
 
                 Vector3 positionDifference = (block.Position + block.RotationOffset) - (FinalPosition + block.RotationOffset);
