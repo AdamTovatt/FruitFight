@@ -24,6 +24,7 @@ public class BoardPlatform : MonoBehaviour
 
     private bool isDown;
     private float downTimeLeft;
+    private bool isUp = true;
 
     private Vector3 rotateAxisOffset;
     private Vector3 rotatePoint;
@@ -46,7 +47,6 @@ public class BoardPlatform : MonoBehaviour
 
     private bool queuedActivate;
     private bool queuedDeactivate;
-    private Vector3 moveOnTriggerOffset;
 
     private void Start()
     {
@@ -60,9 +60,6 @@ public class BoardPlatform : MonoBehaviour
         {
             block = gameObject.GetComponentInParent<BlockInformationHolder>().Block;
             moveOnTrigger = gameObject.GetComponentInParent<MoveOnTrigger>();
-
-            if (moveOnTrigger != null)
-                moveOnTriggerOffset = moveOnTrigger.FinalPosition - moveOnTrigger.transform.position;
 
             if (block.NeighborX.AllTypesPositive.Count > 0)
             {
@@ -158,7 +155,7 @@ public class BoardPlatform : MonoBehaviour
             {
                 float rotateValue = (Mathf.Sin(Mathf.PI * goingUpProgress - (Mathf.PI / 2f)) + 1f) / 2f;
 
-                Vector3 newPosition = Vector3.zero;
+                Vector3 newPosition;
                 Quaternion newRotation = RotateAround(rotatePoint, rotateAxis, (90f - (rotateValue * 90f)) * rotateDirectionMultiplier, out newPosition);
                 transform.position = newPosition;
                 transform.rotation = newRotation;
@@ -202,6 +199,8 @@ public class BoardPlatform : MonoBehaviour
 
     private void CompletedRise()
     {
+        isUp = true;
+
         if (moveOnTrigger != null)
         {
             if (queuedActivate && queuedDeactivate)
@@ -236,23 +235,26 @@ public class BoardPlatform : MonoBehaviour
         {
             if (moveOnTrigger != null)
             {
-                Debug.Log("did set start posittion");
-                startPosition = transform.position;
+                if (isUp)
+                {
+                    if (moveOnTrigger.Active)
+                    {
+                        startPosition = transform.position;
+                        rotatePoint = transform.position + rotateAxisOffset;
+                    }
+                    else
+                    {
+                        startPosition = originalStartPosition;
+                        rotatePoint = originalStartPosition + rotateAxisOffset;
+                    }
+                }
             }
-
-            /*
-            if (moveOnTrigger != null)
-            {
-                if (moveOnTrigger.Active)
-                    startPosition = originalStartPosition + moveOnTriggerOffset;
-                else
-                    startPosition = originalStartPosition;
-            }*/
 
             StopPressure();
             isDown = true;
             goingDown = true;
             goingUp = false;
+            isUp = false;
 
             if (goingUpProgress != 1 && goingUpProgress != 0)
             {
@@ -283,16 +285,6 @@ public class BoardPlatform : MonoBehaviour
 
             Sound.Play("Rise");
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(rotatePoint, 0.2f);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(rotatePoint, 0.1f);
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position, 0.1f);
     }
 
     public void StartPressure()
