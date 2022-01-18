@@ -11,29 +11,32 @@ public class KeyCollectionArea : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag == "Interactable")
+        if (!StateSwitcher.IsActive)
         {
-            int instanceId = other.GetInstanceID();
-            if (!holdableItems.ContainsKey(other.GetInstanceID()))
+            if (other.tag == "Interactable")
             {
-                holdableItems.Add(instanceId, other.GetComponent<Holdable>());
-            }
-
-            Holdable holdable = holdableItems[instanceId];
-
-            if(holdable != null && !holdable.Held)
-            {
-                if(holdable.Id == KeyId)
+                int instanceId = other.GetInstanceID();
+                if (!holdableItems.ContainsKey(other.GetInstanceID()))
                 {
-                    if (ColorCheck(holdable))
-                    {
-                        RespawnAtLastSetPosition respawnAtLastSetPosition = holdable.GetComponent<RespawnAtLastSetPosition>();
-                        if (respawnAtLastSetPosition != null)
-                            respawnAtLastSetPosition.SetLastPosition();
+                    holdableItems.Add(instanceId, other.GetComponent<Holdable>());
+                }
 
-                        holdable.PlacedInHolder(HoldPoint);
-                        StateSwitcher.Activate(holdable);
-                        holdable.OnWasPickedUp += KeyRemoved;
+                Holdable holdable = holdableItems[instanceId];
+
+                if (holdable != null && !holdable.Held)
+                {
+                    if (holdable.Id == KeyId)
+                    {
+                        if (ColorCheck(holdable))
+                        {
+                            RespawnAtLastSetPosition respawnAtLastSetPosition = holdable.GetComponent<RespawnAtLastSetPosition>();
+                            if (respawnAtLastSetPosition != null)
+                                respawnAtLastSetPosition.SetLastPosition();
+
+                            holdable.PlacedInHolder(HoldPoint);
+                            StateSwitcher.Activate(holdable);
+                            holdable.OnWasPickedUp += KeyRemoved;
+                        }
                     }
                 }
             }

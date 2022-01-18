@@ -7,6 +7,8 @@ public class StateSwitcher : MonoBehaviour
     public bool HasDetailColor { get; private set; }
     public DetailColor DetailColor { get; private set; }
 
+    public bool IsActive { get; private set; }
+
     public delegate void OnActivatedHandler();
     public event OnActivatedHandler OnActivated;
 
@@ -34,6 +36,8 @@ public class StateSwitcher : MonoBehaviour
 
     public void Activate(Holdable holdable)
     {
+        IsActive = true;
+
         if (holdable != null)
         {
             if (holdableDelegate != null)
@@ -45,6 +49,8 @@ public class StateSwitcher : MonoBehaviour
 
     public void Deactivate()
     {
+        IsActive = false;
+
         if (holdableDelegate != null)
             holdableDelegate.RemoveContainedHoldable();
 
