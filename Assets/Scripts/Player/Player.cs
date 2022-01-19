@@ -91,23 +91,26 @@ public class Player : NetworkBehaviour
             if (previousDeathTimes.Count > 5)
                 previousDeathTimes.RemoveAt(0);
 
-            if (previousDeathTimes.Count >= 5 && (previousDeathTimes.Max() - previousDeathTimes.Min()) - PlayerRespawnTime * 5 < 10) //if we have died 5 times within 10 seconds
-            {
-                if (Movement.PreviousGroundedPositions.Keys.Count > 1)
-                {
-                    Movement.PreviousGroundedPositions.Remove(Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
-                    previousDeathTimes.Clear();
-                }
+            //if (previousDeathTimes.Count >= 5 && (previousDeathTimes.Max() - previousDeathTimes.Min()) - PlayerRespawnTime * 5 < 10) //if we have died 5 times within 10 seconds
+            //{
 
-                newPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
-            }
-            else
+            if (Movement.PreviousGroundedPositions.Keys.Count > 1)
             {
-                if (causeOfDeath == CauseOfDeath.Water)
-                {
-                    newPosition = Movement.LastGroundedPosition.Position;
-                }
+                Movement.PreviousGroundedPositions.Remove(Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
+                previousDeathTimes.Clear();
             }
+
+            if (Movement.PreviousGroundedPositions.Count > 0)
+                newPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
+
+            //}
+            //else
+            //{
+            //    if (causeOfDeath == CauseOfDeath.Water)
+            //    {
+            //        newPosition = Movement.LastGroundedPosition.Position;
+            //    }
+            //}
 
             Movement.ControlsEnabled = false;
 

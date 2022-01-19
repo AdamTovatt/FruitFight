@@ -50,26 +50,26 @@ public class TemporaryMeshReplacer : NetworkBehaviour
         }
     }
 
-    public void ReplaceMesh(bool spawnNew)
+    public void ReplaceMesh(bool spawnNew, bool setRigidbodyToKinematic = true)
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcReplaceMesh(spawnNew);
+                RpcReplaceMesh(spawnNew, setRigidbodyToKinematic);
             }
             else
             {
-                CmdReplaceMesh(spawnNew);
+                CmdReplaceMesh(spawnNew, setRigidbodyToKinematic);
             }
         }
         else
         {
-            PerformMeshReplace(spawnNew);
+            PerformMeshReplace(spawnNew, setRigidbodyToKinematic);
         }
     }
 
-    private void PerformMeshReplace(bool spawnNew)
+    private void PerformMeshReplace(bool spawnNew, bool setRigidbodyToKinematic)
     {
         if (renderers.Count == 0)
             SetRenderers();
@@ -95,10 +95,13 @@ public class TemporaryMeshReplacer : NetworkBehaviour
                 _collider.enabled = false;
         }
 
-        foreach (Rigidbody _rigidbody in rigidbodies)
+        if (setRigidbodyToKinematic)
         {
-            if (_rigidbody != null)
-                _rigidbody.isKinematic = true;
+            foreach (Rigidbody _rigidbody in rigidbodies)
+            {
+                if (_rigidbody != null)
+                    _rigidbody.isKinematic = true;
+            }
         }
 
         if (spawnNew)
@@ -109,15 +112,15 @@ public class TemporaryMeshReplacer : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcReplaceMesh(bool spawnNew)
+    private void RpcReplaceMesh(bool spawnNew, bool setRigidbodyToKinematic)
     {
-        PerformMeshReplace(spawnNew);
+        PerformMeshReplace(spawnNew, setRigidbodyToKinematic);
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdReplaceMesh(bool spawnNew)
+    private void CmdReplaceMesh(bool spawnNew, bool setRigidbodyToKinematic)
     {
-        RpcReplaceMesh(spawnNew);
+        RpcReplaceMesh(spawnNew, setRigidbodyToKinematic);
     }
 
     public void GoBackToNormal()

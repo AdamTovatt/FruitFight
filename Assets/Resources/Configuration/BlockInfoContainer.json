@@ -736,6 +736,26 @@
       "Name": "Torch",
       "Prefab": "Torch",
       "RotatableX": true
+    },
+    {
+      "Id": 72,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Spikes Horizontal",
+      "Prefab": "SpikesHorizontal",
+      "RotatableX": false
+    },
+    {
+      "Id": 73,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Spikes Vertical",
+      "Prefab": "SpikesVertical",
+      "RotatableX": false
     }
   ]
 }
