@@ -335,6 +335,9 @@ public class PlayerMovement : MovingCharacter
 
         foreach (RaycastHit hit in hits.Where(x => x.transform.position.y > transform.position.y + 0.3f))
         {
+            if (hit.point == Vector3.zero)
+                continue;
+
             debugHits.Add(hit.point);
             Vector3 wallDirection = new Vector3(hit.normal.z, hit.normal.y, hit.normal.x * -1).normalized;
             movement = Vector3.Dot(wallDirection, movement) * wallDirection;
@@ -342,6 +345,9 @@ public class PlayerMovement : MovingCharacter
 
         foreach (ContactPoint contactPoint in contactPoints.Where(x => x.point.y > transform.position.y + 0.3f))
         {
+            if (contactPoint.point == Vector3.zero)
+                continue;
+
             debugHits.Add(contactPoint.point);
 
             if (contactPoint.otherCollider == null || contactPoint.otherCollider.attachedRigidbody == null || contactPoint.otherCollider.attachedRigidbody.isKinematic)
