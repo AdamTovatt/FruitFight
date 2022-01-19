@@ -42,6 +42,7 @@ public class BlockThumbnailScene : MonoBehaviour
                     light.enabled = false;
 
                 OnThumbnailCreationCompleted?.Invoke(this, createdThumbnails);
+                OnThumbnailCreationCompleted = null;
             }
         }
         else

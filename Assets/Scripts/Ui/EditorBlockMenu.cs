@@ -303,7 +303,16 @@ public class EditorBlockMenu : MonoBehaviour
                 button.transform.name = string.Format("{0} Button", limitedList[i].Name);
                 button.Button.onClick.AddListener(BlockButtonWasClicked);
                 button.GetComponent<RectTransform>().localPosition = new Vector3(positionX, positionY, 0);
-                button.Initialize(BlockThumbnailManager.BlockThumbnails[limitedList[i].Prefab], limitedList[i].Name);
+
+                try
+                {
+                    button.Initialize(BlockThumbnailManager.BlockThumbnails[limitedList[i].Prefab], limitedList[i].Name);
+                }
+                catch
+                {
+                    Debug.LogError("Error when creating button for: " + limitedList[i].Prefab + " " + limitedList[i].Name);
+                }
+
                 button.BlockInfo = limitedList[i];
                 button.MenuIndex = i;
                 blockButtons[x][y] = button;
