@@ -98,7 +98,7 @@ QualitySettings:
     antiAliasing: 2
     softParticles: 0
     softVegetation: 1
-    realtimeReflectionProbes: 0
+    realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 1
     vSyncCount: 0
     lodBias: 0.5
@@ -160,7 +160,7 @@ QualitySettings:
     Nintendo Switch: 2
     PS4: 2
     Stadia: 2
-    Standalone: 2
+    Standalone: 3
     WebGL: 1
     Windows Store Apps: 2
     XboxOne: 2
