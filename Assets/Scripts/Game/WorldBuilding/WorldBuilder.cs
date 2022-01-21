@@ -12,6 +12,7 @@ public class WorldBuilder : MonoBehaviour
     public static bool IsInEditor = false;
 
     public IReadOnlyList<GameObject> CurrentPlacedObjects { get { return previousWorldObjects; } }
+    public Dictionary<Transform, BlockInformationHolder> CurrentBlocks { get; set; } = new Dictionary<Transform, BlockInformationHolder>();
 
     private List<GameObject> previousWorldObjects;
     private List<Block> currentBlocks = new List<Block>();
@@ -54,6 +55,7 @@ public class WorldBuilder : MonoBehaviour
 
         debugCubes.Clear();
         currentBlocks.Clear();
+        CurrentBlocks.Clear();
 
         foreach (GameObject gameObject in previousWorldObjects)
         {
@@ -237,6 +239,7 @@ public class WorldBuilder : MonoBehaviour
         {
             block.InformationHolder = block.Instance.AddComponent<BlockInformationHolder>();
             block.InformationHolder.Block = block;
+            CurrentBlocks.Add(block.Instance.transform, block.InformationHolder);
             currentBlocks.Add(block);
         }
     }
@@ -327,6 +330,14 @@ public class WorldBuilder : MonoBehaviour
         {
             zone.Bind();
         }
+    }
+
+    public BlockInformationHolder GetBlockInformationHolder(Transform transform)
+    {
+        if (!CurrentBlocks.ContainsKey(transform))
+            return null;
+
+        return CurrentBlocks[transform];
     }
 
     public void OnDrawGizmos()

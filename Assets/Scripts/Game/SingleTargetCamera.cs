@@ -13,6 +13,7 @@ public class SingleTargetCamera : MonoBehaviour
     public float SmoothTime = 1f;
     public float InsideWallDistance = 0.2f;
     public Vector2 StartRotation;
+    public float MinWallThickness = 0.5f;
 
     public Transform Target { get; private set; }
     public PlayerInput Input { get; private set; }
@@ -119,6 +120,17 @@ public class SingleTargetCamera : MonoBehaviour
         }
     }
 
+    private Vector3 hitStartPoint;
+    private Vector3 hitEndPoint;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(hitStartPoint, 0.4f);
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(hitEndPoint, 0.4f);
+    }
+
     private void Update()
     {
         if (!ControlledByEventCamera && AllowInput && Target != null)
@@ -134,6 +146,38 @@ public class SingleTargetCamera : MonoBehaviour
 
             targetPoint = Vector3.SmoothDamp(targetPoint, Target.position + heightOffset, ref moveVelocity, SmoothTime);
             truePosition = targetPoint + rotation * new Vector3(0, 0, -Distance);
+
+            Ray wallCheckRay = new Ray(targetPoint, truePosition - targetPoint);
+            RaycastHit[] hits = Physics.RaycastAll(wallCheckRay).Where(x => x.transform.CompareTag("Ground")).ToArray();
+            if (hits.Length > 0)
+            {
+                RaycastHit hit = hits.OrderBy(x => x.distance).FirstOrDefault();
+                if (Mathf.Pow(hit.distance, 2) < (truePosition - targetPoint).sqrMagnitude)
+                {
+                    float thickness = 10000;
+
+                    RaycastHit[] thicknessHits = Physics.RaycastAll(new Ray(truePosition, targetPoint - truePosition)).Where(x => x.transform.CompareTag("Ground")).OrderBy(x => x.distance).ToArray();
+                    if (thicknessHits.Length > 0)
+                    {
+                        RaycastHit thicknessHit = thicknessHits.First();
+                        thickness = (thicknessHit.point - hit.point).sqrMagnitude;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Did not hit anything when checking thickness");
+                    }
+
+                    Debug.Log("thickness: " + thickness + " min: " + MinWallThickness);
+
+                    BlockInformationHolder blockInformationHolder = hit.transform.GetComponentInParent<BlockInformationHolder>();
+
+                    if (thickness > MinWallThickness || (blockInformationHolder != null && blockInformationHolder.Block.Info.BlockType == BlockType.Block))
+                    {
+                        truePosition = hit.point + (targetPoint - hit.point).normalized * 0.0f;
+                        hitStartPoint = hit.point;
+                    }
+                }
+            }
 
             transform.position = truePosition;
             transform.rotation = Quaternion.LookRotation(targetPoint - transform.position);

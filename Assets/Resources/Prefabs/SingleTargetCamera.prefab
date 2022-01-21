@@ -137,6 +137,7 @@ MonoBehaviour:
   SmoothTime: 0.2
   InsideWallDistance: 0.2
   StartRotation: {x: 40, y: 0}
+  MinWallThickness: 2
 --- !u!114 &2208430968058263026
 MonoBehaviour:
   m_ObjectHideFlags: 0
