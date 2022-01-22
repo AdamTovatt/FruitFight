@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     private bool hasInitializedLevel;
 
     private List<Spawner> spawners = new List<Spawner>();
+    private Dictionary<Transform, BlockInformationHolder> blockInformationDictionary = new Dictionary<Transform, BlockInformationHolder>();
 
     public void Awake()
     {
@@ -357,5 +358,13 @@ public class GameManager : MonoBehaviour
     {
         SetPlayerControls(true);
         CameraManager.EnableCameraInput();
+    }
+
+    public BlockInformationHolder GetBlockInformationHolder(Transform transform)
+    {
+        if (!blockInformationDictionary.ContainsKey(transform))
+            blockInformationDictionary.Add(transform, transform.GetComponentInParent<BlockInformationHolder>());
+
+        return blockInformationDictionary[transform];
     }
 }

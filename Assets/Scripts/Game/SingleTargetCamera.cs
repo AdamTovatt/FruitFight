@@ -120,17 +120,6 @@ public class SingleTargetCamera : MonoBehaviour
         }
     }
 
-    private Vector3 hitStartPoint;
-    private Vector3 hitEndPoint;
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(hitStartPoint, 0.4f);
-        Gizmos.color = Color.black;
-        Gizmos.DrawSphere(hitEndPoint, 0.4f);
-    }
-
     private void Update()
     {
         if (!ControlledByEventCamera && AllowInput && Target != null)
@@ -164,17 +153,14 @@ public class SingleTargetCamera : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning("Did not hit anything when checking thickness");
+                        Debug.LogWarning("Did not hit anything when checking thickness in SingleTargetCamera");
                     }
 
-                    Debug.Log("thickness: " + thickness + " min: " + MinWallThickness);
-
-                    BlockInformationHolder blockInformationHolder = hit.transform.GetComponentInParent<BlockInformationHolder>();
+                    BlockInformationHolder blockInformationHolder = GameManager.Instance.GetBlockInformationHolder(hit.transform);
 
                     if (thickness > MinWallThickness || (blockInformationHolder != null && blockInformationHolder.Block.Info.BlockType == BlockType.Block))
                     {
-                        truePosition = hit.point + (targetPoint - hit.point).normalized * 0.0f;
-                        hitStartPoint = hit.point;
+                        truePosition = hit.point + (hit.distance > 0.5f ? (hit.normal).normalized * 0.3f : Vector3.zero);
                     }
                 }
             }
