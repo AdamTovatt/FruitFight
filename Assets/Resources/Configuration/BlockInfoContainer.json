@@ -743,9 +743,10 @@
       "Width": 2,
       "Height": 2,
       "ShowInEditor": true,
+      "AngleLimit": 90,
       "Name": "Spikes Horizontal",
       "Prefab": "SpikesHorizontal",
-      "RotatableX": false
+      "RotatableX": true
     },
     {
       "Id": 73,
@@ -753,9 +754,10 @@
       "Width": 2,
       "Height": 2,
       "ShowInEditor": true,
+      "AngleLimit": 90,
       "Name": "Spikes Vertical",
       "Prefab": "SpikesVertical",
-      "RotatableX": false
+      "RotatableX": true
     }
   ]
 }

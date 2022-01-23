@@ -69,6 +69,7 @@ public class WorldEditor : MonoBehaviour
     private float lastMarkerMoveTime;
     private float lastPageSwitchTime;
     private float zoomSpeedMultiplier = 1;
+    private float lastRotateTime;
 
     private PlayerControls input;
 
@@ -122,8 +123,24 @@ public class WorldEditor : MonoBehaviour
         {
             float x = selectedWorldObject.Info.RotatableX ? currentLeftStickInput.x : 0;
             float y = selectedWorldObject.Info.RotatableY ? currentLeftStickInput.y : 0;
-            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
-            selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(y));
+
+            if (selectedWorldObject.Info.AngleLimit != 0)
+            {
+                if (Time.time - lastRotateTime > 0.4f)
+                {
+                    if (x != 0)
+                        selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), selectedWorldObject.Info.AngleLimit);
+                    if (y != 0)
+                        selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), selectedWorldObject.Info.AngleLimit);
+
+                    lastRotateTime = Time.time;
+                }
+            }
+            else
+            {
+                selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
+                selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(y));
+            }
         }
         else
         {
@@ -865,7 +882,7 @@ public class WorldEditor : MonoBehaviour
 
         AudioManager.Instance.Play("place", ((block.Info.Width / 1.5f) / -4f) + 0.5f);
 
-        if (selectedWorldObject.Info.RotatableX) //rotate objects that can be rotated on y axis to a random rotation when placing them
+        if (selectedWorldObject.Info.RotatableX && selectedWorldObject.Info.AngleLimit == 0) //rotate objects that can be rotated on y axis to a random rotation when placing them (only if no angle limit exists)
         {
             selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, 1, 0), Random.Range(0f, 360f));
             selectedWorldObject.Rotation = selectedWorldObject.Instance.transform.rotation;
