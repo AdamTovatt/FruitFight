@@ -70,6 +70,7 @@ public class WorldEditor : MonoBehaviour
     private float lastPageSwitchTime;
     private float zoomSpeedMultiplier = 1;
     private float lastRotateTime;
+    private bool hasReleasedRotate;
 
     private PlayerControls input;
 
@@ -126,7 +127,7 @@ public class WorldEditor : MonoBehaviour
 
             if (selectedWorldObject.Info.AngleLimit != 0)
             {
-                if (Time.time - lastRotateTime > 0.4f)
+                if (hasReleasedRotate || Time.time - lastRotateTime > 0.4f)
                 {
                     if (x != 0)
                         selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), selectedWorldObject.Info.AngleLimit);
@@ -134,6 +135,7 @@ public class WorldEditor : MonoBehaviour
                         selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), selectedWorldObject.Info.AngleLimit);
 
                     lastRotateTime = Time.time;
+                    hasReleasedRotate = false;
                 }
             }
             else
@@ -141,6 +143,9 @@ public class WorldEditor : MonoBehaviour
                 selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(0, x, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(x));
                 selectedWorldObject.Instance.transform.RotateAround(selectedWorldObject.CenterPoint, new Vector3(y, 0, 0), Time.deltaTime * ObjectRotationSpeed * Mathf.Abs(y));
             }
+
+            if (x == 0 && y == 0 && !hasReleasedRotate)
+                hasReleasedRotate = true;
         }
         else
         {
