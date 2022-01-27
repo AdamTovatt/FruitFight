@@ -140,6 +140,8 @@ public class MagicProjectile : MonoBehaviour
             impact.transform.up = forward;
         }
 
+        GameManager.Instance.CameraManager.ShakeCameras(transform.position, 1);
+
         Destroy(gameObject);
     }
 

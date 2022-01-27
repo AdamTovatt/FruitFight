@@ -65,4 +65,12 @@ public class CameraManager : MonoBehaviour
             camera.StopControlByEventCamera();
         }
     }
+
+    public void ShakeCameras(Vector3 shakeOrigin, float shakePower)
+    {
+        foreach (SingleTargetCamera camera in Cameras)
+        {
+            camera.StartShake(shakeOrigin, shakePower);
+        }
+    }
 }

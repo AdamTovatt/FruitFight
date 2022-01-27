@@ -14,6 +14,9 @@ public class SingleTargetCamera : MonoBehaviour
     public float InsideWallDistance = 0.2f;
     public Vector2 StartRotation;
     public float MinWallThickness = 0.5f;
+    public float ShakeSettleTime = 1f;
+    public float ShakeFallOffDistance = 10f;
+    public float ShakeAmplitudeMultiplier = 0.1f;
 
     public Transform Target { get; private set; }
     public PlayerInput Input { get; private set; }
@@ -42,6 +45,9 @@ public class SingleTargetCamera : MonoBehaviour
 
     private Vector3 savedPosition;
     private Quaternion savedRotation;
+
+    private float lastShakeStartTime;
+    private float currentShakeMagnitude;
 
     private void Awake()
     {
@@ -78,6 +84,14 @@ public class SingleTargetCamera : MonoBehaviour
                 gamepadScrollMultiplier = 1f;
             }
         }
+    }
+
+    private Vector3 GetShakePosition(float time, float speed, float size)
+    {
+        float x = (Mathf.Sin(time * speed * 3) + Mathf.Cos(time * speed * 2)) * 0.5f * size;
+        float y = (Mathf.Sin(1.5f + time * speed * 2) + Mathf.Cos(2 + time * speed * 3)) * 0.5f * size;
+        float z = (Mathf.Sin(-1 + time * speed * 3) + Mathf.Cos(1 + time * speed * 2.5f)) * 0.5f * size;
+        return new Vector3(x, y, z);
     }
 
     private void MouseLookCancelled(InputAction.CallbackContext context)
@@ -136,6 +150,18 @@ public class SingleTargetCamera : MonoBehaviour
             targetPoint = Vector3.SmoothDamp(targetPoint, Target.position + heightOffset, ref moveVelocity, SmoothTime);
             truePosition = targetPoint + rotation * new Vector3(0, 0, -Distance);
 
+            //camera shake
+            float time = Time.time;
+            float shakeTime = time - lastShakeStartTime;
+            if (shakeTime < ShakeSettleTime) //camera shake
+            {
+                currentShakeMagnitude = Mathf.Clamp(currentShakeMagnitude - (1 / ShakeSettleTime) * Time.deltaTime, 0, 1);
+                float shakeSettleValue = 1 - Mathf.Clamp(shakeTime, 0, 1);
+                Vector3 cameraShakeOffset = GetShakePosition(time + 100, shakeSettleValue * 8, currentShakeMagnitude * ShakeAmplitudeMultiplier);
+                truePosition += cameraShakeOffset;
+            }
+
+            //avoid walls
             Ray wallCheckRay = new Ray(targetPoint, truePosition - targetPoint);
             RaycastHit[] hits = Physics.RaycastAll(wallCheckRay).Where(x => x.transform.CompareTag("Ground")).ToArray();
             if (hits.Length > 0)
@@ -189,6 +215,12 @@ public class SingleTargetCamera : MonoBehaviour
         {
             Debug.LogWarning("Single target camera is null");
         }
+    }
+
+    public void StartShake(Vector3 shakeOrigin, float shakePower)
+    {
+        lastShakeStartTime = Time.time;
+        currentShakeMagnitude += Mathf.Clamp((ShakeFallOffDistance - (transform.position - shakeOrigin).magnitude), 0, 100) * shakePower;
     }
 
     public void StartControlByEventCamera()

@@ -138,6 +138,9 @@ MonoBehaviour:
   InsideWallDistance: 0.2
   StartRotation: {x: 40, y: 0}
   MinWallThickness: 2
+  ShakeSettleTime: 0.4
+  ShakeFallOffDistance: 25
+  ShakeAmplitudeMultiplier: 0.1
 --- !u!114 &2208430968058263026
 MonoBehaviour:
   m_ObjectHideFlags: 0
