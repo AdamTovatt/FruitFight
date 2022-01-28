@@ -13,12 +13,14 @@ public class IkFootSolver : MonoBehaviour
     public float StepSpeed = 10f;
     public float FootJumpPositionHeight = 1f;
     public IkFootSolver OtherFoot;
+    public Vector3 Offset;
 
     public bool IsMoving { get { return lerp < 1; } }
 
     private Transform character;
     private float appliedFootSpacing;
 
+    public Vector3 GroundForward { get { return groundForward; } }
     public Vector3 OldPosition { get; private set; }
     public Vector3 CurrentPosition { get; private set; }
     public Vector3 NewPosition { get; private set; }
@@ -34,6 +36,7 @@ public class IkFootSolver : MonoBehaviour
     public event PositionUpdatedEventHandler PositionUpdated;
 
     private MoveOnTrigger parent;
+    private Vector3 groundForward;
 
     void Start()
     {
@@ -143,7 +146,10 @@ public class IkFootSolver : MonoBehaviour
     {
         Ray ray = new Ray(character.position + (Vector3.up * 0.5f) + (character.right * appliedFootSpacing) + (character.forward * forward), Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit info, 10))
-            return info.point;
+        {
+            groundForward = Quaternion.AngleAxis(-90, transform.right) * info.normal;
+            return info.point + Offset;
+        }
 
         Debug.LogWarning("No ground position found for next footstep");
         return CurrentPosition;
@@ -153,5 +159,8 @@ public class IkFootSolver : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(NewPosition, 0.05f);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, groundForward);
     }
 }
