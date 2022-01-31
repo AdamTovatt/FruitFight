@@ -758,6 +758,15 @@
       "Name": "Spikes Vertical",
       "Prefab": "SpikesVertical",
       "RotatableX": true
+    },
+    {
+      "Id": 74,
+      "BlockType": 1,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Robot",
+      "Prefab": "RobotSpawner"
     }
   ]
 }

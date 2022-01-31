@@ -181,7 +181,12 @@ public class Robot : MovingCharacter
     {
         if (UniqueSoundSource.Active)
         {
+            Debug.Log("Playnewxt");
             FootStepAudio.PlayNext();
+        }
+        else
+        {
+            Debug.Log("Unique sound not active");
         }
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FootStepAudioSource : MonoBehaviour
@@ -40,11 +41,21 @@ public class FootStepAudioSource : MonoBehaviour
 
     public void PlayNext()
     {
-        GetPlayableSound().Source.Play();
+        AudioSource source = GetPlayableSound().Source;
+        source.Stop();
+        source.Play();
     }
 
     private Sound GetPlayableSound()
     {
-        return Sounds[Random.Range(0, Sounds.Count)];
+        List<Sound> possibleSounds = Sounds.Where(x => !x.Source.isPlaying).ToList();
+
+        if(possibleSounds.Count == 0)
+        {
+            Debug.LogWarning("No sounds to play!");
+            return Sounds[0];
+        }
+
+        return possibleSounds[Random.Range(0, possibleSounds.Count)];
     }
 }
