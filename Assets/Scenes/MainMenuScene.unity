@@ -404,7 +404,7 @@ MonoBehaviour:
   RightArm: 0
   ArmDistanceToBody: 2
   ArmHeight: 2
-  ArmSwingSpeed: 12
+  ArmSwingSpeed: 9
   ArmForward: 0.05
 --- !u!1 &41062524
 GameObject:
@@ -5209,10 +5209,10 @@ MonoBehaviour:
   CharacterMovement: {fileID: 323672400}
   FootSpacing: 0.5
   RightFoot: 0
-  StepDistance: 0.35
-  MinStepDistance: 0.2
-  StepHeight: 0.12
-  StepSpeed: 15
+  StepDistance: 1.5
+  MinStepDistance: 0.7
+  StepHeight: 0.4
+  StepSpeed: 4
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 2084684736}
   Offset: {x: 0, y: 0.1, z: 0}
@@ -6402,6 +6402,8 @@ GameObject:
   - component: {fileID: 323672400}
   - component: {fileID: 323672401}
   - component: {fileID: 323672402}
+  - component: {fileID: 323672403}
+  - component: {fileID: 323672404}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -6452,7 +6454,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &323672398
 MonoBehaviour:
@@ -6478,7 +6480,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 2.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -6506,7 +6508,11 @@ MonoBehaviour:
   syncInterval: 0.1
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
+  RoamNewTargetRange: 5
+  PersonalBoundaryDistance: 1
   Navigation: {fileID: 323672399}
+  UniqueSoundSource: {fileID: 323672404}
+  FootStepAudio: {fileID: 323672403}
 --- !u!114 &323672401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6539,6 +6545,93 @@ MonoBehaviour:
   DistanceToGround: 0.8
   RaycastStartHeight: 0.4
   GroundedGameTimeLength: 0.2
+--- !u!114 &323672403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323672394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ad025e1bfea61468b1813e578bb64c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority: 212
+  Volume: 1
+  AudioSourceRange: 70
+  GlobalPitchShift: -0.1
+  SoundCountMultiplier: 3
+  Sounds:
+  - Name: step01
+    Clips:
+    - {fileID: 8300000, guid: 320fcb68d574e284a83e795f70639988, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step02
+    Clips:
+    - {fileID: 8300000, guid: 11e41df444eabd54facacb3a7bc958e9, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step03
+    Clips:
+    - {fileID: 8300000, guid: 90008dc640da4884ca848473bab40a48, type: 3}
+    Volume: 1
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step04
+    Clips:
+    - {fileID: 8300000, guid: a59b445f1143115469686d374a06983c, type: 3}
+    Volume: 0
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step05
+    Clips:
+    - {fileID: 8300000, guid: 782386e57b0019c4eae999594939bfc3, type: 3}
+    Volume: 0
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step06
+    Clips:
+    - {fileID: 8300000, guid: b4a382e80730e964d8474be0e43ccf66, type: 3}
+    Volume: 0
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step07
+    Clips:
+    - {fileID: 8300000, guid: dd58671d43794374f97c2abc42c64148, type: 3}
+    Volume: 0
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+  - Name: step08
+    Clips:
+    - {fileID: 8300000, guid: f1498c0a51323a241a3ed649af037fdc, type: 3}
+    Volume: 0
+    Pitch: 1
+    PitchVariation: 0.05
+    Delay: 0
+--- !u!114 &323672404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323672394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1bffeeb8abbd847902c25b3be3e8ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: robot
 --- !u!1 &324981125
 GameObject:
   m_ObjectHideFlags: 0
@@ -25157,7 +25250,7 @@ MonoBehaviour:
   RightArm: 1
   ArmDistanceToBody: 2
   ArmHeight: 2
-  ArmSwingSpeed: 12
+  ArmSwingSpeed: 9
   ArmForward: 0.05
 --- !u!1 &1340913709
 GameObject:
@@ -38415,10 +38508,10 @@ MonoBehaviour:
   CharacterMovement: {fileID: 323672400}
   FootSpacing: 0.5
   RightFoot: 1
-  StepDistance: 0.35
-  MinStepDistance: 0.2
-  StepHeight: 0.12
-  StepSpeed: 15
+  StepDistance: 1.5
+  MinStepDistance: 0.7
+  StepHeight: 0.4
+  StepSpeed: 4
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 249573519}
   Offset: {x: 0, y: 0.1, z: 0}
