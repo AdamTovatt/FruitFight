@@ -1206,8 +1206,8 @@ GameObject:
   - component: {fileID: 3914475989003191795}
   - component: {fileID: 3914475989003191794}
   - component: {fileID: 3914475989003191793}
-  - component: {fileID: 3914475989003191792}
   - component: {fileID: 3914475989003191799}
+  - component: {fileID: 682682763253835117}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -1253,7 +1253,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3914475989003191785}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.6
   m_Speed: 2.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1316,7 +1316,7 @@ MonoBehaviour:
   PersonalBoundaryDistance: 1
   Navigation: {fileID: 3914475989003191788}
   UniqueSoundSource: {fileID: 3914475989003191799}
-  FootStepAudio: {fileID: 3914475989003191792}
+  FootStepAudio: {fileID: 682682763253835117}
 --- !u!114 &3914475989003191794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1349,80 +1349,6 @@ MonoBehaviour:
   DistanceToGround: 0.8
   RaycastStartHeight: 0.4
   GroundedGameTimeLength: 0.2
---- !u!114 &3914475989003191792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3914475989003191785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71ad025e1bfea61468b1813e578bb64c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Priority: 255
-  Volume: 0.95
-  AudioSourceRange: 50
-  GlobalPitchShift: -0.1
-  SoundCountMultiplier: 3
-  Sounds:
-  - Name: step01
-    Clips:
-    - {fileID: 8300000, guid: 320fcb68d574e284a83e795f70639988, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step02
-    Clips:
-    - {fileID: 8300000, guid: 11e41df444eabd54facacb3a7bc958e9, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step03
-    Clips:
-    - {fileID: 8300000, guid: 90008dc640da4884ca848473bab40a48, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step04
-    Clips:
-    - {fileID: 8300000, guid: a59b445f1143115469686d374a06983c, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step05
-    Clips:
-    - {fileID: 8300000, guid: 782386e57b0019c4eae999594939bfc3, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step06
-    Clips:
-    - {fileID: 8300000, guid: b4a382e80730e964d8474be0e43ccf66, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step07
-    Clips:
-    - {fileID: 8300000, guid: dd58671d43794374f97c2abc42c64148, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
-  - Name: step08
-    Clips:
-    - {fileID: 8300000, guid: f1498c0a51323a241a3ed649af037fdc, type: 3}
-    Volume: 1
-    Pitch: 1
-    PitchVariation: 0.05
-    Delay: 0
 --- !u!114 &3914475989003191799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1436,6 +1362,80 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Id: robot
+--- !u!114 &682682763253835117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914475989003191785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71ad025e1bfea61468b1813e578bb64c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority: 210
+  Volume: 0.8
+  AudioSourceRange: 70
+  GlobalPitchShift: -0.1
+  SoundCountMultiplier: 3
+  Sounds:
+  - Name: step01
+    Clips:
+    - {fileID: 8300000, guid: 320fcb68d574e284a83e795f70639988, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step02
+    Clips:
+    - {fileID: 8300000, guid: 11e41df444eabd54facacb3a7bc958e9, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step03
+    Clips:
+    - {fileID: 8300000, guid: 90008dc640da4884ca848473bab40a48, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step04
+    Clips:
+    - {fileID: 8300000, guid: a59b445f1143115469686d374a06983c, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step05
+    Clips:
+    - {fileID: 8300000, guid: a59b445f1143115469686d374a06983c, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step06
+    Clips:
+    - {fileID: 8300000, guid: b4a382e80730e964d8474be0e43ccf66, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step07
+    Clips:
+    - {fileID: 8300000, guid: dd58671d43794374f97c2abc42c64148, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
+  - Name: step08
+    Clips:
+    - {fileID: 8300000, guid: f1498c0a51323a241a3ed649af037fdc, type: 3}
+    Volume: 1
+    Pitch: 0.8
+    PitchVariation: 0.1
+    Delay: 0
 --- !u!1 &3914475989102038587
 GameObject:
   m_ObjectHideFlags: 0

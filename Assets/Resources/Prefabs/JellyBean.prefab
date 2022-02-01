@@ -712,6 +712,7 @@ MonoBehaviour:
   StepSpeed: 15
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 4768720916007652171}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!1 &4768720915174604154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,6 +1125,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   StartHealth: 10
+  SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
   SpawnOnDeathPrefab: {fileID: 0}
@@ -1537,6 +1539,7 @@ MonoBehaviour:
   StepSpeed: 15
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 4768720914909270436}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!1 &4768720916267951745
 GameObject:
   m_ObjectHideFlags: 0
