@@ -10,6 +10,8 @@ public class Robot : MovingCharacter
     public NavMeshAgent Navigation;
     public UniqueSoundSource UniqueSoundSource;
     public FootStepAudioSource FootStepAudio;
+    public Health Health;
+    public RobotHatchController Hatches;
 
     public override bool StopFootSetDefault { get { return false; } }
 
@@ -37,7 +39,7 @@ public class Robot : MovingCharacter
 
     private void Start()
     {
-
+        Health.OnHealthUpdated += () => { Hatches.Open(); };
     }
 
     private void Update()
@@ -89,7 +91,6 @@ public class Robot : MovingCharacter
 
     private void ReachedTarget()
     {
-        Debug.Log("ReachedTarget");
         FindNewRoamTarget();
     }
 
@@ -120,7 +121,6 @@ public class Robot : MovingCharacter
     {
         Vector3? newPosition = GetRandomPositionWithinDistance(RoamNewTargetRange);
 
-        Debug.Log("new position: " + newPosition);
         if (newPosition != null)
         {
             SetNewTarget((Vector3)newPosition);
@@ -155,17 +155,6 @@ public class Robot : MovingCharacter
             }
         }
 
-        /*
-        if (foundValue) //we have found a target position, now we want to check if we can see it
-        {
-            Ray visionRay = new Ray(transform.position + Vector3.up * 0.3f, (Vector3)result - transform.position + Vector3.up * 0.3f);
-            if (Physics.Raycast(visionRay, out RaycastHit visionHit))
-            {
-                if (Vector3.SqrMagnitude(visionHit.point - (Vector3)result) > 0.5f)
-                    foundValue = false;
-            }
-        }*/
-
         if (!foundValue)
         {
             if (attempt <= 10)
@@ -181,7 +170,6 @@ public class Robot : MovingCharacter
     {
         if (UniqueSoundSource.Active)
         {
-            Debug.Log("Playnewxt");
             FootStepAudio.PlayNext();
         }
         else
