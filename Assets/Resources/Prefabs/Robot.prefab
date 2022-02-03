@@ -1488,6 +1488,7 @@ GameObject:
   - component: {fileID: 5630173221916183079}
   - component: {fileID: 2515662595440824187}
   - component: {fileID: -6558366719184614670}
+  - component: {fileID: -2392083971740732701}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -1592,6 +1593,7 @@ MonoBehaviour:
   syncInterval: 0.1
   PunchSoundEffectPrefab: {fileID: 9053844485018190056, guid: 87ff51e41189b0e43b20ae71509c2580,
     type: 3}
+  DiscoveryRadius: 20
   RoamNewTargetRange: 5
   PersonalBoundaryDistance: 1
   Navigation: {fileID: 3914475989003191788}
@@ -1599,6 +1601,10 @@ MonoBehaviour:
   FootStepAudio: {fileID: 682682763253835117}
   Health: {fileID: 5630173221916183079}
   Hatches: {fileID: 634434342672072711}
+  JellyBeanPrefab: {fileID: 4768720915529816196, guid: ff6a711dd66649d4e8b1403e0c309eda,
+    type: 3}
+  SmokePoofPrefab: {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714,
+    type: 3}
 --- !u!114 &3914475989003191794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1736,7 +1742,7 @@ MonoBehaviour:
   SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
   WaterSplash: {fileID: 0}
   SpawnOnDeathPrefab: {fileID: 0}
-  SoundSource: {fileID: 0}
+  SoundSource: {fileID: 2515662595440824187}
   DamageSoundName: damage
   DestroyOnDeath: 1
   CanDie: 1
@@ -1763,8 +1769,8 @@ MonoBehaviour:
   Sounds:
   - Name: damage
     Clips:
-    - {fileID: 8300000, guid: 8c382eb192729f8468af19dadc545260, type: 3}
-    Volume: 1
+    - {fileID: 8300000, guid: 320fcb68d574e284a83e795f70639988, type: 3}
+    Volume: 0.29
     Pitch: 1
     PitchVariation: 0.1
     Delay: 0
@@ -1865,6 +1871,35 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2392083971740732701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914475989003191785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!1 &3914475989102038587
 GameObject:
   m_ObjectHideFlags: 0

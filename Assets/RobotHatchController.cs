@@ -43,7 +43,6 @@ public class RobotHatchController : MonoBehaviour
 
     public void Open()
     {
-        Debug.Log("Open robot hatch");
         targetRotation = OpenAngle;
         isRotating = true;
         this.CallWithDelay(Close, 2);
@@ -51,7 +50,6 @@ public class RobotHatchController : MonoBehaviour
 
     public void Close()
     {
-        Debug.Log("Close robot hatch");
         targetRotation = 0;
         isRotating = true;
     }

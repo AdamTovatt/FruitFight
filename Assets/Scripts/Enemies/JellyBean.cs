@@ -28,6 +28,8 @@ public class JellyBean : MovingCharacter
     public List<Texture2D> CoatingTextures;
     public Health Health;
     public CapsuleCollider Collider;
+    public Rigidbody Rigidbody;
+    public NavMeshAgent NavMeshAgent;
 
     public JellyBeanMaterialSettings MaterialSettings { get; private set; }
 
@@ -47,12 +49,13 @@ public class JellyBean : MovingCharacter
         }
     }
 
+    public delegate void BecameGroundedHandler();
+    public event BecameGroundedHandler OnBecameGrounded;
+
     public delegate void StateChangedHandler(object sender, JellyBeanState newState);
     public event StateChangedHandler OnStateChanged;
     public override event AttackHandler OnAttack;
 
-    private NavMeshAgent navMeshAgent;
-    private Rigidbody _rigidbody;
     private Renderer _renderer;
     private SoundSource soundSource;
 
@@ -71,12 +74,21 @@ public class JellyBean : MovingCharacter
         {
             if (_isGrounded == null)
                 _isGrounded = CalculateIsGrounded();
-            return (bool)_isGrounded;
+            bool grounded = (bool)_isGrounded;
+
+            if (grounded && !lastGrounded)
+            {
+                OnBecameGrounded?.Invoke();
+                OnBecameGrounded = null;
+            }
+
+            return grounded;
         }
     }
     private bool? _isGrounded = null;
+    private bool lastGrounded = false;
 
-    public override bool? StandingStill { get { return navMeshAgent.velocity.sqrMagnitude == 0 || navMeshAgent.isStopped; } }
+    public override bool? StandingStill { get { return NavMeshAgent.velocity.sqrMagnitude == 0 || NavMeshAgent.isStopped; } }
 
     private Health targetHealth
     {
@@ -151,8 +163,6 @@ public class JellyBean : MovingCharacter
 
     void Start()
     {
-        _rigidbody = gameObject.GetComponent<Rigidbody>();
-        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         _renderer = JellyBeanModel.GetComponent<Renderer>();
 
         MaterialSettings = SetMaterialSettings(_renderer);
@@ -162,8 +172,6 @@ public class JellyBean : MovingCharacter
         State = Random.Range(1, 3) > 1 ? JellyBeanState.Idle : JellyBeanState.Roaming;
 
         OnAttack += (attackPosition, attackSide) => { };
-
-        _rigidbody.isKinematic = true;
 
         personalBoundaryDistanceSquared = PersonalBoundaryDistance * PersonalBoundaryDistance;
 
@@ -213,7 +221,7 @@ public class JellyBean : MovingCharacter
             }
         }
 
-        navMeshAgent.speed = currentSpeed; //for some reason it gets the wrong value sometime so we force it to be the right value
+        NavMeshAgent.speed = currentSpeed; //for some reason it gets the wrong value sometime so we force it to be the right value
 
         if (target != null) //has target
         {
@@ -236,15 +244,15 @@ public class JellyBean : MovingCharacter
             }
         }
 
-        if (navMeshAgent.enabled)
+        if (NavMeshAgent.enabled)
         {
             switch (State)
             {
                 case JellyBeanState.Roaming:
                     if (TimeInCurrentState < 5f + randomTimeAddition)
                     {
-                        if (navMeshAgent.isOnNavMesh)
-                            navMeshAgent.SetDestination(targetPosition);
+                        if (NavMeshAgent.isOnNavMesh)
+                            NavMeshAgent.SetDestination(targetPosition);
 
                         if (Vector3.Distance(targetPosition, transform.position) < PersonalBoundaryDistance)
                         {
@@ -308,12 +316,12 @@ public class JellyBean : MovingCharacter
                         inRangeForAttack = false;
                     }
 
-                    if (navMeshAgent.isOnNavMesh)
-                        navMeshAgent.SetDestination(targetPosition);
+                    if (NavMeshAgent.isOnNavMesh)
+                        NavMeshAgent.SetDestination(targetPosition);
                     break;
                 case JellyBeanState.Confused:
-                    if (navMeshAgent.isOnNavMesh)
-                        navMeshAgent.SetDestination(targetPosition);
+                    if (NavMeshAgent.isOnNavMesh)
+                        NavMeshAgent.SetDestination(targetPosition);
 
                     if (TimeInCurrentState > 1f + randomTimeAddition)
                     {
@@ -348,7 +356,7 @@ public class JellyBean : MovingCharacter
         if (knockBack)
         {
             float timeSinceKnockBack = Time.time - knockBackTime;
-            if ((_rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
+            if ((Rigidbody.velocity.sqrMagnitude < 0.1f && timeSinceKnockBack > 0.2f) || timeSinceKnockBack > 2f)
             {
                 if (Health.CurrentHealth <= 0)
                 {
@@ -356,13 +364,16 @@ public class JellyBean : MovingCharacter
                 }
 
                 knockBack = false;
-                _rigidbody.isKinematic = true;
-                navMeshAgent.enabled = true;
+                Rigidbody.isKinematic = true;
+                NavMeshAgent.enabled = true;
             }
         }
 
         if (!knockBack)
+        {
+            lastGrounded = _isGrounded ?? false;
             _isGrounded = null; //reset isGrounded so it is calculated next time someone needs it
+        }
     }
 
     private void ForceSyncPosition()
@@ -373,11 +384,11 @@ public class JellyBean : MovingCharacter
     [ClientRpc]
     private void RpcSetPosition(Vector3 position, Vector3 targetPosition)
     {
-        navMeshAgent.Warp(position);
+        NavMeshAgent.Warp(position);
         this.targetPosition = targetPosition;
     }
 
-    private void SetTarget(Health healthOfTarget, Transform newTarget, JellyBeanState newState)
+    public void SetTarget(Health healthOfTarget, Transform newTarget, JellyBeanState newState)
     {
         healthOfTarget.OnDied += TargetDied;
         setTargetTime = Time.time;
@@ -481,18 +492,23 @@ public class JellyBean : MovingCharacter
         PerformWasAttacked(attackOrigin, attackStrength); //only do this as a server since the client has aldready done it locally
     }
 
+    public void SetKnockback(Vector3 forceOrigin, float forceStrength)
+    {
+        Rigidbody.isKinematic = false;
+        NavMeshAgent.enabled = false;
+        Rigidbody.AddExplosionForce(forceStrength * 50f, forceOrigin, forceStrength);
+        Rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
+        knockBack = true;
+        knockBackTime = Time.time;
+    }
+
     private void PerformWasAttacked(Vector3 attackOrigin, float attackStrength)
     {
         if (!knockBack)
         {
             soundSource.Play("hurt");
 
-            _rigidbody.isKinematic = false;
-            navMeshAgent.enabled = false;
-            _rigidbody.AddExplosionForce(attackStrength * 50f, attackOrigin, attackStrength);
-            _rigidbody.AddForce(transform.up, ForceMode.VelocityChange);
-            knockBack = true;
-            knockBackTime = Time.time;
+            SetKnockback(attackOrigin, attackStrength);
         }
     }
 
@@ -598,7 +614,7 @@ public class JellyBean : MovingCharacter
 
         StatusText.text = newState.ToString();
 
-        if (navMeshAgent.isOnNavMesh)
+        if (NavMeshAgent.isOnNavMesh)
         {
             switch (newState)
             {
@@ -648,28 +664,28 @@ public class JellyBean : MovingCharacter
         switch (newState)
         {
             case JellyBeanState.Roaming:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = RoamSpeed;
+                NavMeshAgent.isStopped = false;
+                NavMeshAgent.speed = RoamSpeed;
                 currentSpeed = RoamSpeed;
                 targetPosition = position;
                 break;
             case JellyBeanState.Idle:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.SetDestination(transform.position);
+                NavMeshAgent.isStopped = false;
+                NavMeshAgent.SetDestination(transform.position);
                 break;
             case JellyBeanState.Chasing:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = ChaseSpeed;
+                NavMeshAgent.isStopped = false;
+                NavMeshAgent.speed = ChaseSpeed;
                 currentSpeed = ChaseSpeed;
                 break;
             case JellyBeanState.Confused:
-                navMeshAgent.isStopped = false;
+                NavMeshAgent.isStopped = false;
                 break;
             case JellyBeanState.Searching:
-                navMeshAgent.isStopped = false;
-                navMeshAgent.speed = SearchSpeed;
+                NavMeshAgent.isStopped = false;
+                NavMeshAgent.speed = SearchSpeed;
                 targetPosition = position;
-                navMeshAgent.SetDestination(targetPosition);
+                NavMeshAgent.SetDestination(targetPosition);
                 break;
             default:
                 throw new System.Exception("No such state for: " + ToString());

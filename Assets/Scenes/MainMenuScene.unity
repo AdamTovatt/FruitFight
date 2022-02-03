@@ -7064,6 +7064,7 @@ MonoBehaviour:
   - {fileID: 8706223902884326236, guid: 702ef5130f0a4b74a8f42c99333f8714, type: 3}
   - {fileID: 8551069110806626980, guid: b0f64055f7aaa164883e319c1f9ec961, type: 3}
   - {fileID: 5126637512256253266, guid: 09cdf82d56ab50742afd4f80de5398c7, type: 3}
+  - {fileID: 3914475989003191785, guid: 0eee929dad5ac6f4788c1657f2e08c88, type: 3}
 --- !u!4 &380009485
 Transform:
   m_ObjectHideFlags: 0
@@ -38807,6 +38808,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 53ded51a8c2f34f4aa9d46d8266f16d7, type: 3}
   Health: {fileID: 5065833842647571269}
   Collider: {fileID: 4768720915006031725}
+  Rigidbody: {fileID: 4768720915006031729}
+  NavMeshAgent: {fileID: 4768720915006031734}
 --- !u!195 &4768720915006031734
 NavMeshAgent:
   m_ObjectHideFlags: 0

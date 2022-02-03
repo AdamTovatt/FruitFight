@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.AI;
 
 public class Robot : MovingCharacter
 {
+    public float DiscoveryRadius = 20f;
     public float RoamNewTargetRange = 5f;
     public float PersonalBoundaryDistance = 0.7f;
     public NavMeshAgent Navigation;
@@ -12,12 +14,14 @@ public class Robot : MovingCharacter
     public FootStepAudioSource FootStepAudio;
     public Health Health;
     public RobotHatchController Hatches;
+    public GameObject JellyBeanPrefab;
+    public GameObject SmokePoofPrefab;
 
     public override bool StopFootSetDefault { get { return false; } }
 
     public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
-    public override bool? StandingStill { get { return Navigation.velocity.sqrMagnitude == 0 || Navigation.isStopped; } }
+    public override bool? StandingStill { get { if (shouldOverrideStandingStill) return standingStillOverride; else return Navigation.velocity.sqrMagnitude == 0 || Navigation.isStopped; } }
 
     public override event AttackHandler OnAttack;
 
@@ -25,11 +29,22 @@ public class Robot : MovingCharacter
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
     private Vector3 _targetPosition;
 
+    private Dictionary<Transform, Health> healthLookup = new Dictionary<Transform, Health>();
+    private Dictionary<Transform, uint> playerNetIdLookup = new Dictionary<Transform, uint>();
+    private Dictionary<uint, Transform> netIdPlayerLookup = new Dictionary<uint, Transform>();
+
     private GroundedChecker groundedChecker;
     private float personalBoundaryDistanceSquared;
     private bool isFacingTarget = false;
+    private bool isAtTarget = false;
     private float rotationLerpTime = 0;
     private float standingStillTime = 0;
+    private float lastJellyBeanSpawnTime;
+    private Transform victim;
+    private float setVictimTime;
+    private bool previousStandingStill;
+    private bool standingStillOverride;
+    private bool shouldOverrideStandingStill;
 
     private void Awake()
     {
@@ -39,7 +54,11 @@ public class Robot : MovingCharacter
 
     private void Start()
     {
-        Health.OnHealthUpdated += () => { Hatches.Open(); };
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+            shouldOverrideStandingStill = true;
+
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
+            SetIsStandingStill((bool)StandingStill);
     }
 
     private void Update()
@@ -63,12 +82,33 @@ public class Robot : MovingCharacter
 
     private void Think()
     {
-        if(TargetPosition == Vector3.zero)
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer && (bool)StandingStill != previousStandingStill)
+        {
+            SetIsStandingStill((bool)StandingStill);
+        }
+
+        if ((victim == null || Time.time - setVictimTime > 2) && GameManager.Instance != null)
+        {
+            PlayerMovement player = FindClosestPlayer();
+            if (player != null)
+            {
+                Health health = GetHealthForTransform(player.transform);
+
+                if (health != null && !health.IsDead && health.CanDie)
+                {
+                    health.OnDied += VictimDied;
+                    SetNewVictim(player);
+                    ThinkAboutVictim();
+                }
+            }
+        }
+
+        if (TargetPosition == Vector3.zero)
         {
             FindNewRoamTarget();
         }
 
-        if (DistanceToTargetSquared < personalBoundaryDistanceSquared)
+        if (!isAtTarget && DistanceToTargetSquared < personalBoundaryDistanceSquared)
         {
             ReachedTarget();
         }
@@ -82,16 +122,164 @@ public class Robot : MovingCharacter
             standingStillTime = 0;
         }
 
-        if ((standingStillTime > 2.5f || (standingStillTime > 0.4f && Navigation.path.status != NavMeshPathStatus.PathComplete)) && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+        if (!isAtTarget && (standingStillTime > 2.5f || (standingStillTime > 0.4f && Navigation.path.status != NavMeshPathStatus.PathComplete)) && DistanceToTargetSquared > personalBoundaryDistanceSquared)
         {
             standingStillTime = 0;
             ReachedTarget();
         }
+
+        previousStandingStill = (bool)StandingStill;
+    }
+
+    private void ThinkAboutVictim()
+    {
+
+    }
+
+    private void VictimDied(Health sender, CauseOfDeath causeOfDeath)
+    {
+        SetNewVictim(null);
+    }
+
+    private void SetIdle()
+    {
+
+    }
+
+    private void SetNewVictim(PlayerMovement player)
+    {
+        setVictimTime = Time.time;
+
+        if (player != null)
+        {
+            if (!playerNetIdLookup.ContainsKey(player.transform))
+                playerNetIdLookup.Add(player.transform, player.transform.GetComponent<NetworkIdentity>().netId);
+        }
+
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
+            RpcSetVictim(player == null ? 0 : playerNetIdLookup[player.transform]);
+
+        PerformSetVictim(player == null ? null : player.transform);
+    }
+
+    [ClientRpc]
+    private void RpcSetVictim(uint netId)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        if (netId != 0)
+        {
+            if (!netIdPlayerLookup.ContainsKey(netId))
+                netIdPlayerLookup.Add(netId, NetworkClient.spawned[netId].transform);
+        }
+
+        PerformSetVictim(netId == 0 ? null : netIdPlayerLookup[netId]);
+    }
+
+    private void PerformSetVictim(Transform victim)
+    {
+        if (CustomNetworkManager.HasAuthority && this.victim != null) //remove old victim event listener
+            healthLookup[this.victim].OnDied -= VictimDied;
+        if (CustomNetworkManager.HasAuthority && victim != null) //add new victim event listener
+            healthLookup[victim].OnDied += VictimDied;
+
+        this.victim = victim;
+
+        if (victim == null)
+            SetIdle();
+    }
+
+    [ClientRpc]
+    private void SetIsStandingStill(bool newValue)
+    {
+        if (CustomNetworkManager.HasAuthority)
+            return;
+
+        standingStillOverride = newValue;
+    }
+
+    private Health GetHealthForTransform(Transform transform)
+    {
+        if (!healthLookup.ContainsKey(transform))
+            healthLookup.Add(transform, transform.gameObject.GetComponent<Health>());
+
+        return healthLookup[transform];
+    }
+
+    private void StartSpawnJellyBean()
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                RpcStartSpawnJellyBean();
+                PerformStartSpawnJellyBean();
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            PerformStartSpawnJellyBean();
+        }
+    }
+
+    private void PerformStartSpawnJellyBean()
+    {
+        this.CallWithDelay(SpawnJellyBean, 2);
+        lastJellyBeanSpawnTime = Time.time;
+        this.CallWithDelay(Hatches.Open, 1);
+    }
+
+    [ClientRpc]
+    private void RpcStartSpawnJellyBean()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+        PerformStartSpawnJellyBean();
+    }
+
+    private void SpawnJellyBean()
+    {
+        if (CustomNetworkManager.HasAuthority)
+        {
+            JellyBean jellyBean = Instantiate(JellyBeanPrefab, Hatches.transform.position + Hatches.transform.forward, transform.rotation).GetComponent<JellyBean>();
+            jellyBean.Rigidbody.isKinematic = false;
+            jellyBean.NavMeshAgent.enabled = false;
+            jellyBean.OnBecameGrounded += () =>
+            {
+                jellyBean.Rigidbody.isKinematic = true;
+                jellyBean.NavMeshAgent.enabled = true;
+                PlayerMovement player = FindClosestPlayer();
+                jellyBean.SetTarget(player.Player.Health, player.transform, JellyBeanState.Chasing);
+            };
+        }
+
+        Instantiate(SmokePoofPrefab, Hatches.transform.position + Hatches.transform.forward + Hatches.transform.up * 0.3f, transform.rotation);
+
+        this.CallWithDelay(Hatches.Close, 1);
     }
 
     private void ReachedTarget()
     {
-        FindNewRoamTarget();
+        isAtTarget = true;
+        TakeAction();
+    }
+
+    private void TakeAction()
+    {
+        if (Time.time - lastJellyBeanSpawnTime > 5f)
+        {
+            StartSpawnJellyBean();
+            this.CallWithDelay(FindNewRoamTarget, 4);
+        }
+        else
+        {
+            FindNewRoamTarget();
+        }
     }
 
     private void TargetWasUpdated()
@@ -124,6 +312,7 @@ public class Robot : MovingCharacter
         if (newPosition != null)
         {
             SetNewTarget((Vector3)newPosition);
+            isAtTarget = false;
         }
     }
 
@@ -164,6 +353,30 @@ public class Robot : MovingCharacter
         }
 
         return result;
+    }
+
+    private PlayerMovement FindClosestPlayer()
+    {
+        PlayerMovement closestPlayer = null;
+        float closestPlayerDistance = 100000;
+
+        foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
+        {
+            if (player != null)
+            {
+                float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+                if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
+                {
+                    if (closestPlayerDistance > distanceSquared)
+                    {
+                        closestPlayer = player;
+                        closestPlayerDistance = distanceSquared;
+                    }
+                }
+            }
+        }
+
+        return closestPlayer;
     }
 
     public override void StepWasTaken(Vector3 stepPosition)

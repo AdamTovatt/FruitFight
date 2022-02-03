@@ -24,6 +24,9 @@ public class Magnet : MonoBehaviour
 
     private void Update()
     {
+        if (Targets == null || Targets.Count == 0)
+            return;
+
         foreach (MagnetAttractor target in Targets.Where(x => (x.transform.position - transform.position).sqrMagnitude < sphereOfInfluenceRadiusSquared))
         {
             Vector3 distance = transform.position - target.AttractionPoint;
