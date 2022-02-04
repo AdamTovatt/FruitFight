@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
                 NetworkServer.Destroy(PlayerNetworkCharacter.LocalPlayer.gameObject);
 
             //host stuff
-            GameObject hostPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+            GameObject hostPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + playerSpawnpoint.transform.position + playerSpawnpoint.transform.right * 0.2f, playerSpawnpoint.transform.rotation);
             NetworkServer.Spawn(hostPlayer);
             PlayerNetworkCharacter hostNetworkCharacter = hostPlayer.GetComponent<PlayerNetworkCharacter>();
             hostNetworkCharacter.NetId = PlayerNetworkIdentity.LocalPlayerInstance.NetId;
@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
             hostNetworkCharacter.SetupPlayerNetworkCharacter(true);
 
             //client stuff
-            GameObject clientPlayer = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+            GameObject clientPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + playerSpawnpoint.transform.position + playerSpawnpoint.transform.right * -0.2f, playerSpawnpoint.transform.rotation);
             NetworkServer.Spawn(clientPlayer, PlayerNetworkIdentity.OtherPlayerInstance.connectionToClient);
             PlayerNetworkCharacter clientNetworkCharacter = clientPlayer.GetComponent<PlayerNetworkCharacter>();
             clientNetworkCharacter.NetId = PlayerNetworkIdentity.OtherPlayerInstance.NetId;

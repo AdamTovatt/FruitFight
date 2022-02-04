@@ -77,9 +77,6 @@ public class IkFootSolver : MonoBehaviour
 
         if (groundedChecker == null ? CharacterMovement.IsGrounded : groundedChecker.IsGrounded)
         {
-            //if (CharacterMovement.GetType() == typeof(Robot))
-            //    Debug.Log(CharacterMovement.StandingStill);
-
             if (((CharacterMovement.StandingStill == null) || (CharacterMovement.StandingStill != null && !((bool)CharacterMovement.StandingStill))) && characterVelocity.Velocity > 0.01f) //character is moving
             {
                 float distance = Vector3.Distance(NewPosition, searchPosition);
