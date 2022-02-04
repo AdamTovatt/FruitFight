@@ -28,9 +28,14 @@ public class Robot : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
+    public Vector3 TargetLocationSameHeight { get { return  new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z); } }
+    public bool IsFacingTarget { get { return Quaternion.Angle(Quaternion.LookRotation(TargetLocationSameHeight - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared; } }
     public float DistanceToTargetSquared { get { return (TargetPosition - transform.position).sqrMagnitude; } }
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
     private Vector3 _targetPosition;
+
+    public delegate void StartedFacingTargetHandler();
+    public event StartedFacingTargetHandler OnStartedFacingTarget;
 
     private Dictionary<Transform, Health> healthLookup = new Dictionary<Transform, Health>();
     private Dictionary<Transform, uint> playerNetIdLookup = new Dictionary<Transform, uint>();
@@ -38,7 +43,7 @@ public class Robot : MovingCharacter
 
     private GroundedChecker groundedChecker;
     private float personalBoundaryDistanceSquared;
-    private bool isFacingTarget = false;
+    private bool doneRotatingTowardsTarget = false;
     private bool isAtTarget = false;
     private float rotationLerpTime = 0;
     private float standingStillTime = 0;
@@ -64,16 +69,17 @@ public class Robot : MovingCharacter
         if (CustomNetworkManager.HasAuthority)
             Think();
 
-        if (!isFacingTarget)
+        if (!doneRotatingTowardsTarget)
         {
             Vector3 targetLocation = new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), rotationLerpTime);
             rotationLerpTime += Time.deltaTime * 4 * 0.01f;
 
-            if (Quaternion.Angle(Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared)
+            if (IsFacingTarget)
             {
-                StartedFacingTarget();
+                doneRotatingTowardsTarget = true;
+                InvokeStartedFacingTarget();
             }
         }
 
@@ -270,25 +276,29 @@ public class Robot : MovingCharacter
         }
     }
 
+    private void InvokeStartedFacingTarget()
+    {
+        OnStartedFacingTarget?.Invoke();
+        OnStartedFacingTarget = null;
+    }
+
     private void TargetWasUpdated()
     {
-        Vector3 targetLocation = new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z);
-
-        if (Quaternion.Angle(Quaternion.LookRotation(targetLocation - transform.position, Vector3.up), transform.rotation) > 1 && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+        if (!IsFacingTarget)
         {
-            isFacingTarget = false;
+            doneRotatingTowardsTarget = false;
             rotationLerpTime = 0;
         }
         else
         {
-            StartedFacingTarget();
+            InvokeStartedFacingTarget();
         }
+
+        OnStartedFacingTarget += StartNavigationTowardsTarget;
     }
 
-    private void StartedFacingTarget() //the character has rotated towards the target and will now start to move towards it
+    private void StartNavigationTowardsTarget()
     {
-        isFacingTarget = true;
-
         if (Navigation.isActiveAndEnabled)
             Navigation.SetDestination(TargetPosition);
     }
