@@ -24787,7 +24787,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1349644558}
-  - component: {fileID: 1349644557}
   - component: {fileID: 1349644559}
   m_Layer: 0
   m_Name: MainMenuManager
@@ -24796,25 +24795,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1349644557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1349644556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 274d0ae719705634d94b53fd67319c12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prefab: {fileID: 8968286937793633843, guid: 317bc864145390645bd726912d1b406e, type: 3}
-  SpawnInEditor: 1
-  SpawnAtStart: 1
-  SpawnOnObjectCreated: 0
-  SpawnAtInterval: 0
-  SecondsBetweenSpawning: 5
-  SpawnOnNetwork: 0
 --- !u!4 &1349644558
 Transform:
   m_ObjectHideFlags: 0
