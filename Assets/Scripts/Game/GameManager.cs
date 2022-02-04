@@ -91,20 +91,22 @@ public class GameManager : MonoBehaviour
         WorldBuilder.Instance.BuildNext();
         navMeshSurface.BuildNavMesh();
 
-        PlayerSpawnpoint playerSpawnpoint = FindObjectOfType<PlayerSpawnpoint>();
+        PlayerSpawnpoint[] playerSpawnpoints = FindObjectsOfType<PlayerSpawnpoint>();
 
         bool addedPlayerCamera = false;
 
-        if (playerSpawnpoint != null)
+        if (playerSpawnpoints.Length > 0)
         {
             if (!CustomNetworkManager.IsOnlineSession) //only if this is an offline session
             {
+                PlayerSpawnpoint spawnPoint = playerSpawnpoints[0];
+
                 PlayerConfiguration[] playerConfigurations = PlayerConfigurationManager.Instance.PlayerConfigurations.ToArray();
                 foreach (PlayerConfiguration playerConfiguration in playerConfigurations)
                 {
                     playerConfiguration.Input.SwitchCurrentActionMap("Gameplay");
 
-                    GameObject player = Instantiate(PlayerPrefab, playerSpawnpoint.transform.position, playerSpawnpoint.transform.rotation);
+                    GameObject player = Instantiate(PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
                     PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
 
                     SingleTargetCamera camera = CameraManager.AddCamera(player.transform, playerConfiguration.Input);
@@ -125,6 +127,11 @@ public class GameManager : MonoBehaviour
                     PlayerCharacters.Add(playerMovement);
 
                     Players.Add(new PlayerInformation(playerConfiguration, playerMovement, playerMovement.gameObject.GetComponent<Health>()));
+
+                    if (playerSpawnpoints.Length > 1)
+                    {
+                        spawnPoint = playerSpawnpoints[1];
+                    }
                 }
 
                 CreateUiForPlayers();
@@ -162,7 +169,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerNetworkIdentity.OtherPlayerInstance.Ready && PlayerNetworkIdentity.LocalPlayerInstance.Ready)
         {
-            InitializeLevelOnline(FindObjectOfType<PlayerSpawnpoint>());
+            InitializeLevelOnline(FindObjectsOfType<PlayerSpawnpoint>());
         }
     }
 
@@ -171,15 +178,22 @@ public class GameManager : MonoBehaviour
         spawners.Add(spawner);
     }
 
-    public void InitializeLevelOnline(PlayerSpawnpoint playerSpawnpoint)
+    public void InitializeLevelOnline(PlayerSpawnpoint[] playerSpawnpoints)
     {
         if (CustomNetworkManager.Instance.IsServer && !hasInitializedLevel)
         {
+            PlayerSpawnpoint spawnPoint1 = playerSpawnpoints[0];
+            PlayerSpawnpoint spawnPoint2 = spawnPoint1;
+            if(playerSpawnpoints.Length > 1)
+            {
+                spawnPoint2 = playerSpawnpoints[1];
+            }
+
             if (PlayerNetworkCharacter.LocalPlayer != null)
                 NetworkServer.Destroy(PlayerNetworkCharacter.LocalPlayer.gameObject);
 
             //host stuff
-            GameObject hostPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + playerSpawnpoint.transform.position + playerSpawnpoint.transform.right * 0.2f, playerSpawnpoint.transform.rotation);
+            GameObject hostPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + spawnPoint1.transform.position + spawnPoint1.transform.right * 0.2f, spawnPoint1.transform.rotation);
             NetworkServer.Spawn(hostPlayer);
             PlayerNetworkCharacter hostNetworkCharacter = hostPlayer.GetComponent<PlayerNetworkCharacter>();
             hostNetworkCharacter.NetId = PlayerNetworkIdentity.LocalPlayerInstance.NetId;
@@ -187,7 +201,7 @@ public class GameManager : MonoBehaviour
             hostNetworkCharacter.SetupPlayerNetworkCharacter(true);
 
             //client stuff
-            GameObject clientPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + playerSpawnpoint.transform.position + playerSpawnpoint.transform.right * -0.2f, playerSpawnpoint.transform.rotation);
+            GameObject clientPlayer = Instantiate(PlayerPrefab, Vector3.up * 0.5f + spawnPoint2.transform.position + spawnPoint2.transform.right * -0.2f, spawnPoint2.transform.rotation);
             NetworkServer.Spawn(clientPlayer, PlayerNetworkIdentity.OtherPlayerInstance.connectionToClient);
             PlayerNetworkCharacter clientNetworkCharacter = clientPlayer.GetComponent<PlayerNetworkCharacter>();
             clientNetworkCharacter.NetId = PlayerNetworkIdentity.OtherPlayerInstance.NetId;
