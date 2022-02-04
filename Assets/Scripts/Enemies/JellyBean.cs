@@ -376,6 +376,68 @@ public class JellyBean : MovingCharacter
         }
     }
 
+    public void SetSummoningCompleted()
+    {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcSetSummoningCompleted();
+                PerformSetSummoningCompleted();
+            }
+        }
+        else
+        {
+            PerformSetSummoningCompleted();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSetSummoningCompleted()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformSetSummoningCompleted();
+    }
+
+    private void PerformSetSummoningCompleted()
+    {
+        Rigidbody.isKinematic = true;
+        NavMeshAgent.enabled = true;
+    }
+
+    public void SetWasSummoned()
+    {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcSetWasSummoned();
+                PerformSetWasSummoned();
+            }
+        }
+        else
+        {
+            PerformSetWasSummoned();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcSetWasSummoned()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformSetWasSummoned();
+    }
+
+    private void PerformSetWasSummoned()
+    {
+        Rigidbody.isKinematic = false;
+        NavMeshAgent.enabled = false;
+    }
+
     private void ForceSyncPosition()
     {
         RpcSetPosition(transform.position, targetPosition);

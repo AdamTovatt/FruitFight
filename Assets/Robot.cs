@@ -17,11 +17,14 @@ public class Robot : MovingCharacter
     public GameObject JellyBeanPrefab;
     public GameObject SmokePoofPrefab;
 
+    [SyncVar]
+    public int ServerStandingStill;
+
     public override bool StopFootSetDefault { get { return false; } }
 
     public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
-    public override bool? StandingStill { get { if (shouldOverrideStandingStill) return standingStillOverride; else return Navigation.velocity.sqrMagnitude == 0 || Navigation.isStopped; } }
+    public override bool? StandingStill { get { if (shouldOverrideStandingStill) return ServerStandingStill.ToNullableBool(); else return Navigation.velocity.sqrMagnitude == 0 || Navigation.isStopped; } }
 
     public override event AttackHandler OnAttack;
 
@@ -42,8 +45,6 @@ public class Robot : MovingCharacter
     private float lastJellyBeanSpawnTime;
     private Transform victim;
     private float setVictimTime;
-    private bool previousStandingStill;
-    private bool standingStillOverride;
     private bool shouldOverrideStandingStill;
 
     private void Awake()
@@ -56,9 +57,6 @@ public class Robot : MovingCharacter
     {
         if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
             shouldOverrideStandingStill = true;
-
-        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer)
-            SetIsStandingStill((bool)StandingStill);
     }
 
     private void Update()
@@ -78,15 +76,13 @@ public class Robot : MovingCharacter
                 StartedFacingTarget();
             }
         }
+
+        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.HasAuthority)
+            ServerStandingStill = StandingStill.ToInt();
     }
 
     private void Think()
     {
-        if (CustomNetworkManager.IsOnlineSession && CustomNetworkManager.Instance.IsServer && (bool)StandingStill != previousStandingStill)
-        {
-            SetIsStandingStill((bool)StandingStill);
-        }
-
         if ((victim == null || Time.time - setVictimTime > 2) && GameManager.Instance != null)
         {
             PlayerMovement player = FindClosestPlayer();
@@ -127,8 +123,6 @@ public class Robot : MovingCharacter
             standingStillTime = 0;
             ReachedTarget();
         }
-
-        previousStandingStill = (bool)StandingStill;
     }
 
     private void ThinkAboutVictim()
@@ -190,15 +184,6 @@ public class Robot : MovingCharacter
             SetIdle();
     }
 
-    [ClientRpc]
-    private void SetIsStandingStill(bool newValue)
-    {
-        if (CustomNetworkManager.HasAuthority)
-            return;
-
-        standingStillOverride = newValue;
-    }
-
     private Health GetHealthForTransform(Transform transform)
     {
         if (!healthLookup.ContainsKey(transform))
@@ -247,12 +232,15 @@ public class Robot : MovingCharacter
         if (CustomNetworkManager.HasAuthority)
         {
             JellyBean jellyBean = Instantiate(JellyBeanPrefab, Hatches.transform.position + Hatches.transform.forward, transform.rotation).GetComponent<JellyBean>();
-            jellyBean.Rigidbody.isKinematic = false;
-            jellyBean.NavMeshAgent.enabled = false;
+
+            if (CustomNetworkManager.IsOnlineSession)
+                NetworkServer.Spawn(jellyBean.gameObject, PlayerNetworkCharacter.LocalPlayer.connectionToServer);
+
+            jellyBean.SetWasSummoned();
+
             jellyBean.OnBecameGrounded += () =>
             {
-                jellyBean.Rigidbody.isKinematic = true;
-                jellyBean.NavMeshAgent.enabled = true;
+                jellyBean.SetSummoningCompleted();
                 PlayerMovement player = FindClosestPlayer();
                 jellyBean.SetTarget(player.Player.Health, player.transform, JellyBeanState.Chasing);
             };

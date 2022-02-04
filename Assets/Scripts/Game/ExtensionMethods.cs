@@ -20,4 +20,26 @@ public static class ExtensionMethods
         yield return new WaitForSeconds(delay);
         method();
     }
+
+    public static bool? ToNullableBool(this int value)
+    {
+        if (value == -1)
+            return null;
+        if (value == 1)
+            return true;
+        if (value == 0)
+            return false;
+
+        throw new System.Exception(value + " is not a nullable bool");
+    }
+
+    public static int ToInt(this bool? nullableBool)
+    {
+        if (nullableBool == null)
+            return -1;
+        if ((bool)nullableBool)
+            return 1;
+        else
+            return 0;
+    }
 }
