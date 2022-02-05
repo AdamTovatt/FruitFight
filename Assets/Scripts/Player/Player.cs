@@ -80,7 +80,7 @@ public class Player : NetworkBehaviour
 
     private void OnDied(Health sender, CauseOfDeath causeOfDeath)
     {
-        Vector3 newPosition = transform.position;
+        GroundedPositionInformation groundedPosition = new GroundedPositionInformation(transform, 0, transform.position);
 
         if (Movement.isActiveAndEnabled && Movement.ChargingProjectile)
             Movement.StopChargeProjectile(false);
@@ -101,7 +101,9 @@ public class Player : NetworkBehaviour
             }
 
             if (Movement.PreviousGroundedPositions.Count > 0)
-                newPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key].Position;
+            {
+                groundedPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key];
+            }
 
             //}
             //else
@@ -128,7 +130,7 @@ public class Player : NetworkBehaviour
             RemoveItem(AbsorbableItemType.JellyBean, JellyBeans >= DeathCost ? DeathCost : JellyBeans);
             RemoveItem(AbsorbableItemType.Coin, Coins >= DeathCost * 2 ? DeathCost * 2 : Coins);
 
-            this.CallWithDelay(() => { Respawn(newPosition); }, PlayerRespawnTime);
+            this.CallWithDelay(() => { Respawn(groundedPosition); }, PlayerRespawnTime);
         }
     }
 
@@ -175,22 +177,22 @@ public class Player : NetworkBehaviour
         OnDroppedItem?.Invoke();
     }
 
-    public void Respawn(Vector3 newPosition)
+    public void Respawn(GroundedPositionInformation groundedPosition)
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcRespawn(newPosition);
+                RpcRespawn(groundedPosition.Transform.position + groundedPosition.RelativePosition);
             }
             else
             {
-                CmdRespawn(newPosition);
+                CmdRespawn(groundedPosition.Transform.position + groundedPosition.RelativePosition);
             }
         }
         else
         {
-            PerformRespawn(newPosition);
+            PerformRespawn(groundedPosition.Transform.position + groundedPosition.RelativePosition);
         }
     }
 

@@ -378,9 +378,11 @@ public class PlayerMovement : MovingCharacter
             }
             else
             {
-                UpdateGroundedPosition();
                 averageVelocityKeeper.Parent = null;
             }
+
+            Debug.Log("is grounded, update grounded position");
+            UpdateGroundedPosition();
         }
         else
         {
@@ -727,6 +729,10 @@ public class PlayerMovement : MovingCharacter
         if (LastGroundedPosition == null)
         {
             LastGroundedPosition = new GroundedPositionInformation(groundedChecker.GroundTransform, Time.time, transform.position);
+
+            if (PreviousGroundedPositions.Count == 0)
+                PreviousGroundedPositions.Add(LastGroundedPosition.Transform, LastGroundedPosition);
+
             return;
         }
 
