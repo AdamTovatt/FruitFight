@@ -213,8 +213,18 @@ public class Player : NetworkBehaviour
         transform.position = newPosition;
         BeamOfLight beamOfLight = Instantiate(BeamOfLightPrefab, newPosition, transform.rotation).GetComponent<BeamOfLight>();
 
+        Ray ray = new Ray(newPosition + Vector3.up * 0.5f, -Vector3.up);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, 0.5f, 0.5f).Where(x => x.transform.CompareTag("Ground")).ToArray();
+
+        if(hits.Length > 0)
+        {
+            RaycastHit hit = hits.OrderBy(x => x.distance).First();
+            beamOfLight.transform.SetParent(hit.transform);
+        }
+
         beamOfLight.OnReachedPeak += () =>
         {
+            transform.position = beamOfLight.transform.position;
             MeshReplacer.GoBackToNormal();
 
             if (!CustomNetworkManager.IsOnlineSession || NetworkCharacter.IsLocalPlayer)

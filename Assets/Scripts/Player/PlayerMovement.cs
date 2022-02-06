@@ -381,7 +381,6 @@ public class PlayerMovement : MovingCharacter
                 averageVelocityKeeper.Parent = null;
             }
 
-            Debug.Log("is grounded, update grounded position");
             UpdateGroundedPosition();
         }
         else
