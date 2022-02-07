@@ -8,7 +8,10 @@ public class Robot : MovingCharacter
 {
     public float DiscoveryRadius = 20f;
     public float RoamNewTargetRange = 5f;
+    public float CloseRange = 2f;
     public float PersonalBoundaryDistance = 0.7f;
+    public float PunchDamage = 30f;
+    public float TimeBetweenPunches = 2f;
     public NavMeshAgent Navigation;
     public UniqueSoundSource UniqueSoundSource;
     public FootStepAudioSource FootStepAudio;
@@ -16,6 +19,9 @@ public class Robot : MovingCharacter
     public RobotHatchController Hatches;
     public GameObject JellyBeanPrefab;
     public GameObject SmokePoofPrefab;
+    public GameObject SmallSparkPrefab;
+    public Transform RightHandPosition;
+    public Transform LeftHandPosition;
 
     [SyncVar]
     public int ServerStandingStill;
@@ -28,9 +34,10 @@ public class Robot : MovingCharacter
 
     public override event AttackHandler OnAttack;
 
-    public Vector3 TargetLocationSameHeight { get { return  new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z); } }
+    public Vector3 TargetLocationSameHeight { get { return new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z); } }
     public bool IsFacingTarget { get { return Quaternion.Angle(Quaternion.LookRotation(TargetLocationSameHeight - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared; } }
     public float DistanceToTargetSquared { get { return (TargetPosition - transform.position).sqrMagnitude; } }
+    public float DistanceToVictimSquared { get { if (victim == null) return -1; return (victim.position - transform.position).sqrMagnitude; } }
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
     private Vector3 _targetPosition;
 
@@ -40,6 +47,9 @@ public class Robot : MovingCharacter
     private Dictionary<Transform, Health> healthLookup = new Dictionary<Transform, Health>();
     private Dictionary<Transform, uint> playerNetIdLookup = new Dictionary<Transform, uint>();
     private Dictionary<uint, Transform> netIdPlayerLookup = new Dictionary<uint, Transform>();
+
+    private bool victimIsCloseRange { get { if (victim == null) return false; return DistanceToVictimSquared < CloseRange * CloseRange; } }
+    private Vector3 horizontalToVictim { get { Vector3 toVictim = victim.transform.position - transform.position; toVictim.y = 0; return toVictim; } }
 
     private GroundedChecker groundedChecker;
     private float personalBoundaryDistanceSquared;
@@ -51,6 +61,9 @@ public class Robot : MovingCharacter
     private Transform victim;
     private float setVictimTime;
     private bool shouldOverrideStandingStill;
+    private float lastPunchTime;
+    private AttackSide lastAttackSide;
+    private RobotState state = RobotState.Unspecified;
 
     private void Awake()
     {
@@ -67,7 +80,10 @@ public class Robot : MovingCharacter
     private void Update()
     {
         if (CustomNetworkManager.HasAuthority)
+        {
+            UpdateState();
             Think();
+        }
 
         if (!doneRotatingTowardsTarget)
         {
@@ -87,7 +103,7 @@ public class Robot : MovingCharacter
             ServerStandingStill = StandingStill.ToInt();
     }
 
-    private void Think()
+    private void UpdateState()
     {
         if ((victim == null || Time.time - setVictimTime > 2) && GameManager.Instance != null)
         {
@@ -100,19 +116,90 @@ public class Robot : MovingCharacter
                 {
                     health.OnDied += VictimDied;
                     SetNewVictim(player);
-                    ThinkAboutVictim();
                 }
             }
+        }
+
+        if (victimIsCloseRange)
+        {
+            if (state != RobotState.CloseRange)
+            {
+                state = RobotState.CloseRange;
+
+                if (!IsFacingTarget)
+                    StartRotateTowardsTarget();
+
+                TargetPosition = transform.position;
+                StartNavigationTowardsTarget();
+
+                Debug.Log("Entered close range");
+                return;
+            }
+        }
+        else
+        {
+            if (state == RobotState.CloseRange)
+            {
+                Debug.Log("Exited close range");
+                state = RobotState.Unspecified;
+            }
+        }
+
+        if (state == RobotState.Unspecified)
+        {
+            state = RobotState.Moving;
+        }
+    }
+
+    private void Think()
+    {
+        switch (state)
+        {
+            case RobotState.Moving:
+                if (!isAtTarget && DistanceToTargetSquared < personalBoundaryDistanceSquared)
+                {
+                    ReachedTarget();
+                }
+
+                if (!isAtTarget && (standingStillTime > 2.5f || (standingStillTime > 0.4f && Navigation.path.status != NavMeshPathStatus.PathComplete)) && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+                {
+                    standingStillTime = 0;
+                    ReachedTarget();
+                }
+                break;
+            case RobotState.CloseRange:
+                if (victim != null)
+                {
+                    if (IsFacingPosition(victim.transform.position, 10f) || horizontalToVictim.sqrMagnitude < 1)
+                    {
+                        if (Time.time - lastPunchTime > TimeBetweenPunches)
+                        {
+                            Debug.Log("punch");
+                            AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
+                            lastAttackSide = side;
+                            OnAttack?.Invoke(victim.position + Vector3.up * 0.4f, side);
+                            lastPunchTime = Time.time;
+                            this.CallWithDelay(ApplyPlayerPunch, 0.2f);
+                        }
+                    }
+                    else
+                    {
+                        doneRotatingTowardsTarget = true;
+                        RotateTowardsPosition(victim.transform.position);
+                    }
+                }
+                break;
+            case RobotState.Spawning:
+                break;
+            case RobotState.Unspecified:
+                break;
+            default:
+                break;
         }
 
         if (TargetPosition == Vector3.zero)
         {
             FindNewRoamTarget();
-        }
-
-        if (!isAtTarget && DistanceToTargetSquared < personalBoundaryDistanceSquared)
-        {
-            ReachedTarget();
         }
 
         if ((bool)StandingStill)
@@ -123,17 +210,45 @@ public class Robot : MovingCharacter
         {
             standingStillTime = 0;
         }
+    }
 
-        if (!isAtTarget && (standingStillTime > 2.5f || (standingStillTime > 0.4f && Navigation.path.status != NavMeshPathStatus.PathComplete)) && DistanceToTargetSquared > personalBoundaryDistanceSquared)
+    private void ApplyPlayerPunch()
+    {
+        if (DistanceToVictimSquared < 3.5f && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 1)
         {
-            standingStillTime = 0;
-            ReachedTarget();
+            Vector3 handPosition = lastAttackSide == AttackSide.Left ? LeftHandPosition.position : RightHandPosition.position;
+            Instantiate(SmallSparkPrefab, handPosition, Quaternion.identity);
+
+            Health health = GetHealthForTransform(victim.transform);
+            health.TakeDamage(PunchDamage);
+
+            Vector3 explosionOrigin = health.transform.position + (transform.position - health.transform.position).normalized;// + Vector3.up * -0.1f;
+            explosionOrigin.y = health.transform.position.y;
+            health.GetComponent<PlayerMovement>().RigidBody.AddExplosionForce(10f * PunchDamage, explosionOrigin, 2f);
+
+            lastPunchTime += 0.2f; //if the punch landed we don't want to punch again as soon
+        }
+        else
+        {
+            lastPunchTime -= 1.2f; //if the punch didn't land we want to punch again soon
         }
     }
 
     private void ThinkAboutVictim()
     {
 
+    }
+
+    private bool IsFacingPosition(Vector3 position, float minAngle)
+    {
+        return Quaternion.Angle(Quaternion.LookRotation(position - transform.position, Vector3.up), transform.rotation) <= minAngle;
+    }
+
+    private void RotateTowardsPosition(Vector3 position)
+    {
+        Vector3 newForward = Vector3.RotateTowards(transform.forward, position - transform.position, 5f * Time.deltaTime, 0);
+        newForward.y = transform.forward.y;
+        transform.forward = newForward;
     }
 
     private void VictimDied(Health sender, CauseOfDeath causeOfDeath)
@@ -265,14 +380,18 @@ public class Robot : MovingCharacter
 
     private void TakeAction()
     {
-        if (Time.time - lastJellyBeanSpawnTime > 5f)
+        Debug.Log("Take action: " + state.ToString());
+        if (state != RobotState.CloseRange)
         {
-            StartSpawnJellyBean();
-            this.CallWithDelay(FindNewRoamTarget, 4);
-        }
-        else
-        {
-            FindNewRoamTarget();
+            if (Time.time - lastJellyBeanSpawnTime > 5f)
+            {
+                StartSpawnJellyBean();
+                this.CallWithDelay(FindNewRoamTarget, 4);
+            }
+            else
+            {
+                FindNewRoamTarget();
+            }
         }
     }
 
@@ -286,15 +405,18 @@ public class Robot : MovingCharacter
     {
         if (!IsFacingTarget)
         {
-            doneRotatingTowardsTarget = false;
-            rotationLerpTime = 0;
+            StartRotateTowardsTarget();
         }
         else
         {
             InvokeStartedFacingTarget();
         }
+    }
 
-        OnStartedFacingTarget += StartNavigationTowardsTarget;
+    private void StartRotateTowardsTarget()
+    {
+        doneRotatingTowardsTarget = false;
+        rotationLerpTime = 0;
     }
 
     private void StartNavigationTowardsTarget()
@@ -317,6 +439,7 @@ public class Robot : MovingCharacter
     private void SetNewTarget(Vector3 position)
     {
         TargetPosition = position;
+        OnStartedFacingTarget += StartNavigationTowardsTarget;
     }
 
     private Vector3? GetRandomPositionWithinDistance(float distance, int attempt = 0, Vector3 offset = default(Vector3))
@@ -399,4 +522,9 @@ public class Robot : MovingCharacter
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(TargetPosition, 1);
     }
+}
+
+public enum RobotState
+{
+    Moving, CloseRange, Spawning, Unspecified
 }
