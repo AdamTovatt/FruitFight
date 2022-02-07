@@ -9,6 +9,7 @@ public class Robot : MovingCharacter
     public float DiscoveryRadius = 20f;
     public float RoamNewTargetRange = 5f;
     public float CloseRange = 2f;
+    public float PunchReachSquared = 3.4f;
     public float PersonalBoundaryDistance = 0.7f;
     public float PunchDamage = 30f;
     public float TimeBetweenPunches = 2f;
@@ -62,6 +63,7 @@ public class Robot : MovingCharacter
     private float setVictimTime;
     private bool shouldOverrideStandingStill;
     private float lastPunchTime;
+    private float closeRangeRepositionTime;
     private AttackSide lastAttackSide;
     private RobotState state = RobotState.Unspecified;
 
@@ -170,6 +172,20 @@ public class Robot : MovingCharacter
             case RobotState.CloseRange:
                 if (victim != null)
                 {
+                    if(horizontalToVictim.sqrMagnitude > PunchReachSquared)
+                    {
+                        if (Time.time - closeRangeRepositionTime > 2f)
+                        {
+                            SetNewTarget(victim.position);
+                            StartNavigationTowardsTarget();
+                            closeRangeRepositionTime = Time.time;
+                        }
+                    }
+                    else
+                    {
+                        SetNewTarget(transform.position);
+                    }
+
                     if (IsFacingPosition(victim.transform.position, 10f) || horizontalToVictim.sqrMagnitude < 1)
                     {
                         if (Time.time - lastPunchTime > TimeBetweenPunches)
@@ -214,7 +230,7 @@ public class Robot : MovingCharacter
 
     private void ApplyPlayerPunch()
     {
-        if (DistanceToVictimSquared < 3.5f && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 1)
+        if (DistanceToVictimSquared < PunchReachSquared && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 1)
         {
             Vector3 handPosition = lastAttackSide == AttackSide.Left ? LeftHandPosition.position : RightHandPosition.position;
             Instantiate(SmallSparkPrefab, handPosition, Quaternion.identity);
