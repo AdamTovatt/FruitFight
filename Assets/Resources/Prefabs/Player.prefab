@@ -1230,6 +1230,7 @@ MonoBehaviour:
   StepSpeed: 10
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 2012823963042745976}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!1 &2012823961993309232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,6 +1680,7 @@ MonoBehaviour:
   StepSpeed: 10
   FootJumpPositionHeight: 0.1
   OtherFoot: {fileID: 2012823961827835530}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!1 &2350739880408885265
 GameObject:
   m_ObjectHideFlags: 0

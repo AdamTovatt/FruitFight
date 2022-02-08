@@ -66,6 +66,9 @@ public class Robot : MovingCharacter
     private float closeRangeRepositionTime;
     private AttackSide lastAttackSide;
     private RobotState state = RobotState.Unspecified;
+    private int spawnedJellyBeans;
+    private float lastStartNavigationTime;
+    private float chargeTime;
 
     private void Awake()
     {
@@ -143,7 +146,14 @@ public class Robot : MovingCharacter
             if (state == RobotState.CloseRange)
             {
                 Debug.Log("Exited close range");
-                state = RobotState.Unspecified;
+                if (Time.time - chargeTime < 7f)
+                {
+                    state = RobotState.Charging;
+                }
+                else
+                {
+                    state = RobotState.Unspecified;
+                }
             }
         }
 
@@ -168,13 +178,18 @@ public class Robot : MovingCharacter
                     standingStillTime = 0;
                     ReachedTarget();
                 }
+
+                if(isAtTarget && standingStillTime > 1f)
+                {
+                    ReachedTarget();
+                }
                 break;
             case RobotState.CloseRange:
                 if (victim != null)
                 {
-                    if(horizontalToVictim.sqrMagnitude > PunchReachSquared)
+                    if (horizontalToVictim.sqrMagnitude > PunchReachSquared * 0.8f)
                     {
-                        if (Time.time - closeRangeRepositionTime > 2f)
+                        if (Time.time - closeRangeRepositionTime > 1f)
                         {
                             SetNewTarget(victim.position);
                             StartNavigationTowardsTarget();
@@ -205,9 +220,28 @@ public class Robot : MovingCharacter
                     }
                 }
                 break;
-            case RobotState.Spawning:
+            case RobotState.Charging:
+                if (victim != null)
+                {
+                    TargetPosition = victim.transform.position;
+                    RotateTowardsPosition(TargetPosition);
+
+                    if (Time.time - lastStartNavigationTime > 0.5f)
+                    {
+                        lastStartNavigationTime = Time.time;
+                        StartNavigationTowardsTarget();
+                    }
+                }
+                else
+                {
+                    state = RobotState.Unspecified;
+                }
                 break;
             case RobotState.Unspecified:
+                if (Time.time - chargeTime < 7f && victim != null)
+                    state = RobotState.Charging;
+                else
+                    state = RobotState.Moving;
                 break;
             default:
                 break;
@@ -351,9 +385,11 @@ public class Robot : MovingCharacter
 
     private void PerformStartSpawnJellyBean()
     {
-        this.CallWithDelay(SpawnJellyBean, 2);
+        state = RobotState.Spawning;
+        this.CallWithDelay(SpawnJellyBean, 1.4f);
         lastJellyBeanSpawnTime = Time.time;
-        this.CallWithDelay(Hatches.Open, 1);
+        this.CallWithDelay(Hatches.Open, 0.2f);
+        spawnedJellyBeans++;
     }
 
     [ClientRpc]
@@ -366,6 +402,11 @@ public class Robot : MovingCharacter
 
     private void SpawnJellyBean()
     {
+        if(Time.time - lastJellyBeanSpawnTime < 0.2f)
+        {
+            return;
+        }
+
         if (CustomNetworkManager.HasAuthority)
         {
             JellyBean jellyBean = Instantiate(JellyBeanPrefab, Hatches.transform.position + Hatches.transform.forward, transform.rotation).GetComponent<JellyBean>();
@@ -385,7 +426,9 @@ public class Robot : MovingCharacter
 
         Instantiate(SmokePoofPrefab, Hatches.transform.position + Hatches.transform.forward + Hatches.transform.up * 0.3f, transform.rotation);
 
-        this.CallWithDelay(Hatches.Close, 1);
+        this.CallWithDelay(Hatches.Close, 0.5f);
+        state = RobotState.Moving;
+        lastJellyBeanSpawnTime = Time.time;
     }
 
     private void ReachedTarget()
@@ -399,14 +442,53 @@ public class Robot : MovingCharacter
         Debug.Log("Take action: " + state.ToString());
         if (state != RobotState.CloseRange)
         {
-            if (Time.time - lastJellyBeanSpawnTime > 5f)
+            if (spawnedJellyBeans < 3)
             {
-                StartSpawnJellyBean();
-                this.CallWithDelay(FindNewRoamTarget, 4);
+                if (Time.time - lastJellyBeanSpawnTime > 5f)
+                {
+                    if (victim != null)
+                    {
+                        TargetPosition = victim.transform.position;
+                        StartRotateTowardsTarget();
+                        OnStartedFacingTarget += () =>
+                        {
+                            StartSpawnJellyBean();
+                            this.CallWithDelay(FindNewRoamTarget, 4);
+                        };
+                    }
+                    else
+                    {
+                        StartSpawnJellyBean();
+                        this.CallWithDelay(FindNewRoamTarget, 4);
+                    }
+                }
+                else
+                {
+                    FindNewRoamTarget();
+                }
             }
             else
             {
-                FindNewRoamTarget();
+                if (victim != null)
+                {
+                    if (state != RobotState.Charging)
+                    {
+                        state = RobotState.Charging;
+                        chargeTime = Time.time;
+                        TargetPosition = victim.transform.position;
+                        StartRotateTowardsTarget();
+                        OnStartedFacingTarget += () =>
+                        {
+                            StartNavigationTowardsTarget();
+                        };
+                    }
+                }
+                else
+                {
+                    FindNewRoamTarget();
+                }
+
+                spawnedJellyBeans = 0;
             }
         }
     }
@@ -542,5 +624,5 @@ public class Robot : MovingCharacter
 
 public enum RobotState
 {
-    Moving, CloseRange, Spawning, Unspecified
+    Moving, CloseRange, Spawning, Unspecified, Charging
 }
