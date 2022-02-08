@@ -27,7 +27,7 @@ public class AverageVelocityKeeper : MonoBehaviour
 
     void Update()
     {
-        if (navMeshAgent == null)
+        if (navMeshAgent == null || !navMeshAgent.enabled)
         {
             if (lastSample == null)
                 lastSample = new PointAndTime(transform.position, Time.timeAsDouble, null);

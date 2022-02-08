@@ -37,6 +37,10 @@ public class Health : NetworkBehaviour
     public float WobbleSpeed;
     public float WobbleDuration;
 
+    public bool DisplayHealth;
+    public string HealthDisplayName;
+    public float HpPerHeart = 50;
+
     public MovingCharacter MovingCharacter { get; set; }
     public bool InvincibleOverride { get; set; }
     public bool CurrentlyInvincible { get { return InvincibleOverride || (BecomeInvincibleAfterHit && (Time.time - lastHitTime < InvincibleTime)); } }
@@ -75,6 +79,12 @@ public class Health : NetworkBehaviour
         {
             if (!GameManager.Instance.TransformsWithHealth.ContainsKey(transform))
                 GameManager.Instance.TransformsWithHealth.Add(transform, this);
+        }
+
+        if(DisplayHealth)
+        {
+            Debug.Log("Should display health");
+            GameUi.Instance.DisplayHealth(this, HpPerHeart);
         }
     }
 

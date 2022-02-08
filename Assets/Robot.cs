@@ -66,7 +66,7 @@ public class Robot : MovingCharacter
     private float closeRangeRepositionTime;
     private AttackSide lastAttackSide;
     private RobotState state = RobotState.Unspecified;
-    private int spawnedJellyBeans;
+    private int spawnedJellyBeans = 5;
     private float lastStartNavigationTime;
     private float chargeTime;
 
@@ -79,7 +79,10 @@ public class Robot : MovingCharacter
     private void Start()
     {
         if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.Instance.IsServer)
+        {
+            Navigation.enabled = false;
             shouldOverrideStandingStill = true;
+        }
     }
 
     private void Update()
@@ -179,7 +182,7 @@ public class Robot : MovingCharacter
                     ReachedTarget();
                 }
 
-                if(isAtTarget && standingStillTime > 1f)
+                if (isAtTarget && standingStillTime > 1f)
                 {
                     ReachedTarget();
                 }
@@ -189,7 +192,7 @@ public class Robot : MovingCharacter
                 {
                     if (horizontalToVictim.sqrMagnitude > PunchReachSquared * 0.8f)
                     {
-                        if (Time.time - closeRangeRepositionTime > 1f)
+                        if (Time.time - closeRangeRepositionTime > 0.2f)
                         {
                             SetNewTarget(victim.position);
                             StartNavigationTowardsTarget();
@@ -205,10 +208,9 @@ public class Robot : MovingCharacter
                     {
                         if (Time.time - lastPunchTime > TimeBetweenPunches)
                         {
-                            Debug.Log("punch");
                             AttackSide side = Random.Range(0, 2) > 0 ? AttackSide.Right : AttackSide.Left;
                             lastAttackSide = side;
-                            OnAttack?.Invoke(victim.position + Vector3.up * 0.4f, side);
+                            Punch(side);
                             lastPunchTime = Time.time;
                             this.CallWithDelay(ApplyPlayerPunch, 0.2f);
                         }
@@ -226,7 +228,7 @@ public class Robot : MovingCharacter
                     TargetPosition = victim.transform.position;
                     RotateTowardsPosition(TargetPosition);
 
-                    if (Time.time - lastStartNavigationTime > 0.5f)
+                    if (Time.time - lastStartNavigationTime > 0.2f)
                     {
                         lastStartNavigationTime = Time.time;
                         StartNavigationTowardsTarget();
@@ -262,12 +264,43 @@ public class Robot : MovingCharacter
         }
     }
 
+    private void Punch(AttackSide side)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcPunch((int)side);
+                PerformPunch(side);
+            }
+        }
+        else
+        {
+            PerformPunch(side);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcPunch(int side)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformPunch((AttackSide)side);
+    }
+
+
+    private void PerformPunch(AttackSide side)
+    {
+        OnAttack?.Invoke(victim.position + Vector3.up * 0.4f, side);
+    }
+
     private void ApplyPlayerPunch()
     {
         if (DistanceToVictimSquared < PunchReachSquared && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 1)
         {
             Vector3 handPosition = lastAttackSide == AttackSide.Left ? LeftHandPosition.position : RightHandPosition.position;
-            Instantiate(SmallSparkPrefab, handPosition, Quaternion.identity);
+            CreateSpark(handPosition);
 
             Health health = GetHealthForTransform(victim.transform);
             health.TakeDamage(PunchDamage);
@@ -282,6 +315,40 @@ public class Robot : MovingCharacter
         {
             lastPunchTime -= 1.2f; //if the punch didn't land we want to punch again soon
         }
+    }
+
+    private void CreateSpark(Vector3 position)
+    {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcCreateSpark(position);
+                PerformCreateSpark(position);
+            }
+            else
+            {
+                Debug.LogError("Client tried to create spark, this should not be able to happen");
+            }
+        }
+        else
+        {
+            PerformCreateSpark(position);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcCreateSpark(Vector3 position)
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformCreateSpark(position);
+    }
+
+    private void PerformCreateSpark(Vector3 position)
+    {
+        Instantiate(SmallSparkPrefab, position, Quaternion.identity);
     }
 
     private void ThinkAboutVictim()
@@ -402,7 +469,7 @@ public class Robot : MovingCharacter
 
     private void SpawnJellyBean()
     {
-        if(Time.time - lastJellyBeanSpawnTime < 0.2f)
+        if (Time.time - lastJellyBeanSpawnTime < 0.2f)
         {
             return;
         }
@@ -444,7 +511,7 @@ public class Robot : MovingCharacter
         {
             if (spawnedJellyBeans < 3)
             {
-                if (Time.time - lastJellyBeanSpawnTime > 5f)
+                if (Time.time - lastJellyBeanSpawnTime > 1f)
                 {
                     if (victim != null)
                     {

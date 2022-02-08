@@ -4094,6 +4094,8 @@ MonoBehaviour:
   WinScreen: {fileID: 330635615}
   LoadingScreen: {fileID: 574587376}
   CameraViewBlocker: {fileID: 73360751}
+  HealthDisplayPrefab: {fileID: 6031417007198884223, guid: b40143dee91e03d4c83538f08a625079,
+    type: 3}
 --- !u!114 &1557549036
 MonoBehaviour:
   m_ObjectHideFlags: 0

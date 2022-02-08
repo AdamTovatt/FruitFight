@@ -18,6 +18,8 @@ public class GameUi : UiManager
     public LoadingScreen LoadingScreen;
     public CameraViewBlocker CameraViewBlocker;
 
+    public HealthDisplay HealthDisplayPrefab;
+
     public static GameUi Instance { get; private set; }
 
     private List<UiPlayerInfo> playerInfos;
@@ -50,9 +52,16 @@ public class GameUi : UiManager
         PauseMenu.OnExitLevel -= ExitLevelButton;
     }
 
+    public void DisplayHealth(Health health, float hpPerHeart)
+    {
+        Debug.Log("ui display health");
+        HealthDisplay healthDisplay = Instantiate(HealthDisplayPrefab, transform).GetComponent<HealthDisplay>();
+        healthDisplay.Display(health, hpPerHeart);
+    }
+
     public void ShowWinScreen(int earnedCoins, int earnedJellyBeans, int earnedXp)
     {
-        if(PauseMenu.gameObject.activeSelf)
+        if (PauseMenu.gameObject.activeSelf)
         {
             PauseMenu.Close();
         }
@@ -83,7 +92,7 @@ public class GameUi : UiManager
 
     private void ExitLevelButton()
     {
-        if(!CustomNetworkManager.IsOnlineSession)
+        if (!CustomNetworkManager.IsOnlineSession)
         {
             ExitLevel();
         }

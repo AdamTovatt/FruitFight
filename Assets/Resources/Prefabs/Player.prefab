@@ -852,6 +852,9 @@ MonoBehaviour:
   WobbleAmplitude: 0.1
   WobbleSpeed: 16
   WobbleDuration: 1.2
+  DisplayHealth: 0
+  HealthDisplayName: 
+  HpPerHeart: 50
 --- !u!114 &6360796239342531682
 MonoBehaviour:
   m_ObjectHideFlags: 0

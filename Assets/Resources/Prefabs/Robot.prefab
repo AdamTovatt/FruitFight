@@ -1565,7 +1565,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.6
-  m_Speed: 2.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1626,6 +1626,7 @@ MonoBehaviour:
   DiscoveryRadius: 20
   RoamNewTargetRange: 5
   CloseRange: 4
+  PunchReachSquared: 3.4
   PersonalBoundaryDistance: 1
   PunchDamage: 30
   TimeBetweenPunches: 2
@@ -1776,7 +1777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  StartHealth: 1000
+  StartHealth: 800
   SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
   WaterSplash: {fileID: 0}
   SpawnOnDeathPrefab: {fileID: 0}
@@ -1791,6 +1792,9 @@ MonoBehaviour:
   WobbleAmplitude: 0
   WobbleSpeed: 0
   WobbleDuration: 0
+  DisplayHealth: 1
+  HealthDisplayName: Vile Robot
+  HpPerHeart: 70
 --- !u!114 &2515662595440824187
 MonoBehaviour:
   m_ObjectHideFlags: 0
