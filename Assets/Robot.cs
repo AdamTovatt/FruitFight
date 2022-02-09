@@ -69,6 +69,7 @@ public class Robot : MovingCharacter
     private int spawnedJellyBeans = 5;
     private float lastStartNavigationTime;
     private float chargeTime;
+    private bool isDisplayingHealth;
 
     private void Awake()
     {
@@ -139,6 +140,7 @@ public class Robot : MovingCharacter
 
                 TargetPosition = transform.position;
                 StartNavigationTowardsTarget();
+                isAtTarget = false;
 
                 Debug.Log("Entered close range");
                 return;
@@ -149,7 +151,7 @@ public class Robot : MovingCharacter
             if (state == RobotState.CloseRange)
             {
                 Debug.Log("Exited close range");
-                if (Time.time - chargeTime < 7f)
+                if (Time.time - chargeTime < 3.5f)
                 {
                     state = RobotState.Charging;
                 }
@@ -157,6 +159,8 @@ public class Robot : MovingCharacter
                 {
                     state = RobotState.Unspecified;
                 }
+
+                isAtTarget = false;
             }
         }
 
@@ -268,7 +272,7 @@ public class Robot : MovingCharacter
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
-            if(CustomNetworkManager.Instance.IsServer)
+            if (CustomNetworkManager.Instance.IsServer)
             {
                 RpcPunch((int)side);
                 PerformPunch(side);
@@ -319,9 +323,9 @@ public class Robot : MovingCharacter
 
     private void CreateSpark(Vector3 position)
     {
-        if(CustomNetworkManager.IsOnlineSession)
+        if (CustomNetworkManager.IsOnlineSession)
         {
-            if(CustomNetworkManager.Instance.IsServer)
+            if (CustomNetworkManager.Instance.IsServer)
             {
                 RpcCreateSpark(position);
                 PerformCreateSpark(position);
@@ -418,6 +422,18 @@ public class Robot : MovingCharacter
 
         this.victim = victim;
 
+        if (!isDisplayingHealth && victim != null)
+        {
+            GameUi.Instance.DisplayHealth(Health, Health.HpPerHeart);
+            isDisplayingHealth = true;
+        }
+
+        if (victim == null && isDisplayingHealth)
+        {
+            GameUi.Instance.StopDisplayingHealth();
+            isDisplayingHealth = false;
+        }
+
         if (victim == null)
             SetIdle();
     }
@@ -487,7 +503,8 @@ public class Robot : MovingCharacter
             {
                 jellyBean.SetSummoningCompleted();
                 PlayerMovement player = FindClosestPlayer();
-                jellyBean.SetTarget(player.Player.Health, player.transform, JellyBeanState.Chasing);
+                if (player != null)
+                    jellyBean.SetTarget(player.Player.Health, player.transform, JellyBeanState.Chasing);
             };
         }
 
@@ -500,6 +517,9 @@ public class Robot : MovingCharacter
 
     private void ReachedTarget()
     {
+        if (isAtTarget)
+            return;
+
         isAtTarget = true;
         TakeAction();
     }

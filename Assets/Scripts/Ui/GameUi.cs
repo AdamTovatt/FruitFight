@@ -24,6 +24,7 @@ public class GameUi : UiManager
 
     private List<UiPlayerInfo> playerInfos;
     private PlayerControls playerInput;
+    private HealthDisplay currentHealthDisplay;
 
     private void Awake()
     {
@@ -52,9 +53,20 @@ public class GameUi : UiManager
         PauseMenu.OnExitLevel -= ExitLevelButton;
     }
 
+    public void StopDisplayingHealth()
+    {
+        if(currentHealthDisplay != null)
+        {
+            Destroy(currentHealthDisplay.gameObject);
+            currentHealthDisplay = null;
+        }
+    }
+
     public void DisplayHealth(Health health, float hpPerHeart)
     {
-        Debug.Log("ui display health");
+        if (currentHealthDisplay != null)
+            StopDisplayingHealth();
+
         HealthDisplay healthDisplay = Instantiate(HealthDisplayPrefab, transform).GetComponent<HealthDisplay>();
         healthDisplay.Display(health, hpPerHeart);
     }
