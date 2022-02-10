@@ -23,6 +23,10 @@ public class Robot : MovingCharacter
     public GameObject SmallSparkPrefab;
     public Transform RightHandPosition;
     public Transform LeftHandPosition;
+    public GameObject BodySparks;
+    public GameObject ElectricCharge;
+    public GameObject ElectricProjectile;
+    public Transform ElectricShootPoint;
 
     [SyncVar]
     public int ServerStandingStill;
@@ -52,6 +56,8 @@ public class Robot : MovingCharacter
     private bool victimIsCloseRange { get { if (victim == null) return false; return DistanceToVictimSquared < CloseRange * CloseRange; } }
     private Vector3 horizontalToVictim { get { Vector3 toVictim = victim.transform.position - transform.position; toVictim.y = 0; return toVictim; } }
 
+    private Shake[] shakingParts;
+
     private GroundedChecker groundedChecker;
     private float personalBoundaryDistanceSquared;
     private bool doneRotatingTowardsTarget = false;
@@ -70,11 +76,19 @@ public class Robot : MovingCharacter
     private float lastStartNavigationTime;
     private float chargeTime;
     private bool isDisplayingHealth;
+    private bool enraged;
+    private MagicCharge currentMagicCharge;
+    private bool startedShooting;
 
     private void Awake()
     {
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
         personalBoundaryDistanceSquared = PersonalBoundaryDistance * PersonalBoundaryDistance;
+
+        shakingParts = gameObject.GetComponentsInChildren<Shake>();
+
+        Health.OnHealthUpdated += HealthUpdated;
+        BodySparks.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -157,7 +171,10 @@ public class Robot : MovingCharacter
                 }
                 else
                 {
-                    state = RobotState.Unspecified;
+                    if (enraged)
+                        state = RobotState.Shooting;
+                    else
+                        state = RobotState.Unspecified;
                 }
 
                 isAtTarget = false;
@@ -248,6 +265,10 @@ public class Robot : MovingCharacter
                     state = RobotState.Charging;
                 else
                     state = RobotState.Moving;
+                break;
+            case RobotState.Shooting:
+                if (!startedShooting)
+                    StartShooting();
                 break;
             default:
                 break;
@@ -627,6 +648,30 @@ public class Robot : MovingCharacter
         OnStartedFacingTarget += StartNavigationTowardsTarget;
     }
 
+    private void StartShooting()
+    {
+        startedShooting = true;
+
+        if (currentMagicCharge != null)
+            Destroy(currentMagicCharge.gameObject);
+
+        currentMagicCharge = Instantiate(ElectricCharge, ElectricShootPoint.position, Quaternion.identity, ElectricShootPoint).GetComponent<MagicCharge>();
+        currentMagicCharge.Initialize(1f);
+
+        Debug.Log("did create charge");
+
+        this.CallWithDelay(FireShot, 2f);
+    }
+
+    private void FireShot()
+    {
+        Vector3 victimDirection = victim == null ? transform.forward : (victim.transform.position - ElectricShootPoint.transform.position).normalized;
+
+        Destroy(currentMagicCharge.gameObject);
+        MagicProjectile projectile = Instantiate(ElectricProjectile, ElectricShootPoint.transform.position, Quaternion.identity).GetComponent<MagicProjectile>();
+        projectile.Shoot(ElectricShootPoint.transform.position, transform, victimDirection, ElectricShootPoint.transform.position, 4f, true);
+    }
+
     private Vector3? GetRandomPositionWithinDistance(float distance, int attempt = 0, Vector3 offset = default(Vector3))
     {
         bool foundValue = false;
@@ -699,17 +744,28 @@ public class Robot : MovingCharacter
 
     public override void WasAttacked(Vector3 attackOrigin, Transform attackingTransform, float attackStrength)
     {
-        Debug.Log("robot attacked");
+
+    }
+
+    private void HealthUpdated()
+    {
+        Debug.Log("Startshake)");
+        foreach (Shake part in shakingParts)
+        {
+            part.StartShaking();
+        }
+        BodySparks.gameObject.SetActive(true);
+        enraged = true;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(TargetPosition, 1);
+        Gizmos.DrawSphere(ElectricShootPoint.position, 1);
     }
 }
 
 public enum RobotState
 {
-    Moving, CloseRange, Spawning, Unspecified, Charging
+    Moving, CloseRange, Spawning, Unspecified, Charging, Shooting
 }

@@ -18,7 +18,7 @@ public class MagicProjectile : MonoBehaviour
     private float lifeTime;
     private Vector3 forward;
 
-    public void Shoot(Vector3 shootOrigin, Transform shooter, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime)
+    public void Shoot(Vector3 shootOrigin, Transform shooter, Vector3 shooterForward, Vector3 shooterPosition, float projectileLifeTime, bool searchForTarget = true)
     {
         lifeTime = projectileLifeTime;
 
@@ -32,36 +32,39 @@ public class MagicProjectile : MonoBehaviour
         Health targetHealth = null;
         float greatestRelevance = 0;
 
-        if (GameManager.Instance != null)
+        if (searchForTarget)
         {
-            Ray sphereCastRay = new Ray(shootOrigin, shooterForward);
-            foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 6))
+            if (GameManager.Instance != null)
             {
-                if (hit.transform.tag != "Player" && hit.transform != shooter)
+                Ray sphereCastRay = new Ray(shootOrigin, shooterForward);
+                foreach (RaycastHit hit in Physics.SphereCastAll(sphereCastRay, 6))
                 {
-                    if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
+                    if (hit.transform.tag != "Player" && hit.transform != shooter)
                     {
-                        float angle = Vector3.Angle(shooterForward, (hit.transform.position - transform.position).normalized);
-                        if (angle < maxTargetAngle) //if the angle is greater than (or equal to) maxTargetAngle we wont target the hit
+                        if (GameManager.Instance.TransformsWithHealth.ContainsKey(hit.transform))
                         {
-                            float relevance = 1 - angle / maxTargetAngle; //relevance starts of as this value, we will add to it later
-
-                            Ray visibleRay = new Ray(shootOrigin, (hit.transform.position + hit.collider.bounds.center) - shootOrigin);
-                            if (Physics.Raycast(visibleRay, out RaycastHit visibleCheckHit, 10000, ~(1 << 2), QueryTriggerInteraction.Ignore))
+                            float angle = Vector3.Angle(shooterForward, (hit.transform.position - transform.position).normalized);
+                            if (angle < maxTargetAngle) //if the angle is greater than (or equal to) maxTargetAngle we wont target the hit
                             {
-                                if (visibleCheckHit.transform == hit.transform) //the target is visible, add relevance
+                                float relevance = 1 - angle / maxTargetAngle; //relevance starts of as this value, we will add to it later
+
+                                Ray visibleRay = new Ray(shootOrigin, (hit.transform.position + hit.collider.bounds.center) - shootOrigin);
+                                if (Physics.Raycast(visibleRay, out RaycastHit visibleCheckHit, 10000, ~(1 << 2), QueryTriggerInteraction.Ignore))
                                 {
-                                    relevance += 0.5f;
+                                    if (visibleCheckHit.transform == hit.transform) //the target is visible, add relevance
+                                    {
+                                        relevance += 0.5f;
+                                    }
                                 }
-                            }
 
-                            relevance += 1.5f / (0.5f * hit.distance + 0.5f); //add the distance to the relevance
+                                relevance += 1.5f / (0.5f * hit.distance + 0.5f); //add the distance to the relevance
 
-                            if (relevance > greatestRelevance) //if our current relevance is greater than the previously greatest relevance we want this hit to be our new target
-                            {
-                                targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
-                                target = targetHealth.transform;
-                                greatestRelevance = relevance;
+                                if (relevance > greatestRelevance) //if our current relevance is greater than the previously greatest relevance we want this hit to be our new target
+                                {
+                                    targetHealth = GameManager.Instance.TransformsWithHealth[hit.transform];
+                                    target = targetHealth.transform;
+                                    greatestRelevance = relevance;
+                                }
                             }
                         }
                     }

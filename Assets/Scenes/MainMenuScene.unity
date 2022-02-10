@@ -39599,6 +39599,8 @@ MonoBehaviour:
   WobbleAmplitude: 0.5
   WobbleSpeed: 20
   WobbleDuration: 1
+  HealthDisplayName: 
+  HpPerHeart: 50
 --- !u!1 &5469537219575280888
 GameObject:
   m_ObjectHideFlags: 0
