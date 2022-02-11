@@ -651,6 +651,31 @@ public class Robot : MovingCharacter
 
     private void StartShooting()
     {
+        if(CustomNetworkManager.IsOnlineSession)
+        {
+            if(CustomNetworkManager.Instance.IsServer)
+            {
+                RpcStartShooting();
+                PerformStartShooting();
+            }
+        }
+        else
+        {
+            PerformStartShooting();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcStartShooting()
+    {
+        if (CustomNetworkManager.Instance.IsServer)
+            return;
+
+        PerformStartShooting();
+    }
+
+    private void PerformStartShooting()
+    {
         startedShooting = true;
 
         if (currentMagicCharge != null)
