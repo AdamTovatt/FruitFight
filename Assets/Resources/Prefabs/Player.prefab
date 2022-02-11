@@ -715,7 +715,7 @@ MonoBehaviour:
   PunchHeight: 0.9
   PunchWidth: 0.15
   PunchSphereRadius: 0.4
-  PunchStrength: 100
+  PunchStrength: 5
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
   MagicLevel: 3

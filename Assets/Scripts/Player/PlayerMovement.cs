@@ -428,6 +428,9 @@ public class PlayerMovement : MovingCharacter
         if (MagicSettings.ConsumeJellyBeans && Player.JellyBeans <= 0) //can't start charging magic if no jelly beans are available
             return;
 
+        if (isChargingProjectile)
+            return;
+
         CurrentRunSpeed = Speed * 0.6f;
         isChargingProjectile = true;
         projectileChargeAmount = 0;
