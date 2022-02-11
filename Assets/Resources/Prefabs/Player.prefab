@@ -715,7 +715,7 @@ MonoBehaviour:
   PunchHeight: 0.9
   PunchWidth: 0.15
   PunchSphereRadius: 0.4
-  PunchStrength: 5
+  PunchStrength: 100
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
   MagicLevel: 3
@@ -852,7 +852,6 @@ MonoBehaviour:
   WobbleAmplitude: 0.1
   WobbleSpeed: 16
   WobbleDuration: 1.2
-  DisplayHealth: 0
   HealthDisplayName: 
   HpPerHeart: 50
 --- !u!114 &6360796239342531682

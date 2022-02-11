@@ -1690,6 +1690,7 @@ MonoBehaviour:
   ElectricProjectile: {fileID: 1568711714316788, guid: d047e82584cbdca4a845115b4caf9f41,
     type: 3}
   ElectricShootPoint: {fileID: 8891694213529997664}
+  EnragedSwitchValue: 0.5
   ServerStandingStill: 0
 --- !u!114 &3914475989003191794
 MonoBehaviour:
@@ -1825,9 +1826,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   StartHealth: 700
-  SpawnDeathObjectOffset: {x: 0, y: 0, z: 0}
+  SpawnDeathObjectOffset: {x: 0, y: 0.4, z: 0}
   WaterSplash: {fileID: 0}
-  SpawnOnDeathPrefab: {fileID: 0}
+  SpawnOnDeathPrefab: {fileID: 109007309912499207, guid: 2b9c92f25b363bb4f8b19fd3046d41ac,
+    type: 3}
   SoundSource: {fileID: 2515662595440824187}
   DamageSoundName: damage
   DestroyOnDeath: 1
@@ -1861,6 +1863,13 @@ MonoBehaviour:
     Volume: 0.29
     Pitch: 1
     PitchVariation: 0.1
+    Delay: 0
+  - Name: enraged
+    Clips:
+    - {fileID: 8300000, guid: 6d195962b6910ac49b6364cea3906cf7, type: 3}
+    Volume: 0.37
+    Pitch: 0.38
+    PitchVariation: 0
     Delay: 0
   PlayOnStart: 0
 --- !u!82 &-6558366719184614670

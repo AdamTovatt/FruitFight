@@ -27,6 +27,7 @@ public class Robot : MovingCharacter
     public GameObject ElectricCharge;
     public GameObject ElectricProjectile;
     public Transform ElectricShootPoint;
+    public float EnragedSwitchValue = 0.5f;
 
     [SyncVar]
     public int ServerStandingStill;
@@ -658,18 +659,20 @@ public class Robot : MovingCharacter
         currentMagicCharge = Instantiate(ElectricCharge, ElectricShootPoint.position, Quaternion.identity, ElectricShootPoint).GetComponent<MagicCharge>();
         currentMagicCharge.Initialize(1f);
 
-        Debug.Log("did create charge");
-
         this.CallWithDelay(FireShot, 2f);
     }
 
     private void FireShot()
     {
-        Vector3 victimDirection = victim == null ? transform.forward : (victim.transform.position - ElectricShootPoint.transform.position).normalized;
+        Vector3 victimDirection = victim == null ? transform.forward : ((victim.transform.position + Vector3.up * 0.5f) - ElectricShootPoint.transform.position).normalized;
+        Vector3 shootPosition = ElectricShootPoint.transform.position + victimDirection * 2;
 
         Destroy(currentMagicCharge.gameObject);
-        MagicProjectile projectile = Instantiate(ElectricProjectile, ElectricShootPoint.transform.position, Quaternion.identity).GetComponent<MagicProjectile>();
-        projectile.Shoot(ElectricShootPoint.transform.position, transform, victimDirection, ElectricShootPoint.transform.position, 4f, true);
+        MagicProjectile projectile = Instantiate(ElectricProjectile, shootPosition, Quaternion.identity).GetComponent<MagicProjectile>();
+        projectile.Shoot(shootPosition, ElectricShootPoint.transform, victimDirection, ElectricShootPoint.transform.position, 4f, true);
+
+        state = RobotState.Unspecified;
+        startedShooting = false;
     }
 
     private Vector3? GetRandomPositionWithinDistance(float distance, int attempt = 0, Vector3 offset = default(Vector3))
@@ -749,19 +752,16 @@ public class Robot : MovingCharacter
 
     private void HealthUpdated()
     {
-        Debug.Log("Startshake)");
-        foreach (Shake part in shakingParts)
+        if (Health.CurrentHealth < Health.StartHealth * EnragedSwitchValue)
         {
-            part.StartShaking();
+            foreach (Shake part in shakingParts)
+            {
+                part.StartShaking();
+            }
+            BodySparks.gameObject.SetActive(true);
+            enraged = true;
+            gameObject.GetComponent<SoundSource>().Play("enraged");
         }
-        BodySparks.gameObject.SetActive(true);
-        enraged = true;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(ElectricShootPoint.position, 1);
     }
 }
 
