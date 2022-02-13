@@ -22,6 +22,7 @@ public class Health : NetworkBehaviour
     public Vector3 SpawnDeathObjectOffset;
     public GameObject WaterSplash;
     public GameObject SpawnOnDeathPrefab;
+    public List<GameObject> AdditionalSpawnOnDeathPrefabs;
     public SoundSource SoundSource;
     public string DamageSoundName;
 
@@ -181,6 +182,11 @@ public class Health : NetworkBehaviour
 
         if (SpawnOnDeathPrefab != null)
             Instantiate(SpawnOnDeathPrefab, transform.position + SpawnDeathObjectOffset, Quaternion.identity);
+
+        foreach(GameObject prefab in AdditionalSpawnOnDeathPrefabs)
+        {
+            Instantiate(prefab, transform.position + SpawnDeathObjectOffset, Quaternion.identity);
+        }
 
         OnDied?.Invoke(this, causeOfDeath);
     }

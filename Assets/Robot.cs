@@ -28,6 +28,10 @@ public class Robot : MovingCharacter
     public GameObject ElectricProjectile;
     public Transform ElectricShootPoint;
     public float EnragedSwitchValue = 0.5f;
+    public SoundSource SingleSoundSource;
+    public SoundSource LoopingSoundSource;
+    public ParticleSystem SmokeRight;
+    public ParticleSystem SmokeLeft;
 
     [SyncVar]
     public int ServerStandingStill;
@@ -777,7 +781,7 @@ public class Robot : MovingCharacter
 
     private void HealthUpdated()
     {
-        if (Health.CurrentHealth < Health.StartHealth * EnragedSwitchValue)
+        if (Health.CurrentHealth < Health.StartHealth * EnragedSwitchValue && !enraged)
         {
             foreach (Shake part in shakingParts)
             {
@@ -785,7 +789,11 @@ public class Robot : MovingCharacter
             }
             BodySparks.gameObject.SetActive(true);
             enraged = true;
-            gameObject.GetComponent<SoundSource>().Play("enraged");
+            SingleSoundSource.Play("enraged");
+            LoopingSoundSource.Play("machinery");
+
+            SmokeRight.gameObject.SetActive(true);
+            SmokeLeft.gameObject.SetActive(true);
         }
     }
 }
