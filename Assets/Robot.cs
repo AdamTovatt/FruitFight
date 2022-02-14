@@ -45,7 +45,7 @@ public class Robot : MovingCharacter
     public override event AttackHandler OnAttack;
 
     public Vector3 TargetLocationSameHeight { get { return new Vector3(TargetPosition.x, transform.position.y, TargetPosition.z); } }
-    public bool IsFacingTarget { get { return Quaternion.Angle(Quaternion.LookRotation(TargetLocationSameHeight - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared; } }
+    public bool IsFacingTarget { get { return TargetLocationSameHeight == transform.position|| Quaternion.Angle(Quaternion.LookRotation(TargetLocationSameHeight - transform.position, Vector3.up), transform.rotation) <= 1 || DistanceToTargetSquared <= personalBoundaryDistanceSquared; } }
     public float DistanceToTargetSquared { get { return (TargetPosition - transform.position).sqrMagnitude; } }
     public float DistanceToVictimSquared { get { if (victim == null) return -1; return (victim.position - transform.position).sqrMagnitude; } }
     public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; TargetWasUpdated(); } }
@@ -230,7 +230,7 @@ public class Robot : MovingCharacter
                         SetNewTarget(transform.position);
                     }
 
-                    if (IsFacingPosition(victim.transform.position, 10f) || horizontalToVictim.sqrMagnitude < 1)
+                    if (IsFacingPosition(transform.position + horizontalToVictim, 10f) || horizontalToVictim.sqrMagnitude < 1)
                     {
                         if (Time.time - lastPunchTime > TimeBetweenPunches)
                         {
@@ -327,7 +327,7 @@ public class Robot : MovingCharacter
 
     private void ApplyPlayerPunch()
     {
-        if (DistanceToVictimSquared < PunchReachSquared && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 1)
+        if (DistanceToVictimSquared < PunchReachSquared && IsFacingPosition(victim.transform.position, 15f) || horizontalToVictim.sqrMagnitude < 2f)
         {
             Vector3 handPosition = lastAttackSide == AttackSide.Left ? LeftHandPosition.position : RightHandPosition.position;
             CreateSpark(handPosition);

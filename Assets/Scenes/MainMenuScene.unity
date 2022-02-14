@@ -39588,6 +39588,7 @@ MonoBehaviour:
   WaterSplash: {fileID: 3826576920900936753, guid: 455c909f3b8aec1468a2a3d15ebe4e6d,
     type: 3}
   SpawnOnDeathPrefab: {fileID: 0}
+  AdditionalSpawnOnDeathPrefabs: []
   SoundSource: {fileID: 0}
   DamageSoundName: 
   DestroyOnDeath: 0
