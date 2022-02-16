@@ -307,7 +307,7 @@ public class WorldBuilder : MonoBehaviour
 
                     foreach (Block neighbor in blockInformationHolder.Block.NeighborY.AllTypesNegative)
                     {
-                        BlockInformationHolder neighborInformationHolder = neighbor.Instance.transform.GetComponent<BlockInformationHolder>();
+                        BlockInformationHolder neighborInformationHolder = neighbor.Instance?.transform?.GetComponent<BlockInformationHolder>();
                         if(neighborInformationHolder != null)
                         {
                             neighborInformationHolder.CanMove = true;
