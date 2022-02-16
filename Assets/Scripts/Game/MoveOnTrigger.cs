@@ -34,6 +34,8 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
 
     private Coroutine coroutine;
 
+    private List<PlayerMovement> players = new List<PlayerMovement>();
+
     public override void Init(Block thisBlock, Block activatorBlock)
     {
         if (gameObject.GetComponent<AverageVelocityKeeper>() == null)
@@ -171,8 +173,6 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
                 CurrentPosition = newPosition;
                 lastPosition = transform.position;
 
-                Vector3 positionDifference = (block.Position + block.RotationOffset) - (FinalPosition + block.RotationOffset);
-                CurrentMovement = positionDifference * lerpDelta;
             }
             else
             {
@@ -194,6 +194,25 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
                 }
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        foreach(PlayerMovement movement in players)
+        {
+            Debug.Log("Updating player movement");
+            movement.transform.position += CurrentMovement;
+        }
+    }
+
+    public void AddPlayer(PlayerMovement player)
+    {
+        players.Add(player);
+    }
+
+    public void RemovePlayer(PlayerMovement player)
+    {
+        players.Remove(player);
     }
 
     private bool IsAtStartOfLevel()

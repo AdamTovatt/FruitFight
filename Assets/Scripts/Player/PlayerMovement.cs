@@ -70,6 +70,8 @@ public class PlayerMovement : MovingCharacter
     private PlayerNetworkCharacter playerNetworkCharacter;
     private GroundedChecker groundedChecker;
     private ProjectileConfigurationEntry magicProjectileConfiguration;
+    private MoveOnTrigger moveOnTriggerGround;
+    private Vector3 moveOnTriggerGroundVelocity;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
 
@@ -108,6 +110,7 @@ public class PlayerMovement : MovingCharacter
 
         groundedChecker.OnBecameGrounded += JustLanded;
         groundedChecker.OnNewGroundWasEntered += NewGroundWasEntered;
+        Player.Health.OnDied += Died;
 
         CurrentRunSpeed = Speed;
 
@@ -139,6 +142,7 @@ public class PlayerMovement : MovingCharacter
     {
         groundedChecker.OnBecameGrounded -= JustLanded;
         groundedChecker.OnNewGroundWasEntered -= NewGroundWasEntered;
+        Player.Health.OnDied -= Died;
 
         if (boundPlayerControls != null)
             UnbindInputFromPlayerControls(boundPlayerControls);
@@ -366,15 +370,11 @@ public class PlayerMovement : MovingCharacter
 
         if (IsGrounded)
         {
-            if (!moveOnTriggerLookup.ContainsKey(groundedChecker.GroundTransform))
-                moveOnTriggerLookup.Add(groundedChecker.GroundTransform, groundedChecker.GroundTransform.GetComponentInParent<MoveOnTrigger>());
-
-            MoveOnTrigger moveOnTrigger = moveOnTriggerLookup[groundedChecker.GroundTransform];
-
-            if (moveOnTrigger != null && moveOnTrigger.Moving)
+            if (moveOnTriggerGround != null && moveOnTriggerGround.Moving)
             {
-                groundVelocity = moveOnTrigger.CurrentVelocity * 8.2f; //I don't know why but 8.2 seems to be about the right value to multiply with to avoid slippage on moving platforms
-                averageVelocityKeeper.Parent = moveOnTrigger.AverageVelocityKeeper;
+                moveOnTriggerGroundVelocity = moveOnTriggerGround.CurrentVelocity;
+                groundVelocity = moveOnTriggerGroundVelocity;
+                averageVelocityKeeper.Parent = moveOnTriggerGround.AverageVelocityKeeper;
             }
             else
             {
@@ -405,6 +405,14 @@ public class PlayerMovement : MovingCharacter
             projectileChargeAmount += Time.deltaTime / MagicSettings.ChargeTime;
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
+    }
+
+    private MoveOnTrigger GetMoveOnTrigger(Transform transform)
+    {
+        if (!moveOnTriggerLookup.ContainsKey(transform))
+            moveOnTriggerLookup.Add(transform, transform.GetComponentInParent<MoveOnTrigger>());
+
+        return moveOnTriggerLookup[transform];
     }
 
     private void FixedUpdate()
@@ -681,12 +689,42 @@ public class PlayerMovement : MovingCharacter
         OnLandedOnBouncyObject?.Invoke();
     }
 
+    private void Died(Health sender, CauseOfDeath causeOfDeath)
+    {
+        if (moveOnTriggerGround != null)
+        {
+            moveOnTriggerGround.RemovePlayer(this);
+            moveOnTriggerGround = null;
+        }
+    }
+
     private void NewGroundWasEntered(Block newBlock)
     {
         if (GetShouldTurnOnRunParticles(newBlock))
             TurnOnRunParticles();
         else
             TurnOffRunParticles();
+
+        if (newBlock != null && newBlock.Instance != null)
+        {
+            MoveOnTrigger moveOnTrigger = GetMoveOnTrigger(newBlock.Instance.transform);
+            if (moveOnTrigger != null)
+            {
+                if (moveOnTriggerGround != null)
+                    moveOnTriggerGround.RemovePlayer(this);
+                Debug.Log("Entered moveOn Trigger");
+                moveOnTriggerGround = moveOnTrigger;
+                moveOnTriggerGround.AddPlayer(this);
+            }
+            else
+            {
+                if (moveOnTriggerGround != null)
+                {
+                    moveOnTriggerGround.RemovePlayer(this);
+                    moveOnTriggerGround = null;
+                }
+            }
+        }
     }
 
     private bool GetShouldTurnOnRunParticles(Block block)
