@@ -29,6 +29,19 @@ public class HatConfiguration
         }
     }
 
+    public static List<string> GetHatNames(bool includeNoneHat, string format = "{0}")
+    {
+        List<string> result = new List<string>();
+
+        foreach(int key in Hats.Keys)
+            result.Add(string.Format(format, Hats[key].DisplayName));
+
+        if (includeNoneHat)
+            result.Add(string.Format(format, "None"));
+
+        return result;
+    }
+
     public static GameObject GetHatPrefab(int hatId)
     {
         if (hatId == 0) //0 is no hat

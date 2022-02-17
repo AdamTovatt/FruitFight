@@ -995,6 +995,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f59df6a7035d7754784bebadbc38595c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   TitleText: {fileID: 8842063529985248216}
   ReadyText: {fileID: 8842063529793741604}
   ReadyInstructionsText: {fileID: 8842063528848269966}
@@ -1561,7 +1563,7 @@ PrefabInstance:
     - target: {fileID: 5322438801423301212, guid: d14a397302cb64f4896efc4f749b5378,
         type: 3}
       propertyPath: Choices.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5322438801423301212, guid: d14a397302cb64f4896efc4f749b5378,
         type: 3}
@@ -1587,6 +1589,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Choices.Array.data[4]
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322438801423301212, guid: d14a397302cb64f4896efc4f749b5378,
+        type: 3}
+      propertyPath: Choices.Array.data[5]
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d14a397302cb64f4896efc4f749b5378, type: 3}

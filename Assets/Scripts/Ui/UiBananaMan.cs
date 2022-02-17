@@ -18,14 +18,14 @@ public class UiBananaMan : MonoBehaviour
         bananaManTransform = rotate.transform;
     }
 
-    public void SetHat(Prefab? prefab)
+    public void SetHat(int hatId)
     {
         if (currentHat != null)
             Destroy(currentHat);
 
-        if (prefab != null)
+        if (hatId != 0)
         {
-            currentHat = Instantiate(PrefabKeeper.Instance.GetPrefab((Prefab)prefab), hatPoint.position, bananaManTransform.rotation);
+            currentHat = Instantiate(HatConfiguration.GetHatPrefab(hatId), hatPoint.position, bananaManTransform.rotation);
             currentHat.transform.SetParent(hatPoint);
         }
     }

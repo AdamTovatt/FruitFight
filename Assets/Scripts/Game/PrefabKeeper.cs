@@ -47,5 +47,5 @@ public class PrefabKeeper : MonoBehaviour
 
 public enum Prefab
 {
-    WizardHat, Beanie, SweatBand, MushroomHat
+    WizardHat, Beanie, SweatBand, MushroomHat, Crown
 }

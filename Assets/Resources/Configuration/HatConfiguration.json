@@ -29,6 +29,12 @@
       "DisplayName": "Mushroom",
       "PrefabName": "MushroomHat",
       "MagicProjectileId": 2
+    },
+    {
+      "Id": 5,
+      "DisplayName": "Crown",
+      "PrefabName": "Crown",
+      "MagicProjectileId": 2
     }
   ]
 }

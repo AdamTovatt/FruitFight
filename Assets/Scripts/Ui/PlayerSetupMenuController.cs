@@ -28,7 +28,7 @@ public class PlayerSetupMenuController : NetworkBehaviour
     private PlayerInput playerInput;
     private PlayerControls playerControls;
 
-    private string[] hatTexts = new string[] { "<- No hat ->", "<- Wizard Hat ->", "<- Beanie ->", "<- Sweat Band ->", "<- Mushroom Hat ->" };
+    private List<string> hatTexts;
 
     public bool LocalPlayer { get; set; }
 
@@ -42,6 +42,7 @@ public class PlayerSetupMenuController : NetworkBehaviour
 
     private void Awake()
     {
+        hatTexts = HatConfiguration.GetHatNames(true, "<- {0} ->");
         playerControls = new PlayerControls();
         GameObject rootMenu = GameObject.Find("MainLayout");
         gameObject.transform.SetParent(rootMenu.transform);
@@ -205,10 +206,7 @@ public class PlayerSetupMenuController : NetworkBehaviour
 
         UiBananaMan uiBananaMan = UiModelDisplay.Model.GetComponent<UiBananaMan>();
 
-        Prefab? hatPrefab = null;
-        if (hat > 0)
-            hatPrefab = (Prefab)(hat - 1);
-        uiBananaMan.SetHat(hatPrefab);
+        uiBananaMan.SetHat(hat);
     }
 
     private void SetPlayerReady()
