@@ -17,6 +17,12 @@
       "ProjectilePrefabName": "Water_Projectile",
       "ChargePrefabName": "Water_Charge",
       "HitPrefabName": "Water_Hit"
+    },
+    {
+      "Id": 3,
+      "ProjectilePrefabName": "Ice_Projectile",
+      "ChargePrefabName": "Ice_Charge",
+      "HitPrefabName": "Ice_Hit"
     }
   ]
 }
