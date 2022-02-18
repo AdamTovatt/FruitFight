@@ -23,6 +23,12 @@
       "ProjectilePrefabName": "Ice_Projectile",
       "ChargePrefabName": "Ice_Charge",
       "HitPrefabName": "Ice_Hit"
+    },
+    {
+      "Id": 4,
+      "ProjectilePrefabName": "Green_Projectile",
+      "ChargePrefabName": "Green_Charge",
+      "HitPrefabName": "Green_Hit"
     }
   ]
 }
