@@ -7,6 +7,10 @@ public class GroundedPositionInformation
     public Vector3 Position { get; set; }
     public Vector3 RelativePosition { get; set; }
 
+    public Vector3 AppliedPosition { get { return Transform == null ? Position : Transform.position + RelativePosition; } }
+
+    public GroundedPositionInformation() { }
+
     public GroundedPositionInformation(Transform transform, float time, Vector3 position)
     {
         Transform = transform;

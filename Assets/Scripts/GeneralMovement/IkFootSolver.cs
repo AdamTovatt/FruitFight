@@ -35,6 +35,7 @@ public class IkFootSolver : MonoBehaviour
     public delegate void PositionUpdatedEventHandler(Vector3 newPosition);
     public event PositionUpdatedEventHandler PositionUpdated;
 
+    private GroundedPositionInformation currentGroundedPosition;
     private MoveOnTrigger parent;
     private Vector3 groundForward;
 
@@ -53,7 +54,7 @@ public class IkFootSolver : MonoBehaviour
 
         CharacterMovement.RegisterFoot(this);
 
-        CurrentPosition = GetGroundPosition(0);
+        CurrentPosition = GetGroundPosition(0).Position;
         lerp = 1;
     }
 
@@ -69,23 +70,24 @@ public class IkFootSolver : MonoBehaviour
 
     void Update()
     {
-        transform.position = CurrentPosition += (parent == null ? Vector3.zero : -parent.CurrentMovement);
+        transform.position = CurrentPosition;// += (parent == null ? Vector3.zero : -parent.CurrentMovement);
 
         float appliedStepDistance = Mathf.Max(characterVelocity.Velocity * StepDistance * 0.3f, MinStepDistance);
 
-        Vector3 searchPosition = GetGroundPosition(appliedStepDistance);
+        GroundedPositionInformation searchPosition = GetGroundPosition(appliedStepDistance);
 
         if (groundedChecker == null ? CharacterMovement.IsGrounded : groundedChecker.IsGrounded)
         {
             if (((CharacterMovement.StandingStill == null) || (CharacterMovement.StandingStill != null && !((bool)CharacterMovement.StandingStill))) && characterVelocity.Velocity > 0.01f) //character is moving
             {
-                float distance = Vector3.Distance(NewPosition, searchPosition);
+                float distance = Vector3.Distance(NewPosition, searchPosition.AppliedPosition);
                 if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
                 {
                     inDefaultPosition = false;
                     lerp = 0;
                     OldPosition = CurrentPosition;
-                    NewPosition = searchPosition;
+                    NewPosition = searchPosition.AppliedPosition;
+                    currentGroundedPosition = searchPosition;
                     PositionUpdated?.Invoke(NewPosition);
                 }
             }
@@ -97,15 +99,16 @@ public class IkFootSolver : MonoBehaviour
                 }
             }
         }
-        else
+        else //in air
         {
             inDefaultPosition = false;
             CurrentPosition = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing);
+            currentGroundedPosition = new GroundedPositionInformation() { Position = CurrentPosition };
         }
 
         if (lerp < 1)
         {
-            Vector3 footPosition = Vector3.Lerp(OldPosition, NewPosition, lerp);
+            Vector3 footPosition = Vector3.Lerp(OldPosition, currentGroundedPosition.AppliedPosition, lerp);
 
             if (!inDefaultPosition)
                 footPosition.y += Mathf.Sin(lerp * Mathf.PI) * StepHeight;
@@ -115,7 +118,12 @@ public class IkFootSolver : MonoBehaviour
         }
         else
         {
-            OldPosition = NewPosition;
+            if(currentGroundedPosition == null)
+            {
+                currentGroundedPosition = GetGroundPosition(0);
+            }
+
+            OldPosition = currentGroundedPosition.AppliedPosition;
             if (!CharacterMovement.StopFootSetDefault)
                 inDefaultPosition = false;
         }
@@ -138,21 +146,23 @@ public class IkFootSolver : MonoBehaviour
             inDefaultPosition = true;
             lerp = 0;
             OldPosition = CurrentPosition;
-            NewPosition = GetGroundPosition(0);
+            currentGroundedPosition = GetGroundPosition(0);
+            NewPosition = currentGroundedPosition.Position;
         }
     }
 
-    private Vector3 GetGroundPosition(float forward)
+    private GroundedPositionInformation GetGroundPosition(float forward)
     {
         Ray ray = new Ray(character.position + (Vector3.up * 0.5f) + (character.right * appliedFootSpacing) + (character.forward * forward), Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit info, 10))
         {
             groundForward = Quaternion.AngleAxis(-90, transform.right) * info.normal;
-            return info.point + Offset;
+            GroundedPositionInformation result = new GroundedPositionInformation() { Transform = info.transform, RelativePosition = (info.point + Offset) - info.transform.position };
+            return result;
         }
 
         Debug.LogWarning("No ground position found for next footstep");
-        return CurrentPosition;
+        return currentGroundedPosition == null ? new GroundedPositionInformation() { Position = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing) } : currentGroundedPosition;
     }
 
     private void OnDrawGizmos()
