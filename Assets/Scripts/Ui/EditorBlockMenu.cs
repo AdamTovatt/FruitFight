@@ -26,6 +26,7 @@ public class EditorBlockMenu : MonoBehaviour
     public Button DeselectButtonDown;
     public Button DeselectButtonUp;
 
+    public bool WasJustClosed { get { return Time.time - closeTime < 0.05f; } }
     public bool IsOpen { get; private set; }
     public int CurrentOffset { get { return selectedIndex; } }
 
@@ -33,6 +34,7 @@ public class EditorBlockMenu : MonoBehaviour
     private List<BlockInfo> currentBlockInfos = new List<BlockInfo>();
     private BlockButton[][] currentBlockButtonArray;
 
+    private float closeTime;
     private int currentPage;
     private int selectedIndex;
     private BlockButton selectedButton;
@@ -112,6 +114,7 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void Close()
     {
+        closeTime = Time.time;
         SetSize(1, 1, currentPage);
         IsOpen = false;
         PageText.gameObject.SetActive(false);
@@ -178,6 +181,7 @@ public class EditorBlockMenu : MonoBehaviour
 
     public void MoveBlockButtonSelection(Vector2Int moveVector)
     {
+        Debug.Log("Move block selection");
         if (!IsOpen)
             Open();
 

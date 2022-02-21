@@ -830,7 +830,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(InputAction.CallbackContext context)
     {
-        if (controlsDisabled || isTestingLevel || Ui.BlockMenu.IsOpen)
+        if (controlsDisabled || isTestingLevel || Ui.BlockMenu.IsOpen || Ui.BlockMenu.WasJustClosed)
             return;
 
         if (isCapturingImage)
