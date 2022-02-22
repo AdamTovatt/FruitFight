@@ -105,8 +105,7 @@ public class PlayerMovement : MovingCharacter
         playerNetworkCharacter = gameObject.GetComponent<PlayerNetworkCharacter>();
         groundedChecker = gameObject.GetComponent<GroundedChecker>();
 
-        MagicLevelSettings.Load();
-        MagicSettings = MagicLevelSettings.GetSettingsForLevel(MagicLevel);
+        ApplyMagicLevelSettings();
 
         groundedChecker.OnBecameGrounded += JustLanded;
         groundedChecker.OnNewGroundWasEntered += NewGroundWasEntered;
@@ -148,8 +147,22 @@ public class PlayerMovement : MovingCharacter
             UnbindInputFromPlayerControls(boundPlayerControls);
     }
 
+    public void ApplyMagicLevelSettings()
+    {
+        MagicLevelSettings.Load();
+        MagicSettings = MagicLevelSettings.GetSettingsForLevel(MagicLevel);
+    }
+
     public void InitializePlayerInput(PlayerConfiguration playerConfiguration, SingleTargetCamera singleTargetCamera)
     {
+        Debug.Log(GameStateManager.State);
+
+        if(GameStateManager.State == GameState.Free)
+        {
+            MagicLevel = MagicLevelSettings.Levels.Keys.Max();
+            ApplyMagicLevelSettings();
+        }
+
         this.playerConfiguration = playerConfiguration;
         this.singleTargetCamera = singleTargetCamera;
         Camera = singleTargetCamera.transform;

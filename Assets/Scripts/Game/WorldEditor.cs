@@ -474,6 +474,7 @@ public class WorldEditor : MonoBehaviour
 
     private void StartLevelTest()
     {
+        GameStateManager.SetGameState(GameState.Free);
         Ui.EventSystem.SetActive(false);
         Ui.ShowLoadingScreen();
         Ui.ClosePauseMenu();

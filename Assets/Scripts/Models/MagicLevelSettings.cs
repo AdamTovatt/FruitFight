@@ -11,8 +11,13 @@ public class MagicLevelSettings
     public static Dictionary<int, MagicLevelSettingsEntry> Levels { get { if (_levels == null) Load(); return _levels; } private set { _levels = value; } }
     private static Dictionary<int, MagicLevelSettingsEntry> _levels;
 
-    public static void Load()
+    private static bool hasBeenLoaded;
+
+    public static void Load(bool forceLoad = false)
     {
+        if (hasBeenLoaded && !forceLoad)
+            return;
+
         try
         {
             _levels = new Dictionary<int, MagicLevelSettingsEntry>();
@@ -22,6 +27,8 @@ public class MagicLevelSettings
             {
                 _levels.Add(level.Number, level);
             }
+
+            hasBeenLoaded = true;
         }
         catch (Exception exception)
         {
