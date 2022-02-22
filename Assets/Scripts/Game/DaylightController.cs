@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class DaylightController : MonoBehaviour
 {
     public Light LightSource;
+    public LensFlareComponentSRP LensFlare;
 
     [Range(0.0f, 24.0f)]
     public float TimeOfDay = 15;
@@ -59,7 +61,9 @@ public class DaylightController : MonoBehaviour
 
         float lerpValue = ((timeOfDay - lowerColor.TimeOfDay) / (upperColor.TimeOfDay - lowerColor.TimeOfDay));
         
-        return Color.Lerp(lowerColor.Color, upperColor.Color, lerpValue);
+        Color result = Color.Lerp(lowerColor.Color, upperColor.Color, lerpValue);
+        result.a = 1;
+        return result;
     }
 
     private void CalculateValuesFromTimeOfDay()
@@ -70,6 +74,14 @@ public class DaylightController : MonoBehaviour
         RenderSettings.ambientIntensity = 1 + Mathf.Sin(TimeOfDay * (Mathf.PI / 12f) - (Mathf.PI / 2f)) * 0.2f;
 
         CurrentColor = GetColorFromTimeOfDay(TimeOfDay);
+
+        if(LensFlare != null)
+        {
+            foreach(LensFlareDataElementSRP element in LensFlare.lensFlareData.elements)
+            {
+                element.tint = CurrentColor;
+            }
+        }
     }
 
     private void ApplyAngles()
