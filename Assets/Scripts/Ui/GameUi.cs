@@ -17,6 +17,7 @@ public class GameUi : UiManager
     public WinScreen WinScreen;
     public LoadingScreen LoadingScreen;
     public CameraViewBlocker CameraViewBlocker;
+    public HurtScreenController HurtScreen;
 
     public HealthDisplay HealthDisplayPrefab;
 

@@ -49,6 +49,8 @@ public class SingleTargetCamera : MonoBehaviour
     private float lastShakeStartTime;
     private float currentShakeMagnitude;
 
+    private Health healthComponent;
+
     private void Awake()
     {
         playerControls = new PlayerControls();
@@ -83,7 +85,23 @@ public class SingleTargetCamera : MonoBehaviour
                 gamepadSensitivityMultiplier = 1f;
                 gamepadScrollMultiplier = 1f;
             }
+
+            healthComponent = input.gameObject.GetComponent<Health>();
+            
+            if (healthComponent != null)
+                healthComponent.OnDamageWasTaken += FlashHurtScreen;
         }
+    }
+
+    private void FlashHurtScreen()
+    {
+        GameUi.Instance.HurtScreen.FlashScreen(CameraViewType, 0.5f);
+    }
+
+    private void OnDestroy()
+    {
+        if (healthComponent != null)
+            healthComponent.OnDamageWasTaken -= FlashHurtScreen;
     }
 
     private Vector3 GetShakePosition(float time, float speed, float size)

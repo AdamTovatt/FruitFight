@@ -10,7 +10,7 @@ public class Health : NetworkBehaviour
 
     public bool IsDead { get; set; }
 
-    public float CurrentHealth { get { return _currentHealth; } private set { _currentHealth = value; HealthWasUpdated(); } }
+    public float CurrentHealth { get { return _currentHealth; } private set { bool wasDamage = _currentHealth > value; _currentHealth = value; HealthWasUpdated(wasDamage); } }
     private float _currentHealth;
 
     public delegate void OnDiedHandler(Health sender, CauseOfDeath causeOfDeath);
@@ -18,6 +18,9 @@ public class Health : NetworkBehaviour
 
     public delegate void OnHealthUpdatedHandler();
     public event OnHealthUpdatedHandler OnHealthUpdated;
+
+    public delegate void OnDamageWasTakenHandler();
+    public event OnDamageWasTakenHandler OnDamageWasTaken;
 
     public Vector3 SpawnDeathObjectOffset;
     public GameObject WaterSplash;
@@ -145,7 +148,7 @@ public class Health : NetworkBehaviour
         emissionOnTime = Time.time;
     }
 
-    private void HealthWasUpdated()
+    private void HealthWasUpdated(bool wasDamage)
     {
         if (_currentHealth <= 0)
         {
@@ -164,6 +167,7 @@ public class Health : NetworkBehaviour
         }
 
         OnHealthUpdated?.Invoke();
+        OnDamageWasTaken?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)

@@ -42,4 +42,9 @@ public static class ExtensionMethods
         else
             return 0;
     }
+
+    public static Color SetAlpha(this Color color, float newAlpha)
+    {
+        return new Color(color.r, color.g, color.b, newAlpha);
+    }
 }
