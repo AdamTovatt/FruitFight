@@ -13,7 +13,7 @@ public class HurtScreen : MonoBehaviour
 
     private void Start()
     {
-        ScreenImage.color.SetAlpha(0);
+        ScreenImage.color = ScreenImage.color.SetAlpha(0);
     }
 
     private void Update()

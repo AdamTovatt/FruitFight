@@ -31,7 +31,7 @@ public class HurtScreenController : MonoBehaviour
 
     public void FlashScreen(CameraViewType viewType, float duration)
     {
-        float upTime = Mathf.Min(0.3f, duration * 0.5f);
+        float upTime = Mathf.Min(0.05f, duration * 0.2f);
         float downTime = duration - upTime;
 
         ActivateScreen(viewType, upTime);

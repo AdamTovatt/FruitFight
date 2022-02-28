@@ -86,7 +86,7 @@ public class SingleTargetCamera : MonoBehaviour
                 gamepadScrollMultiplier = 1f;
             }
 
-            healthComponent = input.gameObject.GetComponent<Health>();
+            healthComponent = target.gameObject.GetComponent<Health>();
             
             if (healthComponent != null)
                 healthComponent.OnDamageWasTaken += FlashHurtScreen;

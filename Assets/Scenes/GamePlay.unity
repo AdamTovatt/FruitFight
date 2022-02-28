@@ -4129,6 +4129,7 @@ MonoBehaviour:
   WinScreen: {fileID: 330635615}
   LoadingScreen: {fileID: 574587376}
   CameraViewBlocker: {fileID: 73360751}
+  HurtScreen: {fileID: 2065288236}
   HealthDisplayPrefab: {fileID: 6031417007198884223, guid: b40143dee91e03d4c83538f08a625079,
     type: 3}
 --- !u!114 &1557549036
@@ -4241,7 +4242,6 @@ GameObject:
   - component: {fileID: 1667826369}
   - component: {fileID: 1667826372}
   - component: {fileID: 1667826371}
-  - component: {fileID: 1667826370}
   - component: {fileID: 1667826373}
   m_Layer: 5
   m_Name: HurtScreenFull
@@ -4270,18 +4270,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1820, y: 980}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1667826370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667826368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc8e0b6e1762b4100b6b0b11420678ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1667826371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4574,7 +4562,6 @@ GameObject:
   - component: {fileID: 1800246119}
   - component: {fileID: 1800246122}
   - component: {fileID: 1800246121}
-  - component: {fileID: 1800246120}
   - component: {fileID: 1800246123}
   m_Layer: 5
   m_Name: HurtScreenRight
@@ -4603,18 +4590,6 @@ RectTransform:
   m_AnchoredPosition: {x: 910, y: 0}
   m_SizeDelta: {x: 1820, y: 980}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &1800246120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1800246118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc8e0b6e1762b4100b6b0b11420678ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1800246121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5122,7 +5097,6 @@ GameObject:
   - component: {fileID: 2056825188}
   - component: {fileID: 2056825191}
   - component: {fileID: 2056825190}
-  - component: {fileID: 2056825189}
   - component: {fileID: 2056825192}
   m_Layer: 5
   m_Name: HurtScreenLeft
@@ -5151,18 +5125,6 @@ RectTransform:
   m_AnchoredPosition: {x: -910, y: 0}
   m_SizeDelta: {x: 1820, y: 980}
   m_Pivot: {x: 0, y: 0.5}
---- !u!114 &2056825189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056825187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc8e0b6e1762b4100b6b0b11420678ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2056825190
 MonoBehaviour:
   m_ObjectHideFlags: 0
