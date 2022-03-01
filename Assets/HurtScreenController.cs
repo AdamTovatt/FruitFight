@@ -26,7 +26,7 @@ public class HurtScreenController : MonoBehaviour
         if (viewType == CameraViewType.Left)
             LeftScreen.TurnOff(fadeTime);
         if (viewType == CameraViewType.Right)
-            RightScreen.TurnOn(fadeTime);
+            RightScreen.TurnOff(fadeTime);
     }
 
     public void FlashScreen(CameraViewType viewType, float duration)
