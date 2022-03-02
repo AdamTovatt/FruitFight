@@ -785,6 +785,28 @@
       "ShowInEditor": true,
       "Name": "Mushrooms 2",
       "Prefab": "SmallMushrooms2"
+    },
+    {
+      "Id": 77,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Board Bridge",
+      "Prefab": "BoardBridge",
+      "RotatableX": true,
+      "AngleLimit": 90
+    },
+    {
+      "Id": 78,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Board Bridge Pillars",
+      "Prefab": "BoardBridgePillars",
+      "RotatableX": true,
+      "AngleLimit": 90
     }
   ]
 }
