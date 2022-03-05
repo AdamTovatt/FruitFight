@@ -807,6 +807,17 @@
       "Prefab": "BoardBridgePillars",
       "RotatableX": true,
       "AngleLimit": 90
+    },
+    {
+      "Id": 79,
+      "BlockType": 4,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "Name": "Flower Vines",
+      "Prefab": "FlowerVines",
+      "RotatableX": true,
+      "AngleLimit": 90
     }
   ]
 }
