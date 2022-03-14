@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1354175872663432626}
   - component: {fileID: 8531392826659960667}
   - component: {fileID: -3244998783713537726}
+  - component: {fileID: -3675067871597676351}
   m_Layer: 0
   m_Name: MovableBlock
   m_TagString: Ground
@@ -108,14 +109,14 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1362651984482495093}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &8531392826659960667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,3 +163,18 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &-3675067871597676351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362651984482495093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 085bd7578bccb8a45a33e9a2ee89c84a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rigidbody: {fileID: 1354175872663432626}
+  GlideSpeed: 10
+  Drag: 3

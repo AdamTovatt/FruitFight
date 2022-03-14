@@ -74,6 +74,7 @@ public class PlayerMovement : MovingCharacter
     private Vector3 moveOnTriggerGroundVelocity;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
+    private Dictionary<Transform, MoveableBlock> moveableBlockLookup = new Dictionary<Transform, MoveableBlock>();
 
     private bool hasDoubleJumped;
     private float lastJumpTime;
@@ -157,7 +158,7 @@ public class PlayerMovement : MovingCharacter
     {
         Debug.Log(GameStateManager.State);
 
-        if(GameStateManager.State == GameState.Free)
+        if (GameStateManager.State == GameState.Free)
         {
             MagicLevel = MagicLevelSettings.Levels.Keys.Max();
             ApplyMagicLevelSettings();
@@ -367,6 +368,27 @@ public class PlayerMovement : MovingCharacter
 
             debugHits.Add(contactPoint.point);
 
+            if (groundedChecker.IsGrounded)
+            {
+                if (!moveableBlockLookup.ContainsKey(contactPoint.otherCollider.transform))
+                {
+                    moveableBlockLookup.Add(contactPoint.otherCollider.transform, contactPoint.otherCollider.transform.GetComponent<MoveableBlock>());
+                }
+
+                MoveableBlock moveableBlock = moveableBlockLookup[contactPoint.otherCollider.transform];
+
+                if (moveableBlock != null)
+                {
+                    Vector3 transformPositionSameHeight = new Vector3(transform.position.x, contactPoint.point.y, transform.position.z);
+                    Vector3 collisionDirection = (contactPoint.point - transformPositionSameHeight).normalized;
+                    if (Vector3.Angle(collisionDirection, transform.forward) < 45)
+                    {
+                        contactVector = new Ray(contactPoint.point, collisionDirection);
+                        moveableBlock.Push(collisionDirection);
+                    }
+                }
+            }
+
             if (contactPoint.otherCollider == null || contactPoint.otherCollider.attachedRigidbody == null || contactPoint.otherCollider.attachedRigidbody.isKinematic)
             {
                 Vector3 collisionDirection = (contactPoint.point - transform.position).normalized;
@@ -498,6 +520,7 @@ public class PlayerMovement : MovingCharacter
         }
     }
 
+    private Ray contactVector;
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -508,6 +531,8 @@ public class PlayerMovement : MovingCharacter
 
         Gizmos.DrawRay(transform.position + transform.up * 0.2f, transform.forward * (0.5f + Collider.radius));
         Gizmos.DrawRay(transform.position + transform.up * 0.6f, transform.forward * (0.5f + Collider.radius));
+
+        Gizmos.DrawRay(contactVector);
     }
 
     private void Move(Vector2 moveValue)
