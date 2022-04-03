@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveableBlock : MonoBehaviour
+public class MoveableBlock : NetworkBehaviour
 {
     public Rigidbody Rigidbody;
     public float GlideSpeed = 5f;
@@ -24,7 +25,32 @@ public class MoveableBlock : MonoBehaviour
 
     public void Push(Vector3 direction)
     {
+        if (CustomNetworkManager.IsOnlineSession)
+        {
+            if (CustomNetworkManager.Instance.IsServer)
+            {
+                PerformPush(direction);
+            }
+            else
+            {
+                PushCmd(direction);
+            }
+        }
+        else
+        {
+            PerformPush(direction);
+        }
+    }
+
+    private void PerformPush(Vector3 direction)
+    {
         currentDirection = direction;
         velocity = 1;
+    }
+
+    [Command(requiresAuthority = false)]
+    public void PushCmd(Vector3 direction)
+    {
+        PerformPush(direction);
     }
 }
