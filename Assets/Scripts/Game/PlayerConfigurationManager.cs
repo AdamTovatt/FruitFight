@@ -136,6 +136,20 @@ public class PlayerConfigurationManager : MonoBehaviour
             playerInput.SwitchCurrentActionMap(InputModeEnumToString(CurrentInputMode));
             PlayerConfigurations.Add(new PlayerConfiguration(playerInput));
         }
+
+        this.CallWithDelay(RefreshUiModule, 0.5f); //a bug in unity requires us to disable and then enable the ui input module
+    }
+
+    private void RefreshUiModule()
+    {
+        foreach (PlayerConfiguration config in PlayerConfigurations)
+        {
+            if (config != null && config.Input != null && config.Input.uiInputModule != null)
+            {
+                config.Input.uiInputModule.enabled = false;
+                config.Input.uiInputModule.enabled = true;
+            }
+        }
     }
 
     public void SetInputMode(InputMode mode)
@@ -166,6 +180,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     private void HandlePlayerLeft(PlayerInput playerInput)
     {
         PlayerConfigurations = PlayerConfigurations.Where(x => x.PlayerIndex != playerInput.playerIndex).ToList();
+        RefreshUiModule(); //just in case unity pranks us
     }
 }
 
