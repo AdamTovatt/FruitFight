@@ -370,21 +370,24 @@ public class PlayerMovement : MovingCharacter
 
             if (groundedChecker.IsGrounded)
             {
-                if (!moveableBlockLookup.ContainsKey(contactPoint.otherCollider.transform))
+                if (contactPoint.otherCollider != null)
                 {
-                    moveableBlockLookup.Add(contactPoint.otherCollider.transform, contactPoint.otherCollider.transform.GetComponent<MoveableBlock>());
-                }
-
-                MoveableBlock moveableBlock = moveableBlockLookup[contactPoint.otherCollider.transform];
-
-                if (moveableBlock != null)
-                {
-                    Vector3 transformPositionSameHeight = new Vector3(transform.position.x, contactPoint.point.y, transform.position.z);
-                    Vector3 collisionDirection = (contactPoint.point - transformPositionSameHeight).normalized;
-                    if (Vector3.Angle(collisionDirection, transform.forward) < 45)
+                    if (!moveableBlockLookup.ContainsKey(contactPoint.otherCollider.transform))
                     {
-                        contactVector = new Ray(contactPoint.point, collisionDirection);
-                        moveableBlock.Push(collisionDirection);
+                        moveableBlockLookup.Add(contactPoint.otherCollider.transform, contactPoint.otherCollider.transform.GetComponent<MoveableBlock>());
+                    }
+
+                    MoveableBlock moveableBlock = moveableBlockLookup[contactPoint.otherCollider.transform];
+
+                    if (moveableBlock != null)
+                    {
+                        Vector3 transformPositionSameHeight = new Vector3(transform.position.x, contactPoint.point.y, transform.position.z);
+                        Vector3 collisionDirection = (contactPoint.point - transformPositionSameHeight).normalized;
+                        if (Vector3.Angle(collisionDirection, transform.forward) < 45)
+                        {
+                            contactVector = new Ray(contactPoint.point, collisionDirection);
+                            moveableBlock.Push(collisionDirection);
+                        }
                     }
                 }
             }
