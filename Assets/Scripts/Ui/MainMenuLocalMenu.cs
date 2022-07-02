@@ -9,6 +9,7 @@ public class MainMenuLocalMenu : MonoBehaviour
     public Button BrowseLevelsButton;
     public Button BackButton;
 
+    public StoryModeScreen StoryModeScreen;
     private MainMenuPlayMenu previousMenu;
 
     void Start()
@@ -27,7 +28,9 @@ public class MainMenuLocalMenu : MonoBehaviour
     private void Story()
     {
         GameStateManager.SetGameState(GameState.Story);
-        MainMenuUi.Instance.PlayButtonWasPressed();
+        StoryModeScreen.gameObject.SetActive(true);
+        StoryModeScreen.Show();
+        //MainMenuUi.Instance.PlayButtonWasPressed();
         gameObject.SetActive(false);
     }
 
@@ -42,6 +45,11 @@ public class MainMenuLocalMenu : MonoBehaviour
     {
         this.previousMenu = previousMenu;
         previousMenu.gameObject.SetActive(false);
+        StoryModeButton.Select();
+    }
+
+    public void Show()
+    {
         StoryModeButton.Select();
     }
 }

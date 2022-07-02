@@ -13,6 +13,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
     public bool UseCustomPivot = false;
     public Vector2 Pivot = new Vector2(0.5f, 0.5f);
     public bool RequirePointOnSelectable = false; // if the selectable should enforce a point on the selectable to be selected, this is controlled in MouseOverSelectableChecker.cs
+    public Vector2 Offset = new Vector2(0, 0);
 
     public delegate void SelectedHandler();
     public event SelectedHandler OnSelected;
@@ -106,7 +107,7 @@ public class UiSelectable : MonoBehaviour, ISelectHandler
             if (SelectedMarkerPrefab != null)
             {
                 selectedMarker = Instantiate(SelectedMarkerPrefab, transform.position, transform.rotation, transform);
-                selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot);
+                selectedMarker.GetComponent<SelectedIndicatorBase>().SetContentSize(UseCustomContentSize ? ContentSize : rect.sizeDelta, UseCustomPivot ? Pivot : rect.pivot, Offset);
                 AudioManager.Instance.Play("select");
             }
 

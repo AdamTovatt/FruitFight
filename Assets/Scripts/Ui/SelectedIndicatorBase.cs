@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class SelectedIndicatorBase : MonoBehaviour
 {
-    public abstract void SetContentSize(Vector2 size, Vector2 pivot);
+    public abstract void SetContentSize(Vector2 size, Vector2 pivot, Vector2 offset);
 }

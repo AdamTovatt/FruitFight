@@ -10,12 +10,12 @@ public class SelectedIndicatorSquare : SelectedIndicatorBase
     public Image BottomRightCorner;
     public Image BottomLeftCorner;
 
-    public override void SetContentSize(Vector2 size, Vector2 pivot)
+    public override void SetContentSize(Vector2 size, Vector2 pivot, Vector2 offset)
     {
-        TopRightCorner.transform.localPosition = new Vector3(size.x * (1f - pivot.x), transform.localPosition.y, transform.localPosition.z);
-        TopLeftCorner.transform.localPosition = new Vector3(size.x * -pivot.x, transform.localPosition.y, transform.localPosition.z);
+        TopRightCorner.transform.localPosition = new Vector3(size.x * (1f - pivot.x) + offset.x * size.x, transform.localPosition.y + offset.y * size.y, transform.localPosition.z);
+        TopLeftCorner.transform.localPosition = new Vector3(size.x * -pivot.x + offset.x * size.x, transform.localPosition.y + offset.y * size.y, transform.localPosition.z);
 
-        BottomRightCorner.transform.localPosition = new Vector3(size.x * (1f - pivot.x), -size.y * pivot.y, transform.localPosition.z);
-        BottomLeftCorner.transform.localPosition = new Vector3(size.x * -pivot.x, -size.y * pivot.y, transform.localPosition.z);
+        BottomRightCorner.transform.localPosition = new Vector3(size.x * (1f - pivot.x) + offset.x * size.x, -size.y * pivot.y + offset.y * size.y, transform.localPosition.z);
+        BottomLeftCorner.transform.localPosition = new Vector3(size.x * -pivot.x + offset.x * size.x, -size.y * pivot.y + offset.y * size.y, transform.localPosition.z);
     }
 }
