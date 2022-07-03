@@ -8,6 +8,14 @@ public class ProfileSaveState
     [JsonProperty("profiles")]
     public List<ProfileSave> Profiles { get; set; }
 
+    [JsonIgnore]
+    public static ProfileSaveState Empty { get { return GetEmptyState(); } }
+    
+    public ProfileSaveState()
+    {
+        Profiles = new List<ProfileSave>();
+    }
+
     public void AddProfile(ProfileSave profileSave)
     {
         if (Profiles.Count >= 3)
@@ -29,8 +37,20 @@ public class ProfileSaveState
     public ProfileSave GetProfile(int index)
     {
         if (!(Profiles.Count > index))
-            return new ProfileSave("(empty)") { EmptyProfile = true };
+            return ProfileSave.Empty;
 
         return Profiles[index];
+    }
+
+    private static ProfileSaveState GetEmptyState()
+    {
+        ProfileSaveState state = new ProfileSaveState();
+
+        for (int i = 0; i < 3; i++)
+        {
+            state.AddProfile(ProfileSave.Empty);
+        }
+
+        return state;
     }
 }

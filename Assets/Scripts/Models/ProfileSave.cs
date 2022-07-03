@@ -17,8 +17,11 @@ public class ProfileSave
     [JsonProperty("coins")]
     public int Coins { get; set; }
 
-    [JsonIgnore]
+    [JsonProperty("emptyState")]
     public bool EmptyProfile { get; set; }
+
+    [JsonIgnore]
+    public static ProfileSave Empty { get { return new ProfileSave("(empty)") { EmptyProfile = true }; } }
 
     public ProfileSave() { }
 
