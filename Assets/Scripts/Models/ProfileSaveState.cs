@@ -24,6 +24,11 @@ public class ProfileSaveState
         Profiles.Add(profileSave);
     }
     
+    public void RemoveProfile(int index)
+    {
+        Profiles[index] = ProfileSave.Empty;
+    }
+
     public static ProfileSaveState FromJson(string json)
     {
         return JsonConvert.DeserializeObject<ProfileSaveState>(json);

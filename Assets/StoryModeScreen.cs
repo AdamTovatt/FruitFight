@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,11 +14,19 @@ public class StoryModeScreen : MonoBehaviour
     public ProfileButton Profile1;
     public ProfileButton Profile2;
     public ProfileButton Profile3;
+    public TextMeshProUGUI Title;
+    public TextMeshProUGUI DeleteButtonText;
 
     public MainMenuLocalMenu LocalMenu;
+    public CreateProfileScreen CreateProfileScreen;
+
+    private string originalTitle;
+    private string originalDeleteButtonText;
 
     private void Awake()
     {
+        originalDeleteButtonText = DeleteButtonText.text;
+        originalTitle = Title.text;
         BindEvents();
     }
 
@@ -29,20 +38,97 @@ public class StoryModeScreen : MonoBehaviour
     private void BindEvents()
     {
         BackButton.onClick.AddListener(() => BackButtonClicked());
+        BindProfileButtons();
+        DeleteProfileButton.onClick.AddListener(() => DeleteButtonClick());
     }
 
     private void UnBindEvents()
     {
         BackButton.onClick.RemoveAllListeners();
+        UnBindProfileButtons();
+        DeleteProfileButton.onClick.RemoveAllListeners();
     }
 
-    public void Show()
+    private void BindProfileButtons()
+    {
+        Profile1Button.onClick.AddListener(() => CreateNewProfile(0));
+        Profile2Button.onClick.AddListener(() => CreateNewProfile(1));
+        Profile3Button.onClick.AddListener(() => CreateNewProfile(2));
+    }
+
+    private void UnBindProfileButtons()
+    {
+        Profile1Button.onClick.RemoveAllListeners();
+        Profile2Button.onClick.RemoveAllListeners();
+        Profile3Button.onClick.RemoveAllListeners();
+    }
+
+    private void DeleteButtonClick()
+    {
+        Title.text = "Select a profile to delete";
+        DeleteButtonText.text = "cancel delete";
+
+        DeleteProfileButton.onClick.RemoveAllListeners();
+        DeleteProfileButton.onClick.AddListener(() => CancelDelete());
+
+        UnBindProfileButtons();
+        Profile1Button.onClick.AddListener(() => DeleteProfile(0));
+        Profile2Button.onClick.AddListener(() => DeleteProfile(1));
+        Profile3Button.onClick.AddListener(() => DeleteProfile(2));
+    }
+
+    private void CancelDelete()
+    {
+        DeleteButtonText.text = originalDeleteButtonText;
+        UnBindProfileButtons();
+        BindProfileButtons();
+        DeleteProfileButton.onClick.RemoveAllListeners();
+        DeleteProfileButton.onClick.AddListener(() => DeleteButtonClick());
+    }
+
+    private void DeleteProfile(int index)
+    {
+        ProfileSaveState save = SaveProfileHelper.GetSaveState();
+        save.RemoveProfile(index);
+        SaveProfileHelper.WriteSaveState(save);
+
+        UnBindProfileButtons();
+        BindProfileButtons();
+        Title.text = originalTitle;
+        InitializeButtons();
+        DeleteButtonText.text = originalDeleteButtonText;
+        DeleteProfileButton.onClick.RemoveAllListeners();
+        DeleteProfileButton.onClick.AddListener(() => DeleteButtonClick());
+    }
+
+    private void CreateNewProfile(int index)
+    {
+        ProfileSave save = SaveProfileHelper.GetSaveState().GetProfile(index);
+
+        if (save.EmptyProfile)
+        {
+            CreateProfileScreen.gameObject.SetActive(true);
+            CreateProfileScreen.Show(index);
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            MainMenuUi.Instance.PlayButtonWasPressed();
+        }
+    }
+
+    private void InitializeButtons()
     {
         ProfileSaveState saveState = SaveProfileHelper.GetSaveState();
 
         Profile1.Initialize(saveState.GetProfile(0));
         Profile2.Initialize(saveState.GetProfile(1));
         Profile3.Initialize(saveState.GetProfile(2));
+    }
+
+    public void Show()
+    {
+        InitializeButtons();
 
         Profile1Button.Select();
     }
