@@ -19,6 +19,7 @@ public class StoryModeScreen : MonoBehaviour
 
     public MainMenuLocalMenu LocalMenu;
     public CreateProfileScreen CreateProfileScreen;
+    public StoryLevelSelectScreen LevelSelectScreen;
 
     private string originalTitle;
     private string originalDeleteButtonText;
@@ -51,9 +52,9 @@ public class StoryModeScreen : MonoBehaviour
 
     private void BindProfileButtons()
     {
-        Profile1Button.onClick.AddListener(() => CreateNewProfile(0));
-        Profile2Button.onClick.AddListener(() => CreateNewProfile(1));
-        Profile3Button.onClick.AddListener(() => CreateNewProfile(2));
+        Profile1Button.onClick.AddListener(() => ProfileButtonClick(0));
+        Profile2Button.onClick.AddListener(() => ProfileButtonClick(1));
+        Profile3Button.onClick.AddListener(() => ProfileButtonClick(2));
     }
 
     private void UnBindProfileButtons()
@@ -101,7 +102,7 @@ public class StoryModeScreen : MonoBehaviour
         DeleteProfileButton.onClick.AddListener(() => DeleteButtonClick());
     }
 
-    private void CreateNewProfile(int index)
+    private void ProfileButtonClick(int index)
     {
         ProfileSave save = SaveProfileHelper.GetSaveState().GetProfile(index);
 
@@ -113,8 +114,16 @@ public class StoryModeScreen : MonoBehaviour
         }
         else
         {
-            MainMenuUi.Instance.PlayButtonWasPressed();
+            ShowLevelSelectScreen(index);
         }
+    }
+
+    private void ShowLevelSelectScreen(int profileIndex)
+    {
+        SaveProfileHelper.CurrentProfileIndex = profileIndex;
+        LevelSelectScreen.gameObject.SetActive(true);
+        LevelSelectScreen.Show();
+        gameObject.SetActive(false);
     }
 
     private void InitializeButtons()

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class SaveProfileHelper
 {
+    public static int? CurrentProfileIndex;
+
     private static string saveStatePath = Path.Combine(Application.persistentDataPath, "profileSaveState.json");
     private static ProfileSaveState currentState;
 

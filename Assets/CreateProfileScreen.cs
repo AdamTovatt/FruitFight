@@ -57,6 +57,7 @@ public class CreateProfileScreen : MonoBehaviour
         currentProfile.Name = NameInput.text;
         currentProfile.EmptyProfile = false;
         SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
-        MainMenuUi.Instance.PlayButtonWasPressed();
+
+        Cancel();
     }
 }
