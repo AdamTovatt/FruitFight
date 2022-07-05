@@ -11,6 +11,14 @@ public class SaveProfileHelper
     private static string saveStatePath = Path.Combine(Application.persistentDataPath, "profileSaveState.json");
     private static ProfileSaveState currentState;
 
+    public static ProfileSave GetCurrentSaveProfile()
+    {
+        if (CurrentProfileIndex == null)
+            return null;
+
+        return GetSaveState().GetProfile((int)CurrentProfileIndex);
+    }
+
     public static ProfileSaveState GetSaveState()
     {
         if (currentState == null)

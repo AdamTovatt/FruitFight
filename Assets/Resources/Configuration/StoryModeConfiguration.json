@@ -1,0 +1,36 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "assetName": "01"
+    },
+    {
+      "id": 2,
+      "assetName": "02"
+    },
+    {
+      "id": 3,
+      "assetName": "03"
+    },
+    {
+      "id": 4,
+      "assetName": "04"
+    },
+    {
+      "id": 5,
+      "assetName": "05"
+    },
+    {
+      "id": 6,
+      "assetName": "06"
+    },
+    {
+      "id": 7,
+      "assetName": "07"
+    },
+    {
+      "id": 8,
+      "assetName": "08"
+    }
+  ]
+}

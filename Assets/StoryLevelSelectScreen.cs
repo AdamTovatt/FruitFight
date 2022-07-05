@@ -13,6 +13,13 @@ public class StoryLevelSelectScreen : MonoBehaviour
     public void Show()
     {
         BackButton.Select();
+
+        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+
+        List<World> levels = WorldUtilities.GetStoryModeLevels();
+
+        LevelContainer.Initialize(levels, save);
+        LevelContainer.DisplayPage(1);
     }
 
     private void Awake()

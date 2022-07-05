@@ -20,6 +20,9 @@ public class ProfileSave
     [JsonProperty("emptyState")]
     public bool EmptyProfile { get; set; }
 
+    [JsonProperty]
+    public List<int> CompletedLevelIds { get; set; }
+
     [JsonIgnore]
     public static ProfileSave Empty { get { return new ProfileSave("(empty)") { EmptyProfile = true }; } }
 

@@ -56,7 +56,16 @@ public class World
 
     public static World FromWorldName(string worldName)
     {
-        return FromJson(WorldUtilities.LoadTextFile(string.Format("Maps/{0}", worldName)));
+        try
+        {
+            string json = WorldUtilities.LoadTextFile(string.Format("Maps/{0}", worldName));
+            return FromJson(json);
+        }
+        catch(NullReferenceException)
+        {
+            Debug.LogError(worldName + " does not exist in the assets folder (probably)");
+            throw;
+        }
     }
 
     public void CalculateNeighbors()
