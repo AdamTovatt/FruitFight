@@ -19,7 +19,15 @@ public class StoryLevelSelectScreen : MonoBehaviour
         List<World> levels = WorldUtilities.GetStoryModeLevels();
 
         LevelContainer.Initialize(levels, save);
-        LevelContainer.DisplayPage(1);
+        List<StoryLevelButton> buttons = LevelContainer.DisplayPage(1);
+
+        if (buttons.Count > 0)
+            this.CallWithDelay(() => { SelectButton(buttons[0].Button); }, 0.1f);
+    }
+
+    private void SelectButton(Button button)
+    {
+        button.Select();
     }
 
     private void Awake()

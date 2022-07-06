@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StoryLevelContainer : MonoBehaviour
@@ -23,9 +24,9 @@ public class StoryLevelContainer : MonoBehaviour
         this.save = save;
     }
 
-    public void DisplayPage(int page)
+    public List<StoryLevelButton> DisplayPage(int page)
     {
-        foreach(StoryLevelButton button in currentButtons)
+        foreach (StoryLevelButton button in currentButtons)
         {
             Destroy(button.gameObject);
         }
@@ -37,14 +38,47 @@ public class StoryLevelContainer : MonoBehaviour
 
             Sprite buttonSprite = button.CreateScaledSpriteFromTexture(level.Metadata.GetImageDataAsTexture2d());
 
-            button.Initialize(level.Metadata.Name, buttonSprite);
+            button.Initialize(level.Metadata.Name, buttonSprite, level.StoryModeLevelEntry.Id == 1 || save.HasCompletedLevel(level.StoryModeLevelEntry.Id - 1)); //determine if the button is enabled
             button.Button.onClick.AddListener(() => { LevelWasClicked(level); });
             currentButtons.Add(button);
         }
+
+        return currentButtons;
     }
 
     private void LevelWasClicked(World level)
     {
+        WorldBuilder.NextLevel = level;
         Debug.Log("Level clicked: " + level.Metadata.Name);
+
+        GameStateManager.SetGameState(GameState.Story);
+
+        if (!CustomNetworkManager.IsOnlineSession)
+        {
+            DontDestroyOnLoad(MainMenuUi.Instance.gameObject);
+            MainMenuUi.Instance.MouseOverSelectableChecker.Disable();
+            MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(true);
+            WorldBuilder.NextLevel = level;
+            SceneManager.sceneLoaded += SceneLoaded;
+            SceneManager.LoadScene("GamePlay");
+        }
+        else
+        {
+            if (level.Metadata.Id == 0)
+            {
+                AlertCreator.Instance.CreateNotification("Only levels from the online library can be played in online multiplayer");
+            }
+            else
+            {
+                NetworkMethodCaller.Instance.RpcClientShouldStartLevel(level.Metadata.Id);
+            }
+        }
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        MainMenuUi.Instance.LoadingScreen.gameObject.SetActive(false);
+        MainMenuUi.Instance.gameObject.SetActive(false);
+        SceneManager.sceneLoaded -= SceneLoaded;
     }
 }

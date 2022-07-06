@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ public class World
     public float NorthRotation = 180;
 
     public static int LastBlockId { get; set; }
+
+    [JsonIgnore]
+    public StoryModeLevelEntry StoryModeLevelEntry { get; set; }
 
     public World()
     {

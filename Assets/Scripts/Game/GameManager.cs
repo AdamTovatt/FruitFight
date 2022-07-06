@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
     private PlayerInputManager playerInputManager;
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
-    private static float currentLevel = 1;
 
     private bool hasInitializedLevel;
 
@@ -184,7 +183,7 @@ public class GameManager : MonoBehaviour
         {
             PlayerSpawnpoint spawnPoint1 = playerSpawnpoints[0];
             PlayerSpawnpoint spawnPoint2 = spawnPoint1;
-            if(playerSpawnpoints.Length > 1)
+            if (playerSpawnpoints.Length > 1)
             {
                 spawnPoint2 = playerSpawnpoints[1];
             }
@@ -312,8 +311,15 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        currentLevel++;
-        WorldBuilder.NextLevel = World.FromWorldName(currentLevel.ToString().PadLeft(2, '0'));
+        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+        save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
+
+        World nextWorld = WorldUtilities.GetStoryModeLevels().OrderBy(x => x.StoryModeLevelEntry.Id).Where(x => !save.CompletedLevelIds.Contains(x.StoryModeLevelEntry.Id)).FirstOrDefault();
+
+        WorldBuilder.NextLevel = nextWorld;
+
+        SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
+
         LoadGamePlay();
     }
 

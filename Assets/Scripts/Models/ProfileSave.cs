@@ -32,4 +32,21 @@ public class ProfileSave
     {
         Name = name;
     }
+
+    public bool HasCompletedLevel(int id)
+    {
+        if (CompletedLevelIds == null)
+            return false;
+
+        return CompletedLevelIds.Contains(id);
+    }
+
+    public void AddCompletedLevel(int id)
+    {
+        if (CompletedLevelIds == null)
+            CompletedLevelIds = new List<int>();
+
+        if (!CompletedLevelIds.Contains(id))
+            CompletedLevelIds.Add(id);
+    }
 }

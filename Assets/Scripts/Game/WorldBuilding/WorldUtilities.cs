@@ -20,7 +20,9 @@ public class WorldUtilities
 
             foreach (StoryModeLevelEntry level in storyModeConfiguration.Levels)
             {
-                cachedStoryModeLevels.Add(World.FromWorldName(level.AssetName));
+                World world = World.FromWorldName(level.AssetName);
+                world.StoryModeLevelEntry = level;
+                cachedStoryModeLevels.Add(world);
             }
         }
 
