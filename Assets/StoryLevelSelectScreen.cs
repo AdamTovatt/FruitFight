@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StoryLevelSelectScreen : MonoBehaviour
@@ -10,8 +11,14 @@ public class StoryLevelSelectScreen : MonoBehaviour
 
     public StoryModeScreen StoryModeScreen;
 
+    private string menuScene;
+
+    private bool isShown;
+
     public void Show()
     {
+        isShown = true;
+
         BackButton.Select();
 
         ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
@@ -33,6 +40,7 @@ public class StoryLevelSelectScreen : MonoBehaviour
     private void Awake()
     {
         BindEvents();
+        menuScene = SceneManager.GetActiveScene().name;
     }
 
     private void OnDestroy()
@@ -43,6 +51,22 @@ public class StoryLevelSelectScreen : MonoBehaviour
     private void BindEvents()
     {
         BackButton.onClick.AddListener(() => Back());
+        SceneManager.sceneLoaded += SceneLoaded;
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
+    {
+        if (scene.name == menuScene)
+        {
+            if (isShown)
+            {
+                gameObject.SetActive(true);
+
+                List<StoryLevelButton> buttons = LevelContainer.DisplayPage();
+
+                BackButton.Select();
+            }
+        }
     }
 
     private void UnBindEvents()
@@ -52,6 +76,7 @@ public class StoryLevelSelectScreen : MonoBehaviour
 
     private void Back()
     {
+        isShown = false;
         StoryModeScreen.gameObject.SetActive(true);
         StoryModeScreen.Show();
         gameObject.SetActive(false);

@@ -17,6 +17,9 @@ public class ProfileSave
     [JsonProperty("coins")]
     public int Coins { get; set; }
 
+    [JsonProperty("jellyBeans")]
+    public int JellyBeans { get; set; }
+
     [JsonProperty("emptyState")]
     public bool EmptyProfile { get; set; }
 

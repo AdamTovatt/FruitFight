@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 using System.Linq;
 using Mirror;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
 
     private List<Spawner> spawners = new List<Spawner>();
     private Dictionary<Transform, BlockInformationHolder> blockInformationDictionary = new Dictionary<Transform, BlockInformationHolder>();
+
+    private DateTime levelStartTime;
 
     public void Awake()
     {
@@ -79,6 +82,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        levelStartTime = DateTime.Now;
         Debug.Log("player characters count: " + PlayerCharacters.Count);
 
         if (CustomNetworkManager.IsOnlineSession && NetworkMethodCaller.Instance != null)
@@ -152,6 +156,13 @@ public class GameManager : MonoBehaviour
             CameraManager.AddCamera(transform, null, false);
         }
 
+        if (GameStateManager.State == GameState.Story)
+        {
+            ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+            PlayerCharacters[0].Player.Coins = save.Coins;
+            PlayerCharacters[0].Player.JellyBeans = save.JellyBeans;
+
+        }
         GameUi.Instance.HideLoadingScreen();
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -248,19 +259,39 @@ public class GameManager : MonoBehaviour
     {
         if (WorldEditor.Instance == null || !WorldEditor.IsTestingLevel)
         {
-            int totalCoinsEarned = 0;
-            int totalJellyBeansEarned = 0;
+            int totalCoins = 0;
+            int totalJellyBeans = 0;
 
             foreach (PlayerMovement playerMovement in PlayerCharacters)
             {
-                totalCoinsEarned += playerMovement.Player.Coins;
-                totalJellyBeansEarned += playerMovement.Player.JellyBeans;
+                totalCoins += playerMovement.Player.Coins;
+                totalJellyBeans += playerMovement.Player.JellyBeans;
             }
 
-            int totalXpEarned = (totalCoinsEarned + totalJellyBeansEarned) * 2;
+            if (GameStateManager.State == GameState.Story)
+            {
+                ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+                totalCoins -= save.Coins;
+                totalJellyBeans -= save.JellyBeans;
+            }
+
+            int totalXpEarned = (totalCoins + totalJellyBeans * 2) * 2;
 
             if (CustomNetworkManager.HasAuthority)
-                this.CallWithDelay(() => { ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned); }, 1.5f);
+            {
+                if (GameStateManager.State == GameState.Story)
+                {
+                    ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+                    save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
+                    save.Coins += totalCoins;
+                    save.JellyBeans += totalJellyBeans;
+                    save.Xp += totalXpEarned;
+                    save.HoursPlayed += (DateTime.Now - levelStartTime).TotalHours;
+                    SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
+                }
+
+                this.CallWithDelay(() => { ShowWinScreen(totalCoins, totalJellyBeans, totalXpEarned); }, 1.5f);
+            }
         }
     }
 
@@ -275,6 +306,13 @@ public class GameManager : MonoBehaviour
         {
             GameUi.Instance.ShowWinScreen(totalCoinsEarned, totalJellyBeansEarned, totalXpEarned);
         }
+    }
+
+    private void AddLevelAsCompleted()
+    {
+        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+        save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
+        SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
     }
 
     public void ContinueFromLevel()
@@ -312,13 +350,10 @@ public class GameManager : MonoBehaviour
     public void LoadNextLevel()
     {
         ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
-        save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
 
         World nextWorld = WorldUtilities.GetStoryModeLevels().OrderBy(x => x.StoryModeLevelEntry.Id).Where(x => !save.CompletedLevelIds.Contains(x.StoryModeLevelEntry.Id)).FirstOrDefault();
 
         WorldBuilder.NextLevel = nextWorld;
-
-        SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
 
         LoadGamePlay();
     }

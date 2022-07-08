@@ -16,12 +16,19 @@ public class StoryLevelContainer : MonoBehaviour
     private List<World> levels;
     private ProfileSave save;
 
+    private int currentPage = 1;
+
     private List<StoryLevelButton> currentButtons = new List<StoryLevelButton>();
 
     public void Initialize(List<World> levels, ProfileSave save)
     {
         this.levels = levels;
         this.save = save;
+    }
+
+    public List<StoryLevelButton> DisplayPage()
+    {
+        return DisplayPage(currentPage);
     }
 
     public List<StoryLevelButton> DisplayPage(int page)
@@ -42,6 +49,8 @@ public class StoryLevelContainer : MonoBehaviour
             button.Button.onClick.AddListener(() => { LevelWasClicked(level); });
             currentButtons.Add(button);
         }
+
+        currentPage = page;
 
         return currentButtons;
     }

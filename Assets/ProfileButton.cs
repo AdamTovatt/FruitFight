@@ -16,7 +16,7 @@ public class ProfileButton : MonoBehaviour
         }
         else
         {
-            BodyText.text = string.Format("{0} coins\n{1} xp\n{2}h played", profile.Coins, profile.Xp, profile.HoursPlayed);
+            BodyText.text = string.Format("{0} coins\n{1} xp\n{2}h played", profile.Coins, profile.Xp, (Mathf.CeilToInt((float)profile.HoursPlayed * 10f)/10.0f).ToString("0.0"));
         }
 
         HeaderText.text = profile.Name;
