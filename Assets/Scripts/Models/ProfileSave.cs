@@ -73,4 +73,9 @@ public class ProfileSave
 
         return buttonEnabled;
     }
+
+    public override string ToString()
+    {
+        return string.Format("{0} coins\n{1} xp\n{2}h played", Coins, Xp, (Mathf.CeilToInt((float)HoursPlayed * 10f) / 10.0f).ToString("0.0"));
+    }
 }

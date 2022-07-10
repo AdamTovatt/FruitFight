@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 public class StoryLevelSelectScreen : MonoBehaviour
 {
     public Button BackButton;
+    public TextMeshProUGUI InformationText;
     public StoryLevelContainer LevelContainer;
 
     public StoryModeScreen StoryModeScreen;
@@ -24,6 +26,8 @@ public class StoryLevelSelectScreen : MonoBehaviour
         ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
 
         List<World> levels = WorldUtilities.GetStoryModeLevels();
+
+        InformationText.text = string.Format("{0}\n{1}", save.Name, save.ToString());
 
         LevelContainer.Initialize(levels, save);
         List<StoryLevelButton> buttons = LevelContainer.DisplayPage(1);
