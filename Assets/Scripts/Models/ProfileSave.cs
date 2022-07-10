@@ -52,4 +52,25 @@ public class ProfileSave
         if (!CompletedLevelIds.Contains(id))
             CompletedLevelIds.Add(id);
     }
+
+    public bool HasUnlockedLevel(StoryModeLevelEntry level, out string buttonText)
+    {
+        buttonText = null;
+        bool buttonEnabled = level.Id == 1 || HasCompletedLevel(level.Id - 1);
+
+        if (!buttonEnabled)
+            buttonText = "???";
+
+        if (level.RequiredXp > 0)
+        {
+            if (Xp < level.RequiredXp)
+            {
+                buttonEnabled = false;
+
+                buttonText = string.Format("{0}xp required to unlock", level.RequiredXp);
+            }
+        }
+
+        return buttonEnabled;
+    }
 }

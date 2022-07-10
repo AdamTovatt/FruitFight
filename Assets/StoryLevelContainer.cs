@@ -45,7 +45,11 @@ public class StoryLevelContainer : MonoBehaviour
 
             Sprite buttonSprite = button.CreateScaledSpriteFromTexture(level.Metadata.GetImageDataAsTexture2d());
 
-            button.Initialize(level.Metadata.Name, buttonSprite, level.StoryModeLevelEntry.Id == 1 || save.HasCompletedLevel(level.StoryModeLevelEntry.Id - 1)); //determine if the button is enabled
+            bool buttonEnabled = save.HasUnlockedLevel(level.StoryModeLevelEntry, out string buttonText);
+            if (buttonText == null)
+                buttonText = level.Metadata.Name;
+
+            button.Initialize(buttonText, buttonSprite, buttonEnabled); //determine if the button is enabled
             button.Button.onClick.AddListener(() => { LevelWasClicked(level); });
             currentButtons.Add(button);
         }

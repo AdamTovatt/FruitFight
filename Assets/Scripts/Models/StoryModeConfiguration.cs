@@ -23,4 +23,7 @@ public class StoryModeLevelEntry
 
     [JsonProperty("assetName")]
     public string AssetName { get; set; }
+
+    [JsonProperty("requiredXp")]
+    public int RequiredXp { get; set; }
 }

@@ -353,9 +353,23 @@ public class GameManager : MonoBehaviour
 
         World nextWorld = WorldUtilities.GetStoryModeLevels().OrderBy(x => x.StoryModeLevelEntry.Id).Where(x => !save.CompletedLevelIds.Contains(x.StoryModeLevelEntry.Id)).FirstOrDefault();
 
-        WorldBuilder.NextLevel = nextWorld;
+        if(save.HasUnlockedLevel(nextWorld.StoryModeLevelEntry, out string _buttonText))
+        {
+            WorldBuilder.NextLevel = nextWorld;
 
-        LoadGamePlay();
+            LoadGamePlay();
+        }
+        else
+        {
+            if(!CustomNetworkManager.IsOnlineSession)
+            {
+                GameUi.Instance.ExitLevel();
+            }
+            else
+            {
+                NetworkMethodCaller.Instance.ExitLevel();
+            }
+        }
     }
 
     private void LoadGamePlay()
