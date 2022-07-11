@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2223543691951150455}
   - {fileID: 1256432773765851180}
@@ -61,7 +62,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b11cd0e6034e405438fa0da1ecca1954, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.41
+  m_Volume: 0.278
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -160,6 +161,8 @@ MonoBehaviour:
   SoundClips:
   - {fileID: 8300000, guid: b11cd0e6034e405438fa0da1ecca1954, type: 3}
   AudioSource: {fileID: 7860875326658041553}
+  PlayOnAwake: 1
+  PlayOnCollision: 0
   PitchVariation: 0
 --- !u!1 &1256432773765851187
 GameObject:
@@ -189,6 +192,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1256432773296630213}
   m_RootOrder: 1
@@ -5001,6 +5005,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 4
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -5024,6 +5029,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &4089937461433682913
 GameObject:
@@ -5053,6 +5062,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1256432773296630213}
   m_RootOrder: 2
@@ -9865,6 +9875,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 4
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -9888,6 +9899,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1001 &7352449338445954604
 PrefabInstance:
@@ -9896,6 +9911,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1256432773296630213}
     m_Modifications:
+    - target: {fileID: 6236123957881640248, guid: 702ef5130f0a4b74a8f42c99333f8714,
+        type: 3}
+      propertyPath: m_AssetId
+      value: b7031ed767590a046b7ac151650d7ee0
+      objectReference: {fileID: 0}
     - target: {fileID: 8706223902884326235, guid: 702ef5130f0a4b74a8f42c99333f8714,
         type: 3}
       propertyPath: m_RootOrder
