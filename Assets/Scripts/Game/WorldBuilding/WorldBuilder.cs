@@ -93,7 +93,7 @@ public class WorldBuilder : MonoBehaviour
     public void PlaceBlock(Block block)
     {
         if (block.Info.BlockType == BlockType.Block || block.Info.BlockType == BlockType.Invisible || block.Info.BlockType == BlockType.Prop || block.Info.BlockType == BlockType.Detail)
-        {
+        { //normal blocks
             GameObject instantiatedObject = Instantiate(PrefabLookup.GetPrefab(block.Info.Prefab), block.Position + block.RotationOffset, Quaternion.identity, transform);
             block.Instance = instantiatedObject;
             block.SeeThroughBlock = instantiatedObject.GetComponent<SeeThroughBlock>();
@@ -102,8 +102,17 @@ public class WorldBuilder : MonoBehaviour
             {
                 block.Instance.transform.rotation = block.Rotation;
             }
+
+            if (block.Info.BlockType == BlockType.Block || block.Info.BlockType == BlockType.Prop) //for solid objects, check if we should create water sound
+            {
+                if ((block.NeighborX.OccupiedSides + block.NeighborZ.OccupiedSides) < 4 && block.Position.Y == 0) //is on water level
+                {
+                    Debug.Log("Doesnt have neighbors");
+                    previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab("WaterSound"), block.CenterPoint, Quaternion.identity, transform));
+                }
+            }
         }
-        else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor)
+        else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor) //water
         {
             int width = block.Info.Width;
             for (int x = -5; x < 5; x++)
@@ -156,7 +165,7 @@ public class WorldBuilder : MonoBehaviour
                 }
 
                 EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
-                if(eventCamera != null)
+                if (eventCamera != null)
                 {
                     block.BehaviourProperties.EventCameraPropertyCollection = new EventCameraPropertyCollection();
                 }
@@ -252,7 +261,7 @@ public class WorldBuilder : MonoBehaviour
     private void OptimizeObjects() //an attempt at making a method that optimizes the objects by static batching, for some reason some of the objects get a yellowish tint
     {
         Dictionary<int, List<Block>> blocksByTypes = new Dictionary<int, List<Block>>();
-        foreach(Block block in currentBlocks)
+        foreach (Block block in currentBlocks)
         {
             if (!block.InformationHolder.CanMove && (block.Info.Id == 18 || block.Info.Id == 22 || block.Info.Id == 33))
             {
@@ -265,14 +274,14 @@ public class WorldBuilder : MonoBehaviour
             }
         }
 
-        foreach(List<Block> blocks in blocksByTypes.Values)
+        foreach (List<Block> blocks in blocksByTypes.Values)
         {
             Debug.Log("Blocks to combine: " + blocks.Count);
 
-            if(blocks.Count > 1)
+            if (blocks.Count > 1)
             {
                 List<GameObject> gameObjects = new List<GameObject>();
-                foreach(Block block in blocks)
+                foreach (Block block in blocks)
                 {
                     foreach (Transform childTransform in block.Instance.GetComponentsInChildren<Transform>())
                     {
@@ -281,7 +290,7 @@ public class WorldBuilder : MonoBehaviour
                     }
                 }
 
-                foreach(GameObject child in gameObjects)
+                foreach (GameObject child in gameObjects)
                 {
                     child.transform.SetParent(blocks.First().Instance.transform);
                 }
@@ -308,7 +317,7 @@ public class WorldBuilder : MonoBehaviour
                     foreach (Block neighbor in blockInformationHolder.Block.NeighborY.AllTypesNegative)
                     {
                         BlockInformationHolder neighborInformationHolder = neighbor.Instance?.transform?.GetComponent<BlockInformationHolder>();
-                        if(neighborInformationHolder != null)
+                        if (neighborInformationHolder != null)
                         {
                             neighborInformationHolder.CanMove = true;
                         }

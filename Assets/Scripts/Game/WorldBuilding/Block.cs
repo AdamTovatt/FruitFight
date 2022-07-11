@@ -152,6 +152,11 @@ public class Block
         };
     }
 
+    public bool HasNeighborWithId(int id)
+    {
+        return NeighborX.HasNeighborWithId(id) || NeighborY.HasNeighborWithId(id) || NeighborZ.HasNeighborWithId(id);
+    }
+
     public override string ToString()
     {
         return Info.Prefab;
@@ -160,8 +165,27 @@ public class Block
 
 public class NeighborSet
 {
+    public bool Exists { get { return SameTypesPositive.Count > 0 || SameTypesNegative.Count > 0; } }
+    public int OccupiedSides { get { int count = 0; if (SameTypesPositive.Count > 0) count++; if (SameTypesNegative.Count > 0) count++; return count; } }
     public List<Block> SameTypesPositive { get; set; }
     public List<Block> SameTypesNegative { get; set; }
     public List<Block> AllTypesPositive { get; set; }
     public List<Block> AllTypesNegative { get; set; }
+
+    public bool HasNeighborWithId(int id)
+    {
+        foreach (Block block in AllTypesPositive)
+        {
+            if (block.BlockInfoId == id)
+                return true;
+        }
+
+        foreach (Block block in AllTypesNegative)
+        {
+            if (block.BlockInfoId == id)
+                return true;
+        }
+
+        return false;
+    }
 }

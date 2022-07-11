@@ -829,6 +829,16 @@
       "Prefab": "MoveableBlockSpawner",
       "RotatableX": true,
       "AngleLimit": 90
+    },
+    {
+      "Id": 91,
+      "BlockType": 2,
+      "Width": 1,
+      "Height": 1,
+      "ShowInEditor": false,
+      "Name": "WaterSound",
+      "Prefab": "WaterSound",
+      "EdgePrefabs": []
     }
   ]
 }
