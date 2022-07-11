@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7468057181519426438}
   - component: {fileID: 3553907949924171458}
   - component: {fileID: 1045888554365478220}
-  - component: {fileID: 2208430968058263026}
   m_Layer: 0
   m_Name: SingleTargetCamera
   m_TagString: Untagged
@@ -31,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.373252, y: 5.52443, z: 0.7992652}
   m_LocalScale: {x: 0.43343, y: 0.43343, z: 0.43343}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -85,7 +85,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4417066508167040906}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &3553907949924171458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
   m_Antialiasing: 1
   m_AntialiasingQuality: 2
@@ -132,7 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 3079950163828722329}
   AudioListener: {fileID: 7468057181519426438}
-  SoundSourceManager: {fileID: 2208430968058263026}
+  SoundSourceManager: {fileID: 0}
   StartDistance: 8
   SmoothTime: 0.2
   InsideWallDistance: 0.2
@@ -141,15 +142,3 @@ MonoBehaviour:
   ShakeSettleTime: 0.4
   ShakeFallOffDistance: 25
   ShakeAmplitudeMultiplier: 0.1
---- !u!114 &2208430968058263026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4417066508167040906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da64e51da65d6c4489e99ccf58ef4a9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -136,6 +136,8 @@ public class PlayerMovement : MovingCharacter
             Debug.LogError("Missing magic projectile! Id: " + MagicProjectileId);
 
         Player.TurnOffRunParticles();
+
+        Player.PlayerEars.EnableSound();
     }
 
     private void OnDestroy()
@@ -181,6 +183,8 @@ public class PlayerMovement : MovingCharacter
             input.Gameplay.Enable();
             input.Ui.Disable();
         }
+
+        Player.PlayerEars.SetCamera(singleTargetCamera);
     }
 
     private void BindInputFromPlayerControls(PlayerControls input)

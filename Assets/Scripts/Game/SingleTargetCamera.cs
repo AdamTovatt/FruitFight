@@ -8,7 +8,6 @@ public class SingleTargetCamera : MonoBehaviour
 {
     public Camera Camera;
     public AudioListener AudioListener;
-    public UniqueSoundSourceManager SoundSourceManager;
     public float StartDistance = 8f;
     public float SmoothTime = 1f;
     public float InsideWallDistance = 0.2f;
@@ -286,18 +285,6 @@ public class SingleTargetCamera : MonoBehaviour
         return Physics.OverlapSphere(transform.position + transform.forward * InsideWallDistance, 0.001f).Where(x => x.transform.tag == "Ground" || x.transform.tag == "Water").Count() > 0;
     }
 
-    public void DisableSound()
-    {
-        AudioListener.enabled = false;
-        SoundSourceManager.enabled = false;
-    }
-
-    public void EnableSound()
-    {
-        AudioListener.enabled = true;
-        SoundSourceManager.enabled = true;
-    }
-
     public void SetViewType(CameraViewType viewType)
     {
         CameraViewType = viewType;
@@ -306,15 +293,12 @@ public class SingleTargetCamera : MonoBehaviour
         {
             case global::CameraViewType.Full:
                 Camera.rect = new Rect(0, 0, 1, 1);
-                EnableSound();
                 break;
             case global::CameraViewType.Left:
                 Camera.rect = new Rect(0, 0, 0.5f, 1);
-                EnableSound();
                 break;
             case global::CameraViewType.Right:
                 Camera.rect = new Rect(0.5f, 0, 0.5f, 1);
-                DisableSound();
                 break;
             default:
                 break;

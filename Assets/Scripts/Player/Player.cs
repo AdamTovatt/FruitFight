@@ -44,6 +44,7 @@ public class Player : NetworkBehaviour
     public Health Health;
     public PlayerMovement Movement;
     public PlayerNetworkCharacter NetworkCharacter;
+    public PlayerEars PlayerEars;
 
     private int magicProjectileId;
     private ProjectileConfigurationEntry magicProjectileConfigurationEntry;
