@@ -18,6 +18,7 @@ public class Block
     public bool IsFromGrassify;
     public bool HasPropertyExposer;
     public BehaviourPropertyContainer BehaviourProperties;
+    public List<BehaviourProperties> BehaviourProperties2;
 
     public Vector3 AppliedPosition { get { return new Vector3(X, Y, Z) + RotationOffset; } }
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
@@ -42,6 +43,8 @@ public class Block
     public SeeThroughBlock SeeThroughBlock { get; set; }
 
     public List<Vector3Int> ObscuredPositions { get; set; }
+
+    public Block() { }
 
     public Block(BlockInfo info, Vector3Int position)
     {

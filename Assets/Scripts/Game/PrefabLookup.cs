@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Lookups
             {
                 prefabLookup = new Dictionary<string, GameObject>();
                 LoadPrefabs(BlockInfoLookup.GetBlockInfoContainer());
+                LoadAdditionalPrefabs();
                 isInitialized = true;
             }
         }
@@ -33,7 +35,7 @@ namespace Lookups
                     {
                         if (!prefabLookup.ContainsKey(prefab))
                         {
-                            LoadPrefab(prefab);
+                            LoadPrefab(prefab, "Prefabs/Terrain/{0}");
                         }
                     }
 
@@ -42,9 +44,24 @@ namespace Lookups
             }
         }
 
-        private static void LoadPrefab(string name)
+        private static void LoadAdditionalPrefabs()
         {
-            prefabLookup.Add(name, Resources.Load<GameObject>(string.Format("Prefabs/Terrain/{0}", name)));
+            foreach(PrefabConfigurationEntry prefab in PrefabConfiguration.GetInstance().Prefabs)
+            {
+                try
+                {
+                    LoadPrefab(prefab.Name, prefab.Path);
+                }
+                catch(Exception exception)
+                {
+                    Debug.LogError("Error when loading prefab: " + prefab + " " + exception.Message);
+                }
+            }
+        }
+
+        private static void LoadPrefab(string name, string path)
+        {
+            prefabLookup.Add(name, Resources.Load<GameObject>(string.Format(path, name)));
         }
 
         public static GameObject GetPrefab(string name)
@@ -55,7 +72,7 @@ namespace Lookups
             if (!prefabLookup.ContainsKey(name))
             {
                 Debug.LogError("The prefab: " + name + " has not been loaded correctly.");
-                LoadPrefab(name);
+                //LoadPrefab(name); this should not be here but I don't want to remove it because it might introduce a bug, you can remove it if you havent noticed any bugs related to prefabs
             }
 
             return prefabLookup[name];

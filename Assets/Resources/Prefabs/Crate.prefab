@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 8235472246260940242}
   - component: {fileID: 619074008742090808}
   - component: {fileID: 1581231819493572606}
+  - component: {fileID: -6843786720705409187}
   m_Layer: 3
   m_Name: Crate
   m_TagString: Ground
@@ -305,3 +306,15 @@ MonoBehaviour:
   visible: 0
   m_AssetId: ef544c3c2eb2a6f46928712dd780bad4
   hasSpawned: 0
+--- !u!114 &-6843786720705409187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4463981258025038861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 310e40d840fe9a0409635f859109a29c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

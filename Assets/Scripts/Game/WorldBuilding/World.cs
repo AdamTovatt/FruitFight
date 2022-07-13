@@ -48,7 +48,7 @@ public class World
 
     public static World FromJson(string json)
     {
-        World world = JsonUtility.FromJson<World>(json);
+        World world = JsonConvert.DeserializeObject<World>(json);
         world.blockLookup.Initialize(world.blocks);
         world.CalculateNeighbors();
 
@@ -82,6 +82,6 @@ public class World
 
     public string ToJson(bool prettyPrint = false)
     {
-        return JsonUtility.ToJson(this, prettyPrint);
+        return JsonConvert.SerializeObject(this, prettyPrint ? Formatting.Indented : Formatting.None);
     }
 }

@@ -1,5 +1,6 @@
 using Assets.Scripts.Models;
 using Lookups;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,15 @@ public class WorldBuilder : MonoBehaviour
     public static World NextLevel;
     public static bool IsInEditor = false;
 
+    public delegate void FinishedPlacingBlocksHandler();
+    public event FinishedPlacingBlocksHandler OnFinishedPlacingBlocks;
+
     public IReadOnlyList<GameObject> CurrentPlacedObjects { get { return previousWorldObjects; } }
     public Dictionary<Transform, BlockInformationHolder> CurrentBlocks { get; set; } = new Dictionary<Transform, BlockInformationHolder>();
 
     private List<GameObject> previousWorldObjects;
     private List<Block> currentBlocks = new List<Block>();
+    private Dictionary<int, Block> placedBlocks = new Dictionary<int, Block>();
 
     private World upcommingWorld;
     private List<ActivatedByStateSwitcher> activatedByStateSwitcherObjectsToBind = new List<ActivatedByStateSwitcher>();
@@ -56,6 +61,7 @@ public class WorldBuilder : MonoBehaviour
         debugCubes.Clear();
         currentBlocks.Clear();
         CurrentBlocks.Clear();
+        placedBlocks.Clear();
 
         foreach (GameObject gameObject in previousWorldObjects)
         {
@@ -87,6 +93,8 @@ public class WorldBuilder : MonoBehaviour
         {
             DaylightController.Instance.Initialize(world.NorthRotation, world.TimeOfDay);
         }
+
+        OnFinishedPlacingBlocks?.Invoke();
     }
 
     List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();
@@ -107,10 +115,11 @@ public class WorldBuilder : MonoBehaviour
             {
                 if ((block.NeighborX.OccupiedSides + block.NeighborZ.OccupiedSides) < 4 && block.Position.Y == 0) //is on water level
                 {
-                    Debug.Log("Doesnt have neighbors");
                     previousWorldObjects.Add(Instantiate(PrefabLookup.GetPrefab("WaterSound"), block.CenterPoint, Quaternion.identity, transform));
                 }
             }
+
+            placedBlocks.Add(block.Id, block);
         }
         else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor) //water
         {
@@ -251,6 +260,27 @@ public class WorldBuilder : MonoBehaviour
             CurrentBlocks.Add(block.Instance.transform, block.InformationHolder);
             currentBlocks.Add(block);
         }
+
+        if (block.BehaviourProperties2 != null && block.BehaviourProperties2.Count > 0) //check if we have any second generation behaviour properties
+        {
+            if (block.Instance != null) //we need to have an instance of the block
+            {
+                foreach (BehaviourProperties behaviourProperties in block.BehaviourProperties2) //second generation behaviour properties
+                {
+                    Type propertyType = behaviourProperties.GetType();
+
+                    if (propertyType == typeof(Container.ContainerProperties))
+                    {
+                        Container container = block.Instance.AddComponent<Container>();
+                        container.Initialize((Container.ContainerProperties)behaviourProperties);
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("Wanted to bind 2genBehaviourProperties but block.Instance was null");
+            }
+        }
     }
 
     private Block GetBlockInUpcommingWorld(int blockId)
@@ -339,6 +369,14 @@ public class WorldBuilder : MonoBehaviour
         {
             zone.Bind();
         }
+    }
+
+    public Block GetPlacedBlock(int blockId)
+    {
+        if (!placedBlocks.TryGetValue(blockId, out Block result))
+            return null;
+        else
+            return result;
     }
 
     public BlockInformationHolder GetBlockInformationHolder(Transform transform)

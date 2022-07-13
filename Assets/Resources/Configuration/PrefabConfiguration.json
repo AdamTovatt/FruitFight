@@ -1,0 +1,28 @@
+{
+  "prefabs": [
+    {
+      "name": "JellyBean",
+      "path": "Prefabs/{0}"
+    },
+    {
+      "name": "Coin",
+      "path": "Prefabs/{0}"
+    },
+    {
+      "name": "SmokePoof",
+      "path": "Prefabs/Effects/{0}"
+    },
+    {
+      "name": "SmallSpark",
+      "path": "Prefabs/Effects/{0}"
+    },
+    {
+      "name": "Confetti",
+      "path": "Prefabs/Effects/{0}"
+    },
+    {
+      "name": "CrateBroken",
+      "path": "Prefabs/Effects/{0}"
+    }
+  ]
+}
