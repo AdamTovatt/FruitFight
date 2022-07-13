@@ -1,5 +1,6 @@
 using Assets.Scripts.Models;
 using Lookups;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,28 +21,38 @@ public class Block
     public BehaviourPropertyContainer BehaviourProperties;
     public List<BehaviourProperties> BehaviourProperties2;
 
+    [JsonIgnore]
     public Vector3 AppliedPosition { get { return new Vector3(X, Y, Z) + RotationOffset; } }
+    [JsonIgnore]
     public Vector3Int Position { get { return new Vector3Int(X, Y, Z); } }
+    [JsonIgnore]
     public Vector3 CenterPoint { get { return Position + new Vector3(Info.Width / 2f, Info.Height / 2f, Info.Width / 2f); } }
 
     public bool EnforceEdge { get; set; }
 
+    [JsonIgnore]
     public BlockInfo Info
     {
         get { if (_info == null) { _info = BlockInfoLookup.Get(BlockInfoId); } return _info; }
         set { BlockInfoId = value.Id; _info = value; }
     }
-    [NonSerialized]
     private BlockInfo _info;
 
+    [JsonIgnore]
     public NeighborSet NeighborX { get; set; }
+    [JsonIgnore]
     public NeighborSet NeighborY { get; set; }
+    [JsonIgnore]
     public NeighborSet NeighborZ { get; set; }
 
+    [JsonIgnore]
     public GameObject Instance { get; set; }
+    [JsonIgnore]
     public BlockInformationHolder InformationHolder { get; set; }
+    [JsonIgnore]
     public SeeThroughBlock SeeThroughBlock { get; set; }
 
+    [JsonIgnore]
     public List<Vector3Int> ObscuredPositions { get; set; }
 
     public Block() { }

@@ -119,7 +119,10 @@ public class WorldBuilder : MonoBehaviour
                 }
             }
 
-            placedBlocks.Add(block.Id, block);
+            if (!placedBlocks.ContainsKey(block.Id))
+                placedBlocks.Add(block.Id, block);
+            else
+                Debug.LogError("This block was placed twice: " + block);
         }
         else if (block.Info.BlockType == BlockType.Ocean && !IsInEditor) //water
         {

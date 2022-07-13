@@ -183,6 +183,13 @@
       "dependencies": {},
       "hash": "f2c6cb09817832dccd0600f291053d8d55298ee9"
     },
+    "jillejr.newtonsoft.json-for-unity.converters": {
+      "version": "https://github.com/jilleJr/Newtonsoft.Json-for-Unity.Converters.git#1.4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6064d12de09ac6baa9df88a30722b212b942d0e1"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

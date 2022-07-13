@@ -7,10 +7,7 @@ using UnityEngine;
 [Serializable]
 public class World
 {
-    public IReadOnlyList<Block> Blocks { get { return blocks; } }
-
-    [SerializeField]
-    private List<Block> blocks;
+    public List<Block> Blocks { get; set; }
 
     private WorldBlockLookup blockLookup;
 
@@ -26,18 +23,18 @@ public class World
     public World()
     {
         blockLookup = new WorldBlockLookup();
-        blocks = new List<Block>();
+        Blocks = new List<Block>();
     }
 
     public void Add(Block block)
     {
-        blocks.Add(block);
+        Blocks.Add(block);
         blockLookup.Add(block);
     }
 
     public void Remove(Block block, Vector3Int position)
     {
-        blocks = blocks.Where(x => x.Id != block.Id).ToList();
+        Blocks = Blocks.Where(x => x.Id != block.Id).ToList();
         blockLookup.Remove(block, position);
     }
 
@@ -49,11 +46,11 @@ public class World
     public static World FromJson(string json)
     {
         World world = JsonConvert.DeserializeObject<World>(json);
-        world.blockLookup.Initialize(world.blocks);
+        world.blockLookup.Initialize(world.Blocks);
         world.CalculateNeighbors();
 
-        if (world.blocks.Count > 0)
-            LastBlockId = world.blocks.OrderByDescending(b => b.Id).First().Id;
+        if (world.Blocks.Count > 0)
+            LastBlockId = world.Blocks.OrderByDescending(b => b.Id).First().Id;
 
         return world;
     }
@@ -74,9 +71,9 @@ public class World
 
     public void CalculateNeighbors()
     {
-        for (int i = 0; i < blocks.Count; i++)
+        for (int i = 0; i < Blocks.Count; i++)
         {
-            blocks[i].CalculateNeighbors(this);
+            Blocks[i].CalculateNeighbors(this);
         }
     }
 
