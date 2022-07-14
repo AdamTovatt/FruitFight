@@ -14,25 +14,25 @@ public class Container : MonoBehaviour
 
     public class ContainerProperties : BehaviourProperties
     {
-        [StringInput(CheckIfPrefab = true, Description = "The effect that will be used for when an object is released")]
+        [StringInput(CheckIfPrefab = true, Name = "Effect", Description = "The effect that will be used for when an object is released")]
         public string ReleaseEffectPrefab { get; set; }
         
-        [StringInput(CheckIfPrefab = true, Description = "The object that will be released")]
+        [StringInput(CheckIfPrefab = true, Name = "Object", Description = "The object that will be released")]
         public string ReleaseObjectPrefab { get; set; }
         
-        [IntInput(MinValue = 1, MaxValue = 10, Description = "The amount of objects that will be released")]
+        [IntInput(MinValue = 1, MaxValue = 10, Name = "Amount", Description = "The amount of objects that will be released")]
         public int AmountToRelease { get; set; }
         
-        [FloatInput(MinValue = 0.0f, MaxValue = 10f, Description = "The force with which the objects that are released will be released. Objects that have a higher force will fly further.")]
+        [FloatInput(MinValue = 0.0f, MaxValue = 10f, Name = "Force strength", Description = "The force with which the objects that are released will be released. Objects that have a higher force will fly further.")]
         public float SpawnForceStrength { get; set; } = 5f;
         
-        [EnumInput(EnumType = typeof(ReleaseType), Description = "The type of trigger that will trigger the release. Should the release happen when the releasing object is destroyed or should it be determined by some other trigger?")]
+        [EnumInput(EnumType = typeof(ReleaseType), Name = "Trigger type", Description = "The type of trigger that will trigger the release. Should the release happen when the releasing object is destroyed or should it be determined by some other trigger?")]
         public ReleaseType ReleaseType { get; set; }
         
-        [ActivatorInput(Description = "The object that will give the trigger to release objects if that release type is chosen")]
+        [ActivatorInput(Name = "Activator", Description = "The object that will give the trigger to release objects if that release type is chosen")]
         public int ActivatorObjectId { get; set; }
 
-        [BoolInput(Description = "Should this container release objects multiple times or just once?")]
+        [BoolInput(Name = "Multiple times", Description = "Should this container release objects multiple times or just once?")]
         public bool ReleaseMultipleTimes { get; set; }
     }
 

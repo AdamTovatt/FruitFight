@@ -270,7 +270,7 @@ MonoBehaviour:
   PanelDescription: {fileID: 4395084144199793458}
   ErrorColor: {r: 0.8, g: 0.4392157, b: 0.29411766, a: 1}
   NormalColor: {r: 0.9098039, g: 0.7529412, b: 0.49019608, a: 1}
-  NormalTextColor: {r: 1, g: 1, b: 1, a: 0}
+  ConfirmedColor: {r: 0.62352943, g: 0.7529412, b: 0.53333336, a: 1}
 --- !u!1 &4395084143475823646
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,7 +903,7 @@ MonoBehaviour:
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 
   m_CaretBlinkRate: 0.85
-  m_CaretWidth: 2
+  m_CaretWidth: 4
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

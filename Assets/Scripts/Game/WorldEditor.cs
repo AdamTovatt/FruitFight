@@ -33,6 +33,9 @@ public class WorldEditor : MonoBehaviour
     public delegate void ImageWasCaptured(Texture2D image);
     public event ImageWasCaptured OnImageWasCaptured;
 
+    public delegate void ActivatorWasPicked(Block block);
+    public event ActivatorWasPicked OnActivatorWasPicked;
+
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
 
@@ -53,6 +56,7 @@ public class WorldEditor : MonoBehaviour
     private bool isRotatingObject = false;
 
     private bool isPickingActivator = false;
+    private bool isPickingActivator2 = false;
     private List<Block> currentlyAvailableActivators;
     private int currentActivatorIndex;
     private Block currentMovePropertiesBlock;
@@ -280,6 +284,42 @@ public class WorldEditor : MonoBehaviour
             ((EventCameraMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else
             Debug.LogError(activatorPickingMenu.GetType().ToString() + " is not supported as a activator picking menu");
+
+        currentlyAvailableActivators = null;
+
+        SetMarkerPositionToBlock(currentMovePropertiesBlock);
+    }
+
+    public List<Block> GetCurrentlyAvailableActivators()
+    {
+        currentlyAvailableActivators = new List<Block>();
+        foreach (StateSwitcher stateSwitcher in FindObjectsOfType<StateSwitcher>())
+            currentlyAvailableActivators.Add(CurrentWorld.Blocks.Where(x => x.Instance == stateSwitcher.gameObject).FirstOrDefault());
+
+        currentlyAvailableActivators = currentlyAvailableActivators.OrderBy(x => ((Vector3)(x.Position - MarkerPosition)).sqrMagnitude).ToList();
+
+        return currentlyAvailableActivators;
+    }
+
+    public void PickActivator2(Block blockOfOrigin)
+    {
+        GetCurrentlyAvailableActivators();
+
+        currentActivatorIndex = -1;
+        WorldEditorUi.Instance.DisableUiInput();
+        EnableControls();
+        isPickingActivator2 = true;
+        currentMovePropertiesBlock = blockOfOrigin;
+    }
+
+    private void PickedActivator2(Block selectedStateSwitcher)
+    {
+        WorldEditorUi.Instance.EnableUiInput();
+        DisableControls();
+        isPickingActivator2 = false;
+
+        OnActivatorWasPicked?.Invoke(selectedStateSwitcher);
+        OnActivatorWasPicked = null;
 
         currentlyAvailableActivators = null;
 
@@ -872,6 +912,13 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
+        if(isPickingActivator2)
+        {
+            List<Block> stateSwitchers = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.Instance.GetComponent<StateSwitcher>() != null).ToList();
+            PickedActivator2(stateSwitchers.FirstOrDefault());
+            return;
+        }
+
         if (isPickingFinalPosition)
         {
             PickedPosition(MarkerPosition);
@@ -955,7 +1002,7 @@ public class WorldEditor : MonoBehaviour
 
             if (x != 0 || y != 0)
             {
-                if (!isPickingActivator)
+                if (!isPickingActivator && !isPickingActivator2)
                 {
                     marker.transform.position = new Vector3(marker.transform.position.x + (x * GridSize), marker.transform.position.y, marker.transform.position.z + (y * GridSize));
                 }

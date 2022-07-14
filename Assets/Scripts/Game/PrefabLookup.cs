@@ -64,6 +64,14 @@ namespace Lookups
             prefabLookup.Add(name, Resources.Load<GameObject>(string.Format(path, name)));
         }
 
+        public static bool PrefabExists(string name)
+        {
+            if (!isInitialized)
+                Initialize();
+
+            return prefabLookup.ContainsKey(name);
+        }
+
         public static GameObject GetPrefab(string name)
         {
             if (!isInitialized)

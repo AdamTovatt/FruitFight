@@ -1,3 +1,4 @@
+using Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -13,11 +14,12 @@ public class BehaviourStringInput : MonoBehaviour
     public TextMeshProUGUI PanelDescription;
     public Color ErrorColor;
     public Color NormalColor;
-    public Color NormalTextColor;
+    public Color ConfirmedColor;
 
     private bool checkIfPrefab;
     private PropertyInfo currentProperty;
     private BehaviourProperties currentBehaviour;
+    private StringInputAttribute currentAttribute;
 
     private void Awake()
     {
@@ -31,17 +33,48 @@ public class BehaviourStringInput : MonoBehaviour
 
     public void Initialize(StringInputAttribute stringInputAttribute, PropertyInfo property, BehaviourProperties behaviour)
     {
+        currentAttribute = stringInputAttribute;
         currentProperty = property;
         currentBehaviour = behaviour;
-        InputDescription.text = property.Name;
+        InputDescription.text = stringInputAttribute.Name;
         PanelDescription.text = stringInputAttribute.Description;
         checkIfPrefab = stringInputAttribute.CheckIfPrefab;
         TextInput.text = (string)property.GetValue(currentBehaviour);
+
+        TextWasEntered(TextInput.text);
     }
 
     private void TextWasEntered(string text)
     {
-        Debug.Log("text was entered: " + text);
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        if (checkIfPrefab)
+        {
+            if (!PrefabLookup.PrefabExists(text))
+                SetErrorState();
+            else
+                SetConfirmedState();
+        }
+
         currentProperty.SetValue(currentBehaviour, TextInput.text);
+    }
+
+    private void SetConfirmedState()
+    {
+        PanelDescription.text = currentAttribute.Description;
+        TextBackground.color = ConfirmedColor;
+    }
+
+    private void SetErrorState()
+    {
+        PanelDescription.text = "That prefab does not exist!";
+        TextBackground.color = ErrorColor;
+    }
+
+    private void SetNormalState()
+    {
+        PanelDescription.text = currentAttribute.Description;
+        TextBackground.color = NormalColor;
     }
 }
