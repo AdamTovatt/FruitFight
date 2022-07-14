@@ -18,6 +18,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
     public Button BackButton;
     public BlockInspector BlockInspector;
     public Transform BlockInspectorParent;
+    public Transform BackgroundBlur;
 
     List<GameObject> previousInputs = new List<GameObject>();
 
@@ -90,8 +91,13 @@ public class BehaviourPropertiesScreen : MonoBehaviour
                     break;
                 case ActivatorInputAttribute activatorInput:
                     BehaviourActivatorInput behaviourActivatorInput = Instantiate(ActivatorInputPrefab, InputContainer).GetComponent<BehaviourActivatorInput>();
-                    behaviourActivatorInput.Initialize(activatorInput, key, currentProperties, currentBlock, this, BlockInspector);
+                    behaviourActivatorInput.Initialize(activatorInput, key, currentProperties, currentBlock, this);
                     previousInputs.Add(behaviourActivatorInput.gameObject);
+                    break;
+                case BoolInputAttribute boolInput:
+                    BehaviourBoolInput behaviourBoolInput = Instantiate(BoolInputPrefab, InputContainer).GetComponent<BehaviourBoolInput>();
+                    behaviourBoolInput.Initialize(boolInput, key, currentProperties);
+                    previousInputs.Add(behaviourBoolInput.gameObject);
                     break;
                 default:
                     Debug.Log("We have a type that is not yet supported: " + inputs[key].GetType());

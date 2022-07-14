@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -51,7 +52,15 @@ public class BehaviourActivatorInput : MonoBehaviour
     private void UpdateTextFromProperty()
     {
         int blockId = ((int)currentProperty.GetValue(currentBehaviour));
-        ButtonText.text = blockId.ToString(); //display the block instead of block id maybe
+        Block block = WorldEditor.Instance.CurrentWorld.Blocks.Where(x => x.Id == blockId).FirstOrDefault();
+        string text = "(click to select)";
+
+        if(block != null)
+        {
+            text = string.Format("{0} ({1})", block.Info.Name, blockId);
+        }
+
+        ButtonText.text = text;
     }
 
     private void Select()
@@ -63,14 +72,15 @@ public class BehaviourActivatorInput : MonoBehaviour
         }
 
         behaviourPropertiesScreen.gameObject.SetActive(false);
+        behaviourPropertiesScreen.BackgroundBlur.gameObject.SetActive(false);
 
         WorldEditor.Instance.OnActivatorWasPicked += (Block block) =>
         {
             currentProperty.SetValue(currentBehaviour, block.Id);
             behaviourPropertiesScreen.gameObject.SetActive(true);
+            behaviourPropertiesScreen.BackgroundBlur.gameObject.SetActive(true);
+            UpdateTextFromProperty();
         };
         WorldEditor.Instance.PickActivator2(currentBlock);
-
-        UpdateTextFromProperty();
     }
 }
