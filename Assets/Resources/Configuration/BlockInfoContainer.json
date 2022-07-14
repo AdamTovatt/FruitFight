@@ -189,7 +189,10 @@
       "ShowInEditor": true,
       "Name": "Tree Stump",
       "Prefab": "TreeStump",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "ContainerProperties"
+      ]
     },
     {
       "Id": 18,

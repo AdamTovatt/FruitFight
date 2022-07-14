@@ -7,6 +7,17 @@ using System;
 public abstract class BehaviourProperties //base class for all second generation behaviour properties, obviously. For example, Container.cs should inherit from this in ContainerProperties
 {
     public string Type;
+
+    public static Type GetTypeFromName(string name)
+    {
+        switch (name)
+        {
+            case "ContainerProperties":
+                return typeof(Container.ContainerProperties);
+            default:
+                return null;
+        }
+    }
 }
 
 public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
@@ -34,13 +45,10 @@ public class BaseConverter : JsonConverter
     {
         JObject jObject = JObject.Load(reader);
 
-        switch (jObject["Type"].Value<string>())
-        {
-            case "ContainerProperties":
-                return JsonConvert.DeserializeObject<Container.ContainerProperties>(jObject.ToString(), SpecifiedSubclassConversion);
-            default:
-                throw new Exception();
-        }
+        Type type = BehaviourProperties.GetTypeFromName(jObject["Type"].Value<string>());
+
+        if (type != null)
+            return JsonConvert.DeserializeObject(jObject.ToString(), type, SpecifiedSubclassConversion);
 
         throw new NotImplementedException();
     }

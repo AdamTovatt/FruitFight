@@ -19,7 +19,7 @@ public class Block
     public bool IsFromGrassify;
     public bool HasPropertyExposer;
     public BehaviourPropertyContainer BehaviourProperties;
-    public List<BehaviourProperties> BehaviourProperties2;
+    public List<BehaviourProperties> BehaviourProperties2 = new List<BehaviourProperties>();
 
     [JsonIgnore]
     public Vector3 AppliedPosition { get { return new Vector3(X, Y, Z) + RotationOffset; } }

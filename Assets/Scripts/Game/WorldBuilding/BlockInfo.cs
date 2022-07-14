@@ -18,6 +18,7 @@ public class BlockInfo
     public float AngleLimit;
     public bool StartWithPropertyExposer;
     public BlockMaterial BlockMaterial;
+    public List<string> AvailableBehaviours;
 
     public BlockInfo()
     {

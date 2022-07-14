@@ -12,15 +12,27 @@ public class Container : MonoBehaviour
         OnDestroyed, ByActivator
     }
 
-    [Serializable]
     public class ContainerProperties : BehaviourProperties
     {
+        [StringInput(CheckIfPrefab = true, Description = "The effect that will be used for when an object is released")]
         public string ReleaseEffectPrefab { get; set; }
+        
+        [StringInput(CheckIfPrefab = true, Description = "The object that will be released")]
         public string ReleaseObjectPrefab { get; set; }
+        
+        [IntInput(MinValue = 1, MaxValue = 10, Description = "The amount of objects that will be released")]
         public int AmountToRelease { get; set; }
+        
+        [FloatInput(MinValue = 0.0f, MaxValue = 10f, Description = "The force with which the objects that are released will be released. Objects that have a higher force will fly further.")]
         public float SpawnForceStrength { get; set; } = 5f;
+        
+        [EnumInput(EnumType = typeof(ReleaseType), Description = "The type of trigger that will trigger the release. Should the release happen when the releasing object is destroyed or should it be determined by some other trigger?")]
         public ReleaseType ReleaseType { get; set; }
+        
+        [ActivatorInput(Description = "The object that will give the trigger to release objects if that release type is chosen")]
         public int ActivatorObjectId { get; set; }
+
+        [BoolInput(Description = "Should this container release objects multiple times or just once?")]
         public bool ReleaseMultipleTimes { get; set; }
     }
 
@@ -88,7 +100,7 @@ public class Container : MonoBehaviour
             releaseObjectPrefab = PrefabLookup.GetPrefab(Properties.ReleaseObjectPrefab);
         }
 
-        if(!string.IsNullOrEmpty(Properties.ReleaseEffectPrefab))
+        if (!string.IsNullOrEmpty(Properties.ReleaseEffectPrefab))
         {
             releaseEffectPrefab = PrefabLookup.GetPrefab(Properties.ReleaseEffectPrefab);
         }
@@ -130,7 +142,7 @@ public class Container : MonoBehaviour
             }
         }
 
-        if(Properties.ReleaseEffectPrefab != null && CustomNetworkManager.HasAuthority)
+        if (Properties.ReleaseEffectPrefab != null && CustomNetworkManager.HasAuthority)
         {
             GameObject spawnedObject = SpawnPrefab(releaseEffectPrefab);
 

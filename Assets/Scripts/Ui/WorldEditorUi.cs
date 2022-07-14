@@ -17,6 +17,7 @@ public class WorldEditorUi : UiManager
     public BehaviourMenu BehaviourMenu;
     public EditorLoadLevelScreen LoadLevelScreen;
     public LevelPropertiesScreen LevelPropertiesScreen;
+    public BehaviourMenu2 BehaviourMenu2;
 
     public List<GameObject> UiSectionPanels;
 
@@ -124,6 +125,27 @@ public class WorldEditorUi : UiManager
         Destroy(EventSystem);
         Destroy(gameObject);
         Destroy(this);
+    }
+
+    public void OpenBehaviourMenu2(Block block)
+    {
+        if (uiInput != null)
+            uiInput.enabled = true;
+
+        BehaviourMenu2.gameObject.SetActive(true);
+        BehaviourMenu2.Show(block);
+        BlockMenu.gameObject.SetActive(false);
+    }
+
+    public void CloseBehaviourMenu2()
+    {
+        if (uiInput != null)
+            uiInput.enabled = false;
+
+        BehaviourMenu2.Hide();
+        BehaviourMenu2.gameObject.SetActive(false);
+        WorldEditor.Instance.EnableControls();
+        BlockMenu.gameObject.SetActive(true);
     }
 
     public void OpenBehaviourMenu(Block block)
