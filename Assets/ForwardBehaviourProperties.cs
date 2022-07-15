@@ -17,7 +17,7 @@ public class ForwardBehaviourProperties : MonoBehaviour
         Spawner.OnObjectSpawned -= Spawned;
 
         BlockInformationHolder blockInformationHolder = BehaviourHolder.gameObject.GetComponent<BlockInformationHolder>();
-        if(blockInformationHolder == null)
+        if (blockInformationHolder == null)
         {
             Debug.LogError("Could not forward behaviour of spawned object: " + transform.name);
             return;
@@ -25,13 +25,7 @@ public class ForwardBehaviourProperties : MonoBehaviour
 
         Block block = blockInformationHolder.Block;
 
-        if(block.BehaviourProperties2 != null && block.BehaviourProperties2.Count > 0)
-        {
+        if (block.BehaviourProperties2 != null && block.BehaviourProperties2.Count > 0)
             WorldBuilder.BindBehaviourProperties(block.BehaviourProperties2, spawnedObject);
-        }
-        else
-        {
-            Debug.LogError("No behaviour properties to forward");
-        }
     }
 }

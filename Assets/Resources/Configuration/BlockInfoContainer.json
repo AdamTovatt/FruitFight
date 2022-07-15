@@ -651,6 +651,18 @@
       "RotatableX": true,
       "AvailableBehaviours": [
         "ContainerProperties"
+      ],
+      "DefaultBehaviours": [
+        {
+          "Type": "ContainerProperties",
+          "ReleaseEffectPrefab": "SmokePoof",
+          "ReleaseObjectPrefab": "Coin",
+          "AmountToRelease": 5,
+          "SpawnForceStrength": 5,
+          "ReleaseType": "OnDestroyed",
+          "ActivatorObjectId": 0,
+          "ReleaseMultipleTimes": false
+        }
       ]
     },
     {

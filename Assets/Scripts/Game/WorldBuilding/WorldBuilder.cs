@@ -264,6 +264,15 @@ public class WorldBuilder : MonoBehaviour
             currentBlocks.Add(block);
         }
 
+        if(block.Info.DefaultBehaviours != null) //if there are default behaviours we will add them
+        {
+            foreach(BehaviourProperties behaviour in block.Info.DefaultBehaviours)
+            {
+                if (!block.BehaviourProperties2.Any(x => x.Type == behaviour.Type)) //check if this behaviour exists
+                    block.BehaviourProperties2.Add(behaviour); //if it doesn't exist we add it since it's default, this will cause a bug where you can't remove behaviours that are default!
+            }
+        }
+
         if (block.BehaviourProperties2 != null && block.BehaviourProperties2.Count > 0) //check if we have any second generation behaviour properties
         {
             if (block.Instance != null) //we need to have an instance of the block

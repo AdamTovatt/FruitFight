@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class BlockInfo
     public bool StartWithPropertyExposer;
     public BlockMaterial BlockMaterial;
     public List<string> AvailableBehaviours;
+    public List<BehaviourProperties> DefaultBehaviours;
 
     public BlockInfo()
     {
@@ -48,7 +50,8 @@ public class BlockInfoContainer
 
     public static BlockInfoContainer LoadFromConfiguration()
     {
-        return JsonUtility.FromJson<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
+        return JsonConvert.DeserializeObject<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
+        //return JsonUtility.FromJson<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
     }
 
     public Dictionary<int, BlockInfo> CreateLookup()
