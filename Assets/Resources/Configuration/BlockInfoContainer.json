@@ -648,7 +648,10 @@
       "ShowInEditor": true,
       "Name": "Crate",
       "Prefab": "Crate",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "ContainerProperties"
+      ]
     },
     {
       "Id": 63,

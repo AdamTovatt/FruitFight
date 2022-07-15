@@ -268,20 +268,25 @@ public class WorldBuilder : MonoBehaviour
         {
             if (block.Instance != null) //we need to have an instance of the block
             {
-                foreach (BehaviourProperties behaviourProperties in block.BehaviourProperties2) //second generation behaviour properties
-                {
-                    Type propertyType = behaviourProperties.GetType();
-
-                    if (propertyType == typeof(Container.ContainerProperties))
-                    {
-                        Container container = block.Instance.AddComponent<Container>();
-                        container.Initialize((Container.ContainerProperties)behaviourProperties);
-                    }
-                }
+                BindBehaviourProperties(block.BehaviourProperties2, block.Instance);
             }
             else
             {
                 Debug.LogError("Wanted to bind 2genBehaviourProperties but block.Instance was null");
+            }
+        }
+    }
+
+    public static void BindBehaviourProperties(List<BehaviourProperties> behaviourPropertiesList, GameObject gameObject)
+    {
+        foreach (BehaviourProperties behaviourProperties in behaviourPropertiesList) //second generation behaviour properties
+        {
+            Type propertyType = behaviourProperties.GetType();
+
+            if (propertyType == typeof(Container.ContainerProperties))
+            {
+                Container container = gameObject.AddComponent<Container>();
+                container.Initialize((Container.ContainerProperties)behaviourProperties);
             }
         }
     }

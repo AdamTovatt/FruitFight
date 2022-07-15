@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: 8235472246260940242}
   - component: {fileID: 619074008742090808}
   - component: {fileID: 1581231819493572606}
-  - component: {fileID: -6843786720705409187}
   m_Layer: 3
   m_Name: Crate
   m_TagString: Ground
@@ -267,11 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6879fe83dedef7459064e9741493665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnOnBreakPrefab: {fileID: 7684453904019838991, guid: d327fab57d04d6248ab0b8d1855cc349,
-    type: 3}
-  AmountToSpawn: 5
-  SpawnForceStrength: 4
-  BoxCollider: {fileID: 4463981258025038860}
+  Collider: {fileID: 4463981258025038860}
   Rigidbody: {fileID: 619074008742090808}
 --- !u!54 &619074008742090808
 Rigidbody:
@@ -306,15 +301,3 @@ MonoBehaviour:
   visible: 0
   m_AssetId: ef544c3c2eb2a6f46928712dd780bad4
   hasSpawned: 0
---- !u!114 &-6843786720705409187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4463981258025038861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 310e40d840fe9a0409635f859109a29c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

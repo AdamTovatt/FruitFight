@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6897142626017479741}
   - component: {fileID: 7461287544634921393}
   - component: {fileID: 2486682197769379392}
+  - component: {fileID: 2446966485352546218}
   m_Layer: 3
   m_Name: Crate
   m_TagString: Ground
@@ -30,6 +31,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8928398162022148263}
   m_RootOrder: 0
@@ -99,6 +101,7 @@ MonoBehaviour:
   Prefab: {fileID: 4463981258025038861, guid: ef544c3c2eb2a6f46928712dd780bad4, type: 3}
   SpawnInEditor: 0
   SpawnAtStart: 1
+  SpawnOnObjectCreated: 0
   SpawnAtInterval: 0
   SecondsBetweenSpawning: 5
   SpawnOnNetwork: 1
@@ -114,6 +117,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ae203e563f732478d8a2a58e957197, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2446966485352546218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951548209883622888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9d0a96a786ba7449dbecb8e2172b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Spawner: {fileID: 7461287544634921393}
+  BehaviourHolder: {fileID: 8928398162022148263}
 --- !u!1 &8928398162022148262
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +157,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5763691012730255186}
   m_Father: {fileID: 0}

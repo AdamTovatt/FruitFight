@@ -6,11 +6,7 @@ using UnityEngine;
 
 public class Crate : MonoBehaviour
 {
-    public GameObject SpawnOnBreakPrefab;
-    [Range(1, 10)]
-    public int AmountToSpawn = 1;
-    public float SpawnForceStrength = 5f;
-    public BoxCollider BoxCollider;
+    public BoxCollider Collider;
     public Rigidbody Rigidbody;
 
     private Health health;
@@ -67,33 +63,8 @@ public class Crate : MonoBehaviour
 
     private void WasBroken(Health sender, CauseOfDeath causeOfDeath)
     {
-        BoxCollider.enabled = false;
-
-        if (SpawnOnBreakPrefab != null && CustomNetworkManager.HasAuthority)
-        {
-            for (int i = 0; i < AmountToSpawn; i++)
-            {
-                GameObject spawnedObject = SpawnPrefab();
-
-                if (CustomNetworkManager.IsOnlineSession)
-                    NetworkServer.Spawn(spawnedObject);
-            }
-        }
-
+        Collider.enabled = false;
         ActivateCrateAbove();
-    }
-
-    private GameObject SpawnPrefab()
-    {
-        GameObject instantiatedObject = Instantiate(SpawnOnBreakPrefab, transform.position + (Vector3.up * 0.5f), Quaternion.identity);
-        Rigidbody rigidbody = instantiatedObject.GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
-        {
-            rigidbody.velocity = Random.onUnitSphere * SpawnForceStrength + Vector3.up;
-        }
-
-        return instantiatedObject;
     }
 
     private void ActivateCrateAbove()
