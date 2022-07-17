@@ -22,17 +22,20 @@ public class BlockInspector : MonoBehaviour
         currentBlock = block;
         Title.text = block.Info.Name;
 
-        foreach (string availableBehaviour in block.Info.AvailableBehaviours)
+        if (block.Info.AvailableBehaviours != null)
         {
-            AddButton(availableBehaviour);
+            foreach (string availableBehaviour in block.Info.AvailableBehaviours)
+            {
+                AddButton(availableBehaviour);
+            }
         }
     }
 
     public void Clean()
     {
         Title.text = "Block Inspector";
-        
-        foreach(BehaviourButton button in buttons)
+
+        foreach (BehaviourButton button in buttons)
         {
             button.Button.onClick.RemoveAllListeners();
             Destroy(button.gameObject);
@@ -55,8 +58,8 @@ public class BlockInspector : MonoBehaviour
     private void BehaviourClicked(string behaviourName)
     {
         BehaviourProperties properties = GetBehaviourProperties(currentBlock, behaviourName, out Type behaviourType);
-        
-        if(properties == null)
+
+        if (properties == null)
         {
             properties = (BehaviourProperties)Activator.CreateInstance(behaviourType);
             properties.Type = behaviourType.Name;

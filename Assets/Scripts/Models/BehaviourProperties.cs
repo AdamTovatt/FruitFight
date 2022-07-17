@@ -18,6 +18,16 @@ public abstract class BehaviourProperties //base class for all second generation
                 return null;
         }
     }
+
+    public static BehaviourProperties FromJson(string json)
+    {
+        return JsonConvert.DeserializeObject<BehaviourProperties>(json);
+    }
+
+    public string ToJson()
+    {
+        return JsonConvert.SerializeObject(this);
+    }
 }
 
 public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver

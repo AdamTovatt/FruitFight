@@ -269,7 +269,7 @@ public class WorldBuilder : MonoBehaviour
             foreach(BehaviourProperties behaviour in block.Info.DefaultBehaviours)
             {
                 if (!block.BehaviourProperties2.Any(x => x.Type == behaviour.Type)) //check if this behaviour exists
-                    block.BehaviourProperties2.Add(behaviour); //if it doesn't exist we add it since it's default, this will cause a bug where you can't remove behaviours that are default!
+                    block.BehaviourProperties2.Add(BehaviourProperties.FromJson(behaviour.ToJson())); //if it doesn't exist we add it since it's default, this will cause a bug where you can't remove behaviours that are default!
             }
         }
 
