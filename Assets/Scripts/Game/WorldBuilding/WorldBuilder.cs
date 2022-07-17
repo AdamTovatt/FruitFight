@@ -295,7 +295,12 @@ public class WorldBuilder : MonoBehaviour
             if (propertyType == typeof(Container.ContainerProperties))
             {
                 Container container = gameObject.AddComponent<Container>();
-                container.Initialize((Container.ContainerProperties)behaviourProperties);
+                container.Initialize(behaviourProperties);
+            }
+            else if(propertyType == typeof(MoveBehaviour.MoveBehaviourProperties))
+            {
+                MoveBehaviour moveBehaviour = gameObject.AddComponent<MoveBehaviour>();
+                moveBehaviour.Initialize(behaviourProperties);
             }
         }
     }

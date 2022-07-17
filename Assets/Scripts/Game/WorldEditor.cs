@@ -36,6 +36,9 @@ public class WorldEditor : MonoBehaviour
     public delegate void ActivatorWasPicked(Block block);
     public event ActivatorWasPicked OnActivatorWasPicked;
 
+    public delegate void PositionWasPicked(Vector3Int position);
+    public event PositionWasPicked OnPositionWasPicked;
+
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
 
@@ -65,6 +68,7 @@ public class WorldEditor : MonoBehaviour
     private bool isCapturingImage = false;
     private bool isAddingTriggerSubZone = false;
     private bool isPickingFinalPosition = false;
+    private bool isPickingFinalPosition2 = false;
     private Vector2 currentLeftStickInput;
     private float moveMarkerStartTime = 0;
     private Block selectedWorldObject; //this is the selected object in the world, the object which the marker is above
@@ -200,6 +204,28 @@ public class WorldEditor : MonoBehaviour
             throw new Exception("Unsupported menu type for picking position");
 
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
+    }
+
+    public void PickPosition2(Block block)
+    {
+        WorldEditorUi.Instance.DisableUiInput();
+        EnableControls();
+        isPickingFinalPosition2 = true;
+        SetSelectedBlock(block.BlockInfoId);
+        SetMarkerPositionToBlock(block);
+        currentMovePropertiesBlock = block;
+    }
+
+    public void PickedPosition2(Vector3Int position)
+    {
+        WorldEditorUi.Instance.EnableUiInput();
+        controlsDisabled = true;
+        isPickingFinalPosition2 = false;
+
+        SetMarkerPositionToBlock(currentMovePropertiesBlock);
+
+        OnPositionWasPicked?.Invoke(position);
+        OnPositionWasPicked = null;
     }
 
     public void AddTriggerSubZone(TriggerZoneMenu menu, Block block)
@@ -765,7 +791,7 @@ public class WorldEditor : MonoBehaviour
 
     private void MoveBlockSelection(InputAction.CallbackContext context)
     {
-        if (!isPickingFinalPosition)
+        if (!isPickingFinalPosition && !isPickingFinalPosition2)
         {
             if (!controlsDisabled || isTestingLevel)
             {
@@ -922,6 +948,12 @@ public class WorldEditor : MonoBehaviour
         if (isPickingFinalPosition)
         {
             PickedPosition(MarkerPosition);
+            return;
+        }
+
+        if (isPickingFinalPosition2)
+        {
+            PickedPosition2(MarkerPosition);
             return;
         }
 

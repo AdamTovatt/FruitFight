@@ -72,8 +72,11 @@ public class PlayerMovement : MovingCharacter
     private ProjectileConfigurationEntry magicProjectileConfiguration;
     private MoveOnTrigger moveOnTriggerGround;
     private Vector3 moveOnTriggerGroundVelocity;
+    private MoveBehaviour moveBehaviourGround;
+    private Vector3 moveBehaviourVelocity;
 
     private Dictionary<Transform, MoveOnTrigger> moveOnTriggerLookup = new Dictionary<Transform, MoveOnTrigger>();
+    private Dictionary<Transform, MoveBehaviour> moveBehaviourLookup = new Dictionary<Transform, MoveBehaviour>();
     private Dictionary<Transform, MoveableBlock> moveableBlockLookup = new Dictionary<Transform, MoveableBlock>();
 
     private bool hasDoubleJumped;
@@ -418,6 +421,10 @@ public class PlayerMovement : MovingCharacter
                 groundVelocity = moveOnTriggerGroundVelocity;
                 averageVelocityKeeper.Parent = moveOnTriggerGround.AverageVelocityKeeper;
             }
+            else if(moveBehaviourGround != null && moveBehaviourGround.Moving)
+            {
+                groundVelocity = moveBehaviourGround.CurrentMovement;
+            }
             else
             {
                 averageVelocityKeeper.Parent = null;
@@ -455,6 +462,14 @@ public class PlayerMovement : MovingCharacter
             moveOnTriggerLookup.Add(transform, transform.GetComponentInParent<MoveOnTrigger>());
 
         return moveOnTriggerLookup[transform];
+    }
+
+    private MoveBehaviour GetMoveBehaviour(Transform transform)
+    {
+        if (!moveBehaviourLookup.ContainsKey(transform))
+            moveBehaviourLookup.Add(transform, transform.GetComponentInParent<MoveBehaviour>());
+
+        return moveBehaviourLookup[transform];
     }
 
     private void FixedUpdate()
@@ -741,6 +756,12 @@ public class PlayerMovement : MovingCharacter
             moveOnTriggerGround.RemovePlayer(this);
             moveOnTriggerGround = null;
         }
+
+        if (moveBehaviourGround != null)
+        {
+            moveBehaviourGround.RemovePlayer(this);
+            moveBehaviourGround = null;
+        }
     }
 
     private void NewGroundWasEntered(Block newBlock)
@@ -767,6 +788,24 @@ public class PlayerMovement : MovingCharacter
                 {
                     moveOnTriggerGround.RemovePlayer(this);
                     moveOnTriggerGround = null;
+                }
+            }
+
+            MoveBehaviour moveBehaviour = GetMoveBehaviour(newBlock.Instance.transform);
+            if (moveBehaviour != null)
+            {
+                if (moveBehaviourGround != null)
+                    moveBehaviourGround.RemovePlayer(this);
+                Debug.Log("Entered moveOn Trigger");
+                moveBehaviourGround = moveBehaviour;
+                moveBehaviourGround.AddPlayer(this);
+            }
+            else
+            {
+                if (moveBehaviourGround != null)
+                {
+                    moveBehaviourGround.RemovePlayer(this);
+                    moveBehaviourGround = null;
                 }
             }
         }

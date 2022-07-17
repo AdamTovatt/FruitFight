@@ -91,9 +91,9 @@ public class Container : MonoBehaviour
             UnBindEvents(); //if we aren't gonna release multiple times we will unbind the event now to avoid calling it when it isn't needed
     }
 
-    public void Initialize(ContainerProperties containerProperties)
+    public void Initialize(BehaviourProperties containerProperties)
     {
-        Properties = containerProperties;
+        Properties = (Container.ContainerProperties)containerProperties;
 
         if (!string.IsNullOrEmpty(Properties.ReleaseObjectPrefab))
         {

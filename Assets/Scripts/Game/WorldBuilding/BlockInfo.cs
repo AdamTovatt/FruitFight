@@ -51,7 +51,6 @@ public class BlockInfoContainer
     public static BlockInfoContainer LoadFromConfiguration()
     {
         return JsonConvert.DeserializeObject<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
-        //return JsonUtility.FromJson<BlockInfoContainer>(WorldUtilities.LoadTextFile("Configuration/BlockInfoContainer"));
     }
 
     public Dictionary<int, BlockInfo> CreateLookup()

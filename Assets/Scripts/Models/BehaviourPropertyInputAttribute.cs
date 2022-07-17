@@ -46,3 +46,8 @@ public class EnumInputAttribute : BehaviourPropertyInputAttribute
 public class ActivatorInputAttribute : BehaviourPropertyInputAttribute
 {
 }
+
+[AttributeUsage(AttributeTargets.Property)]
+public class PositionInputAttribute : BehaviourPropertyInputAttribute
+{
+}

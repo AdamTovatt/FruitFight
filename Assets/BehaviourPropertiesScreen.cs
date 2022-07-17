@@ -15,6 +15,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
     public GameObject BoolInputPrefab;
     public GameObject EnumInputPrefab;
     public GameObject ActivatorInputPrefab;
+    public GameObject PositionInputPrefab;
     public Button BackButton;
     public BlockInspector BlockInspector;
     public Transform BlockInspectorParent;
@@ -47,7 +48,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
 
     public void Clean()
     {
-        foreach(GameObject gameObject in previousInputs)
+        foreach (GameObject gameObject in previousInputs)
         {
             Destroy(gameObject);
         }
@@ -65,9 +66,9 @@ public class BehaviourPropertiesScreen : MonoBehaviour
 
         Dictionary<PropertyInfo, BehaviourPropertyInputAttribute> inputs = GetPropertyInputs(behaviourProperties);
 
-        foreach(PropertyInfo key in inputs.Keys)
+        foreach (PropertyInfo key in inputs.Keys)
         {
-            switch(inputs[key])
+            switch (inputs[key])
             {
                 case StringInputAttribute stringInput:
                     BehaviourStringInput behaviourStringInput = Instantiate(StringInputPrefab, InputContainer).GetComponent<BehaviourStringInput>();
@@ -89,15 +90,20 @@ public class BehaviourPropertiesScreen : MonoBehaviour
                     behaviourEnumInput.Initialize(enumInput, key, currentProperties);
                     previousInputs.Add(behaviourEnumInput.gameObject);
                     break;
+                case BoolInputAttribute boolInput:
+                    BehaviourBoolInput behaviourBoolInput = Instantiate(BoolInputPrefab, InputContainer).GetComponent<BehaviourBoolInput>();
+                    behaviourBoolInput.Initialize(boolInput, key, currentProperties);
+                    previousInputs.Add(behaviourBoolInput.gameObject);
+                    break;
                 case ActivatorInputAttribute activatorInput:
                     BehaviourActivatorInput behaviourActivatorInput = Instantiate(ActivatorInputPrefab, InputContainer).GetComponent<BehaviourActivatorInput>();
                     behaviourActivatorInput.Initialize(activatorInput, key, currentProperties, currentBlock, this);
                     previousInputs.Add(behaviourActivatorInput.gameObject);
                     break;
-                case BoolInputAttribute boolInput:
-                    BehaviourBoolInput behaviourBoolInput = Instantiate(BoolInputPrefab, InputContainer).GetComponent<BehaviourBoolInput>();
-                    behaviourBoolInput.Initialize(boolInput, key, currentProperties);
-                    previousInputs.Add(behaviourBoolInput.gameObject);
+                case PositionInputAttribute positionInput:
+                    BehaviourPositionInput behaviourPositionInput = Instantiate(PositionInputPrefab, InputContainer).GetComponent<BehaviourPositionInput>();
+                    behaviourPositionInput.Initialize(positionInput, key, currentProperties, currentBlock, this);
+                    previousInputs.Add(behaviourPositionInput.gameObject);
                     break;
                 default:
                     Debug.Log("We have a type that is not yet supported: " + inputs[key].GetType());

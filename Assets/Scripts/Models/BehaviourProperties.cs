@@ -14,6 +14,8 @@ public abstract class BehaviourProperties //base class for all second generation
         {
             case "ContainerProperties":
                 return typeof(Container.ContainerProperties);
+            case "MoveBehaviourProperties":
+                return typeof(MoveBehaviour.MoveBehaviourProperties);
             default:
                 return null;
         }
