@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveBehaviour : MonoBehaviour
+public class MoveBehaviour : BehaviourBase
 {
     private enum MoveState
     {
@@ -28,6 +29,8 @@ public class MoveBehaviour : MonoBehaviour
 
         [ActivatorInput(Description = "The activator which will activate this movement", Name = "Activator")]
         public int ActivatorObjectId { get; set; }
+
+        public override Type BehaviourType { get { return typeof(MoveBehaviour); } }
     }
 
     public MoveBehaviourProperties Properties;
@@ -46,7 +49,7 @@ public class MoveBehaviour : MonoBehaviour
     private Vector3 positionA;
     private Vector3 positionB;
 
-    public void Initialize(BehaviourProperties behaviourProperties)
+    public override void Initialize(BehaviourProperties behaviourProperties)
     {
         Properties = (MoveBehaviourProperties)behaviourProperties;
 

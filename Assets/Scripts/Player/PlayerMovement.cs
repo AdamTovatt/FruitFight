@@ -421,7 +421,7 @@ public class PlayerMovement : MovingCharacter
                 groundVelocity = moveOnTriggerGroundVelocity;
                 averageVelocityKeeper.Parent = moveOnTriggerGround.AverageVelocityKeeper;
             }
-            else if(moveBehaviourGround != null && moveBehaviourGround.Moving)
+            else if (moveBehaviourGround != null && moveBehaviourGround.Moving)
             {
                 groundVelocity = moveBehaviourGround.CurrentMovement;
             }
@@ -606,14 +606,45 @@ public class PlayerMovement : MovingCharacter
         if (isChargingProjectile) //cannot interact while charging projectile
             return;
 
+        lastInteractTime = Time.time;
+
         bool shouldPunch = true;
+        Vector3 pickupPosition = transform.position + (transform.up * 0.4f) + (transform.forward * 0.5f); //the center point of the spehere which we will use for pick up detection
+
+        Collider[] colliders = Physics.OverlapSphere(pickupPosition, 0.5f);
+
+        foreach (Collider collider in colliders) //this is for item triggers
+        {
+            ItemTrigger itemTrigger = collider.GetComponent<ItemTrigger>();
+
+            if (itemTrigger != null && !itemTrigger.IsSatisfied) //there is an item trigger here
+            {
+                switch (itemTrigger.Properties.ItemType)
+                {
+                    case ItemTrigger.TriggerItemType.JellyBean:
+                        if (Player.JellyBeans >= itemTrigger.Properties.Amount)
+                        {
+                            Player.RemoveItem(AbsorbableItemType.JellyBean, itemTrigger.Properties.Amount);
+                            itemTrigger.WasSatisfied();
+                        }
+                        return;
+                    case ItemTrigger.TriggerItemType.Coin:
+                        if (Player.Coins >= itemTrigger.Properties.Amount)
+                        {
+                            Player.RemoveItem(AbsorbableItemType.Coin, itemTrigger.Properties.Amount);
+                            itemTrigger.WasSatisfied();
+                        }
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
 
         if (HeldItem == null)
         {
-            Vector3 pickupPosition = transform.position + (transform.up * 0.4f) + (transform.forward * 0.5f); //the center point of the spehere which we will use for pick up detection
-
             Holdable holdable = null;
-            foreach (Collider collider in Physics.OverlapSphere(pickupPosition, 0.5f).Where(x => x.transform.tag == "Interactable")) //try to get the holdable component
+            foreach (Collider collider in colliders.Where(x => x.transform.tag == "Interactable")) //try to get the holdable component
             {
                 holdable = collider.transform.GetComponent<Holdable>();
 
@@ -646,8 +677,6 @@ public class PlayerMovement : MovingCharacter
 
         if (shouldPunch)
             Punch();
-
-        lastInteractTime = Time.time;
     }
 
     private Vector3 CalculateHoldPosition()

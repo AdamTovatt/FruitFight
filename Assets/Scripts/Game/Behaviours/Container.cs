@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Container : MonoBehaviour
+public class Container : BehaviourBase
 {
     public enum ReleaseType
     {
@@ -34,6 +34,8 @@ public class Container : MonoBehaviour
 
         [BoolInput(Name = "Multiple times", Description = "Should this container release objects multiple times or just once?")]
         public bool ReleaseMultipleTimes { get; set; }
+
+        public override Type BehaviourType { get { return typeof(Container); } }
     }
 
     public ContainerProperties Properties;
@@ -91,9 +93,9 @@ public class Container : MonoBehaviour
             UnBindEvents(); //if we aren't gonna release multiple times we will unbind the event now to avoid calling it when it isn't needed
     }
 
-    public void Initialize(BehaviourProperties containerProperties)
+    public override void Initialize(BehaviourProperties containerProperties)
     {
-        Properties = (Container.ContainerProperties)containerProperties;
+        Properties = (ContainerProperties)containerProperties;
 
         if (!string.IsNullOrEmpty(Properties.ReleaseObjectPrefab))
         {

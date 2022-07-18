@@ -6,6 +6,9 @@ using System;
 [JsonConverter(typeof(BaseConverter))]
 public abstract class BehaviourProperties //base class for all second generation behaviour properties, obviously. For example, Container.cs should inherit from this in ContainerProperties
 {
+    [JsonIgnore]
+    public abstract Type BehaviourType { get; }
+
     public string Type;
 
     public static Type GetTypeFromName(string name)
@@ -16,6 +19,8 @@ public abstract class BehaviourProperties //base class for all second generation
                 return typeof(Container.ContainerProperties);
             case "MoveBehaviourProperties":
                 return typeof(MoveBehaviour.MoveBehaviourProperties);
+            case "ItemTriggerProperties":
+                return typeof(ItemTrigger.ItemTriggerProperties);
             default:
                 return null;
         }
