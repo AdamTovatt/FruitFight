@@ -16,6 +16,8 @@ public class SingleTargetCamera : MonoBehaviour
     public float ShakeSettleTime = 1f;
     public float ShakeFallOffDistance = 10f;
     public float ShakeAmplitudeMultiplier = 0.1f;
+    public float MaxDistance = 10f;
+    public float MinDistance = 1.5f;
 
     public Transform Target { get; private set; }
     public PlayerInput Input { get; private set; }
@@ -160,7 +162,7 @@ public class SingleTargetCamera : MonoBehaviour
             rotationY = Mathf.Clamp(rotationY, -89, 89);
 
             Distance += currentZoom * gamepadScrollMultiplier * 15f * Time.deltaTime * Distance;
-            Distance = Mathf.Clamp(Distance, 2, 20);
+            Distance = Mathf.Clamp(Distance, MinDistance, MaxDistance);
 
             Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
 

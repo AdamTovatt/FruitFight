@@ -133,8 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 3079950163828722329}
   AudioListener: {fileID: 7468057181519426438}
-  SoundSourceManager: {fileID: 0}
-  StartDistance: 8
+  StartDistance: 3.6
   SmoothTime: 0.2
   InsideWallDistance: 0.2
   StartRotation: {x: 40, y: 0}
@@ -142,3 +141,5 @@ MonoBehaviour:
   ShakeSettleTime: 0.4
   ShakeFallOffDistance: 25
   ShakeAmplitudeMultiplier: 0.1
+  MaxDistance: 5.5
+  MinDistance: 1.5
