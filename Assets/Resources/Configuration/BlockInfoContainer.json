@@ -33,6 +33,9 @@
         "RockPanel03_2",
         "RockPanel04_2"
       ],
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ],
       "BlockMaterial": 1
     },
     {
