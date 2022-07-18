@@ -10,8 +10,23 @@ public class OneShotRandomSound : MonoBehaviour
     public bool PlayOnAwake = true;
     public bool PlayOnCollision = false;
 
+    /// <summary>
+    /// If the object should wobble on collision, requires a wobble component on the object!
+    /// </summary>
+    public bool WobbleOnCollision = false;
+
+    private Wobble wobble;
+
     [Range(0f, 0.3f)]
     public float PitchVariation;
+
+    private void Awake()
+    {
+        if(WobbleOnCollision)
+        {
+            wobble = gameObject.GetComponent<Wobble>();
+        }
+    }
 
     void Start()
     {
@@ -34,6 +49,9 @@ public class OneShotRandomSound : MonoBehaviour
         if (!AudioSource.isPlaying)
         {
             Play();
+
+            if (WobbleOnCollision && wobble != null)
+                wobble.StartWobble();
         }
     }
 }
