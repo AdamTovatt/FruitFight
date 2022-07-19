@@ -51,7 +51,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
+  m_FocalLength: 15.638705
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -60,7 +60,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: 1
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 3079950163828722329}
   AudioListener: {fileID: 7468057181519426438}
-  StartDistance: 3.6
+  StartDistance: 3.5
   SmoothTime: 0.2
   InsideWallDistance: 0.2
   StartRotation: {x: 40, y: 0}
@@ -141,5 +141,5 @@ MonoBehaviour:
   ShakeSettleTime: 0.4
   ShakeFallOffDistance: 25
   ShakeAmplitudeMultiplier: 0.1
-  MaxDistance: 5.5
+  MaxDistance: 4.5
   MinDistance: 1.5
