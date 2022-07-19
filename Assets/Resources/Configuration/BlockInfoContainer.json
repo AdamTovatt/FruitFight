@@ -875,6 +875,34 @@
       "AvailableBehaviours": [
         "ItemTriggerProperties"
       ]
+    },
+    {
+      "Id": 93,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "AngleLimit": 90,
+      "Name": "Spike Gate",
+      "Prefab": "SpikeGate",
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "ActivatableProperties"
+      ]
+    },
+    {
+      "Id": 94,
+      "BlockType": 3,
+      "Width": 2,
+      "Height": 2,
+      "ShowInEditor": true,
+      "AngleLimit": 90,
+      "Name": "Spike Gate Tall",
+      "Prefab": "SpikeGate2",
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "ActivatableProperties"
+      ]
     }
   ]
 }
