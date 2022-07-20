@@ -423,7 +423,7 @@ public class PlayerMovement : MovingCharacter
             }
             else if (moveBehaviourGround != null && moveBehaviourGround.Moving)
             {
-                groundVelocity = moveBehaviourGround.CurrentMovement;
+                groundVelocity = moveBehaviourGround.Rigidbody.velocity;
             }
             else
             {
@@ -437,14 +437,16 @@ public class PlayerMovement : MovingCharacter
             transform.parent = null; //this is a bit wierd tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
         }
 
-        float moveTime = Time.time - startMoveTime;
-        if (moveTime < TimeToFullSpeed)
-            currentMovementSpeedMultiplier = (Mathf.Sin(moveTime * Mathf.PI * (1 / TimeToFullSpeed) - (Mathf.PI / 2)) + 1f) / 2f;
-        else
-            currentMovementSpeedMultiplier = 1f;
+        //float moveTime = Time.time - startMoveTime;
+        //if (moveTime < TimeToFullSpeed)
+        //    currentMovementSpeedMultiplier = (Mathf.Sin(moveTime * Mathf.PI * (1 / TimeToFullSpeed) - (Mathf.PI / 2)) + 1f) / 2f;
+        //else
+        //    currentMovementSpeedMultiplier = 1f;
 
-        Vector3 newVelocity = movement * CurrentRunSpeed * currentMovementSpeedMultiplier;
-        RigidBody.velocity = new Vector3(newVelocity.x + groundVelocity.x, RigidBody.velocity.y, newVelocity.z + groundVelocity.z);
+        Vector3 newVelocity = movement * CurrentRunSpeed * 10 * (IsGrounded ? 1f : 0.4f);
+
+        if (RigidBody.velocity.sqrMagnitude < Speed)
+            RigidBody.AddForce(new Vector3(newVelocity.x, 0, newVelocity.z));
 
         Vector3 newPosition = RigidBody.transform.position + movement;
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
@@ -786,11 +788,11 @@ public class PlayerMovement : MovingCharacter
             moveOnTriggerGround = null;
         }
 
-        if (moveBehaviourGround != null)
-        {
-            moveBehaviourGround.RemovePlayer(this);
-            moveBehaviourGround = null;
-        }
+        //if (moveBehaviourGround != null)
+        //{
+        //    moveBehaviourGround.RemovePlayer(this);
+        //    moveBehaviourGround = null;
+        //}
     }
 
     private void NewGroundWasEntered(Block newBlock)
@@ -820,23 +822,23 @@ public class PlayerMovement : MovingCharacter
                 }
             }
 
-            MoveBehaviour moveBehaviour = GetMoveBehaviour(newBlock.Instance.transform);
-            if (moveBehaviour != null)
-            {
-                if (moveBehaviourGround != null)
-                    moveBehaviourGround.RemovePlayer(this);
-                Debug.Log("Entered moveOn Trigger");
-                moveBehaviourGround = moveBehaviour;
-                moveBehaviourGround.AddPlayer(this);
-            }
-            else
-            {
-                if (moveBehaviourGround != null)
-                {
-                    moveBehaviourGround.RemovePlayer(this);
-                    moveBehaviourGround = null;
-                }
-            }
+            //MoveBehaviour moveBehaviour = GetMoveBehaviour(newBlock.Instance.transform);
+            //if (moveBehaviour != null)
+            //{
+            //    if (moveBehaviourGround != null)
+            //        moveBehaviourGround.RemovePlayer(this);
+            //    Debug.Log("Entered moveOn Trigger");
+            //    moveBehaviourGround = moveBehaviour;
+            //    moveBehaviourGround.AddPlayer(this);
+            //}
+            //else
+            //{
+            //    if (moveBehaviourGround != null)
+            //    {
+            //        moveBehaviourGround.RemovePlayer(this);
+            //        moveBehaviourGround = null;
+            //    }
+            //}
         }
     }
 

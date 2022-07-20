@@ -42,7 +42,6 @@ public class MoveBehaviour : BehaviourBase
     private StateSwitcher stateSwitcher;
     private float lerpValue;
     private MoveState moveState = MoveState.Still;
-    private List<PlayerMovement> players = new List<PlayerMovement>();
 
     private bool hasSufficientValues;
 
@@ -180,7 +179,8 @@ public class MoveBehaviour : BehaviourBase
             }
 
             lerpValue = Mathf.Clamp(lerpValue, 0f, 1f);
-            transform.position = positionA + positionalDifference * lerpValue;
+            //transform.position = positionA + positionalDifference * lerpValue;
+            Rigidbody.MovePosition(positionA + positionalDifference * lerpValue);
 
             if (lerpValue == 1 || lerpValue == 0)
             {
@@ -196,23 +196,5 @@ public class MoveBehaviour : BehaviourBase
                 }
             }
         }
-    }
-
-    private void LateUpdate()
-    {
-        foreach (PlayerMovement movement in players)
-        {
-            movement.transform.position += CurrentMovement / 800f;
-        }
-    }
-
-    public void AddPlayer(PlayerMovement player)
-    {
-        players.Add(player);
-    }
-
-    public void RemovePlayer(PlayerMovement player)
-    {
-        players.Remove(player);
     }
 }
