@@ -17,6 +17,7 @@ public class BehaviourActivatorInput : MonoBehaviour
 
     public Button SelectButton;
     public TextMeshProUGUI ButtonText;
+    public Button RemoveButton;
 
     private PropertyInfo currentProperty;
     private BehaviourProperties currentBehaviour;
@@ -28,11 +29,13 @@ public class BehaviourActivatorInput : MonoBehaviour
     private void Awake()
     {
         SelectButton.onClick.AddListener(() => Select());
+        RemoveButton.onClick.AddListener(() => Remove());
     }
 
     private void OnDestroy()
     {
         SelectButton.onClick.RemoveAllListeners();
+        RemoveButton.onClick.RemoveAllListeners();
     }
 
     public void Initialize(ActivatorInputAttribute activatorInputAttribute, PropertyInfo property, BehaviourProperties behaviour, Block block, BehaviourPropertiesScreen behaviourPropertiesScreen)
@@ -55,12 +58,18 @@ public class BehaviourActivatorInput : MonoBehaviour
         Block block = WorldEditor.Instance.CurrentWorld.Blocks.Where(x => x.Id == blockId).FirstOrDefault();
         string text = "(click to select)";
 
-        if(block != null)
+        if (block != null)
         {
             text = string.Format("{0} ({1})", block.Info.Name, blockId);
         }
 
         ButtonText.text = text;
+    }
+
+    private void Remove()
+    {
+        currentProperty.SetValue(currentBehaviour, 0);
+        UpdateTextFromProperty();
     }
 
     private void Select()
@@ -76,10 +85,15 @@ public class BehaviourActivatorInput : MonoBehaviour
 
         WorldEditor.Instance.OnActivatorWasPicked += (Block block) =>
         {
-            currentProperty.SetValue(currentBehaviour, block.Id);
+            if (block != null)
+            {
+                currentProperty.SetValue(currentBehaviour, block.Id);
+            }
+
             behaviourPropertiesScreen.gameObject.SetActive(true);
             behaviourPropertiesScreen.BackgroundBlur.gameObject.SetActive(true);
             UpdateTextFromProperty();
+
         };
         WorldEditor.Instance.PickActivator2(currentBlock);
     }

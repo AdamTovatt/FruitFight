@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 859963329105959958}
   m_RootOrder: 1
@@ -109,6 +110,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3728635542297874929}
   - {fileID: 444001613837249621}
@@ -157,6 +159,7 @@ GameObject:
   - component: {fileID: 840168390219121600}
   - component: {fileID: 8840417760018238090}
   - component: {fileID: -1857965499231579436}
+  - component: {fileID: 5769819009979905735}
   m_Layer: 0
   m_Name: SphereKey
   m_TagString: Interactable
@@ -174,6 +177,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 859963329105959958}
   m_Father: {fileID: 0}
@@ -220,6 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523bf948fd7e8b3478fa8ff0a24039bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   Radius: 0.36
   Id: 
   DummyPrefab: {fileID: 3664600246569946297, guid: f93b70899c88c4546a70106922461f1e,
@@ -294,7 +300,7 @@ MonoBehaviour:
     Pitch: 1
     PitchVariation: 0.072
     Delay: 0
-  PlayOnAwake: 0
+  PlayOnStart: 0
 --- !u!82 &-780201314048325877
 AudioSource:
   m_ObjectHideFlags: 0
@@ -453,6 +459,18 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &5769819009979905735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3664600246569946297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760ba9802ef07f048a07bb0cd5496765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8297292202934303851
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +499,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 859963329105959958}
   m_RootOrder: 0

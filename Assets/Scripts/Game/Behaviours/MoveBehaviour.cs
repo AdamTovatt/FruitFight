@@ -36,6 +36,7 @@ public class MoveBehaviour : BehaviourBase
     public MoveBehaviourProperties Properties;
     public bool Moving { get { return moveState != MoveState.Still; } }
     public Vector3 CurrentMovement { get; set; }
+    public Rigidbody Rigidbody { get; set; }
 
     private Vector3 positionalDifference;
     private StateSwitcher stateSwitcher;
@@ -64,6 +65,22 @@ public class MoveBehaviour : BehaviourBase
             positionA = transform.position;
 
         positionalDifference = positionB - positionA;
+
+        Rigidbody = gameObject.AddComponent<Rigidbody>();
+        Rigidbody.isKinematic = true;
+
+        foreach (Collider collider in gameObject.GetComponentsInChildren<Collider>())
+        {
+            Rigidbody rigidbody = collider.gameObject.GetComponent<Rigidbody>();
+
+            if (rigidbody == null)
+            {
+                rigidbody = collider.gameObject.AddComponent<Rigidbody>();
+                rigidbody.isKinematic = true;
+            }
+
+            NonSlidingRigidbody.Rigidbodies.TryAdd(collider.transform, Rigidbody);
+        }
 
         BindEvents();
     }

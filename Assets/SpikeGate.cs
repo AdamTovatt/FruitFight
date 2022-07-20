@@ -45,7 +45,6 @@ public class SpikeGate : MonoBehaviour
         lerping = true;
         startPosition = Spikes.localPosition;
         heightDifference = startPosition.y - DownHeight;
-        Debug.Log("startheight: " + startPosition.y);
     }
 
     private void Update()
