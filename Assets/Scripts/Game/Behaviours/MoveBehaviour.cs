@@ -37,7 +37,6 @@ public class MoveBehaviour : BehaviourBase
     public bool Moving { get { return moveState != MoveState.Still; } }
     public Vector3 CurrentMovement { get; set; }
 
-    private float speed;
     private Vector3 positionalDifference;
     private StateSwitcher stateSwitcher;
     private float lerpValue;
@@ -65,7 +64,6 @@ public class MoveBehaviour : BehaviourBase
             positionA = transform.position;
 
         positionalDifference = positionB - positionA;
-        speed = positionalDifference.sqrMagnitude;
 
         BindEvents();
     }
@@ -107,16 +105,45 @@ public class MoveBehaviour : BehaviourBase
         }
 
         if (!WorldBuilder.IsInEditor || WorldEditor.IsTestingLevel)
+        {
             transform.position = positionA;
+
+            if (Properties.PingPong && stateSwitcher == null)
+                StateSwitcherActivated();
+        }
     }
 
     private void StateSwitcherActivated()
+    {
+        if (moveState == MoveState.Still) //if the block is still it should wait for the endpoint delay
+        {
+            this.CallWithDelay(() => StartMoveTowardsB(), Properties.EndpointDelay);
+        }
+        else
+        {
+            StartMoveTowardsB();
+        }
+    }
+
+    private void StartMoveTowardsB()
     {
         moveState = MoveState.TowardsB;
         CurrentMovement = positionalDifference / Properties.MoveTime;
     }
 
     private void StateSwitcherDeactivated()
+    {
+        if (moveState == MoveState.Still) //if the block is still it should wait for the endpoint delay
+        {
+            this.CallWithDelay(() => StartMoveTowardsA(), Properties.EndpointDelay);
+        }
+        else
+        {
+            StartMoveTowardsA();
+        }
+    }
+
+    private void StartMoveTowardsA()
     {
         moveState = MoveState.TowardsA;
         CurrentMovement = positionalDifference / -Properties.MoveTime;
@@ -142,6 +169,14 @@ public class MoveBehaviour : BehaviourBase
             {
                 moveState = MoveState.Still;
                 CurrentMovement = Vector3.zero;
+
+                if (Properties.PingPong)
+                {
+                    if (lerpValue == 1)
+                        StateSwitcherDeactivated();
+                    else if (lerpValue == 0)
+                        StateSwitcherActivated();
+                }
             }
         }
     }
@@ -150,7 +185,6 @@ public class MoveBehaviour : BehaviourBase
     {
         foreach (PlayerMovement movement in players)
         {
-            Debug.Log("Updating player movement");
             movement.transform.position += CurrentMovement / 800f;
         }
     }
