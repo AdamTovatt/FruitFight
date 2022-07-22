@@ -22,7 +22,7 @@ public class NonSlidingRigidbody : MonoBehaviour
         if (groundRigidBody != null)
         {
             Debug.Log(groundRigidBody.velocity);
-            rigidbody.MovePosition(rigidbody.transform.position + groundRigidBody.velocity);
+            rigidbody.MovePosition(rigidbody.transform.position + groundRigidBody.velocity * Time.deltaTime);
         }
         else
             Debug.Log("nothing");

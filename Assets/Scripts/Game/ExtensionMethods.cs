@@ -47,4 +47,9 @@ public static class ExtensionMethods
     {
         return new Color(color.r, color.g, color.b, newAlpha);
     }
+
+    public static Vector3 Clamp(this Vector3 vector, float maxValue)
+    {
+        return new Vector3(Mathf.Clamp(vector.x, -maxValue, maxValue), Mathf.Clamp(vector.y, -maxValue, maxValue), Mathf.Clamp(vector.z, -maxValue, maxValue));
+    }
 }

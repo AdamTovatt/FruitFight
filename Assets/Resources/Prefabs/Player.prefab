@@ -721,7 +721,7 @@ MonoBehaviour:
     type: 3}
   PunchSphereTransform: {fileID: 4974615858160056374}
   SpineTransform: {fileID: 6981282915230941826}
-  Speed: 20
+  Speed: 8
   JumpStrength: 6
   DistanceToGround: 0.8
   MovementInputCutoff: 0.2
@@ -733,7 +733,8 @@ MonoBehaviour:
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
   MagicLevel: 3
-  TimeToFullSpeed: 0.15
+  TimeToFullSpeed: 0.02
+  SlowDownMultiplier: 0.2
   InteractCooldownTime: 0.2
 --- !u!54 &2012823961798305032
 Rigidbody:

@@ -25,6 +25,7 @@ public class PlayerMovement : MovingCharacter
     public float GameTimeLength = 0.2f;
     public int MagicLevel;
     public float TimeToFullSpeed = 1f;
+    public float SlowDownMultiplier = 0.2f;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -89,6 +90,7 @@ public class PlayerMovement : MovingCharacter
     private MagicCharge currentMagicCharge;
     private float startMoveTime;
     private float currentMovementSpeedMultiplier;
+    private Vector3 movementVelocity;
 
     private PlayerControls boundPlayerControls;
 
@@ -434,19 +436,19 @@ public class PlayerMovement : MovingCharacter
         }
         else
         {
-            transform.parent = null; //this is a bit wierd tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
+            transform.parent = null; //this is a bit weird tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
         }
 
-        //float moveTime = Time.time - startMoveTime;
-        //if (moveTime < TimeToFullSpeed)
-        //    currentMovementSpeedMultiplier = (Mathf.Sin(moveTime * Mathf.PI * (1 / TimeToFullSpeed) - (Mathf.PI / 2)) + 1f) / 2f;
-        //else
-        //    currentMovementSpeedMultiplier = 1f;
+        float moveTime = Time.time - startMoveTime;
+        if (moveTime < TimeToFullSpeed)
+            currentMovementSpeedMultiplier = (Mathf.Sin(moveTime * Mathf.PI * (1 / TimeToFullSpeed) - (Mathf.PI / 2)) + 1f) / 2f;
+        else
+            currentMovementSpeedMultiplier = 1f;
 
-        Vector3 newVelocity = movement * CurrentRunSpeed * 10 * (IsGrounded ? 1f : 0.4f);
+        movementVelocity += movement * (IsGrounded ? 1 : 0.8f) * Time.deltaTime / TimeToFullSpeed;
+        movement = movementVelocity.Clamp(Speed);
 
-        if (RigidBody.velocity.sqrMagnitude < Speed)
-            RigidBody.AddForce(new Vector3(newVelocity.x, 0, newVelocity.z));
+        RigidBody.velocity = new Vector3(movement.x, RigidBody.velocity.y, movement.z);
 
         Vector3 newPosition = RigidBody.transform.position + movement;
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
@@ -456,6 +458,8 @@ public class PlayerMovement : MovingCharacter
             projectileChargeAmount += Time.deltaTime / MagicSettings.ChargeTime;
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
+
+        movementVelocity -= movementVelocity * SlowDownMultiplier * Time.deltaTime / TimeToFullSpeed;
     }
 
     private MoveOnTrigger GetMoveOnTrigger(Transform transform)
