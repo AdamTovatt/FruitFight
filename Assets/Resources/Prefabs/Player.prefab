@@ -1191,6 +1191,8 @@ MonoBehaviour:
     type: 3}
   AngelPrefab: {fileID: 181977417639096183, guid: 7aa49ef11d6ce5c4bbc9c978e87f1fb9,
     type: 3}
+  PlayerIndicatorPrefab: {fileID: 2268152543473167420, guid: c38a92436c51df846a985fbb15f75082,
+    type: 3}
   VelocityKeeper: {fileID: 2012823961798305030}
   MeshReplacer: {fileID: -4431200645922323308}
   Health: {fileID: -1100488477938289283}

@@ -112,6 +112,9 @@ public class GameManager : MonoBehaviour
                     GameObject player = Instantiate(PlayerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
                     PlayerMovement playerMovement = player.gameObject.GetComponent<PlayerMovement>();
 
+                    playerMovement.Player.PlayerNumber = addedPlayerCamera ? 2 : 1; //set up player number to displaye player indicator correctly
+                    playerMovement.Player.SetupPlayerIndicator();
+
                     SingleTargetCamera camera = CameraManager.AddCamera(player.transform, playerConfiguration.Input);
                     CameraViewType viewType = playerConfigurations.Length > 1 ? (addedPlayerCamera ? CameraViewType.Right : CameraViewType.Left) : CameraViewType.Full;
                     camera.SetViewType(viewType);

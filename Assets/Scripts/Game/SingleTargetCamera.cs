@@ -295,16 +295,32 @@ public class SingleTargetCamera : MonoBehaviour
         {
             case global::CameraViewType.Full:
                 Camera.rect = new Rect(0, 0, 1, 1);
+                EnableRenderLayer("PlayerOne");
+                DisableRenderLayer("PlayerTwo");
                 break;
             case global::CameraViewType.Left:
                 Camera.rect = new Rect(0, 0, 0.5f, 1);
+                EnableRenderLayer("PlayerOne");
+                DisableRenderLayer("PlayerTwo");
                 break;
             case global::CameraViewType.Right:
                 Camera.rect = new Rect(0.5f, 0, 0.5f, 1);
+                EnableRenderLayer("PlayerTwo");
+                DisableRenderLayer("PlayerOne");
                 break;
             default:
                 break;
         }
+    }
+
+    private void EnableRenderLayer(string layerName)
+    {
+        Camera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
+    }
+
+    private void DisableRenderLayer(string layerName)
+    {
+        Camera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
     }
 }
 

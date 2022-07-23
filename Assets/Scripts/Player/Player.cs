@@ -16,6 +16,8 @@ public class Player : NetworkBehaviour
     public int DeathCost = 5;
     public float RunParticlesEmissionRate = 30f;
 
+    public int PlayerNumber { get; set; }
+
     public ParticleSystem RunParticles;
 
     public delegate void JellyBeansUpdatedHandler(int newAmount);
@@ -38,6 +40,7 @@ public class Player : NetworkBehaviour
 
     public GameObject BeamOfLightPrefab;
     public GameObject AngelPrefab;
+    public GameObject PlayerIndicatorPrefab;
 
     public AverageVelocityKeeper VelocityKeeper;
     public TemporaryMeshReplacer MeshReplacer;
@@ -66,6 +69,12 @@ public class Player : NetworkBehaviour
 
         if (magicProjectileConfigurationEntry != null)
             magicProjectileConfigurationEntry.Load();
+    }
+
+    public void SetupPlayerIndicator()
+    {
+        PlayerIndicatorRing indicator = Instantiate(PlayerIndicatorPrefab, transform.position, Quaternion.identity, transform).GetComponent<PlayerIndicatorRing>();
+        indicator.Initialize(PlayerNumber == 1);
     }
 
     private void Update()

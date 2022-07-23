@@ -81,15 +81,18 @@ public class IkFootSolver : MonoBehaviour
         {
             if (((CharacterMovement.StandingStill == null) || (CharacterMovement.StandingStill != null && !((bool)CharacterMovement.StandingStill))) && characterVelocity.Velocity > 0.01f) //character is moving
             {
-                float distance = Vector3.Distance(NewPosition.AppliedPosition, searchPosition.AppliedPosition);
-                if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
+                if (NewPosition != null)
                 {
-                    inDefaultPosition = false;
-                    lerp = 0;
-                    OldPosition = CurrentPosition;
-                    NewPosition = searchPosition;
-                    currentGroundedPosition = searchPosition;
-                    PositionUpdated?.Invoke(NewPosition.AppliedPosition);
+                    float distance = Vector3.Distance(NewPosition.AppliedPosition, searchPosition.AppliedPosition);
+                    if (distance > appliedStepDistance && ((!OtherFoot.IsMoving && lerp >= 1) || distance > StepDistance * 1.8f))
+                    {
+                        inDefaultPosition = false;
+                        lerp = 0;
+                        OldPosition = CurrentPosition;
+                        NewPosition = searchPosition;
+                        currentGroundedPosition = searchPosition;
+                        PositionUpdated?.Invoke(NewPosition.AppliedPosition);
+                    }
                 }
             }
             else //character is not moving

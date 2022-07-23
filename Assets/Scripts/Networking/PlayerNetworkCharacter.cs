@@ -59,6 +59,9 @@ public class PlayerNetworkCharacter : NetworkBehaviour
             playerMovementActive = true;
             playerMovement.enabled = true;
 
+            playerMovement.Player.PlayerNumber = 1; //set local player as player one
+            playerMovement.Player.SetupPlayerIndicator();
+
             if (CustomNetworkManager.Instance.IsServer)
             {
                 gameObject.GetComponent<NetworkTransform>().clientAuthority = false;
@@ -88,6 +91,9 @@ public class PlayerNetworkCharacter : NetworkBehaviour
         else
         {
             OtherPlayer = this;
+
+            playerMovement.Player.PlayerNumber = 2; //set other player as player 2
+            playerMovement.Player.SetupPlayerIndicator();
         }
 
         //create hat
