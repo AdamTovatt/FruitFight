@@ -80,6 +80,9 @@ public class DaylightController : MonoBehaviour
             foreach(LensFlareDataElementSRP element in LensFlare.lensFlareData.elements)
             {
                 element.tint = CurrentColor;
+
+                if (Elevation < 0)
+                    element.visible = false;
             }
         }
     }
