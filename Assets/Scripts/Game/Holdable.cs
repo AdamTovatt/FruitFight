@@ -200,7 +200,6 @@ public class Holdable : NetworkBehaviour
 
     public void PerformDrop(Vector3 holderVelocity, float holdingBodyMovingVelocity)
     {
-        Debug.Log("was dropped");
         transform.position = instantiatedDummyObject.transform.position;
         transform.parent = null;
         _rigidbody.isKinematic = false;

@@ -52,7 +52,6 @@ public class FootStepAudioSource : MonoBehaviour
 
         if(possibleSounds.Count == 0)
         {
-            Debug.LogWarning("No sounds to play!");
             return Sounds[0];
         }
 

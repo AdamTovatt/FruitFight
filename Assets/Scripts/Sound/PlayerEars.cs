@@ -30,7 +30,6 @@ public class PlayerEars : MonoBehaviour
 
     public void EnableSound()
     {
-        Debug.Log("Enable sound");
         AudioListener.enabled = true;
         SoundSourceManager.enabled = true;
     }

@@ -142,7 +142,8 @@ public class PlayerMovement : MovingCharacter
 
         Player.TurnOffRunParticles();
 
-        Player.PlayerEars.EnableSound();
+        if (Player.PlayerNumber == 1)
+            Player.PlayerEars.EnableSound();
     }
 
     private void OnDestroy()
