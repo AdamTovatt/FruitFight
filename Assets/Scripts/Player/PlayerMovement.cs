@@ -459,7 +459,7 @@ public class PlayerMovement : MovingCharacter
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
 
-        movementVelocity -= movementVelocity * SlowDownMultiplier * Time.deltaTime / TimeToFullSpeed;
+        movementVelocity -= movementVelocity * (SlowDownMultiplier * (HeldItem == null ? 1 : 1.2f)) * Time.deltaTime / TimeToFullSpeed;
     }
 
     private MoveOnTrigger GetMoveOnTrigger(Transform transform)
