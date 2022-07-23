@@ -23,6 +23,8 @@ public abstract class BehaviourProperties //base class for all second generation
                 return typeof(ItemTrigger.ItemTriggerProperties);
             case "ActivatableProperties":
                 return typeof(Activatable.ActivatableProperties);
+            case "ChildObjectProperties":
+                return typeof(ChildObject.ChildObjectProperties);
             default:
                 return null;
         }

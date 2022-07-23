@@ -20,19 +20,14 @@ public class NonSlidingRigidbody : MonoBehaviour
         Rigidbody groundRigidBody = GetGroundRigidbody();
 
         if (groundRigidBody != null)
-        {
-            Debug.Log(groundRigidBody.velocity);
             rigidbody.MovePosition(rigidbody.transform.position + groundRigidBody.velocity * Time.deltaTime);
-        }
-        else
-            Debug.Log("nothing");
     }
 
     private Rigidbody GetGroundRigidbody()
     {
         Transform ground = GetGroundTransform();
 
-        if(ground != null)
+        if (ground != null)
         {
             if (Rigidbodies.TryGetValue(ground, out Rigidbody rigidbody))
                 return rigidbody;

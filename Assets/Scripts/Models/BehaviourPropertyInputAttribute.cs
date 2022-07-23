@@ -15,6 +15,7 @@ public class IntInputAttribute : BehaviourPropertyInputAttribute
 {
     public int MinValue { get; set; }
     public int MaxValue { get; set; }
+    public bool Limitless { get; set; }
 }
 
 [AttributeUsage(AttributeTargets.Property)]
