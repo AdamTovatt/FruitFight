@@ -15,6 +15,7 @@ public class ChildObject : BehaviourBase
         public ChildObjectProperties(int parentObjectId)
         {
             ParentObjectId = parentObjectId;
+            Type = typeof(ChildObjectProperties).Name;
         }
 
         public override Type BehaviourType => typeof(ChildObject);
@@ -47,6 +48,7 @@ public class ChildObject : BehaviourBase
     {
         Block parent = WorldBuilder.Instance.GetPlacedBlock(Properties.ParentObjectId);
 
-        gameObject.transform.parent = parent.Instance.transform;
+        if (parent.Instance != null)
+            gameObject.transform.parent = parent.Instance.transform;
     }
 }

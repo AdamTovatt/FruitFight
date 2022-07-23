@@ -9,7 +9,7 @@ public abstract class BehaviourProperties //base class for all second generation
     [JsonIgnore]
     public abstract Type BehaviourType { get; }
 
-    public string Type;
+    public string Type { get; set; }
 
     public static Type GetTypeFromName(string name)
     {
