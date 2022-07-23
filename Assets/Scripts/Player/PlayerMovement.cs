@@ -51,7 +51,7 @@ public class PlayerMovement : MovingCharacter
     public event OnLandedOnBouncyObjectHandler OnLandedOnBouncyObject;
 
     public override bool StopFootSetDefault { get { return false; } }
-    public override bool? StandingStill { get { if (!playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
+    public override bool? StandingStill { get { if (CustomNetworkManager.IsOnlineSession && !playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
 
     public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
