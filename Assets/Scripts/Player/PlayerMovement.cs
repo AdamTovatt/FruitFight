@@ -629,16 +629,26 @@ public class PlayerMovement : MovingCharacter
                 switch (itemTrigger.Properties.ItemType)
                 {
                     case ItemTrigger.TriggerItemType.JellyBean:
-                        if (Player.JellyBeans >= itemTrigger.Properties.Amount)
+                        if (GameManager.Instance.Players.Sum(x => x.Inventory.JellyBeans) >= itemTrigger.Properties.Amount)
                         {
-                            Player.RemoveItem(AbsorbableItemType.JellyBean, itemTrigger.Properties.Amount);
+                            int firstPlayerPayment = Player.JellyBeans <= itemTrigger.Properties.Amount ? Player.JellyBeans : itemTrigger.Properties.Amount;
+                            int secondPlayerPayment = itemTrigger.Properties.Amount - firstPlayerPayment;
+
+                            Player.RemoveItem(AbsorbableItemType.JellyBean, firstPlayerPayment);
+                            GameManager.Instance.Players.Where(x => x.Movement != Player.Movement).FirstOrDefault()?.Inventory.RemoveItem(AbsorbableItemType.JellyBean, secondPlayerPayment);
+                            
                             itemTrigger.WasSatisfied();
                         }
                         return;
                     case ItemTrigger.TriggerItemType.Coin:
-                        if (Player.Coins >= itemTrigger.Properties.Amount)
+                        if (GameManager.Instance.Players.Sum(x => x.Inventory.Coins) >= itemTrigger.Properties.Amount)
                         {
-                            Player.RemoveItem(AbsorbableItemType.Coin, itemTrigger.Properties.Amount);
+                            int firstPlayerPayment = Player.Coins <= itemTrigger.Properties.Amount ? Player.Coins : itemTrigger.Properties.Amount;
+                            int secondPlayerPayment = itemTrigger.Properties.Amount - firstPlayerPayment;
+
+                            Player.RemoveItem(AbsorbableItemType.Coin, firstPlayerPayment);
+                            GameManager.Instance.Players.Where(x => x.Movement != Player.Movement).FirstOrDefault()?.Inventory.RemoveItem(AbsorbableItemType.Coin, secondPlayerPayment);
+                            
                             itemTrigger.WasSatisfied();
                         }
                         return;
