@@ -12,8 +12,18 @@ public class WorldBuilder : MonoBehaviour
     public static World NextLevel;
     public static bool IsInEditor = false;
 
+    /// <summary>
+    /// Will be invoked as soon as the world builder has finished placing blocks
+    /// </summary>
     public delegate void FinishedPlacingBlocksHandler();
     public event FinishedPlacingBlocksHandler OnFinishedPlacingBlocks;
+
+    /// <summary>
+    /// Will be invoked when the world builder has finished placing blocks, but only after the OnFinishedPlacingBlocks event
+    /// MoveBehaviour needs this to move the block into place only after the children (grass) has been parented to the block which occurs in the OnFinishedPlacingBlocks event
+    /// </summary>
+    public delegate void FinishedPlacingBlocksLateHandler();
+    public event FinishedPlacingBlocksLateHandler OnFinishedPlacingBlocksLate;
 
     public IReadOnlyList<GameObject> CurrentPlacedObjects { get { return previousWorldObjects; } }
     public Dictionary<Transform, BlockInformationHolder> CurrentBlocks { get; set; } = new Dictionary<Transform, BlockInformationHolder>();
@@ -95,6 +105,7 @@ public class WorldBuilder : MonoBehaviour
         }
 
         OnFinishedPlacingBlocks?.Invoke();
+        OnFinishedPlacingBlocksLate?.Invoke();
     }
 
     List<PartialBlockIntersection> debugCubes = new List<PartialBlockIntersection>();

@@ -25,6 +25,7 @@ public class PlayerMovement : MovingCharacter
     public float GameTimeLength = 0.2f;
     public int MagicLevel;
     public float TimeToFullSpeed = 1f;
+    public float SlowDownMultiplier = 0.2f;
 
     public float InteractCooldownTime = 0.2f;
 
@@ -50,7 +51,7 @@ public class PlayerMovement : MovingCharacter
     public event OnLandedOnBouncyObjectHandler OnLandedOnBouncyObject;
 
     public override bool StopFootSetDefault { get { return false; } }
-    public override bool? StandingStill { get { if (!playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
+    public override bool? StandingStill { get { if (CustomNetworkManager.IsOnlineSession && !playerNetworkCharacter.IsLocalPlayer) return playerNetworkCharacter.IsStandingStill; return move == Vector2.zero; } }
 
     public override bool IsGrounded { get { return groundedChecker.IsGrounded; } }
 
@@ -89,6 +90,7 @@ public class PlayerMovement : MovingCharacter
     private MagicCharge currentMagicCharge;
     private float startMoveTime;
     private float currentMovementSpeedMultiplier;
+    private Vector3 movementVelocity;
 
     private PlayerControls boundPlayerControls;
 
@@ -423,7 +425,7 @@ public class PlayerMovement : MovingCharacter
             }
             else if (moveBehaviourGround != null && moveBehaviourGround.Moving)
             {
-                groundVelocity = moveBehaviourGround.CurrentMovement;
+                groundVelocity = moveBehaviourGround.Rigidbody.velocity;
             }
             else
             {
@@ -434,7 +436,7 @@ public class PlayerMovement : MovingCharacter
         }
         else
         {
-            transform.parent = null; //this is a bit wierd tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
+            transform.parent = null; //this is a bit weird tbh, I don't know if this serves any other purpose than to show the player higher up in the hierarchy for easier access when debugging
         }
 
         float moveTime = Time.time - startMoveTime;
@@ -443,8 +445,10 @@ public class PlayerMovement : MovingCharacter
         else
             currentMovementSpeedMultiplier = 1f;
 
-        Vector3 newVelocity = movement * CurrentRunSpeed * currentMovementSpeedMultiplier;
-        RigidBody.velocity = new Vector3(newVelocity.x + groundVelocity.x, RigidBody.velocity.y, newVelocity.z + groundVelocity.z);
+        movementVelocity += movement * (IsGrounded ? 1 : 0.8f) * Time.deltaTime / TimeToFullSpeed;
+        movement = movementVelocity.Clamp(Speed);
+
+        RigidBody.velocity = new Vector3(movement.x, RigidBody.velocity.y, movement.z);
 
         Vector3 newPosition = RigidBody.transform.position + movement;
         if ((newPosition - transform.position != Vector3.zero) && move != Vector2.zero) //rotate the player towards where it's going
@@ -454,6 +458,8 @@ public class PlayerMovement : MovingCharacter
             projectileChargeAmount += Time.deltaTime / MagicSettings.ChargeTime;
 
         RigidBody.AddForce(-Vector3.up * Time.deltaTime * 250); //make the player fall faster because the default fall rate is to slow
+
+        movementVelocity -= movementVelocity * (SlowDownMultiplier * (HeldItem == null ? 1 : 1.2f)) * Time.deltaTime / TimeToFullSpeed;
     }
 
     private MoveOnTrigger GetMoveOnTrigger(Transform transform)
@@ -786,11 +792,11 @@ public class PlayerMovement : MovingCharacter
             moveOnTriggerGround = null;
         }
 
-        if (moveBehaviourGround != null)
-        {
-            moveBehaviourGround.RemovePlayer(this);
-            moveBehaviourGround = null;
-        }
+        //if (moveBehaviourGround != null)
+        //{
+        //    moveBehaviourGround.RemovePlayer(this);
+        //    moveBehaviourGround = null;
+        //}
     }
 
     private void NewGroundWasEntered(Block newBlock)
@@ -820,23 +826,23 @@ public class PlayerMovement : MovingCharacter
                 }
             }
 
-            MoveBehaviour moveBehaviour = GetMoveBehaviour(newBlock.Instance.transform);
-            if (moveBehaviour != null)
-            {
-                if (moveBehaviourGround != null)
-                    moveBehaviourGround.RemovePlayer(this);
-                Debug.Log("Entered moveOn Trigger");
-                moveBehaviourGround = moveBehaviour;
-                moveBehaviourGround.AddPlayer(this);
-            }
-            else
-            {
-                if (moveBehaviourGround != null)
-                {
-                    moveBehaviourGround.RemovePlayer(this);
-                    moveBehaviourGround = null;
-                }
-            }
+            //MoveBehaviour moveBehaviour = GetMoveBehaviour(newBlock.Instance.transform);
+            //if (moveBehaviour != null)
+            //{
+            //    if (moveBehaviourGround != null)
+            //        moveBehaviourGround.RemovePlayer(this);
+            //    Debug.Log("Entered moveOn Trigger");
+            //    moveBehaviourGround = moveBehaviour;
+            //    moveBehaviourGround.AddPlayer(this);
+            //}
+            //else
+            //{
+            //    if (moveBehaviourGround != null)
+            //    {
+            //        moveBehaviourGround.RemovePlayer(this);
+            //        moveBehaviourGround = null;
+            //    }
+            //}
         }
     }
 

@@ -56,7 +56,9 @@ public class BehaviourIntInput : MonoBehaviour
 
         int value = int.Parse(text);
 
-        value = Mathf.Clamp(value, currentAttribute.MinValue, currentAttribute.MaxValue);
+        if (!currentAttribute.Limitless)
+            value = Mathf.Clamp(value, currentAttribute.MinValue, currentAttribute.MaxValue);
+
         TextInput.text = value.ToString();
 
         currentProperty.SetValue(currentBehaviour, value);

@@ -2,32 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class NonSlidingRigidbody : MonoBehaviour
 {
     public static Dictionary<Transform, Rigidbody> Rigidbodies { get; set; } = new Dictionary<Transform, Rigidbody>();
     private Collider collider;
+    private Rigidbody rigidbody;
 
     private void Awake()
     {
         collider = gameObject.GetComponent<Collider>();
+        rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Rigidbody rigidbody = GetGroundRigidbody();
+        Rigidbody groundRigidBody = GetGroundRigidbody();
 
-        if (rigidbody != null)
-            Debug.Log(rigidbody.transform.name);
-        else
-            Debug.Log("nothing");
+        if (groundRigidBody != null)
+            rigidbody.MovePosition(rigidbody.transform.position + groundRigidBody.velocity * Time.deltaTime);
     }
 
     private Rigidbody GetGroundRigidbody()
     {
         Transform ground = GetGroundTransform();
 
-        if(ground != null)
+        if (ground != null)
         {
             if (Rigidbodies.TryGetValue(ground, out Rigidbody rigidbody))
                 return rigidbody;
@@ -38,7 +38,7 @@ public class NonSlidingRigidbody : MonoBehaviour
 
     private Transform GetGroundTransform()
     {
-        Ray ray = new Ray(transform.position, Vector3.down);
+        Ray ray = new Ray(collider.bounds.center, Vector3.down);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

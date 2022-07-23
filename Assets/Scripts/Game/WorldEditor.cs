@@ -433,13 +433,13 @@ public class WorldEditor : MonoBehaviour
         List<Vector3Int> placedPositions = new List<Vector3Int>();
         List<Block> blocksToAdd = new List<Block>();
 
-        foreach (Block growBlock in CurrentWorld.Blocks)
+        foreach (Block growBlock in CurrentWorld.Blocks) //check all blocks in world
         {
-            if (grassifyConfiguration.GrowBlocks.Contains(growBlock.Info.Id))
+            if (grassifyConfiguration.GrowBlocks.Contains(growBlock.Info.Id)) //if this block is a block that should grow from
             {
-                if (growBlock.NeighborY.SameTypesPositive.Count == 0)
+                if (growBlock.NeighborY.SameTypesPositive.Count == 0) //make sure there are no blocks of the same type above this block
                 {
-                    foreach (GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks)
+                    foreach (GrassifyBlockConfiguration blockConfiguration in grassifyConfiguration.VegetationBlocks) //go through all the vegetationblocks
                     {
                         BlockInfo grassInfo = BlockInfoLookup.Get(blockConfiguration.Id);
 
@@ -465,7 +465,10 @@ public class WorldEditor : MonoBehaviour
                                     }
                                 }
 
-                                blocksToAdd.Add(new Block(BlockInfoLookup.Get(blockId), obscuredPosition) { IsFromGrassify = true }); //add block that is sometimes of a random variation
+                                Block newBlock = new Block(BlockInfoLookup.Get(blockId), obscuredPosition) { IsFromGrassify = true };
+                                newBlock.BehaviourProperties2.Add(new ChildObject.ChildObjectProperties(growBlock.Id)); //make this vegetation have the growblock as a parent
+
+                                blocksToAdd.Add(newBlock); //add block that is sometimes of a random variation
 
                                 if (!blockConfiguration.AllowOverlap)
                                     placedPositions.Add(obscuredPosition); //so that we won't place multiple things on same place

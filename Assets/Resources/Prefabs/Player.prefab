@@ -672,6 +672,7 @@ GameObject:
   - component: {fileID: -4431200645922323308}
   - component: {fileID: 4143436102440095783}
   - component: {fileID: -1204347376148528488}
+  - component: {fileID: 7637775022392944529}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -720,7 +721,7 @@ MonoBehaviour:
     type: 3}
   PunchSphereTransform: {fileID: 4974615858160056374}
   SpineTransform: {fileID: 6981282915230941826}
-  Speed: 4
+  Speed: 8
   JumpStrength: 6
   DistanceToGround: 0.8
   MovementInputCutoff: 0.2
@@ -732,7 +733,8 @@ MonoBehaviour:
   RotateCameraSpeed: 9
   GameTimeLength: 0.2
   MagicLevel: 3
-  TimeToFullSpeed: 0.15
+  TimeToFullSpeed: 0.02
+  SlowDownMultiplier: 0.2
   InteractCooldownTime: 0.2
 --- !u!54 &2012823961798305032
 Rigidbody:
@@ -742,8 +744,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2012823961798305035}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0.1
+  m_Mass: 4
+  m_Drag: 0.4
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -1205,6 +1207,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da64e51da65d6c4489e99ccf58ef4a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7637775022392944529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012823961798305035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760ba9802ef07f048a07bb0cd5496765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2012823961827835532

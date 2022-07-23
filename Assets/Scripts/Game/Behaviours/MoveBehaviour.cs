@@ -33,7 +33,7 @@ public class MoveBehaviour : BehaviourBase
         public override Type BehaviourType { get { return typeof(MoveBehaviour); } }
     }
 
-    public MoveBehaviourProperties Properties;
+    public MoveBehaviourProperties Properties { get; set; }
     public bool Moving { get { return moveState != MoveState.Still; } }
     public Vector3 CurrentMovement { get; set; }
     public Rigidbody Rigidbody { get; set; }
@@ -42,7 +42,6 @@ public class MoveBehaviour : BehaviourBase
     private StateSwitcher stateSwitcher;
     private float lerpValue;
     private MoveState moveState = MoveState.Still;
-    private List<PlayerMovement> players = new List<PlayerMovement>();
 
     private bool hasSufficientValues;
 
@@ -93,11 +92,13 @@ public class MoveBehaviour : BehaviourBase
     private void BindEvents()
     {
         WorldBuilder.Instance.OnFinishedPlacingBlocks += WorldWasBuilt;
+        WorldBuilder.Instance.OnFinishedPlacingBlocksLate += WorldWasBuiltLate;
     }
 
     private void UnBindEvents()
     {
         WorldBuilder.Instance.OnFinishedPlacingBlocks -= WorldWasBuilt;
+        WorldBuilder.Instance.OnFinishedPlacingBlocksLate -= WorldWasBuiltLate;
 
         if (stateSwitcher != null)
         {
@@ -120,7 +121,10 @@ public class MoveBehaviour : BehaviourBase
                 stateSwitcher.OnDeactivated += StateSwitcherDeactivated;
             }
         }
+    }
 
+    private void WorldWasBuiltLate()
+    {
         if (!WorldBuilder.IsInEditor || WorldEditor.IsTestingLevel)
         {
             transform.position = positionA;
@@ -180,7 +184,8 @@ public class MoveBehaviour : BehaviourBase
             }
 
             lerpValue = Mathf.Clamp(lerpValue, 0f, 1f);
-            transform.position = positionA + positionalDifference * lerpValue;
+            //transform.position = positionA + positionalDifference * lerpValue;
+            Rigidbody.MovePosition(positionA + positionalDifference * lerpValue);
 
             if (lerpValue == 1 || lerpValue == 0)
             {
@@ -196,23 +201,5 @@ public class MoveBehaviour : BehaviourBase
                 }
             }
         }
-    }
-
-    private void LateUpdate()
-    {
-        foreach (PlayerMovement movement in players)
-        {
-            movement.transform.position += CurrentMovement / 800f;
-        }
-    }
-
-    public void AddPlayer(PlayerMovement player)
-    {
-        players.Add(player);
-    }
-
-    public void RemovePlayer(PlayerMovement player)
-    {
-        players.Remove(player);
     }
 }
