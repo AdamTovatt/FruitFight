@@ -1062,7 +1062,7 @@ MonoBehaviour:
   PersonalBoundaryDistance: 0.62
   DiscoveryRadius: 6
   DistanceToGround: 0.3
-  AttackInitialWaitTime: 0.3
+  AttackInitialWaitTime: 0.4
   AttackCooldown: 1
   PunchDamage: 10
   JellyBeanModel: {fileID: 728964469066429983}
