@@ -92,7 +92,10 @@
       "ShowInEditor": true,
       "Name": "Pillar Bottom",
       "Prefab": "PillarBottom",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 8,
@@ -102,7 +105,10 @@
       "ShowInEditor": true,
       "Name": "Pillar Middle",
       "Prefab": "PillarMiddle",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 9,
@@ -112,7 +118,10 @@
       "ShowInEditor": true,
       "Name": "Pillar Top",
       "Prefab": "PillarCap",
-      "EdgePrefabs": []
+      "EdgePrefabs": [],
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 10,
@@ -123,7 +132,10 @@
       "Name": "Rock Large",
       "Prefab": "Rock1",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 11,
@@ -134,7 +146,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock2",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 12,
@@ -145,7 +160,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock3",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 13,
@@ -155,7 +173,10 @@
       "ShowInEditor": true,
       "Name": "Tree Medium",
       "Prefab": "Tree1_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 14,
@@ -165,7 +186,10 @@
       "ShowInEditor": true,
       "Name": "Tree Large",
       "Prefab": "Tree2_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 15,
@@ -175,7 +199,10 @@
       "ShowInEditor": true,
       "Name": "Tree Small",
       "Prefab": "Tree3_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 16,
@@ -185,7 +212,10 @@
       "ShowInEditor": true,
       "Name": "Tree Small",
       "Prefab": "Tree4_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 17,
@@ -197,7 +227,8 @@
       "Prefab": "TreeStump",
       "RotatableX": true,
       "AvailableBehaviours": [
-        "ContainerProperties"
+        "ContainerProperties",
+        "MoveBehaviourProperties"
       ]
     },
     {
@@ -208,7 +239,10 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass1",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 22,
@@ -218,7 +252,10 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass2",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 19,
@@ -228,7 +265,10 @@
       "ShowInEditor": true,
       "Name": "Leaves Large",
       "Prefab": "FallingLeaves1_4",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 20,
@@ -238,7 +278,10 @@
       "ShowInEditor": true,
       "Name": "Leaves Medium",
       "Prefab": "FallingLeaves2_2",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 21,
@@ -248,7 +291,10 @@
       "ShowInEditor": true,
       "Name": "Leaves Medium",
       "Prefab": "FallingLeaves3_2",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 23,
@@ -258,7 +304,10 @@
       "ShowInEditor": true,
       "Name": "Plant 1",
       "Prefab": "Plant1_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 24,
@@ -268,7 +317,10 @@
       "ShowInEditor": true,
       "Name": "Plant 2 A",
       "Prefab": "Plant2_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 25,
@@ -278,7 +330,10 @@
       "ShowInEditor": true,
       "Name": "Plant 3",
       "Prefab": "Plant3_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 26,
@@ -288,7 +343,10 @@
       "ShowInEditor": true,
       "Name": "Plant 4",
       "Prefab": "Plant4_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 27,
@@ -298,7 +356,10 @@
       "ShowInEditor": true,
       "Name": "Bush 1 A",
       "Prefab": "Bush1_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 28,
@@ -308,7 +369,10 @@
       "ShowInEditor": true,
       "Name": "Bush 1 B",
       "Prefab": "Bush1_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 29,
@@ -318,7 +382,10 @@
       "ShowInEditor": true,
       "Name": "Bush 1 C",
       "Prefab": "Bush1_c",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 30,
@@ -328,7 +395,10 @@
       "ShowInEditor": true,
       "Name": "Bush 1 D",
       "Prefab": "Bush1_d",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 31,
@@ -338,7 +408,10 @@
       "ShowInEditor": true,
       "Name": "Bush 1 E",
       "Prefab": "Bush1_e",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 32,
@@ -348,7 +421,10 @@
       "ShowInEditor": true,
       "Name": "Bush 2",
       "Prefab": "Bush2_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 33,
@@ -358,7 +434,10 @@
       "ShowInEditor": true,
       "Name": "Grass",
       "Prefab": "Grass3",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 34,
@@ -368,7 +447,10 @@
       "ShowInEditor": true,
       "Name": "Plant 2 B",
       "Prefab": "Plant2_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 35,
@@ -378,7 +460,10 @@
       "ShowInEditor": true,
       "Name": "Flower 1 A",
       "Prefab": "Flower1_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 36,
@@ -388,7 +473,10 @@
       "ShowInEditor": true,
       "Name": "Flower 1 B",
       "Prefab": "Flower1_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 37,
@@ -398,7 +486,10 @@
       "ShowInEditor": true,
       "Name": "Flower 2 A",
       "Prefab": "Flower2_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 38,
@@ -408,7 +499,10 @@
       "ShowInEditor": true,
       "Name": "Flower 2 B",
       "Prefab": "Flower2_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 39,
@@ -418,7 +512,10 @@
       "ShowInEditor": true,
       "Name": "Flower 2 C",
       "Prefab": "Flower2_c",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 40,
@@ -428,7 +525,10 @@
       "ShowInEditor": true,
       "Name": "Flower 2 D",
       "Prefab": "Flower2_d",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 41,
@@ -438,7 +538,10 @@
       "ShowInEditor": true,
       "Name": "Flower 3 A",
       "Prefab": "Flower3_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 42,
@@ -448,7 +551,10 @@
       "ShowInEditor": true,
       "Name": "Flower 3 b",
       "Prefab": "Flower3_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 43,
@@ -458,7 +564,10 @@
       "ShowInEditor": true,
       "Name": "Flower 3 c",
       "Prefab": "Flower3_c",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 44,
@@ -468,7 +577,10 @@
       "ShowInEditor": true,
       "Name": "Flower 3 e",
       "Prefab": "Flower3_e",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 45,
@@ -478,7 +590,10 @@
       "ShowInEditor": true,
       "Name": "Flower 3 f",
       "Prefab": "Flower3_f",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 46,
@@ -488,7 +603,10 @@
       "ShowInEditor": true,
       "Name": "Flower 4 A",
       "Prefab": "Flower4_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 47,
@@ -498,7 +616,10 @@
       "ShowInEditor": true,
       "Name": "Flower 4 b",
       "Prefab": "Flower4_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 48,
@@ -508,7 +629,10 @@
       "ShowInEditor": true,
       "Name": "Flower 4 c",
       "Prefab": "Flower4_c",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 49,
@@ -518,7 +642,10 @@
       "ShowInEditor": true,
       "Name": "Flower 4 e",
       "Prefab": "Flower4_e",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 50,
@@ -528,7 +655,10 @@
       "ShowInEditor": true,
       "Name": "Flower 5 A",
       "Prefab": "Flower5_a",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 51,
@@ -538,7 +668,10 @@
       "ShowInEditor": true,
       "Name": "Flower 5 b",
       "Prefab": "Flower5_b",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 52,
@@ -549,7 +682,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock4",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 53,
@@ -560,7 +696,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock5",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 54,
@@ -571,7 +710,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock6",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 55,
@@ -582,7 +724,10 @@
       "Name": "Rock Medium",
       "Prefab": "Rock7",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 56,
@@ -641,7 +786,10 @@
       "Name": "Rock Large",
       "Prefab": "Rock8",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 60,
@@ -650,7 +798,10 @@
       "Height": 1,
       "ShowInEditor": true,
       "Name": "Crystal Dark",
-      "Prefab": "CrystalDark"
+      "Prefab": "CrystalDark",
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 61,
@@ -659,7 +810,10 @@
       "Height": 1,
       "ShowInEditor": true,
       "Name": "Crystal Light",
-      "Prefab": "CrystalLight"
+      "Prefab": "CrystalLight",
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 62,
@@ -671,7 +825,8 @@
       "Prefab": "Crate",
       "RotatableX": true,
       "AvailableBehaviours": [
-        "ContainerProperties"
+        "ContainerProperties",
+        "MoveBehaviourProperties"
       ],
       "DefaultBehaviours": [
         {
@@ -695,7 +850,8 @@
       "Name": "Trigger Zone",
       "Prefab": "TriggerZone",
       "AvailableBehaviours": [
-        "TriggerZoneProperties"
+        "TriggerZoneProperties",
+        "MoveBehaviourProperties"
       ],
       "DefaultBehaviours": [
         {
@@ -726,7 +882,10 @@
       "Name": "Rock Small",
       "Prefab": "Rock9",
       "RotatableX": true,
-      "RotatableY": true
+      "RotatableY": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 66,
@@ -736,7 +895,10 @@
       "ShowInEditor": true,
       "Name": "Board Platform",
       "Prefab": "BoardPlatform",
-      "RotatableX": false
+      "RotatableX": false,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 67,
@@ -746,7 +908,10 @@
       "ShowInEditor": true,
       "Name": "Mushroom Cap",
       "Prefab": "MushroomCap",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 68,
@@ -756,7 +921,10 @@
       "ShowInEditor": true,
       "Name": "Mushroom Stem 1",
       "Prefab": "MushroomStem1",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 69,
@@ -766,7 +934,10 @@
       "ShowInEditor": true,
       "Name": "Mushroom Stem 2",
       "Prefab": "MushroomStem2",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 70,
@@ -785,7 +956,10 @@
       "ShowInEditor": true,
       "Name": "Torch",
       "Prefab": "Torch",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 72,
@@ -796,7 +970,10 @@
       "AngleLimit": 90,
       "Name": "Spikes Horizontal",
       "Prefab": "SpikesHorizontal",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 73,
@@ -807,7 +984,10 @@
       "AngleLimit": 90,
       "Name": "Spikes Vertical",
       "Prefab": "SpikesVertical",
-      "RotatableX": true
+      "RotatableX": true,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 74,
@@ -825,7 +1005,10 @@
       "Height": 1,
       "ShowInEditor": true,
       "Name": "Mushrooms 1",
-      "Prefab": "SmallMushrooms1"
+      "Prefab": "SmallMushrooms1",
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 76,
@@ -834,7 +1017,10 @@
       "Height": 1,
       "ShowInEditor": true,
       "Name": "Mushrooms 2",
-      "Prefab": "SmallMushrooms2"
+      "Prefab": "SmallMushrooms2",
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 77,
@@ -845,7 +1031,10 @@
       "Name": "Board Bridge",
       "Prefab": "BoardBridge",
       "RotatableX": true,
-      "AngleLimit": 90
+      "AngleLimit": 90,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 78,
@@ -856,7 +1045,10 @@
       "Name": "Board Bridge Pillars",
       "Prefab": "BoardBridgePillars",
       "RotatableX": true,
-      "AngleLimit": 90
+      "AngleLimit": 90,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 79,
@@ -867,7 +1059,10 @@
       "Name": "Flower Vines",
       "Prefab": "FlowerVines",
       "RotatableX": true,
-      "AngleLimit": 90
+      "AngleLimit": 90,
+      "AvailableBehaviours": [
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 90,
@@ -899,7 +1094,8 @@
       "Name": "Event Zone",
       "Prefab": "EventZone",
       "AvailableBehaviours": [
-        "ItemTriggerProperties"
+        "ItemTriggerProperties",
+        "MoveBehaviourProperties"
       ]
     },
     {
@@ -913,7 +1109,8 @@
       "Prefab": "SpikeGate",
       "RotatableX": true,
       "AvailableBehaviours": [
-        "ActivatableProperties"
+        "ActivatableProperties",
+        "MoveBehaviourProperties"
       ]
     },
     {
@@ -927,7 +1124,8 @@
       "Prefab": "SpikeGate2",
       "RotatableX": true,
       "AvailableBehaviours": [
-        "ActivatableProperties"
+        "ActivatableProperties",
+        "MoveBehaviourProperties"
       ]
     }
   ]
