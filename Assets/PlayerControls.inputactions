@@ -763,15 +763,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "OpenBehaviourMenu2",
-                    "type": "Button",
-                    "id": "1e7f3070-6630-4432-89a1-0afc5d1c7914",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1261,23 +1252,23 @@
                 },
                 {
                     "name": "",
+                    "id": "4a8d5e8c-e7ad-4b3a-a04e-eee56760b932",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "63fcff15-e74e-4fee-8984-9a3c16166351",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "MouseScroll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3499e744-49ed-4b4c-99fc-d412bcefa22e",
-                    "path": "<Keyboard>/b",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "OpenBehaviourMenu2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

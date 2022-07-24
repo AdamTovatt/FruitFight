@@ -785,15 +785,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""OpenBehaviourMenu2"",
-                    ""type"": ""Button"",
-                    ""id"": ""1e7f3070-6630-4432-89a1-0afc5d1c7914"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1283,23 +1274,23 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""4a8d5e8c-e7ad-4b3a-a04e-eee56760b932"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""63fcff15-e74e-4fee-8984-9a3c16166351"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""MouseScroll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3499e744-49ed-4b4c-99fc-d412bcefa22e"",
-                    ""path"": ""<Keyboard>/b"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""OpenBehaviourMenu2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1372,7 +1363,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_LevelEditor_Grassify = m_LevelEditor.FindAction("Grassify", throwIfNotFound: true);
         m_LevelEditor_RightClick = m_LevelEditor.FindAction("RightClick", throwIfNotFound: true);
         m_LevelEditor_MouseScroll = m_LevelEditor.FindAction("MouseScroll", throwIfNotFound: true);
-        m_LevelEditor_OpenBehaviourMenu2 = m_LevelEditor.FindAction("OpenBehaviourMenu2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1617,7 +1607,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_LevelEditor_Grassify;
     private readonly InputAction m_LevelEditor_RightClick;
     private readonly InputAction m_LevelEditor_MouseScroll;
-    private readonly InputAction m_LevelEditor_OpenBehaviourMenu2;
     public struct LevelEditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -1637,7 +1626,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Grassify => m_Wrapper.m_LevelEditor_Grassify;
         public InputAction @RightClick => m_Wrapper.m_LevelEditor_RightClick;
         public InputAction @MouseScroll => m_Wrapper.m_LevelEditor_MouseScroll;
-        public InputAction @OpenBehaviourMenu2 => m_Wrapper.m_LevelEditor_OpenBehaviourMenu2;
         public InputActionMap Get() { return m_Wrapper.m_LevelEditor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1692,9 +1680,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @MouseScroll.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
                 @MouseScroll.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
                 @MouseScroll.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnMouseScroll;
-                @OpenBehaviourMenu2.started -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnOpenBehaviourMenu2;
-                @OpenBehaviourMenu2.performed -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnOpenBehaviourMenu2;
-                @OpenBehaviourMenu2.canceled -= m_Wrapper.m_LevelEditorActionsCallbackInterface.OnOpenBehaviourMenu2;
             }
             m_Wrapper.m_LevelEditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -1744,9 +1729,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @MouseScroll.started += instance.OnMouseScroll;
                 @MouseScroll.performed += instance.OnMouseScroll;
                 @MouseScroll.canceled += instance.OnMouseScroll;
-                @OpenBehaviourMenu2.started += instance.OnOpenBehaviourMenu2;
-                @OpenBehaviourMenu2.performed += instance.OnOpenBehaviourMenu2;
-                @OpenBehaviourMenu2.canceled += instance.OnOpenBehaviourMenu2;
             }
         }
     }
@@ -1807,6 +1789,5 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnGrassify(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
         void OnMouseScroll(InputAction.CallbackContext context);
-        void OnOpenBehaviourMenu2(InputAction.CallbackContext context);
     }
 }

@@ -594,7 +594,6 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.MouseWheel.canceled += editorCamera.ScrollWheelUp;
         input.LevelEditor.Grassify.performed += Grassify;
         input.LevelEditor.MouseScroll.performed += MouseScroll;
-        input.LevelEditor.OpenBehaviourMenu2.performed += OpenBehaviourMenu2;
     }
 
     public void RemoveInputEventListeners()
@@ -621,7 +620,6 @@ public class WorldEditor : MonoBehaviour
         input.LevelEditor.ToggleObjectRotation.performed -= ToggleRotateObject;
         input.LevelEditor.Grassify.performed -= Grassify;
         input.LevelEditor.MouseScroll.performed -= MouseScroll;
-        input.LevelEditor.OpenBehaviourMenu2.performed -= OpenBehaviourMenu2;
     }
 
     public void ExitLevelTest()
@@ -866,20 +864,6 @@ public class WorldEditor : MonoBehaviour
         Builder.BuildWorld(CurrentWorld);
     }
 
-    private void OpenBehaviourMenu2(InputAction.CallbackContext context)
-    {
-        if (controlsDisabled || IsTestingLevel)
-            return;
-
-        Block block = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList().FirstOrDefault();
-
-        if (block == null)
-            return;
-
-        controlsDisabled = true;
-        WorldEditorUi.Instance.OpenBehaviourMenu2(block);
-    }
-
     private void OpenBehaviourMenu(InputAction.CallbackContext context)
     {
         if (controlsDisabled || IsTestingLevel)
@@ -891,7 +875,7 @@ public class WorldEditor : MonoBehaviour
             return;
 
         controlsDisabled = true;
-        WorldEditorUi.Instance.OpenBehaviourMenu(block);
+        WorldEditorUi.Instance.OpenBehaviourMenu2(block);
     }
 
     private IEnumerator CaptureScreenShot()
