@@ -181,11 +181,11 @@ public class WorldBuilder : MonoBehaviour
                     block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
                 }
 
-                NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
-                if (notificationBlock != null)
-                {
-                    block.BehaviourProperties.NotificationPropertyCollection = new NotificationPropertyCollection();
-                }
+                //NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
+                //if (notificationBlock != null)
+                //{
+                //    block.BehaviourProperties.NotificationPropertyCollection = new NotificationPropertyCollection();
+                //}
 
                 EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
                 if (eventCamera != null)
@@ -217,13 +217,13 @@ public class WorldBuilder : MonoBehaviour
                 triggerZoneObjectsToBind.Add(triggerZone);
             }
 
-            if (block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
-            {
-                NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
+            //if (block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
+            //{
+            //    NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
 
-                notificationBlock.Init(block, GetBlockInUpcommingWorld(block.BehaviourProperties.NotificationPropertyCollection.ActivatorBlockId));
-                activatedByStateSwitcherObjectsToBind.Add(notificationBlock);
-            }
+            //    notificationBlock.Init(block, GetBlockInUpcommingWorld(block.BehaviourProperties.NotificationPropertyCollection.ActivatorBlockId));
+            //    activatedByStateSwitcherObjectsToBind.Add(notificationBlock);
+            //}
 
             if (block.BehaviourProperties.EventCameraPropertyCollection != null && block.BehaviourProperties.EventCameraPropertyCollection.HasValues) //init event camera
             {

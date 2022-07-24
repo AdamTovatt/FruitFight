@@ -11,7 +11,6 @@ namespace Assets.Scripts.Models
         public DetailColorPropertyCollection DetailColorPropertyCollection;
         public MovePropertyCollection MovePropertyCollection;
         public TriggerZonePropertyCollection TriggerZonePropertyCollection;
-        public NotificationPropertyCollection NotificationPropertyCollection;
         public EventCameraPropertyCollection EventCameraPropertyCollection;
 
         private Dictionary<Type, BehaviourPropertyCollection> properties;
@@ -29,10 +28,6 @@ namespace Assets.Scripts.Models
             else if(behaviour == typeof(TriggerZone))
             {
                 return TriggerZonePropertyCollection;
-            }
-            else if(behaviour == typeof(NotificationBlock))
-            {
-                return NotificationPropertyCollection;
             }
             else if(behaviour == typeof(EventCamera))
             {

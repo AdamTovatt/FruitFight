@@ -304,8 +304,6 @@ public class WorldEditor : MonoBehaviour
 
         if (activatorPickingMenu.GetType() == typeof(MoveMenu))
             ((MoveMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
-        else if (activatorPickingMenu.GetType() == typeof(NotificationMenu))
-            ((NotificationMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else if (activatorPickingMenu.GetType() == typeof(EventCameraMenu))
             ((EventCameraMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else

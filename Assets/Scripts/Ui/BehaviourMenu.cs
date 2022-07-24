@@ -19,7 +19,6 @@ public class BehaviourMenu : MonoBehaviour
     public DetailColorMenu DetailColorMenu;
     public MoveMenu MoveMenu;
     public TriggerZoneMenu TriggerZoneMenu;
-    public NotificationMenu NotificationMenu;
     public EventCameraMenu EventCameraMenu;
     
     public GameObject BehaviourPanel;
@@ -43,7 +42,6 @@ public class BehaviourMenu : MonoBehaviour
         DetailColorButton.onClick.AddListener(() => { DetailColor(); });
         TriggerZoneButton.onClick.AddListener(TriggerZone);
         CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
-        NotificationButton.onClick.AddListener(Notification);
     }
 
     private void TriggerZone()
@@ -59,19 +57,6 @@ public class BehaviourMenu : MonoBehaviour
         TriggerZoneMenu.OnClosed += () =>
         {
             TriggerZoneMenu.gameObject.SetActive(false);
-            CloseButton.Select();
-        };
-    }
-
-    private void Notification()
-    {
-        NotificationMenu.gameObject.SetActive(true);
-        NotificationMenu.SetActivatorButton.Select();
-        NotificationMenu.Show(currentBlock);
-
-        NotificationMenu.OnClosed += () =>
-        {
-            NotificationMenu.gameObject.SetActive(false);
             CloseButton.Select();
         };
     }
@@ -134,7 +119,6 @@ public class BehaviourMenu : MonoBehaviour
     {
         MoveMenu.gameObject.SetActive(false);
         DetailColorMenu.gameObject.SetActive(false);
-        NotificationMenu.gameObject.SetActive(false);
         TriggerZoneMenu.gameObject.SetActive(false);
         EventCameraMenu.gameObject.SetActive(false);
     }

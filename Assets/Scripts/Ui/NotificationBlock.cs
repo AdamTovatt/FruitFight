@@ -1,70 +1,98 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NotificationBlock : ActivatedByStateSwitcher
+public class NotificationBlock : BehaviourBase
 {
+    public class NotificationBlockProperties : BehaviourProperties
+    {
+        [StringInput(Description = "The name of the icon to display, if any", Name = "Icon")]
+        public string IconName { get; set; }
+
+        [StringInput(Name = "Text", Description = "The text to show in the notification")]
+        public string Text { get; set; }
+
+        [IntInput(Name = "Display time", Description = "The time the notification will be displayed for in seconds", MinValue = 0, MaxValue = 10)]
+        public int DisplayTime { get; set; }
+
+        [BoolInput(Name = "Show multiple times", Description = "If the notification should be shown multiple times or not")]
+        public bool ShowMultipleTimes { get; set; }
+
+        [ActivatorInput(Description = "The activator which will activate this movement", Name = "Activator")]
+        public int ActivatorObjectId { get; set; }
+
+        public override Type BehaviourType => typeof(NotificationBlock);
+    }
+
+    [JsonIgnore]
     public AlwaysFaceCamera IconRotator;
+    [JsonIgnore]
     public MeshRenderer IconGraphic;
 
-    public string IconName { get; set; }
-    public string Text { get; set; }
-    public int DisplayTime { get; set; }
-    public bool ShowMultipleTimes { get; set; }
+    public NotificationBlockProperties Properties { get; set; }
 
     private bool hasBeenActivated = false;
+    private StateSwitcher stateSwitcher;
 
-    public override void Activated()
+    public override void Initialize(BehaviourProperties behaviourProperties)
     {
-        if (!hasBeenActivated || ShowMultipleTimes)
+        Properties = (NotificationBlockProperties)behaviourProperties;
+
+        BindEvents();
+    }
+
+    public void ShowNotification()
+    {
+        if (!hasBeenActivated || Properties.ShowMultipleTimes)
         {
             hasBeenActivated = true;
-            AlertCreator.Instance.CreateNotification(Text, DisplayTime, IconName);
+            AlertCreator.Instance.CreateNotification(Properties.Text, Properties.DisplayTime, Properties.IconName);
         }
-    }
-
-    public override void BindStateSwitcher()
-    {
-        if (activatorObject != null && activatorObject.Instance != null)
-        {
-            stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
-            if (stateSwitcher != null)
-            {
-                stateSwitcher.OnActivated += Activated;
-                stateSwitcher.OnDeactivated += Deactivated;
-            }
-            else
-            {
-                Debug.Log("StateSwitcher was null: " + transform.name);
-            }
-        }
-    }
-
-    public override void Deactivated()
-    {
-        //notifications don't really do anything when deactivated
-    }
-
-    public override void Init(Block thisBlock, Block activatorBlock)
-    {
-        block = thisBlock;
-        activatorObject = activatorBlock;
     }
 
     private void Start()
     {
         if (!WorldBuilder.IsInEditor)
         {
-            IconRotator.DeActivate();
+            if (IconRotator != null)
+                IconRotator.DeActivate();
         }
     }
 
     private void OnDestroy()
     {
+        UnBindEvents();
+    }
+
+    private void BindEvents()
+    {
+        WorldBuilder.Instance.OnFinishedPlacingBlocks += WorldWasBuilt;
+    }
+
+    private void UnBindEvents()
+    {
+        WorldBuilder.Instance.OnFinishedPlacingBlocks -= WorldWasBuilt;
+
         if (stateSwitcher != null)
         {
-            stateSwitcher.OnActivated -= Activated;
-            stateSwitcher.OnDeactivated -= Deactivated;
+            stateSwitcher.OnActivated -= ShowNotification;
+        }
+    }
+
+    private void WorldWasBuilt()
+    {
+        Block activator = WorldBuilder.Instance.GetPlacedBlock(Properties.ActivatorObjectId);
+
+        if (activator != null && activator.Instance != null)
+        {
+            stateSwitcher = activator.Instance.GetComponent<StateSwitcher>();
+
+            if (stateSwitcher != null)
+            {
+                stateSwitcher.OnActivated += ShowNotification;
+            }
         }
     }
 }

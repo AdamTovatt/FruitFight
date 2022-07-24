@@ -27,6 +27,8 @@ public abstract class BehaviourProperties //base class for all second generation
                 return typeof(ChildObject.ChildObjectProperties);
             case "DetailColorProperties":
                 return typeof(DetailColorBehaviour.DetailColorProperties);
+            case "NotificationBlockProperties":
+                return typeof(NotificationBlock.NotificationBlockProperties);
             default:
                 return null;
         }

@@ -696,7 +696,9 @@
       "ShowInEditor": true,
       "Name": "Notification",
       "Prefab": "NotificationBlock",
-      "StartWithPropertyExposer": true
+      "AvailableBehaviours": [
+        "NotificationBlockProperties"
+      ]
     },
     {
       "Id": 65,
