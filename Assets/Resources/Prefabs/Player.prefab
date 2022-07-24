@@ -725,7 +725,7 @@ MonoBehaviour:
   JumpStrength: 6
   DistanceToGround: 0.8
   MovementInputCutoff: 0.2
-  PunchDistance: 0.6
+  PunchDistance: 0.5
   PunchHeight: 0.9
   PunchWidth: 0.15
   PunchSphereRadius: 0.8
