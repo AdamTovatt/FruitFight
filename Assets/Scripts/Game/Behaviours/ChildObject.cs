@@ -48,7 +48,7 @@ public class ChildObject : BehaviourBase
     {
         Block parent = WorldBuilder.Instance.GetPlacedBlock(Properties.ParentObjectId);
 
-        if (parent.Instance != null)
+        if (parent != null && parent.Instance != null)
             gameObject.transform.parent = parent.Instance.transform;
     }
 }

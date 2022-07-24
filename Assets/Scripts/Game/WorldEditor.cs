@@ -999,6 +999,11 @@ public class WorldEditor : MonoBehaviour
             AddedTriggerSubZone(block); //if we were adding a trigger zone we should do a callback to the trigger zone menu now
     }
 
+    public void RebuildCurrentWorld()
+    {
+        Builder.BuildWorld(CurrentWorld);
+    }
+
     private void MoveMarker()
     {
         if (isRotatingObject)

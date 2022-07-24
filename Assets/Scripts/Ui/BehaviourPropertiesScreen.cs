@@ -58,6 +58,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
 
     public void Show(Block block, BehaviourProperties behaviourProperties)
     {
+        WorldEditor.Instance.RebuildCurrentWorld();
         Clean();
         BlockInspectorParent.gameObject.SetActive(false);
         currentBlock = block;
@@ -117,6 +118,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
         BlockInspectorParent.gameObject.SetActive(true);
         BlockInspector.Show(currentBlock);
         gameObject.SetActive(false);
+        WorldEditor.Instance.RebuildCurrentWorld();
     }
 
     private Dictionary<PropertyInfo, BehaviourPropertyInputAttribute> GetPropertyInputs(BehaviourProperties behaviourProperties)

@@ -604,7 +604,11 @@
       "Name": "Sphere Holder",
       "Prefab": "SphereHolder",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer": true
+      "StartWithPropertyExposer": true,
+      "AvailableBehaviours": [
+        "DetailColorProperties",
+        "MoveBehaviourProperties"
+      ]
     },
     {
       "Id": 58,
@@ -615,7 +619,10 @@
       "Name": "Sphere Key",
       "Prefab": "SphereKeySpawner",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer": true
+      "StartWithPropertyExposer": true,
+      "AvailableBehaviours": [
+        "DetailColorProperties"
+      ]
     },
     {
       "Id": 59,

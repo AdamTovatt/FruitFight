@@ -46,4 +46,10 @@ public class DetailColorController : MonoBehaviour
             _renderer.material.SetColor("_EmissionColor", finalColor);
         }
     }
+
+    public void SetColor(DetailColor color)
+    {
+        Color = color;
+        SetTextureFromColor();
+    }
 }
