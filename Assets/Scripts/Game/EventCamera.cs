@@ -1,49 +1,101 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventCamera : ActivatedByStateSwitcher
+public class EventCamera : BehaviourBase
 {
+    public class EventCameraProperties : BehaviourProperties
+    {
+        [ActivatorInput(Name = "Activator", Description = "The thing that should activate this event camera")]
+        public int ActivatorId { get; set; }
+
+        [BoolInput(Name = "Auto-deactivate", Description = "If the camera should deactivate automatically after a delay when it has been activated. This should generally be set to yes")]
+        public bool DeactivateAutomatically { get; set; }
+
+        [FloatInput(Name = "Active time", Description = "The time the camera will remain active for if using auto-deactivate", MinValue = 0, MaxValue = 60)]
+        public float ActiveTime { get; set; }
+
+        [BoolInput(Name = "Multiple activations", Description = "If the camera should be able to be activated multiple times or not")]
+        public bool ActivateMultipleTimes { get; set; }
+
+        [PositionInput(Name = "Target", Description = "The target position. The camera will look at this position")]
+        public Vector3Int TargetPosition { get; set; }
+
+        public override Type BehaviourType => typeof(EventCamera);
+    }
+
     public GameObject EventCameraGraphic;
 
     public Vector3 CameraOverridePosition { get { return EventCameraGraphic.transform.position; } }
     public Quaternion CameraOverrideRotation { get { return EventCameraGraphic.transform.rotation; } }
 
-    public Vector3 TargetPosition { get { return _targetPosition; } set { _targetPosition = value; LookAtTarget(); } }
-    private Vector3 _targetPosition;
-    public bool DeactivateAutomatically { get; set; }
-    public float ActiveTime { get; set; }
-    public bool ActivateMultipleTimes { get; set; }
+    public EventCameraProperties Properties { get; set; }
 
+    private StateSwitcher stateSwitcher;
     private bool hasBeenActivated;
     private bool isActive;
     private float activateTime;
 
-    private void Start()
+    public override void Initialize(BehaviourProperties behaviourProperties)
     {
-        if (TargetPosition != Vector3.zero)
-            LookAtTarget();
+        Properties = (EventCameraProperties)behaviourProperties;
+        BindEvents();
+        LookAtTarget();
     }
 
     private void Update()
     {
-        if (isActive && DeactivateAutomatically)
+        if (isActive)
         {
-            if (Time.time - activateTime > ActiveTime)
+            LookAtTarget();
+
+            if (Properties.DeactivateAutomatically && Time.time - activateTime > Properties.ActiveTime)
             {
                 Deactivated();
             }
         }
     }
 
-    public void LookAtTarget()
+    private void BindEvents()
     {
-        EventCameraGraphic.transform.LookAt(TargetPosition, Vector3.up);
+        WorldBuilder.Instance.OnFinishedPlacingBlocks += WorldWasBuilt;
     }
 
-    public override void Activated()
+    private void UnBindEvents()
     {
-        if (!hasBeenActivated || ActivateMultipleTimes)
+        if (stateSwitcher != null)
+        {
+            stateSwitcher.OnActivated -= Activated;
+            stateSwitcher.OnDeactivated -= Deactivated;
+        }
+
+        WorldBuilder.Instance.OnFinishedPlacingBlocks -= WorldWasBuilt;
+    }
+
+    private void WorldWasBuilt()
+    {
+        Block block = WorldBuilder.Instance.GetPlacedBlock(Properties.ActivatorId);
+
+        if (block != null)
+            stateSwitcher = block.Instance.GetComponent<StateSwitcher>();
+
+        if (stateSwitcher != null)
+        {
+            stateSwitcher.OnActivated += Activated;
+            stateSwitcher.OnDeactivated += Deactivated;
+        }
+    }
+
+    public void LookAtTarget()
+    {
+        if (Properties.TargetPosition != null)
+            EventCameraGraphic.transform.LookAt(Properties.TargetPosition, Vector3.up);
+    }
+
+    private void Activated()
+    {
+        if (!hasBeenActivated || Properties.ActivateMultipleTimes)
         {
             isActive = true;
             hasBeenActivated = true;
@@ -54,24 +106,7 @@ public class EventCamera : ActivatedByStateSwitcher
         }
     }
 
-    public override void BindStateSwitcher()
-    {
-        if (activatorObject != null && activatorObject.Instance != null)
-        {
-            stateSwitcher = activatorObject.Instance.GetComponent<StateSwitcher>();
-            if (stateSwitcher != null)
-            {
-                stateSwitcher.OnActivated += Activated;
-                stateSwitcher.OnDeactivated += Deactivated;
-            }
-            else
-            {
-                Debug.Log("StateSwitcher was null: " + transform.name);
-            }
-        }
-    }
-
-    public override void Deactivated()
+    private void Deactivated()
     {
         if (isActive)
         {
@@ -81,18 +116,8 @@ public class EventCamera : ActivatedByStateSwitcher
         }
     }
 
-    public override void Init(Block thisBlock, Block activatorBlock)
-    {
-        block = thisBlock;
-        activatorObject = activatorBlock;
-    }
-
     private void OnDestroy()
     {
-        if (stateSwitcher != null)
-        {
-            stateSwitcher.OnActivated -= Activated;
-            stateSwitcher.OnDeactivated -= Deactivated;
-        }
+        UnBindEvents();
     }
 }

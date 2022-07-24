@@ -187,11 +187,11 @@ public class WorldBuilder : MonoBehaviour
                 //    block.BehaviourProperties.NotificationPropertyCollection = new NotificationPropertyCollection();
                 //}
 
-                EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
-                if (eventCamera != null)
-                {
-                    block.BehaviourProperties.EventCameraPropertyCollection = new EventCameraPropertyCollection();
-                }
+                //EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
+                //if (eventCamera != null)
+                //{
+                //    block.BehaviourProperties.EventCameraPropertyCollection = new EventCameraPropertyCollection();
+                //}
             }
 
             if (block.BehaviourProperties.MovePropertyCollection != null && block.BehaviourProperties.MovePropertyCollection.HasValues) //init move
@@ -225,13 +225,13 @@ public class WorldBuilder : MonoBehaviour
             //    activatedByStateSwitcherObjectsToBind.Add(notificationBlock);
             //}
 
-            if (block.BehaviourProperties.EventCameraPropertyCollection != null && block.BehaviourProperties.EventCameraPropertyCollection.HasValues) //init event camera
-            {
-                EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
+            //if (block.BehaviourProperties.EventCameraPropertyCollection != null && block.BehaviourProperties.EventCameraPropertyCollection.HasValues) //init event camera
+            //{
+            //    EventCamera eventCamera = block.Instance.GetComponent<EventCamera>();
 
-                eventCamera.Init(block, GetBlockInUpcommingWorld(block.BehaviourProperties.EventCameraPropertyCollection.ActivatorBlockId));
-                activatedByStateSwitcherObjectsToBind.Add(eventCamera);
-            }
+            //    eventCamera.Init(block, GetBlockInUpcommingWorld(block.BehaviourProperties.EventCameraPropertyCollection.ActivatorBlockId));
+            //    activatedByStateSwitcherObjectsToBind.Add(eventCamera);
+            //}
 
             propertyExposer.WasLoaded(block.BehaviourProperties);
         }

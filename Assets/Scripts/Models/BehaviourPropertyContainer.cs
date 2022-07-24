@@ -10,7 +10,6 @@ namespace Assets.Scripts.Models
     {
         public DetailColorPropertyCollection DetailColorPropertyCollection;
         public MovePropertyCollection MovePropertyCollection;
-        public EventCameraPropertyCollection EventCameraPropertyCollection;
 
         private Dictionary<Type, BehaviourPropertyCollection> properties;
 
@@ -23,10 +22,6 @@ namespace Assets.Scripts.Models
             else if(behaviour == typeof(MoveOnTrigger))
             {
                 return MovePropertyCollection;
-            }
-            else if(behaviour == typeof(EventCamera))
-            {
-                return EventCameraPropertyCollection;
             }
             else
                 throw new Exception("Unsupported behaviour type");

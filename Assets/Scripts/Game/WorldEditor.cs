@@ -201,8 +201,6 @@ public class WorldEditor : MonoBehaviour
 
         if (activatorPickingMenu.GetType() == typeof(MoveMenu))
             ((MoveMenu)activatorPickingMenu).PositionWasPicked(position);
-        else if (activatorPickingMenu.GetType() == typeof(EventCameraMenu))
-            ((EventCameraMenu)activatorPickingMenu).PositionWasPicked(position);
         else
             throw new Exception("Unsupported menu type for picking position");
 
@@ -304,8 +302,6 @@ public class WorldEditor : MonoBehaviour
 
         if (activatorPickingMenu.GetType() == typeof(MoveMenu))
             ((MoveMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
-        else if (activatorPickingMenu.GetType() == typeof(EventCameraMenu))
-            ((EventCameraMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
         else
             Debug.LogError(activatorPickingMenu.GetType().ToString() + " is not supported as a activator picking menu");
 

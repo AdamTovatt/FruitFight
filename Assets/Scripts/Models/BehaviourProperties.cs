@@ -31,6 +31,8 @@ public abstract class BehaviourProperties //base class for all second generation
                 return typeof(NotificationBlock.NotificationBlockProperties);
             case "TriggerZoneProperties":
                 return typeof(TriggerZone.TriggerZoneProperties);
+            case "EventCameraProperties":
+                return typeof(EventCamera.EventCameraProperties);
             default:
                 return null;
         }

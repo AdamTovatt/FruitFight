@@ -94,19 +94,19 @@ public class TriggerZone : BehaviourBase
 
     private void BindEvents()
     {
-        WorldEditor.Instance.Builder.OnFinishedPlacingBlocks += WorldWasBuilt;
+        WorldBuilder.Instance.OnFinishedPlacingBlocks += WorldWasBuilt;
     }
 
     private void UnBindEvents()
     {
-        WorldEditor.Instance.Builder.OnFinishedPlacingBlocks -= WorldWasBuilt;
+        WorldBuilder.Instance.OnFinishedPlacingBlocks -= WorldWasBuilt;
     }
 
     private void WorldWasBuilt()
     {
         if (!Properties.IsParent)
         {
-            Block parentBlock = WorldEditor.Instance.Builder.GetPlacedBlock(Properties.ParentId);
+            Block parentBlock = WorldBuilder.Instance.GetPlacedBlock(Properties.ParentId);
 
             if (parentBlock != null)
             {

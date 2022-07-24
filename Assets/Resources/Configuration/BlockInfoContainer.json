@@ -593,7 +593,17 @@
       "Name": "Camera",
       "Prefab": "Camera",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer": true
+      "AvailableBehaviours": [
+        "EventCameraProperties",
+        "MoveBehaviourProperties"
+      ],
+      "DefaultBehaviours": [
+        {
+          "Type": "EventCameraProperties",
+          "DeactivateAutomatically": true,
+          "ActiveTime": 4
+        }
+      ]
     },
     {
       "Id": 57,
@@ -604,7 +614,6 @@
       "Name": "Sphere Holder",
       "Prefab": "SphereHolder",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer": true,
       "AvailableBehaviours": [
         "DetailColorProperties",
         "MoveBehaviourProperties"
@@ -619,7 +628,6 @@
       "Name": "Sphere Key",
       "Prefab": "SphereKeySpawner",
       "EdgePrefabs": [],
-      "StartWithPropertyExposer": true,
       "AvailableBehaviours": [
         "DetailColorProperties"
       ]
@@ -686,7 +694,6 @@
       "ShowInEditor": true,
       "Name": "Trigger Zone",
       "Prefab": "TriggerZone",
-      "StartWithPropertyExposer": true,
       "AvailableBehaviours": [
         "TriggerZoneProperties"
       ],

@@ -18,7 +18,6 @@ public class BehaviourMenu : MonoBehaviour
 
     public DetailColorMenu DetailColorMenu;
     public MoveMenu MoveMenu;
-    public EventCameraMenu EventCameraMenu;
     
     public GameObject BehaviourPanel;
 
@@ -81,26 +80,10 @@ public class BehaviourMenu : MonoBehaviour
         };
     }
 
-    public void EventCamera()
-    {
-        BehaviourPanel.gameObject.SetActive(false);
-
-        EventCameraMenu.gameObject.SetActive(true);
-        EventCameraMenu.Show(currentBlock);
-
-        EventCameraMenu.OnClosed += () =>
-        {
-            WorldEditorUi.Instance.CloseBehaviourMenu();
-            EventCameraMenu.gameObject.SetActive(false);
-            BehaviourPanel.gameObject.SetActive(true);
-        };
-    }
-
     public void Hide()
     {
         MoveMenu.gameObject.SetActive(false);
         DetailColorMenu.gameObject.SetActive(false);
-        EventCameraMenu.gameObject.SetActive(false);
     }
 
     public void Show(Block block)
@@ -113,12 +96,6 @@ public class BehaviourMenu : MonoBehaviour
         currentTriggerZone = block.Instance.GetComponent<TriggerZone>();
         currentNotificationBlock = block.Instance.GetComponent<NotificationBlock>();
         currentEventCamera = block.Instance.GetComponent<EventCamera>();
-
-        if(currentEventCamera != null) //if this is an event camera we will show the event camera menu straight away
-        {
-            EventCamera();
-            return;
-        }
 
         if (currentDetailColor == null)
             DetailColorButtonText.color = Color.grey;
