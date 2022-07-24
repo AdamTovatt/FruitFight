@@ -18,7 +18,6 @@ public class BehaviourMenu : MonoBehaviour
 
     public DetailColorMenu DetailColorMenu;
     public MoveMenu MoveMenu;
-    public TriggerZoneMenu TriggerZoneMenu;
     public EventCameraMenu EventCameraMenu;
     
     public GameObject BehaviourPanel;
@@ -40,25 +39,7 @@ public class BehaviourMenu : MonoBehaviour
     {
         MoveButton.onClick.AddListener(() => { Move(); });
         DetailColorButton.onClick.AddListener(() => { DetailColor(); });
-        TriggerZoneButton.onClick.AddListener(TriggerZone);
         CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
-    }
-
-    private void TriggerZone()
-    {
-        currentTriggerZone = currentBlock.Instance.GetComponent<TriggerZone>();
-        if (currentTriggerZone == null || !currentTriggerZone.IsParent)
-            return;
-
-        TriggerZoneMenu.gameObject.SetActive(true);
-        TriggerZoneMenu.AddSubZoneButton.Select();
-        TriggerZoneMenu.Show(currentBlock);
-
-        TriggerZoneMenu.OnClosed += () =>
-        {
-            TriggerZoneMenu.gameObject.SetActive(false);
-            CloseButton.Select();
-        };
     }
 
     private void DetailColor()
@@ -119,7 +100,6 @@ public class BehaviourMenu : MonoBehaviour
     {
         MoveMenu.gameObject.SetActive(false);
         DetailColorMenu.gameObject.SetActive(false);
-        TriggerZoneMenu.gameObject.SetActive(false);
         EventCameraMenu.gameObject.SetActive(false);
     }
 
@@ -144,11 +124,6 @@ public class BehaviourMenu : MonoBehaviour
             DetailColorButtonText.color = Color.grey;
         else
             DetailColorButtonText.color = enabledColor;
-
-        if (currentTriggerZone == null || !currentTriggerZone.IsParent)
-            TriggerZoneButtonText.color = Color.grey;
-        else
-            TriggerZoneButtonText.color = enabledColor;
 
         if (currentNotificationBlock == null)
             NotificationButtonText.color = Color.grey;

@@ -686,7 +686,17 @@
       "ShowInEditor": true,
       "Name": "Trigger Zone",
       "Prefab": "TriggerZone",
-      "StartWithPropertyExposer": true
+      "StartWithPropertyExposer": true,
+      "AvailableBehaviours": [
+        "TriggerZoneProperties"
+      ],
+      "DefaultBehaviours": [
+        {
+          "Type": "TriggerZoneProperties",
+          "IsParent": true,
+          "ParentId": 0
+        }
+      ]
     },
     {
       "Id": 64,

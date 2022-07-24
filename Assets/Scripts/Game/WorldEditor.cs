@@ -39,6 +39,9 @@ public class WorldEditor : MonoBehaviour
     public delegate void PositionWasPicked(Vector3Int position);
     public event PositionWasPicked OnPositionWasPicked;
 
+    public delegate void TriggerZoneWasPicked(Block block);
+    public event TriggerZoneWasPicked OnTriggerZoneWasPicked;
+
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
 
@@ -228,10 +231,8 @@ public class WorldEditor : MonoBehaviour
         OnPositionWasPicked = null;
     }
 
-    public void AddTriggerSubZone(TriggerZoneMenu menu, Block block)
+    public void AddTriggerSubZone(Block block)
     {
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
-        menu.gameObject.SetActive(false);
         WorldEditorUi.Instance.DisableUiInput();
         EnableControls();
         SetSelectedBlock(block.BlockInfoId);
@@ -240,15 +241,14 @@ public class WorldEditor : MonoBehaviour
         currentTriggerZonePropertiesBlock = block;
     }
 
-    public void AddedTriggerSubZone(Block triggerSubZone)
+    private void AddedTriggerSubZone(Block triggerSubZone)
     {
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
         WorldEditorUi.Instance.EnableUiInput();
-        WorldEditorUi.Instance.BehaviourMenu.TriggerZoneMenu.gameObject.SetActive(true);
-        WorldEditorUi.Instance.BehaviourMenu.TriggerZoneMenu.SubZoneWasAdded(triggerSubZone);
         SetMarkerPositionToBlock(currentTriggerZonePropertiesBlock);
         isAddingTriggerSubZone = false;
         controlsDisabled = true;
+        OnTriggerZoneWasPicked?.Invoke(triggerSubZone);
+        OnTriggerZoneWasPicked = null;
     }
 
     public void CaptureImage()
@@ -969,11 +969,8 @@ public class WorldEditor : MonoBehaviour
 
         if (isAddingTriggerSubZone) //we should set this trigger sub zone to not be a parent
         {
-            block.BehaviourProperties = new BehaviourPropertyContainer();
-            block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
-            block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = false; //should be false by default but why not set it again
-            block.BehaviourProperties.TriggerZonePropertyCollection.ParentId = currentTriggerZonePropertiesBlock.Id;
-            block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
+            TriggerZone.TriggerZoneProperties properties = new TriggerZone.TriggerZoneProperties(currentTriggerZonePropertiesBlock.Id);
+            block.BehaviourProperties2.Add(properties);
         }
 
         CurrentWorld.Add(block);

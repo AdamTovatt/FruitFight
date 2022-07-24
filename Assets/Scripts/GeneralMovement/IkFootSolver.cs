@@ -170,7 +170,6 @@ public class IkFootSolver : MonoBehaviour
             return result;
         }
 
-        Debug.LogWarning("No ground position found for next footstep");
         return currentGroundedPosition == null ? new GroundedPositionInformation() { Position = character.transform.position + (Vector3.up * FootJumpPositionHeight) + (character.right * appliedFootSpacing) } : currentGroundedPosition;
     }
 

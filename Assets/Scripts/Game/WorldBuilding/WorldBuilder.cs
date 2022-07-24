@@ -173,13 +173,13 @@ public class WorldBuilder : MonoBehaviour
                     block.BehaviourProperties.DetailColorPropertyCollection = new DetailColorPropertyCollection();
                 }
 
-                TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
-                if (triggerZone != null)
-                {
-                    block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
-                    block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
-                    block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
-                }
+                //TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
+                //if (triggerZone != null)
+                //{
+                //    block.BehaviourProperties.TriggerZonePropertyCollection = new TriggerZonePropertyCollection();
+                //    block.BehaviourProperties.TriggerZonePropertyCollection.IsParent = true;
+                //    block.BehaviourProperties.TriggerZonePropertyCollection.HasValues = true;
+                //}
 
                 //NotificationBlock notificationBlock = block.Instance.GetComponent<NotificationBlock>();
                 //if (notificationBlock != null)
@@ -207,15 +207,15 @@ public class WorldBuilder : MonoBehaviour
                 block.MakeEnforceEdges();
             }
 
-            if (block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues) //init trigger zone
-            {
-                TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
+            //if (block.BehaviourProperties.TriggerZonePropertyCollection != null && block.BehaviourProperties.TriggerZonePropertyCollection.HasValues) //init trigger zone
+            //{
+            //    TriggerZone triggerZone = block.Instance.GetComponent<TriggerZone>();
 
-                triggerZone.Init(block.BehaviourProperties.TriggerZonePropertyCollection.IsParent, GetBlockInUpcommingWorld(block.BehaviourProperties.TriggerZonePropertyCollection.ParentId));
-                propertyExposer.Behaviours.Add(triggerZone);
+            //    triggerZone.Init(block.BehaviourProperties.TriggerZonePropertyCollection.IsParent, GetBlockInUpcommingWorld(block.BehaviourProperties.TriggerZonePropertyCollection.ParentId));
+            //    propertyExposer.Behaviours.Add(triggerZone);
 
-                triggerZoneObjectsToBind.Add(triggerZone);
-            }
+            //    triggerZoneObjectsToBind.Add(triggerZone);
+            //}
 
             //if (block.BehaviourProperties.NotificationPropertyCollection != null && block.BehaviourProperties.NotificationPropertyCollection.HasValues) //init notifications
             //{
@@ -301,7 +301,15 @@ public class WorldBuilder : MonoBehaviour
     {
         foreach (BehaviourProperties behaviourProperties in behaviourPropertiesList) //second generation behaviour properties
         {
-            BehaviourBase behaviour = (BehaviourBase)gameObject.AddComponent(behaviourProperties.BehaviourType);
+            BehaviourBase behaviour;
+
+            Component component = gameObject.GetComponent(behaviourProperties.BehaviourType); //try to get existing behaviour
+
+            if (component != null)
+                behaviour = (BehaviourBase)component; //behaviour already exists
+            else
+                behaviour = (BehaviourBase)gameObject.AddComponent(behaviourProperties.BehaviourType); //behaviour doesn't exist
+
             behaviour.Initialize(behaviourProperties);
         }
     }
@@ -386,11 +394,6 @@ public class WorldBuilder : MonoBehaviour
                     Debug.LogError("Missing BlockInformationHolder on MoveOnTrigger object");
                 }
             }
-        }
-
-        foreach (TriggerZone zone in triggerZoneObjectsToBind)
-        {
-            zone.Bind();
         }
     }
 

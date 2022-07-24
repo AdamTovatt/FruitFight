@@ -52,3 +52,8 @@ public class ActivatorInputAttribute : BehaviourPropertyInputAttribute
 public class PositionInputAttribute : BehaviourPropertyInputAttribute
 {
 }
+
+[AttributeUsage(AttributeTargets.Property)]
+public class SubZoneInputAttribute : BehaviourPropertyInputAttribute
+{
+}

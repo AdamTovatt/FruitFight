@@ -9,6 +9,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
 {
     public TextMeshProUGUI TitleText;
     public Transform InputContainer;
+
     public GameObject StringInputPrefab;
     public GameObject IntInputPrefab;
     public GameObject FloatInputPrefab;
@@ -16,6 +17,8 @@ public class BehaviourPropertiesScreen : MonoBehaviour
     public GameObject EnumInputPrefab;
     public GameObject ActivatorInputPrefab;
     public GameObject PositionInputPrefab;
+    public GameObject SubZoneInputPrefab;
+
     public Button BackButton;
     public BlockInspector BlockInspector;
     public Transform BlockInspectorParent;
@@ -105,6 +108,11 @@ public class BehaviourPropertiesScreen : MonoBehaviour
                     BehaviourPositionInput behaviourPositionInput = Instantiate(PositionInputPrefab, InputContainer).GetComponent<BehaviourPositionInput>();
                     behaviourPositionInput.Initialize(positionInput, key, currentProperties, currentBlock, this);
                     previousInputs.Add(behaviourPositionInput.gameObject);
+                    break;
+                case SubZoneInputAttribute subZoneInput:
+                    BehaviourSubZoneInput behaviourSubZoneInput = Instantiate(SubZoneInputPrefab, InputContainer).GetComponent<BehaviourSubZoneInput>();
+                    behaviourSubZoneInput.Initialize(subZoneInput, key, currentProperties, currentBlock, this);
+                    previousInputs.Add(behaviourSubZoneInput.gameObject);
                     break;
                 default:
                     Debug.Log("We have a type that is not yet supported: " + inputs[key].GetType());
