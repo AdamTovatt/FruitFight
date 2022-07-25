@@ -190,13 +190,16 @@ public class JellyBean : MovingCharacter
 
                 foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
                 {
-                    float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
-                    if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
+                    if (player != null)
                     {
-                        if (closestPlayerDistance > distanceSquared)
+                        float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+                        if (distanceSquared < DiscoveryRadius * DiscoveryRadius)
                         {
-                            closestPlayer = player;
-                            closestPlayerDistance = distanceSquared;
+                            if (closestPlayerDistance > distanceSquared)
+                            {
+                                closestPlayer = player;
+                                closestPlayerDistance = distanceSquared;
+                            }
                         }
                     }
                 }

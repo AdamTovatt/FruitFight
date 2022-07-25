@@ -55,6 +55,8 @@ public class Player : NetworkBehaviour
 
     private List<float> previousDeathTimes = new List<float>();
 
+    private GroundedPositionInformation lastGroundedPosition;
+
     private void Start()
     {
         InvokeJellyBeansUpdated(JellyBeans);
@@ -101,9 +103,6 @@ public class Player : NetworkBehaviour
             if (previousDeathTimes.Count > 5)
                 previousDeathTimes.RemoveAt(0);
 
-            //if (previousDeathTimes.Count >= 5 && (previousDeathTimes.Max() - previousDeathTimes.Min()) - PlayerRespawnTime * 5 < 10) //if we have died 5 times within 10 seconds
-            //{
-
             if (Movement.PreviousGroundedPositions.Keys.Count > 1)
             {
                 Movement.PreviousGroundedPositions.Remove(Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key);
@@ -114,15 +113,6 @@ public class Player : NetworkBehaviour
             {
                 groundedPosition = Movement.PreviousGroundedPositions[Movement.PreviousGroundedPositions.OrderByDescending(x => x.Value.Time).First().Key];
             }
-
-            //}
-            //else
-            //{
-            //    if (causeOfDeath == CauseOfDeath.Water)
-            //    {
-            //        newPosition = Movement.LastGroundedPosition.Position;
-            //    }
-            //}
 
             Movement.ControlsEnabled = false;
 
@@ -137,10 +127,9 @@ public class Player : NetworkBehaviour
 
             MeshReplacer.ReplaceMesh(causeOfDeath != CauseOfDeath.Water);
 
-            RemoveItem(AbsorbableItemType.JellyBean, JellyBeans >= DeathCost ? DeathCost : JellyBeans);
-            RemoveItem(AbsorbableItemType.Coin, Coins >= DeathCost * 2 ? DeathCost * 2 : Coins);
-
-            this.CallWithDelay(() => { Respawn(groundedPosition); }, PlayerRespawnTime);
+            lastGroundedPosition = groundedPosition;
+            GameManager.Instance.PlayerDied(this);
+            //this.CallWithDelay(() => { Respawn(groundedPosition); }, PlayerRespawnTime);
         }
     }
 
@@ -185,6 +174,11 @@ public class Player : NetworkBehaviour
     public void DroppedItem()
     {
         OnDroppedItem?.Invoke();
+    }
+
+    public void Respawn()
+    {
+        Respawn(lastGroundedPosition);
     }
 
     public void Respawn(GroundedPositionInformation groundedPosition)

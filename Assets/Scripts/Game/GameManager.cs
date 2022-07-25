@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     private PlayerInputManager playerInputManager;
     private PlayerControls playerControls;
     private NavMeshSurface navMeshSurface;
+    private Coroutine respawnPlayerCoroutine;
 
     private bool hasInitializedLevel;
 
@@ -39,6 +40,9 @@ public class GameManager : MonoBehaviour
     private Dictionary<Transform, BlockInformationHolder> blockInformationDictionary = new Dictionary<Transform, BlockInformationHolder>();
 
     private DateTime levelStartTime;
+
+    private List<Player> deadPlayers = new List<Player>();
+    private GroundedPositionInformation respawnPosition;
 
     public void Awake()
     {
@@ -170,12 +174,38 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void PlayerDied(Player player)
+    {
+        deadPlayers.Add(player);
+
+        if(deadPlayers.Count == PlayerCharacters.Count) //all players are dead
+        {
+            if(respawnPosition == null)
+            {
+                if(respawnPlayerCoroutine != null)
+                    StopCoroutine(respawnPlayerCoroutine);
+
+                deadPlayers.Clear();
+                CleanLevel();
+                LoadGamePlay();
+                StartLevel();
+            }
+        }
+        else
+        {
+            respawnPlayerCoroutine = this.CallWithDelay(() => { player.Respawn(); respawnPlayerCoroutine = null; }, 3);
+        }
+    }
+
     public void CleanLevel()
     {
         foreach (PlayerMovement player in PlayerCharacters)
         {
             Destroy(player.gameObject);
         }
+
+        PlayerCharacters.Clear();
+        GameUi.Instance.ClearAllPlayerUi();
     }
 
     private void PlayerReadyStatusWasUpdated(bool localPlayer, bool newStatus)

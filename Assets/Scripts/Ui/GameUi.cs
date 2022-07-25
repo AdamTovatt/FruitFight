@@ -149,6 +149,16 @@ public class GameUi : UiManager
         playerInfos.Add(uiPlayerInfo);
     }
 
+    public void ClearAllPlayerUi()
+    {
+        foreach(UiPlayerInfo info in playerInfos)
+        {
+            Destroy(info.gameObject);
+        }
+
+        playerInfos.Clear();
+    }
+
     private void SelectPerformed(InputAction.CallbackContext context)
     {
         if (context.control.ToString().ToLower().Contains("mouse"))
