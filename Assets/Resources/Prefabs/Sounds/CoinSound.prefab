@@ -4916,6 +4916,7 @@ GameObject:
   - component: {fileID: 6921529022183800657}
   - component: {fileID: 727329296033362405}
   - component: {fileID: 6668778767965089494}
+  - component: {fileID: -3456610796047986634}
   m_Layer: 0
   m_Name: CoinSound
   m_TagString: Untagged
@@ -5071,3 +5072,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DelaySeconds: 1
+--- !u!114 &-3456610796047986634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7274938570909421772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: af79d5ed42a61d44ba4c35f1c8fe2540
+  hasSpawned: 0

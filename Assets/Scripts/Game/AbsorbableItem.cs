@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 public class AbsorbableItem : MonoBehaviour
@@ -19,7 +20,12 @@ public class AbsorbableItem : MonoBehaviour
             absorbingPlayer = player;
 
             if (SpawnOnAbsorbedPrefab != null)
-                Instantiate(SpawnOnAbsorbedPrefab, transform.position, Quaternion.identity);
+            {
+                GameObject absorbedEffect = Instantiate(SpawnOnAbsorbedPrefab, transform.position, Quaternion.identity);
+
+                if (CustomNetworkManager.IsOnlineSession)
+                    NetworkServer.Spawn(absorbedEffect);
+            }
 
             this.CallWithDelay(Absorb, AbsorbDelay);
         }
