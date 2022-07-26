@@ -298,4 +298,10 @@ public class NetworkMethodCaller : NetworkBehaviour
         Block block = WorldBuilder.Instance.GetPlacedBlock(id);
         block.Instance.GetComponent<ItemTrigger>().WasSatisfied();
     }
+
+    [Command(requiresAuthority = false)]
+    public void CmdEnablePlayerConfigurationManagerForHost()
+    {
+        PlayerConfigurationManager.Instance.EnableForHost();
+    }
 }

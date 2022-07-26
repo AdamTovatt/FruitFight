@@ -13,6 +13,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     public GameObject JoinInstructionsText;
     public GameObject PlayerSetupPanelPrefab;
     public PlayerConfigurationOnlineManager OnlineManager;
+    public LoadingScreen LoadingScreen;
 
     public InputMode CurrentInputMode { get; private set; }
     public List<PlayerConfiguration> PlayerConfigurations { get; private set; }
@@ -35,7 +36,28 @@ public class PlayerConfigurationManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(Instance);
             PlayerConfigurations = new List<PlayerConfiguration>();
+
+            LoadingScreen.Hide();
+
+            if (CustomNetworkManager.IsOnlineSession)
+            {
+                if (CustomNetworkManager.Instance.IsServer)
+                {
+                    playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+                    LoadingScreen.Show();
+                }
+                else
+                {
+                    NetworkMethodCaller.Instance.CmdEnablePlayerConfigurationManagerForHost();
+                }
+            }
         }
+    }
+
+    public void EnableForHost()
+    {
+        LoadingScreen.Hide();
+        playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
     }
 
     public void SetPlayerHat(int index, int hat)
