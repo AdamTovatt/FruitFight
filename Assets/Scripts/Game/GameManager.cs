@@ -243,8 +243,10 @@ public class GameManager : MonoBehaviour
                 spawner.SpawnObject();
             }
 
-            PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
-            PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
+            //PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
+            //PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
+            hostNetworkCharacter.AddSelfToPlayerCharacters();
+            clientNetworkCharacter.AddSelfToPlayerCharacters();
 
             HandleStoryMode();
         }

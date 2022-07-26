@@ -273,7 +273,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Command]
+    [Command(requiresAuthority = false)]
     private void CmdRemoveItem(int itemType, int amount)
     {
         PerformRemoveItem(itemType, amount);

@@ -629,27 +629,27 @@ public class PlayerMovement : MovingCharacter
                 switch (itemTrigger.Properties.ItemType)
                 {
                     case ItemTrigger.TriggerItemType.JellyBean:
-                        if (GameManager.Instance.Players.Sum(x => x.Inventory.JellyBeans) >= itemTrigger.Properties.Amount)
+                        if (GameManager.Instance.PlayerCharacters.Sum(x => x.Player.JellyBeans) >= itemTrigger.Properties.Amount)
                         {
                             int firstPlayerPayment = Player.JellyBeans <= itemTrigger.Properties.Amount ? Player.JellyBeans : itemTrigger.Properties.Amount;
                             int secondPlayerPayment = itemTrigger.Properties.Amount - firstPlayerPayment;
 
                             Player.RemoveItem(AbsorbableItemType.JellyBean, firstPlayerPayment);
-                            GameManager.Instance.Players.Where(x => x.Movement != Player.Movement).FirstOrDefault()?.Inventory.RemoveItem(AbsorbableItemType.JellyBean, secondPlayerPayment);
-                            
-                            itemTrigger.WasSatisfied();
+                            GameManager.Instance.PlayerCharacters.Find(x => x != Player)?.Player.RemoveItem(AbsorbableItemType.JellyBean, secondPlayerPayment);
+
+                            SatisfyItemTrigger(itemTrigger);
                         }
                         return;
                     case ItemTrigger.TriggerItemType.Coin:
-                        if (GameManager.Instance.Players.Sum(x => x.Inventory.Coins) >= itemTrigger.Properties.Amount)
+                        if (GameManager.Instance.PlayerCharacters.Sum(x => x.Player.Coins) >= itemTrigger.Properties.Amount)
                         {
                             int firstPlayerPayment = Player.Coins <= itemTrigger.Properties.Amount ? Player.Coins : itemTrigger.Properties.Amount;
                             int secondPlayerPayment = itemTrigger.Properties.Amount - firstPlayerPayment;
 
                             Player.RemoveItem(AbsorbableItemType.Coin, firstPlayerPayment);
-                            GameManager.Instance.Players.Where(x => x.Movement != Player.Movement).FirstOrDefault()?.Inventory.RemoveItem(AbsorbableItemType.Coin, secondPlayerPayment);
-                            
-                            itemTrigger.WasSatisfied();
+                            GameManager.Instance.PlayerCharacters.Find(x => x != Player)?.Player.RemoveItem(AbsorbableItemType.Coin, secondPlayerPayment);
+
+                            SatisfyItemTrigger(itemTrigger);
                         }
                         return;
                     default:
@@ -694,6 +694,14 @@ public class PlayerMovement : MovingCharacter
 
         if (shouldPunch)
             Punch();
+    }
+
+    private void SatisfyItemTrigger(ItemTrigger itemTrigger)
+    {
+        if (CustomNetworkManager.IsOnlineSession)
+            NetworkMethodCaller.Instance.SatisfyItemTrigger(itemTrigger.BlockInfo.Block.Id);
+        else
+            itemTrigger.WasSatisfied();
     }
 
     private Vector3 CalculateHoldPosition()

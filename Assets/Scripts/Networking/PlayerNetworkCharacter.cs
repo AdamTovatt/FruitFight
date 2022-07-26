@@ -180,4 +180,16 @@ public class PlayerNetworkCharacter : NetworkBehaviour
     {
         OnAttack?.Invoke(position, (MovingCharacter.AttackSide)side);
     }
+
+    public void AddSelfToPlayerCharacters()
+    {
+        GameManager.Instance.PlayerCharacters.Add(playerMovement);
+        RpcAddSelfToPlayerCharacters();
+    }
+
+    [ClientRpc]
+    private void RpcAddSelfToPlayerCharacters()
+    {
+        GameManager.Instance.PlayerCharacters.Add(playerMovement);
+    }
 }

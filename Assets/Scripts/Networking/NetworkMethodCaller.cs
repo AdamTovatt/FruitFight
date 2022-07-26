@@ -61,7 +61,7 @@ public class NetworkMethodCaller : NetworkBehaviour
 
     [ClientRpc]
     public void RpcClientShouldStartStoryLevel(string levelName)
-    { 
+    {
         Debug.Log("Start rpc");
         StartLevel(WorldUtilities.GetStoryModeLevel(levelName));
     }
@@ -266,5 +266,36 @@ public class NetworkMethodCaller : NetworkBehaviour
     private void PerformExitLevel()
     {
         GameUi.Instance.ExitLevel();
+    }
+
+    public void SatisfyItemTrigger(int id)
+    {
+        if (CustomNetworkManager.HasAuthority)
+        {
+            RpcSatisfyItemTrigger(id);
+        }
+        else
+        {
+            CmdSatisfyItemTrigger(id);
+            PerformSatisfyItemTrigger(id);
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdSatisfyItemTrigger(int id)
+    {
+        PerformSatisfyItemTrigger(id);
+    }
+
+    [ClientRpc()]
+    private void RpcSatisfyItemTrigger(int id)
+    {
+        PerformSatisfyItemTrigger(id);
+    }
+
+    private void PerformSatisfyItemTrigger(int id)
+    {
+        Block block = WorldBuilder.Instance.GetPlacedBlock(id);
+        block.Instance.GetComponent<ItemTrigger>().WasSatisfied();
     }
 }

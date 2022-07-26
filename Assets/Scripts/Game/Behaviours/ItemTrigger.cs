@@ -24,6 +24,8 @@ public class ItemTrigger : BehaviourBase
     public ItemTriggerProperties Properties { get; set; }
     public bool IsSatisfied { get; set; }
 
+    public BlockInformationHolder BlockInfo { get; set; }
+
     private StateSwitcher stateSwitcher;
     private GameObject worldIconPrefab;
 
@@ -44,6 +46,7 @@ public class ItemTrigger : BehaviourBase
     public override void Initialize(BehaviourProperties behaviourProperties)
     {
         Properties = (ItemTriggerProperties)behaviourProperties;
+        BlockInfo = gameObject.GetComponent<BlockInformationHolder>();
     }
 
     public void WasSatisfied()
