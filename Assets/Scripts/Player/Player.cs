@@ -137,8 +137,8 @@ public class Player : NetworkBehaviour
 
             MeshReplacer.ReplaceMesh(causeOfDeath != CauseOfDeath.Water);
 
-            RemoveItem(AbsorbableItemType.JellyBean, JellyBeans >= DeathCost ? DeathCost : JellyBeans);
-            RemoveItem(AbsorbableItemType.Coin, Coins >= DeathCost * 2 ? DeathCost * 2 : Coins);
+            //RemoveItem(AbsorbableItemType.JellyBean, JellyBeans >= DeathCost ? DeathCost : JellyBeans);
+            //RemoveItem(AbsorbableItemType.Coin, Coins >= DeathCost * 2 ? DeathCost * 2 : Coins);
 
             this.CallWithDelay(() => { Respawn(groundedPosition); }, PlayerRespawnTime);
         }
@@ -317,6 +317,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void RpcInvokeJellyBeansUpdated(int jellyBeans)
     {
+        Debug.Log("Jelly beans updated: " + jellyBeans);
         OnJellyBeansUpdated?.Invoke(jellyBeans);
     }
 

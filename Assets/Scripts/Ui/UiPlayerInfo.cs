@@ -49,7 +49,7 @@ public class UiPlayerInfo : MonoBehaviour
         }
         else
         {
-            if(isLeft)
+            if (isLeft)
                 image = PlayerNetworkIdentity.LocalPlayerInstance.Portrait;
             else
                 image = PlayerNetworkIdentity.OtherPlayerInstance.Portrait;
@@ -121,5 +121,20 @@ public class UiPlayerInfo : MonoBehaviour
     private void Start()
     {
         UpdateHearts();
+
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.HasAuthority) //this is only for the client in multiplayer
+        {
+            //this is to make sure the coins and jelly beans are updated in multiplayer
+            this.CallWithDelay(() =>
+            {
+                UpdateJellyBeans(playerInformation.Inventory.JellyBeans);
+                UpdateCoins(playerInformation.Inventory.Coins);
+            }, 0.1f);
+            this.CallWithDelay(() =>
+            {
+                UpdateJellyBeans(playerInformation.Inventory.JellyBeans);
+                UpdateCoins(playerInformation.Inventory.Coins);
+            }, 1);
+        }
     }
 }

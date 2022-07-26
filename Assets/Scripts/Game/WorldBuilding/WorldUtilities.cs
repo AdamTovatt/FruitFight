@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldUtilities
@@ -9,6 +10,11 @@ public class WorldUtilities
     public static string LoadTextFile(string path)
     {
         return Resources.Load<TextAsset>(path).text;
+    }
+
+    public static World GetStoryModeLevel(string name)
+    {
+        return GetStoryModeLevels().Where(x => x.Metadata.Name == name).FirstOrDefault();
     }
 
     public static List<World> GetStoryModeLevels()

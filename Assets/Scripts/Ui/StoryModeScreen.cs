@@ -120,6 +120,7 @@ public class StoryModeScreen : MonoBehaviour
 
     private void ShowLevelSelectScreen(int profileIndex)
     {
+        Debug.Log("Set current save profile");
         SaveProfileHelper.CurrentProfileIndex = profileIndex;
         LevelSelectScreen.gameObject.SetActive(true);
         LevelSelectScreen.Show();

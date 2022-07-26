@@ -21,14 +21,14 @@ public class MainMenuConnectedMenu : MonoBehaviour
 
     private void StoryMode()
     {
+        Debug.Log("Story mode");
         GameStateManager.SetGameState(GameState.Story);
 
+        MainMenuUi.Instance.StartMenu.PlayMenu.LocalPlayMenu.StoryModeScreen.gameObject.SetActive(true);
+        MainMenuUi.Instance.StartMenu.PlayMenu.LocalPlayMenu.StoryModeScreen.Show();
+        gameObject.SetActive(false);
+
         UnbindEventListeners();
-
-        PlayerNetworkIdentity.LocalPlayerInstance.SetReady(false);
-        PlayerNetworkIdentity.OtherPlayerInstance.SetReady(false);
-
-        NetworkMethodCaller.Instance.RpcClientShouldStartStoryLevel("01");
     }
 
     private void BrowseLevels()

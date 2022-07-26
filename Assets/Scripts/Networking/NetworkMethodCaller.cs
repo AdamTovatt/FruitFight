@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,8 +61,17 @@ public class NetworkMethodCaller : NetworkBehaviour
 
     [ClientRpc]
     public void RpcClientShouldStartStoryLevel(string levelName)
+    { 
+        Debug.Log("Start rpc");
+        StartLevel(WorldUtilities.GetStoryModeLevel(levelName));
+    }
+
+    [ClientRpc]
+    public void RpcLoadGameplay(string levelName)
     {
-        StartLevel(World.FromWorldName(levelName));
+        WorldBuilder.NextLevel = WorldUtilities.GetStoryModeLevel(levelName);
+        Debug.Log("Next level: " + WorldBuilder.NextLevel.Metadata.Name);
+        GameManager.Instance.LoadGamePlay();
     }
 
     private void StartLevel(World world)
@@ -184,45 +194,45 @@ public class NetworkMethodCaller : NetworkBehaviour
         GameManager.Instance.ContinueFromLevel();
     }
 
-    public void GoToNextStoryLevel()
+    public void GoToNextStoryLevel(string name)
     {
         if (CustomNetworkManager.IsOnlineSession)
         {
             if (CustomNetworkManager.Instance.IsServer)
             {
-                RpcGoToNextStoryLevel();
-                PerformGoToNextStoryLevel();
+                RpcGoToNextStoryLevel(name);
+                PerformGoToNextStoryLevel(name);
             }
             else
             {
-                CmdGoToNextStoryLevel();
-                PerformGoToNextStoryLevel();
+                CmdGoToNextStoryLevel(name);
+                PerformGoToNextStoryLevel(name);
             }
         }
         else
         {
-            PerformGoToNextStoryLevel();
+            PerformGoToNextStoryLevel(name);
         }
     }
 
     [ClientRpc]
-    private void RpcGoToNextStoryLevel()
+    private void RpcGoToNextStoryLevel(string name)
     {
         if (CustomNetworkManager.Instance.IsServer)
             return;
 
-        PerformGoToNextStoryLevel();
+        PerformGoToNextStoryLevel(name);
     }
 
     [Command(requiresAuthority = false)]
-    private void CmdGoToNextStoryLevel()
+    private void CmdGoToNextStoryLevel(string name)
     {
-        PerformGoToNextStoryLevel();
+        PerformGoToNextStoryLevel(name);
     }
 
-    private void PerformGoToNextStoryLevel()
+    private void PerformGoToNextStoryLevel(string name)
     {
-        GameManager.Instance.LoadNextLevel();
+        GameManager.Instance.LoadNextStoryLevel(name);
     }
 
     public void ExitLevel()

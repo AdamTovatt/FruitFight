@@ -62,7 +62,7 @@ public class StoryLevelContainer : MonoBehaviour
     private void LevelWasClicked(World level)
     {
         WorldBuilder.NextLevel = level;
-        Debug.Log("Level clicked: " + level.Metadata.Name);
+        Debug.Log("Level clicked ub story: " + level.Metadata.Name);
 
         GameStateManager.SetGameState(GameState.Story);
 
@@ -77,6 +77,12 @@ public class StoryLevelContainer : MonoBehaviour
         }
         else
         {
+            PlayerNetworkIdentity.LocalPlayerInstance.SetReady(false);
+            PlayerNetworkIdentity.OtherPlayerInstance.SetReady(false);
+
+            NetworkMethodCaller.Instance.RpcClientShouldStartStoryLevel(level.Metadata.Name);
+
+            /*
             if (level.Metadata.Id == 0)
             {
                 AlertCreator.Instance.CreateNotification("Only levels from the online library can be played in online multiplayer");
@@ -84,7 +90,7 @@ public class StoryLevelContainer : MonoBehaviour
             else
             {
                 NetworkMethodCaller.Instance.RpcClientShouldStartLevel(level.Metadata.Id);
-            }
+            }*/
         }
     }
 

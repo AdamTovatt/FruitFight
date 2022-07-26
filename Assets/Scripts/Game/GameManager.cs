@@ -159,15 +159,24 @@ public class GameManager : MonoBehaviour
             CameraManager.AddCamera(transform, null, false);
         }
 
-        if (GameStateManager.State == GameState.Story)
-        {
-            ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
-            PlayerCharacters[0].Player.Coins = save.Coins;
-            PlayerCharacters[0].Player.JellyBeans = save.JellyBeans;
+        HandleStoryMode();
 
-        }
         GameUi.Instance.HideLoadingScreen();
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void HandleStoryMode()
+    {
+        if (GameStateManager.State == GameState.Story)
+        {
+            if (!CustomNetworkManager.IsOnlineSession || hasInitializedLevel)
+            {
+                ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+
+                PlayerCharacters[0].Player.RemoveItem(AbsorbableItemType.Coin, -save.Coins); //remove negative amount to add it
+                PlayerCharacters[0].Player.RemoveItem(AbsorbableItemType.JellyBean, -save.JellyBeans);
+            }
+        }
     }
 
     public void CleanLevel()
@@ -236,6 +245,8 @@ public class GameManager : MonoBehaviour
 
             PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
             PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
+
+            HandleStoryMode();
         }
     }
 
@@ -274,8 +285,12 @@ public class GameManager : MonoBehaviour
             if (GameStateManager.State == GameState.Story)
             {
                 ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
-                totalCoins -= save.Coins;
-                totalJellyBeans -= save.JellyBeans;
+
+                if (save != null)
+                {
+                    totalCoins -= save.Coins;
+                    totalJellyBeans -= save.JellyBeans;
+                }
             }
 
             int totalXpEarned = (totalCoins + totalJellyBeans * 2) * 2;
@@ -285,12 +300,15 @@ public class GameManager : MonoBehaviour
                 if (GameStateManager.State == GameState.Story)
                 {
                     ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
-                    save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
-                    save.Coins += totalCoins;
-                    save.JellyBeans += totalJellyBeans;
-                    save.Xp += totalXpEarned;
-                    save.HoursPlayed += (DateTime.Now - levelStartTime).TotalHours;
-                    SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
+                    if (save != null)
+                    {
+                        save.AddCompletedLevel(WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id);
+                        save.Coins += totalCoins;
+                        save.JellyBeans += totalJellyBeans;
+                        save.Xp += totalXpEarned;
+                        save.HoursPlayed += (DateTime.Now - levelStartTime).TotalHours;
+                        SaveProfileHelper.WriteSaveState(SaveProfileHelper.GetSaveState());
+                    }
                 }
 
                 this.CallWithDelay(() => { ShowWinScreen(totalCoins, totalJellyBeans, totalXpEarned); }, 1.5f);
@@ -326,56 +344,76 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        World nextWorld = GetNextStoryWorld();
+
         if (GameStateManager.State == GameState.Story)
         {
-            if (CustomNetworkManager.IsOnlineSession)
+            if (nextWorld != null)
             {
-                NetworkMethodCaller.Instance.GoToNextStoryLevel();
+                LoadNextStoryLevel(nextWorld.Metadata.Name);
             }
             else
             {
-                LoadNextLevel();
+                ExitLevel();
             }
         }
         else
+        {
+            ExitLevel();
+        }
+    }
+
+    private void ExitLevel()
+    {
+        if (!CustomNetworkManager.IsOnlineSession)
+        {
+            GameUi.Instance.ExitLevel();
+        }
+        else
+        {
+            NetworkMethodCaller.Instance.ExitLevel();
+        }
+    }
+
+    private World GetNextStoryWorld()
+    {
+        int nextWorldId = WorldBuilder.Instance.CurrentWorld.StoryModeLevelEntry.Id + 1;
+        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+
+        return WorldUtilities.GetStoryModeLevels().Find(x => x.StoryModeLevelEntry.Id == nextWorldId);
+    }
+
+    public void LoadNextStoryLevel(string name)
+    {
+        if (CustomNetworkManager.IsOnlineSession && !CustomNetworkManager.HasAuthority)
+            return;
+
+        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
+        World nextWorld = WorldUtilities.GetStoryModeLevel(name);
+
+        if (save.HasUnlockedLevel(nextWorld.StoryModeLevelEntry, out string _buttonText))
         {
             if (!CustomNetworkManager.IsOnlineSession)
             {
-                GameUi.Instance.ExitLevel();
+                WorldBuilder.NextLevel = nextWorld;
+                LoadGamePlay();
             }
             else
             {
-                NetworkMethodCaller.Instance.ExitLevel();
+                if (CustomNetworkManager.HasAuthority)
+                {
+                    Debug.Log("call rpc load gameplay");
+                    NetworkMethodCaller.Instance.RpcLoadGameplay(name);
+                }
             }
-        }
-    }
-
-    public void LoadNextLevel()
-    {
-        ProfileSave save = SaveProfileHelper.GetCurrentSaveProfile();
-
-        World nextWorld = WorldUtilities.GetStoryModeLevels().OrderBy(x => x.StoryModeLevelEntry.Id).Where(x => !save.CompletedLevelIds.Contains(x.StoryModeLevelEntry.Id)).FirstOrDefault();
-
-        if(save.HasUnlockedLevel(nextWorld.StoryModeLevelEntry, out string _buttonText))
-        {
-            WorldBuilder.NextLevel = nextWorld;
-
-            LoadGamePlay();
         }
         else
         {
-            if(!CustomNetworkManager.IsOnlineSession)
-            {
-                GameUi.Instance.ExitLevel();
-            }
-            else
-            {
-                NetworkMethodCaller.Instance.ExitLevel();
-            }
+            ExitLevel();
         }
     }
 
-    private void LoadGamePlay()
+    public void LoadGamePlay()
     {
         if (Paused)
             GameUi.Instance.PauseMenuWasClosed();

@@ -200,7 +200,6 @@ public class MoveOnTrigger : ActivatedByStateSwitcher
     {
         foreach(PlayerMovement movement in players)
         {
-            Debug.Log("Updating player movement");
             movement.transform.position += CurrentMovement;
         }
     }
