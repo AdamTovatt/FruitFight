@@ -76,6 +76,7 @@ public class StoryLevelSelectScreen : MonoBehaviour
     private void UnBindEvents()
     {
         BackButton.onClick.RemoveAllListeners();
+        SceneManager.sceneLoaded -= SceneLoaded;
     }
 
     private void Back()
