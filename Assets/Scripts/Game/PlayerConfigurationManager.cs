@@ -45,6 +45,7 @@ public class PlayerConfigurationManager : MonoBehaviour
                 {
                     playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
                     LoadingScreen.Show();
+                    JoinInstructionsText.gameObject.SetActive(false);
                 }
                 else
                 {
@@ -57,6 +58,7 @@ public class PlayerConfigurationManager : MonoBehaviour
     public void EnableForHost()
     {
         LoadingScreen.Hide();
+        JoinInstructionsText.gameObject.SetActive(true);
         playerInputManager.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
     }
 

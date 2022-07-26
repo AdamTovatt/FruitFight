@@ -1,3 +1,4 @@
+using kcp2k;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,7 +23,7 @@ public class MainMenuConnectingMenu : MonoBehaviour
         UnBindListeners();
 
         MainMenuLobbyMenu.gameObject.SetActive(true);
-        MainMenuLobbyMenu.Show(false, CustomNetworkManager.Instance.networkAddress, previousMenu.PreviousMenu);
+        MainMenuLobbyMenu.Show(false, string.Format("Host port: {0}", CustomNetworkManager.Instance.GetComponent<KcpTransport>().Port), previousMenu.PreviousMenu);
 
         gameObject.SetActive(false);
     }

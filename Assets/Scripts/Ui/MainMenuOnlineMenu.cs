@@ -1,3 +1,4 @@
+using kcp2k;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -84,7 +85,7 @@ public class MainMenuOnlineMenu : MonoBehaviour
         }
 
         LobbyMenu.gameObject.SetActive(true);
-        LobbyMenu.Show(true, CustomNetworkManager.Instance.networkAddress, this);
+        LobbyMenu.Show(true, string.Format("Host port: {0}", CustomNetworkManager.Instance.GetComponent<KcpTransport>().Port), this);
     }
 
     private void Back()

@@ -91,6 +91,8 @@ public class MainMenuUi : UiManager
 
     private IEnumerator ShowMenuWithDelay()
     {
+        WorldUtilities.GetStoryModeLevels(); //to load to cache
+
         yield return new WaitForSeconds(0.2f);
 
         if (!cameBackFromMultiplayer)
