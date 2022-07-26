@@ -317,7 +317,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void RpcInvokeJellyBeansUpdated(int jellyBeans)
     {
-        Debug.Log("Jelly beans updated: " + jellyBeans);
         OnJellyBeansUpdated?.Invoke(jellyBeans);
     }
 

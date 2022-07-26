@@ -601,9 +601,9 @@ public class JellyBean : MovingCharacter
 
             if (CustomNetworkManager.IsOnlineSession)
                 NetworkServer.Spawn(deadJellyBean);
-        }
 
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }
     }
 
     private Vector3 GetNewTargetPosition(float targetDistance)
