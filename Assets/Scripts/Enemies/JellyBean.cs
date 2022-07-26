@@ -539,6 +539,9 @@ public class JellyBean : MovingCharacter
 
         hasAttacked = true;
         lastAttackTime = Time.time;
+
+        if (CustomNetworkManager.Instance.IsServer)
+            ForceSyncPosition();
     }
 
     [ClientRpc]

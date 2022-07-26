@@ -243,10 +243,9 @@ public class GameManager : MonoBehaviour
                 spawner.SpawnObject();
             }
 
-            //PlayerCharacters.Add(hostNetworkCharacter.PlayerMovement);
-            //PlayerCharacters.Add(clientNetworkCharacter.PlayerMovement);
             hostNetworkCharacter.AddSelfToPlayerCharacters();
             clientNetworkCharacter.AddSelfToPlayerCharacters();
+            Debug.Log("add to characters: " + PlayerCharacters.Count);
 
             HandleStoryMode();
         }
@@ -277,6 +276,8 @@ public class GameManager : MonoBehaviour
         {
             int totalCoins = 0;
             int totalJellyBeans = 0;
+
+            PlayerCharacters = PlayerCharacters.Distinct().ToList();
 
             foreach (PlayerMovement playerMovement in PlayerCharacters)
             {
