@@ -347,10 +347,10 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        World nextWorld = GetNextStoryWorld();
-
         if (GameStateManager.State == GameState.Story)
         {
+            World nextWorld = GetNextStoryWorld();
+
             if (nextWorld != null)
             {
                 LoadNextStoryLevel(nextWorld.Metadata.Name);
