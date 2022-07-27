@@ -65,25 +65,29 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     public void ThumbnailWasCaptured(Texture2D image)
     {
-        AudioManager.Instance.Play("cameraShutter");
-        Instantiate(FlashWhiteTransitionPrefab, transform);
         CaptureThumbnailCameraOverlay.gameObject.SetActive(false);
 
-        Sprite squareSprite = Sprite.Create(image, new Rect((image.width - image.height) / 2, 0, image.height, image.height), Vector2.zero);
+        if (image != null)
+        {
+            AudioManager.Instance.Play("cameraShutter");
+            Instantiate(FlashWhiteTransitionPrefab, transform);
 
-        ThumbnailImage.sprite = nullSprite;
+            Sprite squareSprite = Sprite.Create(image, new Rect((image.width - image.height) / 2, 0, image.height, image.height), Vector2.zero);
 
-        ThumbnailTransition.enabled = true;
-        ThumbnailTransition.OnDidTransition += ThumbnailTransitionWasCompleted;
-        ThumbnailTransition.SetImage(squareSprite);
-        ThumbnailTransition.DoTransition(Vector2.zero, squareSprite.rect.size, ThumbnailImage.rectTransform.localPosition, ThumbnailImage.rectTransform.sizeDelta, 1f);
+            ThumbnailImage.sprite = nullSprite;
 
-        Texture2D lowRes = new Texture2D(image.height, image.height);
-        lowRes.SetPixels(squareSprite.texture.GetPixels((image.width - image.height) / 2, 0, image.height, image.height, 0));
-        lowRes.Apply();
-        lowRes = ResizeTexture2d(lowRes, 512, 512);
+            ThumbnailTransition.enabled = true;
+            ThumbnailTransition.OnDidTransition += ThumbnailTransitionWasCompleted;
+            ThumbnailTransition.SetImage(squareSprite);
+            ThumbnailTransition.DoTransition(Vector2.zero, squareSprite.rect.size, ThumbnailImage.rectTransform.localPosition, ThumbnailImage.rectTransform.sizeDelta, 1f);
 
-        WorldEditor.Instance.CurrentWorld.Metadata.ImageData = Convert.ToBase64String(lowRes.EncodeToJPG());
+            Texture2D lowRes = new Texture2D(image.height, image.height);
+            lowRes.SetPixels(squareSprite.texture.GetPixels((image.width - image.height) / 2, 0, image.height, image.height, 0));
+            lowRes.Apply();
+            lowRes = ResizeTexture2d(lowRes, 512, 512);
+
+            WorldEditor.Instance.CurrentWorld.Metadata.ImageData = Convert.ToBase64String(lowRes.EncodeToJPG());
+        }
     }
 
     private void LevelNameWasSet(string text)

@@ -229,8 +229,10 @@ public class WorldEditor : MonoBehaviour
         isCapturingImage = true;
     }
 
-    public void CaptureImageWasCompleted()
+    public void CaptureImageWasCompleted(Texture2D image)
     {
+        OnImageWasCaptured?.Invoke(image);
+        OnImageWasCaptured = null;
         Ui.LevelPropertiesScreen.gameObject.SetActive(true);
         marker.Show();
         DisableControls();
@@ -577,7 +579,7 @@ public class WorldEditor : MonoBehaviour
             else if (isPickingActivator2)
                 PickedActivator2(null);
             else if (isCapturingImage)
-                CaptureImage();
+                CaptureImageWasCompleted(null);
             else if (isRotatingObject)
                 ExitRotationMode();
             else
@@ -815,10 +817,7 @@ public class WorldEditor : MonoBehaviour
         image.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
         image.Apply();
 
-        OnImageWasCaptured?.Invoke(image);
-        OnImageWasCaptured = null;
-
-        CaptureImageWasCompleted();
+        CaptureImageWasCompleted(image);
     }
 
     private void Place(InputAction.CallbackContext context)
