@@ -8,13 +8,12 @@ using UnityEngine.UI;
 
 public class LevelPropertiesScreen : MonoBehaviour
 {
+    public TMP_InputField LevelNameInput;
     public Button CloseButton;
     public Button CaptureThumbnailButton;
-    public Button SetLevelNameButton;
     public Button IncreaseTimeButton;
     public Button DecreaseTimeButton;
     public TextMeshProUGUI TimeText;
-    public TextMeshProUGUI LevelNameText;
     public GameObject CaptureThumbnailCameraOverlay;
     public Image ThumbnailImage;
     public ImageTransition ThumbnailTransition;
@@ -32,7 +31,7 @@ public class LevelPropertiesScreen : MonoBehaviour
     {
         CloseButton.onClick.AddListener(Close);
         CaptureThumbnailButton.onClick.AddListener(CaptureThumbnail);
-        SetLevelNameButton.onClick.AddListener(SetLevelName);
+        LevelNameInput.onEndEdit.AddListener((text) => LevelNameWasSet(text));
         IncreaseTimeButton.onClick.AddListener(IncreaseTime);
         DecreaseTimeButton.onClick.AddListener(DecreaseTime);
     }
@@ -87,20 +86,13 @@ public class LevelPropertiesScreen : MonoBehaviour
         WorldEditor.Instance.CurrentWorld.Metadata.ImageData = Convert.ToBase64String(lowRes.EncodeToJPG());
     }
 
-    private void SetLevelName()
+    private void LevelNameWasSet(string text)
     {
-        WorldEditorUi.Instance.OnScreenKeyboard.OnGotText += (sender, success, text) =>
-        {
-            if (success)
-            {
-                WorldEditor.Instance.CurrentWorld.Metadata.Name = text;
-                LevelNameText.text = text;
-            }
+        string trimmed = text.Trim();
+        LevelNameInput.text = trimmed;
 
-            SetLevelNameButton.Select();
-        };
-
-        WorldEditorUi.Instance.OnScreenKeyboard.OpenKeyboard();
+        if (!string.IsNullOrEmpty(trimmed))
+            WorldEditor.Instance.CurrentWorld.Metadata.Name = trimmed;
     }
 
     private static Texture2D ResizeTexture2d(Texture2D source, int newWidth, int newHeight)
@@ -135,14 +127,8 @@ public class LevelPropertiesScreen : MonoBehaviour
 
         if (metadata != null)
         {
-            if (metadata.Name != null)
-            {
-                LevelNameText.text = metadata.Name;
-            }
-            else
-            {
-                LevelNameText.text = "(Untitled level)";
-            }
+            if (!string.IsNullOrEmpty(metadata.Name))
+                LevelNameInput.text = metadata.Name;
 
             if (metadata.ImageData != null)
             {
@@ -162,7 +148,7 @@ public class LevelPropertiesScreen : MonoBehaviour
 
         SetTimeOfDayText();
 
-        SetLevelNameButton.Select();
+        CloseButton.Select();
     }
 
     private void SetTimeOfDayText()
@@ -176,7 +162,7 @@ public class LevelPropertiesScreen : MonoBehaviour
 
     private void SetTimeOfDayLight()
     {
-        if(DaylightController.Instance != null)
+        if (DaylightController.Instance != null)
         {
             DaylightController.Instance.Initialize(WorldEditor.Instance.CurrentWorld.NorthRotation, WorldEditor.Instance.CurrentWorld.TimeOfDay);
         }
