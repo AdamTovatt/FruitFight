@@ -14,7 +14,6 @@ public class WorldEditorUi : UiManager
     public EditorPauseMenu PauseMenu;
     public EditorBlockMenu BlockMenu;
     public TestLevelPauseMenu TestLevelPauseMenu;
-    public BehaviourMenu BehaviourMenu;
     public EditorLoadLevelScreen LoadLevelScreen;
     public LevelPropertiesScreen LevelPropertiesScreen;
     public BehaviourMenu2 BehaviourMenu2;
@@ -127,69 +126,109 @@ public class WorldEditorUi : UiManager
         Destroy(this);
     }
 
-    public void OpenBehaviourMenu2(Block block)
+    public void OpenBehaviourMenu()
     {
-        if (uiInput != null)
-            uiInput.enabled = true;
+        EnableUiInput();
 
-        BehaviourMenu2.gameObject.SetActive(true);
-        BehaviourMenu2.Show(block);
-        BlockMenu.gameObject.SetActive(false);
-    }
-
-    public void CloseBehaviourMenu2()
-    {
-        if (uiInput != null)
-            uiInput.enabled = false;
-
-        BehaviourMenu2.Hide();
-        BehaviourMenu2.gameObject.SetActive(false);
-        WorldEditor.Instance.EnableControls();
-        BlockMenu.gameObject.SetActive(true);
-    }
-
-    public void OpenBehaviourMenu(Block block)
-    {
-        if (uiInput != null)
-            uiInput.enabled = true;
-
-        BehaviourMenu.gameObject.SetActive(true);
-        BehaviourMenu.Show(block);
+        OpenPanel(BehaviourMenu2);
     }
 
     public void CloseBehaviourMenu()
     {
-        if (uiInput != null)
-            uiInput.enabled = false;
+        DisableUiInput();
 
-        BehaviourMenu.gameObject.SetActive(false);
+        ClosePanel(BehaviourMenu2);
+    }
+
+    public void OpenPanel(PanelBase panel)
+    {
+        panel.gameObject.SetActive(true);
+        if (panel.Show())
+        {
+            BlockMenu.gameObject.SetActive(false);
+        }
+        else
+        {
+            panel.gameObject.SetActive(false);
+            Debug.LogError("Error when opening panel");
+        }
+    }
+
+    public void ClosePanel(PanelBase panel)
+    {
+        if (panel.Hide())
+        {
+            panel.gameObject.SetActive(false);
+            BlockMenu.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Error when closing panel");
+        }
+    }
+
+    public void EscapeWasPressed()
+    {
+        if (UiSectionPanels.Count(x => x.gameObject.activeSelf && x.transform.name != "BlockMenu") == 0)
+        {
+            OpenPauseMenu();
+        }
+        else
+        {
+            if (PauseMenuIsOpen)
+                ClosePauseMenu();
+
+            foreach (GameObject panel in UiSectionPanels)
+            {
+                if (panel.transform.name == "BlockMenu")
+                {
+                    Debug.Log("Block menu");
+                    panel.SetActive(true); //this is the "default" panel
+                }
+                else
+                {
+                    PanelBase panelBase = gameObject.GetComponent<PanelBase>();
+                    if (panelBase != null)
+                        ClosePanel(panelBase);
+                    else
+                        panel.SetActive(false);
+                }
+            }
+
+            WorldEditor.Instance.EnableControls();
+        }
+    }
+
+    public void EnterUiControlMode()
+    {
+        WorldEditor.Instance.DisableControls();
+        EnableUiInput();
+    }
+
+    public void ExitUiControlMode()
+    {
         WorldEditor.Instance.EnableControls();
+        DisableUiInput();
     }
 
     public void OpenPauseMenu()
     {
-        if (uiInput != null)
-            uiInput.enabled = true;
+        EnableUiInput();
+        WorldEditor.Instance.DisableControls();
 
         PauseMenu.gameObject.SetActive(true);
         PauseMenu.WasShown();
 
         BlockMenu.DisableDeselectButtons();
-        
+
         PauseMenuIsOpen = true;
         BlockMenu.Close();
     }
 
     public void ClosePauseMenu()
     {
-        if (uiInput != null)
-            uiInput.enabled = false;
-
-        if (BehaviourMenu.gameObject.activeSelf)
-        {
-            BehaviourMenu.Hide();
-            BehaviourMenu.gameObject.SetActive(false);
-        }
+        DisableUiInput();
+        WorldEditor.Instance.EnableControls();
 
         PauseMenu.gameObject.SetActive(false);
         WorldEditor.Instance.EnableControls();
@@ -200,16 +239,14 @@ public class WorldEditorUi : UiManager
 
     public void HideBlockSelection()
     {
-        if (uiInput != null)
-            uiInput.enabled = false;
+        DisableUiInput();
 
         BlockMenu.gameObject.SetActive(false);
     }
 
     public void ShowBlockSelection()
     {
-        if (uiInput != null)
-            uiInput.enabled = true;
+        EnableUiInput();
 
         BlockMenu.gameObject.SetActive(true);
     }

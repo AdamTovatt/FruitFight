@@ -38,8 +38,6 @@ public class MoveMenu : MonoBehaviour
 
     private void Start()
     {
-        SetActivatorButton.onClick.AddListener(SetActivator);
-        SetFinalPositionButton.onClick.AddListener(SetFinalPosition);
         CloseButton.onClick.AddListener(Close);
         IncreaseMoveSpeedButton.onClick.AddListener(IncreaseMoveSpeed);
         DecreaseMoveSpeedButton.onClick.AddListener(DecreaseMoveSpeed);
@@ -122,22 +120,12 @@ public class MoveMenu : MonoBehaviour
         MoveSpeedText.text = moveSpeed.ToString(stringFormat);
     }
 
-    private void SetActivator()
-    {
-        WorldEditor.Instance.PickActivator(this, currentBlock);
-    }
-
     public void PositionWasPicked(Vector3Int position)
     {
         currentBlock.BehaviourProperties.MovePropertyCollection.FinalPosition = position;
         currentBlock.BehaviourProperties.MovePropertyCollection.HasValues = true;
         FinalPositionText.text = position.ToString();
         SetActivatorButton.Select();
-    }
-
-    private void SetFinalPosition()
-    {
-        WorldEditor.Instance.PickPosition(this, currentBlock);
     }
 
     private void Close()

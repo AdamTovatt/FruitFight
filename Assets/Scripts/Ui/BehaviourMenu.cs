@@ -38,7 +38,6 @@ public class BehaviourMenu : MonoBehaviour
     {
         MoveButton.onClick.AddListener(() => { Move(); });
         DetailColorButton.onClick.AddListener(() => { DetailColor(); });
-        CloseButton.onClick.AddListener(() => { WorldEditorUi.Instance.CloseBehaviourMenu(); });
     }
 
     private void DetailColor()

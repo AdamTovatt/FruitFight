@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourMenu2 : MonoBehaviour
+public class BehaviourMenu2 : PanelBase
 {
     public BlockInspector Inspector;
+    public GameObject BlockInpsectorParent;
     public Button CloseInspectorButton;
 
     private void Awake()
@@ -20,7 +21,7 @@ public class BehaviourMenu2 : MonoBehaviour
 
     private void BindEvents()
     {
-        CloseInspectorButton.onClick.AddListener(() => WorldEditorUi.Instance.CloseBehaviourMenu2());
+        CloseInspectorButton.onClick.AddListener(() => WorldEditorUi.Instance.CloseBehaviourMenu());
     }
 
     private void UnBindEvents()
@@ -28,15 +29,26 @@ public class BehaviourMenu2 : MonoBehaviour
         CloseInspectorButton.onClick.RemoveAllListeners();
     }
 
-    public void Show(Block block)
+    public override bool Show()
     {
+        Block block = WorldEditor.Instance.GetCurrentHighlightedBlock();
+        if (block == null)
+            return false;
+
+        WorldEditorUi.Instance.EnterUiControlMode();
+        BlockInpsectorParent.SetActive(true);
         Inspector.gameObject.SetActive(true);
         Inspector.Show(block);
+
+        return true;
     }
 
-    public void Hide()
+    public override bool Hide()
     {
         Inspector.Clean();
         Inspector.gameObject.SetActive(false);
+        WorldEditorUi.Instance.ExitUiControlMode();
+
+        return true;
     }
 }

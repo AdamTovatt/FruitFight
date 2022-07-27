@@ -44,6 +44,7 @@ public class WorldEditor : MonoBehaviour
 
     public WorldBuilder Builder { get; private set; }
     public World CurrentWorld { get; private set; }
+    public bool ControlsDisabled { get; set; }
 
     public BlockThumbnailManager ThumbnailManager { get; private set; }
 
@@ -57,7 +58,6 @@ public class WorldEditor : MonoBehaviour
     private List<GameObject> gridLines;
     private EditorCamera editorCamera;
     private EditorMarker marker;
-    private bool controlsDisabled = false;
     private static bool isTestingLevel = false;
     private bool isRotatingObject = false;
 
@@ -178,35 +178,6 @@ public class WorldEditor : MonoBehaviour
         GetComponent<Spawner>().OnObjectSpawned -= SpawnerSpawnedObject;
     }
 
-    public void PickPosition(MonoBehaviour menu, Block block)
-    {
-        menu.gameObject.SetActive(false);
-        activatorPickingMenu = menu;
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
-        WorldEditorUi.Instance.DisableUiInput();
-        EnableControls();
-        isPickingFinalPosition = true;
-        SetSelectedBlock(block.BlockInfoId);
-        SetMarkerPositionToBlock(block);
-        currentMovePropertiesBlock = block;
-    }
-
-    public void PickedPosition(Vector3Int position)
-    {
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
-        WorldEditorUi.Instance.EnableUiInput();
-        controlsDisabled = true;
-        isPickingFinalPosition = false;
-        activatorPickingMenu.gameObject.SetActive(true);
-
-        if (activatorPickingMenu.GetType() == typeof(MoveMenu))
-            ((MoveMenu)activatorPickingMenu).PositionWasPicked(position);
-        else
-            throw new Exception("Unsupported menu type for picking position");
-
-        SetMarkerPositionToBlock(currentMovePropertiesBlock);
-    }
-
     public void PickPosition2(Block block)
     {
         WorldEditorUi.Instance.DisableUiInput();
@@ -220,7 +191,7 @@ public class WorldEditor : MonoBehaviour
     public void PickedPosition2(Vector3Int position)
     {
         WorldEditorUi.Instance.EnableUiInput();
-        controlsDisabled = true;
+        ControlsDisabled = true;
         isPickingFinalPosition2 = false;
 
         SetMarkerPositionToBlock(currentMovePropertiesBlock);
@@ -244,7 +215,7 @@ public class WorldEditor : MonoBehaviour
         WorldEditorUi.Instance.EnableUiInput();
         SetMarkerPositionToBlock(currentTriggerZonePropertiesBlock);
         isAddingTriggerSubZone = false;
-        controlsDisabled = true;
+        ControlsDisabled = true;
         OnTriggerZoneWasPicked?.Invoke(triggerSubZone);
         OnTriggerZoneWasPicked = null;
     }
@@ -265,49 +236,6 @@ public class WorldEditor : MonoBehaviour
         DisableControls();
         Ui.EnableUiInput();
         isCapturingImage = false;
-    }
-
-    public void PickActivator(MonoBehaviour menu, Block block)
-    {
-        currentlyAvailableActivators = new List<Block>();
-        foreach (StateSwitcher stateSwitcher in FindObjectsOfType<StateSwitcher>())
-        {
-            currentlyAvailableActivators.Add(CurrentWorld.Blocks.Where(x => x.Instance == stateSwitcher.gameObject).FirstOrDefault());
-        }
-
-        currentlyAvailableActivators = currentlyAvailableActivators.OrderBy(x => ((Vector3)(x.Position - MarkerPosition)).sqrMagnitude).ToList();
-
-        if (currentlyAvailableActivators.Count == 0)
-        {
-            return;
-        }
-
-        currentActivatorIndex = -1;
-        menu.gameObject.SetActive(false);
-        activatorPickingMenu = menu;
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(false);
-        WorldEditorUi.Instance.DisableUiInput();
-        EnableControls();
-        isPickingActivator = true;
-        currentMovePropertiesBlock = block;
-    }
-
-    private void PickedActivator(Block selectedStateSwitcher)
-    {
-        WorldEditorUi.Instance.BehaviourMenu.gameObject.SetActive(true);
-        WorldEditorUi.Instance.EnableUiInput();
-        DisableControls();
-        isPickingActivator = false;
-        activatorPickingMenu.gameObject.SetActive(true);
-
-        if (activatorPickingMenu.GetType() == typeof(MoveMenu))
-            ((MoveMenu)activatorPickingMenu).ActivatorWasSet(selectedStateSwitcher);
-        else
-            Debug.LogError(activatorPickingMenu.GetType().ToString() + " is not supported as a activator picking menu");
-
-        currentlyAvailableActivators = null;
-
-        SetMarkerPositionToBlock(currentMovePropertiesBlock);
     }
 
     public List<Block> GetCurrentlyAvailableActivators()
@@ -419,7 +347,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Grassify(InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (ControlsDisabled)
             return;
 
         GrassifyConfiguration grassifyConfiguration = GrassifyConfiguration.LoadFromConfig();
@@ -546,7 +474,7 @@ public class WorldEditor : MonoBehaviour
         SceneManager.LoadScene("PlayerSetup");
         SceneManager.sceneLoaded += LevelTestWasLoaded;
         isTestingLevel = true;
-        controlsDisabled = false;
+        ControlsDisabled = false;
         Destroy(editorCamera);
     }
 
@@ -626,7 +554,7 @@ public class WorldEditor : MonoBehaviour
     {
         Ui.ShowLoadingScreen();
         isTestingLevel = false;
-        controlsDisabled = true;
+        ControlsDisabled = true;
 
         foreach (PlayerMovement player in GameManager.Instance.PlayerCharacters)
         {
@@ -644,38 +572,40 @@ public class WorldEditor : MonoBehaviour
     {
         if (!isTestingLevel)
         {
-            if (!controlsDisabled)
-            {
-                controlsDisabled = true;
-                Ui.OpenPauseMenu();
-            }
+            if (isPickingFinalPosition2)
+                PickedPosition2(null);
+            else if (isPickingActivator2)
+                PickedActivator2(null);
+            else if (isCapturingImage)
+                CaptureImage();
+            else if (isRotatingObject)
+                ExitRotationMode();
             else
-            {
-                controlsDisabled = false;
-                Ui.ClosePauseMenu();
-            }
+                Ui.EscapeWasPressed();
         }
         else
         {
-            if (!controlsDisabled)
+            if (!ControlsDisabled)
             {
-                controlsDisabled = true;
+                ControlsDisabled = true;
             }
             else
             {
-                controlsDisabled = false;
+                ControlsDisabled = false;
             }
         }
     }
 
     public void EnableControls()
     {
-        controlsDisabled = false;
+        Debug.Log("Enable controls");
+        ControlsDisabled = false;
     }
 
     public void DisableControls()
     {
-        controlsDisabled = true;
+        Debug.Log("Disable controls");
+        ControlsDisabled = true;
     }
 
     private void CancelNextPage(InputAction.CallbackContext context)
@@ -690,7 +620,7 @@ public class WorldEditor : MonoBehaviour
 
     private void MouseScroll(InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (ControlsDisabled)
             return;
 
         float scrollValue = context.ReadValue<float>();
@@ -715,7 +645,7 @@ public class WorldEditor : MonoBehaviour
 
     private void NextPage(InputAction.CallbackContext context)
     {
-        if (!controlsDisabled || isTestingLevel)
+        if (!ControlsDisabled || isTestingLevel)
         {
             if (Ui.BlockMenu.IsOpen)
             {
@@ -736,7 +666,7 @@ public class WorldEditor : MonoBehaviour
 
     private void PreviousPage(InputAction.CallbackContext context)
     {
-        if (!controlsDisabled || isTestingLevel)
+        if (!ControlsDisabled || isTestingLevel)
         {
             if (Ui.BlockMenu.IsOpen)
             {
@@ -756,7 +686,7 @@ public class WorldEditor : MonoBehaviour
 
     private void ToggleRotateObject(InputAction.CallbackContext context)
     {
-        if (controlsDisabled)
+        if (ControlsDisabled)
             return;
 
         if (!isRotatingObject)
@@ -788,7 +718,7 @@ public class WorldEditor : MonoBehaviour
     {
         if (!isPickingFinalPosition && !isPickingFinalPosition2)
         {
-            if (!controlsDisabled || isTestingLevel)
+            if (!ControlsDisabled || isTestingLevel)
             {
                 if (isRotatingObject)
                     ExitRotationMode();
@@ -814,7 +744,7 @@ public class WorldEditor : MonoBehaviour
 
     private void LowerMarker(InputAction.CallbackContext context)
     {
-        if (controlsDisabled || isTestingLevel)
+        if (ControlsDisabled || isTestingLevel)
             return;
 
         if (isRotatingObject)
@@ -829,7 +759,7 @@ public class WorldEditor : MonoBehaviour
 
     private void RaiseMarker(InputAction.CallbackContext context)
     {
-        if (controlsDisabled || isTestingLevel)
+        if (ControlsDisabled || isTestingLevel)
             return;
 
         if (isRotatingObject)
@@ -866,16 +796,15 @@ public class WorldEditor : MonoBehaviour
 
     private void OpenBehaviourMenu(InputAction.CallbackContext context)
     {
-        if (controlsDisabled || IsTestingLevel)
+        if (ControlsDisabled || IsTestingLevel)
             return;
 
-        Block block = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList().FirstOrDefault();
+        WorldEditorUi.Instance.OpenBehaviourMenu();
+    }
 
-        if (block == null)
-            return;
-
-        controlsDisabled = true;
-        WorldEditorUi.Instance.OpenBehaviourMenu2(block);
+    public Block GetCurrentHighlightedBlock()
+    {
+        return CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.BlockInfoId == selectedBlock).ToList().FirstOrDefault();
     }
 
     private IEnumerator CaptureScreenShot()
@@ -894,7 +823,7 @@ public class WorldEditor : MonoBehaviour
 
     private void Place(InputAction.CallbackContext context)
     {
-        if (controlsDisabled || isTestingLevel || Ui.BlockMenu.IsOpen || Ui.BlockMenu.WasJustClosed)
+        if (ControlsDisabled || isTestingLevel || Ui.BlockMenu.IsOpen || Ui.BlockMenu.WasJustClosed)
             return;
 
         if (isCapturingImage)
@@ -912,23 +841,10 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
-        if (isPickingActivator)
-        {
-            List<Block> stateSwitchers = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.Instance.GetComponent<StateSwitcher>() != null).ToList();
-            PickedActivator(stateSwitchers.FirstOrDefault());
-            return;
-        }
-
-        if(isPickingActivator2)
+        if (isPickingActivator2)
         {
             List<Block> stateSwitchers = CurrentWorld.GetBlocksAtPosition(MarkerPosition).Where(b => b.Instance.GetComponent<StateSwitcher>() != null).ToList();
             PickedActivator2(stateSwitchers.FirstOrDefault());
-            return;
-        }
-
-        if (isPickingFinalPosition)
-        {
-            PickedPosition(MarkerPosition);
             return;
         }
 
@@ -1057,7 +973,7 @@ public class WorldEditor : MonoBehaviour
             return;
         }
 
-        if (controlsDisabled || isTestingLevel)
+        if (ControlsDisabled || isTestingLevel)
             return;
 
         Vector2 input = context.ReadValue<Vector2>();
