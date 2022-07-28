@@ -13,7 +13,6 @@ public class WorldEditorUi : UiManager
 
     public EditorPauseMenu PauseMenu;
     public EditorBlockMenu BlockMenu;
-    public TestLevelPauseMenu TestLevelPauseMenu;
     public EditorLoadLevelScreen LoadLevelScreen;
     public LevelPropertiesScreen LevelPropertiesScreen;
     public BehaviourMenu2 BehaviourMenu2;

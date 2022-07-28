@@ -433,14 +433,7 @@ public class WorldEditor : MonoBehaviour
     {
         if (CurrentWorld.Blocks.Where(x => x.BlockInfoId == 2).Count() < 1)
         {
-            Alert alert = WorldEditorUi.Instance.AlertCreator.CreateAlert("No player start point exists in the level", new List<string>() { "Go back", "Continue anyway" });
-            alert.OnOptionWasChosen += (sender, optionIndex) =>
-            {
-                if (optionIndex == 0)
-                    WorldEditorUi.Instance.ClosePauseMenu();
-                else if (optionIndex == 1)
-                    StartLevelTest();
-            };
+            WorldEditorUi.Instance.AlertCreator.CreateNotification("No player startpoint exists in level. Add one first");
         }
         else
         {
