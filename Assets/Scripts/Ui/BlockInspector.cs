@@ -10,6 +10,8 @@ public class BlockInspector : MonoBehaviour
     public GameObject BehaviourButtonPrefab;
     public TextMeshProUGUI Title;
     public BehaviourPropertiesScreen BehaviourPropertiesScreen;
+    public Tween ParentTween;
+    public BehaviourMenu2 BehaviourMenu;
 
     private List<BehaviourButton> buttons = new List<BehaviourButton>();
     private Block currentBlock;
@@ -29,6 +31,13 @@ public class BlockInspector : MonoBehaviour
                 AddButton(availableBehaviour);
             }
         }
+
+        ParentTween.StartTween();
+
+        if (buttons.Count > 0)
+            buttons.First().Button.Select();
+        else
+            BehaviourMenu.CloseInspectorButton.Select();
     }
 
     public void Clean()

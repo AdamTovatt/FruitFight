@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourBoolInput : MonoBehaviour
+public class BehaviourBoolInput : AttributeUiInput
 {
     public Toggle Toggle;
     public TextMeshProUGUI InputDescription;
@@ -44,5 +44,10 @@ public class BehaviourBoolInput : MonoBehaviour
     private void ToggleStateWasChanged(bool newValue)
     {
         currentProperty.SetValue(currentBehaviour, newValue);
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return Toggle;
     }
 }

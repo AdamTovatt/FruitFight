@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourFloatInput : MonoBehaviour
+public class BehaviourFloatInput : AttributeUiInput
 {
     public TMP_InputField TextInput;
     public Image TextBackground;
@@ -70,5 +70,10 @@ public class BehaviourFloatInput : MonoBehaviour
     private void Subtract()
     {
         TextWasEntered((float.Parse(TextInput.text) - 0.1f).ToString());
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return SubtractButton;
     }
 }

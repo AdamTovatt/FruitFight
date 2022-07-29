@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourActivatorInput : MonoBehaviour
+public class BehaviourActivatorInput : AttributeUiInput
 {
     public Image ButtonBackground;
     public TextMeshProUGUI InputDescription;
@@ -96,5 +96,10 @@ public class BehaviourActivatorInput : MonoBehaviour
 
         };
         WorldEditor.Instance.PickActivator2(currentBlock);
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return SelectButton;
     }
 }

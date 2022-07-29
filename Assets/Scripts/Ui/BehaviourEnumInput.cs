@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourEnumInput : MonoBehaviour
+public class BehaviourEnumInput : AttributeUiInput
 {
     public TMP_InputField TextInput;
     public Image TextBackground;
@@ -82,5 +82,10 @@ public class BehaviourEnumInput : MonoBehaviour
         }
 
         return 0;
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return PreviousButton;
     }
 }

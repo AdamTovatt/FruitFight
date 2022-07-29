@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourIntInput : MonoBehaviour
+public class BehaviourIntInput : AttributeUiInput
 {
     public TMP_InputField TextInput;
     public Image TextBackground;
@@ -72,5 +72,10 @@ public class BehaviourIntInput : MonoBehaviour
     private void Subtract()
     {
         TextWasEntered((int.Parse(TextInput.text) - 1).ToString());
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return SubtractButton;
     }
 }

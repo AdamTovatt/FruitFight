@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourStringInput : MonoBehaviour
+public class BehaviourStringInput : AttributeUiInput
 {
     public TMP_InputField TextInput;
     public Image TextBackground;
@@ -76,5 +76,10 @@ public class BehaviourStringInput : MonoBehaviour
     {
         PanelDescription.text = currentAttribute.Description;
         TextBackground.color = NormalColor;
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return TextInput;
     }
 }

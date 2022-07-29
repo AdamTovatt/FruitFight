@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourSubZoneInput : MonoBehaviour
+public class BehaviourSubZoneInput : AttributeUiInput
 {
     public Image ButtonBackground;
     public TextMeshProUGUI InputDescription;
@@ -78,5 +78,10 @@ public class BehaviourSubZoneInput : MonoBehaviour
 
         };
         WorldEditor.Instance.AddTriggerSubZone(currentBlock);
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return SelectButton;
     }
 }

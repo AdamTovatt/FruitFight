@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BehaviourPositionInput : MonoBehaviour
+public class BehaviourPositionInput : AttributeUiInput
 {
     public Image ButtonBackground;
     public TextMeshProUGUI InputDescription;
@@ -75,5 +75,10 @@ public class BehaviourPositionInput : MonoBehaviour
             UpdateTextFromProperty();
         };
         WorldEditor.Instance.PickPosition2(currentBlock);
+    }
+
+    public override Selectable GetSelectable()
+    {
+        return SelectButton;
     }
 }

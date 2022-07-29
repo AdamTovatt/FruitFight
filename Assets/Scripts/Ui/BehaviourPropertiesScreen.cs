@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
     public Transform BlockInspectorParent;
     public Transform BackgroundBlur;
 
-    List<GameObject> previousInputs = new List<GameObject>();
+    List<AttributeUiInput> previousInputs = new List<AttributeUiInput>();
 
     BehaviourProperties currentProperties;
     Block currentBlock;
@@ -51,9 +52,9 @@ public class BehaviourPropertiesScreen : MonoBehaviour
 
     public void Clean()
     {
-        foreach (GameObject gameObject in previousInputs)
+        foreach (AttributeUiInput input in previousInputs)
         {
-            Destroy(gameObject);
+            Destroy(input.gameObject);
         }
 
         previousInputs.Clear();
@@ -66,7 +67,7 @@ public class BehaviourPropertiesScreen : MonoBehaviour
         BlockInspectorParent.gameObject.SetActive(false);
         currentBlock = block;
         currentProperties = behaviourProperties;
-        TitleText.text = string.Format("Editing properties for: {0}", behaviourProperties.GetType().ToString());
+        TitleText.text = string.Format("Editing properties for: {0}", behaviourProperties.GetType().ToString().Split("+").First());
 
         Dictionary<PropertyInfo, BehaviourPropertyInputAttribute> inputs = GetPropertyInputs(behaviourProperties);
 
@@ -77,48 +78,53 @@ public class BehaviourPropertiesScreen : MonoBehaviour
                 case StringInputAttribute stringInput:
                     BehaviourStringInput behaviourStringInput = Instantiate(StringInputPrefab, InputContainer).GetComponent<BehaviourStringInput>();
                     behaviourStringInput.Initialize(stringInput, key, currentProperties);
-                    previousInputs.Add(behaviourStringInput.gameObject);
+                    previousInputs.Add(behaviourStringInput);
                     break;
                 case IntInputAttribute intInput:
                     BehaviourIntInput behaviourIntInput = Instantiate(IntInputPrefab, InputContainer).GetComponent<BehaviourIntInput>();
                     behaviourIntInput.Initialize(intInput, key, currentProperties);
-                    previousInputs.Add(behaviourIntInput.gameObject);
+                    previousInputs.Add(behaviourIntInput);
                     break;
                 case FloatInputAttribute floatInput:
                     BehaviourFloatInput behaviourFloatInput = Instantiate(FloatInputPrefab, InputContainer).GetComponent<BehaviourFloatInput>();
                     behaviourFloatInput.Initialize(floatInput, key, currentProperties);
-                    previousInputs.Add(behaviourFloatInput.gameObject);
+                    previousInputs.Add(behaviourFloatInput);
                     break;
                 case EnumInputAttribute enumInput:
                     BehaviourEnumInput behaviourEnumInput = Instantiate(EnumInputPrefab, InputContainer).GetComponent<BehaviourEnumInput>();
                     behaviourEnumInput.Initialize(enumInput, key, currentProperties);
-                    previousInputs.Add(behaviourEnumInput.gameObject);
+                    previousInputs.Add(behaviourEnumInput);
                     break;
                 case BoolInputAttribute boolInput:
                     BehaviourBoolInput behaviourBoolInput = Instantiate(BoolInputPrefab, InputContainer).GetComponent<BehaviourBoolInput>();
                     behaviourBoolInput.Initialize(boolInput, key, currentProperties);
-                    previousInputs.Add(behaviourBoolInput.gameObject);
+                    previousInputs.Add(behaviourBoolInput);
                     break;
                 case ActivatorInputAttribute activatorInput:
                     BehaviourActivatorInput behaviourActivatorInput = Instantiate(ActivatorInputPrefab, InputContainer).GetComponent<BehaviourActivatorInput>();
                     behaviourActivatorInput.Initialize(activatorInput, key, currentProperties, currentBlock, this);
-                    previousInputs.Add(behaviourActivatorInput.gameObject);
+                    previousInputs.Add(behaviourActivatorInput);
                     break;
                 case PositionInputAttribute positionInput:
                     BehaviourPositionInput behaviourPositionInput = Instantiate(PositionInputPrefab, InputContainer).GetComponent<BehaviourPositionInput>();
                     behaviourPositionInput.Initialize(positionInput, key, currentProperties, currentBlock, this);
-                    previousInputs.Add(behaviourPositionInput.gameObject);
+                    previousInputs.Add(behaviourPositionInput);
                     break;
                 case SubZoneInputAttribute subZoneInput:
                     BehaviourSubZoneInput behaviourSubZoneInput = Instantiate(SubZoneInputPrefab, InputContainer).GetComponent<BehaviourSubZoneInput>();
                     behaviourSubZoneInput.Initialize(subZoneInput, key, currentProperties, currentBlock, this);
-                    previousInputs.Add(behaviourSubZoneInput.gameObject);
+                    previousInputs.Add(behaviourSubZoneInput);
                     break;
                 default:
                     Debug.Log("We have a type that is not yet supported: " + inputs[key].GetType());
                     break;
             }
         }
+
+        if (previousInputs.Count > 0 && previousInputs.First().GetSelectable() != null)
+            previousInputs.First().GetSelectable().Select();
+        else
+            BackButton.Select();
     }
 
     private void Back()
