@@ -10,6 +10,7 @@ public class LimitedTextInput : MonoBehaviour
 
     public int MaxCharacters;
     public TextMeshProUGUI LimitDisplayText;
+    public bool OnlyShowLimitIfAlmostReached;
 
     private void Awake()
     {
@@ -19,6 +20,9 @@ public class LimitedTextInput : MonoBehaviour
         UpdateDisplayText(inputField.text);
 
         BindEvents();
+
+        if (OnlyShowLimitIfAlmostReached)
+            LimitDisplayText.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -38,6 +42,14 @@ public class LimitedTextInput : MonoBehaviour
 
     private void UpdateDisplayText(string newValue)
     {
-        LimitDisplayText.text = string.Format("({0}/{1})", newValue.Length, MaxCharacters);
+        if (OnlyShowLimitIfAlmostReached && newValue.Length < MaxCharacters * 0.8f)
+        {
+            LimitDisplayText.gameObject.SetActive(false);
+        }
+        else
+        {
+            LimitDisplayText.gameObject.SetActive(true);
+            LimitDisplayText.text = string.Format("({0}/{1})", newValue.Length, MaxCharacters);
+        }
     }
 }
