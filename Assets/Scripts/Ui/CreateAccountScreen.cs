@@ -65,10 +65,11 @@ public class CreateAccountScreen : MonoBehaviour
         {
             emailValid = true;
             EmailInputArea.image.color = ValidColor;
+            UsernameInputArea.Select();
         }
         else
         {
-            EmailInputArea.image.color = ErrorColor;
+            EmailInputArea.image.color = string.IsNullOrEmpty(text) ? NeutralColor : ErrorColor;
             emailValid = false;
         }
 
@@ -81,13 +82,14 @@ public class CreateAccountScreen : MonoBehaviour
 
         if (string.IsNullOrEmpty(text))
         {
-            PasswordInputArea.image.color = ErrorColor;
+            PasswordInputArea.image.color = string.IsNullOrEmpty(text) ? NeutralColor : ErrorColor;
             passwordValid = false;
         }
         else
         {
             PasswordInputArea.image.color = ValidColor;
             passwordValid = true;
+            VerifyPasswordInputArea.Select();
         }
 
         UpdateCreateButtonColor();
@@ -99,13 +101,14 @@ public class CreateAccountScreen : MonoBehaviour
 
         if (string.IsNullOrEmpty(text) || rawPassword2 != rawPassword)
         {
-            VerifyPasswordInputArea.image.color = ErrorColor;
+            VerifyPasswordInputArea.image.color = string.IsNullOrEmpty(text) ? NeutralColor : ErrorColor;
             passwordValid = false;
         }
         else
         {
             VerifyPasswordInputArea.image.color = ValidColor;
             password2Valid = true;
+            CreateAccountButton.Select();
         }
 
         UpdateCreateButtonColor();
@@ -115,16 +118,17 @@ public class CreateAccountScreen : MonoBehaviour
     {
         if(string.IsNullOrEmpty(text))
         {
-            UsernameInputArea.image.color = ErrorColor;
+            UsernameInputArea.image.color = string.IsNullOrEmpty(text) ? NeutralColor : ErrorColor;
             usernameValid = false;
         }
         else
         {
             UsernameInputArea.image.color = ValidColor;
             usernameValid = true;
+            PasswordInputArea.Select();
         }
 
-        UpdateCreateButtonColor();
+        UpdateCreateButtonColor();  
     }
 
     private void UpdateCreateButtonColor()

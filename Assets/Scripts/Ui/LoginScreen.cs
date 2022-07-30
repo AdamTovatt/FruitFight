@@ -96,6 +96,7 @@ public class LoginScreen : MonoBehaviour
     private void Close()
     {
         OnLoginScreenWasExited?.Invoke();
+        OnLoginScreenWasExited = null;
         previousScreen.gameObject.SetActive(true);
         gameObject.SetActive(false);
 
