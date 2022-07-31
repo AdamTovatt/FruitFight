@@ -1,20 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginScreen : MonoBehaviour
 {
-    public Button UsernameInputArea;
-    public Button PasswordInputArea;
+    public TMP_InputField UsernameInputArea;
+    public TMP_InputField PasswordInputArea;
+
     public Button LoginButton;
     public Button CreateNewAccountButton;
     public Button CloseButton;
-
-    public TextMeshProUGUI UsernameText;
-    public TextMeshProUGUI PasswordText;
 
     public UiKeyboardInput Keyboard;
 
@@ -28,8 +23,8 @@ public class LoginScreen : MonoBehaviour
 
     private void Start()
     {
-        UsernameInputArea.onClick.AddListener(StartUsernameInput);
-        PasswordInputArea.onClick.AddListener(StartPasswordInput);
+        UsernameInputArea.onEndEdit.AddListener(GotUsername);
+        PasswordInputArea.onEndEdit.AddListener(GotPassword);
         LoginButton.onClick.AddListener(LoginButtonPressed);
         CreateNewAccountButton.onClick.AddListener(CreateNewAccountButtonPressed);
         CloseButton.onClick.AddListener(Close);
@@ -37,7 +32,7 @@ public class LoginScreen : MonoBehaviour
 
     public void SelectDefaultButton()
     {
-        LoginButton.Select();
+        UsernameInputArea.Select();
     }
 
     public void Show(MonoBehaviour previousScreen)
@@ -47,40 +42,35 @@ public class LoginScreen : MonoBehaviour
         SelectDefaultButton();
     }
 
-    private void StartUsernameInput()
+    private void GotUsername(string text)
     {
-        Keyboard.OnGotText += (sender, success, text) => { OnGotUserName(success, text); };
-        Keyboard.OpenKeyboard();
+        if (!string.IsNullOrEmpty(text))
+            PasswordInputArea.Select();
     }
 
-    private void StartPasswordInput()
+    private void GotPassword(string text)
     {
-        Keyboard.OnGotText += (sender, success, text) => { OnGotPassword(success, text); };
-        Keyboard.OpenKeyboard(true);
-    }
+        rawPasswordInput = text;
 
-    private void OnGotUserName(bool success, string text)
-    {
-        if (success) 
-            UsernameText.text = text;
-
-        PasswordInputArea.Select();
-    }
-
-    private void OnGotPassword(bool success, string text)
-    {
-        if (success) 
-        { 
-            rawPasswordInput = text; 
-            PasswordText.text = new string('*', text.Length); 
-        }
-
-        LoginButton.Select();
+        if (!string.IsNullOrEmpty(text))
+            LoginButton.Select();
     }
 
     private async void LoginButtonPressed()
     {
-        bool loginSuccess = await ApiUserManager.Login(UsernameText.text, rawPasswordInput);
+        if(string.IsNullOrEmpty(UsernameInputArea.text))
+        {
+            AlertCreator.Instance.CreateNotification("Username can not be empty");
+            return;
+        }
+
+        if(string.IsNullOrEmpty(rawPasswordInput))
+        {
+            AlertCreator.Instance.CreateNotification("Password can not be empty");
+            return;
+        }
+
+        bool loginSuccess = await ApiUserManager.Login(UsernameInputArea.text, rawPasswordInput);
 
         if (loginSuccess)
             Close();
