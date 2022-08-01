@@ -7,7 +7,7 @@ public class LoginScreen : MonoBehaviour
     public TMP_InputField UsernameInputArea;
     public TMP_InputField PasswordInputArea;
 
-    public Button LoginButton;
+    public LoadingSpinnerButton LoginButton;
     public Button CreateNewAccountButton;
     public Button CloseButton;
 
@@ -25,7 +25,7 @@ public class LoginScreen : MonoBehaviour
     {
         UsernameInputArea.onEndEdit.AddListener(GotUsername);
         PasswordInputArea.onEndEdit.AddListener(GotPassword);
-        LoginButton.onClick.AddListener(LoginButtonPressed);
+        LoginButton.Button.onClick.AddListener(LoginButtonPressed);
         CreateNewAccountButton.onClick.AddListener(CreateNewAccountButtonPressed);
         CloseButton.onClick.AddListener(Close);
     }
@@ -53,7 +53,7 @@ public class LoginScreen : MonoBehaviour
         rawPasswordInput = text;
 
         if (!string.IsNullOrEmpty(text))
-            LoginButton.Select();
+            LoginButton.Button.Select();
     }
 
     private async void LoginButtonPressed()
@@ -70,7 +70,9 @@ public class LoginScreen : MonoBehaviour
             return;
         }
 
+        LoginButton.ShowSpinner();
         bool loginSuccess = await ApiUserManager.Login(UsernameInputArea.text, rawPasswordInput);
+        LoginButton.ReturnToNormal();
 
         if (loginSuccess)
             Close();
