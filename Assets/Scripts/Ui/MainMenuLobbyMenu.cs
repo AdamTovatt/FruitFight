@@ -19,7 +19,10 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     public GameObject NetworkMethodCallerPrefab;
 
-    public Color ContinueButtonActiveColor;
+    public Color PositiveColor;
+    public Color NeutralColor;
+
+    public CenterContentContainer ButtonsContainer;
 
     public MainMenuConnectedMenu ConnectedMenu;
 
@@ -35,20 +38,22 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
     private void Start()
     {
+        ContinueButton.gameObject.SetActive(true);
         BackButton.onClick.AddListener(Back);
         ContinueButton.onClick.AddListener(Continue);
     }
 
     private void DisableContinueButton()
     {
-        ContinueButton.interactable = false;
-        ContinueButtonText.color = new Color(0.7f, 0.7f, 0.7f, 0.5f);
+        //ContinueButton.interactable = false;
+        ContinueButton.image.color = NeutralColor;
     }
 
     public void EnableContinueButton()
     {
-        ContinueButton.interactable = true;
-        ContinueButtonText.color = ContinueButtonActiveColor;
+        //ContinueButton.interactable = true;
+        ContinueButton.image.color = PositiveColor;
+        ContinueButton.Select();
     }
 
     public void FindExistingPlayerIdentities()
@@ -58,9 +63,9 @@ public class MainMenuLobbyMenu : MonoBehaviour
             player.AddSelfToMainMenuLobbyMenu();
         }
 
-        if(playerObjects.Count > 1)
+        if (playerObjects.Count > 1)
         {
-            TitleText.text = CustomNetworkManager.HasAuthority ? "Waiting for you to continue..." : "Waiting for host to continue...";
+            TitleText.text = CustomNetworkManager.HasAuthority ? "waiting for you to continue..." : "waiting for host to make a choice...";
         }
     }
 
@@ -76,7 +81,10 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
         this.previousMenu.gameObject.SetActive(false);
 
-        BackButton.Select();
+        if (ContinueButton.gameObject.activeSelf)
+            ContinueButton.Select();
+        else
+            BackButton.Select();
 
         if (hostInformation != null)
             HostInformationText.text = hostInformation;
@@ -93,7 +101,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
         if (playerObjects.Count < 2)
         {
             DisableContinueButton();
-            TitleText.text = "Waiting for players to join...";
+            TitleText.text = "waiting for players to join...";
         }
     }
 
@@ -121,6 +129,20 @@ public class MainMenuLobbyMenu : MonoBehaviour
                 EnableContinueButton();
             else
                 DisableContinueButton();
+        }
+        else
+        {
+            if (ButtonsContainer.Content.Count > 1)
+            {
+                ContinueButton.gameObject.SetActive(false);
+                ButtonsContainer.Content = new List<RectTransform>() { BackButton.GetComponent<RectTransform>() };
+                ButtonsContainer.CenterContent();
+            }
+        }
+
+        if (playerObjects.Count == 2)
+        {
+            TitleText.text = CustomNetworkManager.HasAuthority ? "waiting for you to continue..." : "waiting for host to make a choice...";
         }
     }
 
@@ -152,6 +174,10 @@ public class MainMenuLobbyMenu : MonoBehaviour
             RemoveEventListeners();
             ConnectedMenu.gameObject.SetActive(true);
             ConnectedMenu.Show(this);
+        }
+        else
+        {
+            AlertCreator.Instance.CreateNotification("Another player needs to join first!", 3);
         }
     }
 
