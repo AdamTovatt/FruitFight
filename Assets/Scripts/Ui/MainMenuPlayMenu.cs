@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MainMenuPlayMenu : MonoBehaviour
 {
-    public Button SinglePlayerButton;
+    public Button HelpButton;
     public Button LocalMultiplayerButton;
     public Button OnlineMultiplayerButton;
     public Button BackButton;
@@ -18,18 +18,24 @@ public class MainMenuPlayMenu : MonoBehaviour
     {
         BackButton.onClick.AddListener(Back);
         LocalMultiplayerButton.onClick.AddListener(LocalPlay);
-        SinglePlayerButton.onClick.AddListener(LocalPlay);
+        HelpButton.onClick.AddListener(Help);
         OnlineMultiplayerButton.onClick.AddListener(OnlinePlay);
     }
 
     public void Show(MainMenuStart previousMenu)
     {
-        SinglePlayerButton.Select();
+        LocalMultiplayerButton.Select();
 
         if (previousMenu != null)
             PreviousMenu = previousMenu;
 
         PreviousMenu.gameObject.SetActive(false);
+    }
+
+    private void Help()
+    {
+        AlertCreator.Instance.CreateNotification("Online = play online multiplayer with friends", 5);
+        AlertCreator.Instance.CreateNotification("Local = single player or split screen multiplayer", 5);
     }
 
     private void LocalPlay()

@@ -87,6 +87,8 @@ public class MainMenuUi : UiManager
                 StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.FindExistingPlayerIdentities();
             }
         }
+
+        AlertCreator.SetInstance(gameObject.GetComponent<AlertCreator>());
     }
 
     private IEnumerator ShowMenuWithDelay()
