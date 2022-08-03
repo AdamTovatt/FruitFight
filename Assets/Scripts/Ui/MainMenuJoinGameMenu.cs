@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class MainMenuJoinGameMenu : MonoBehaviour
 {
+    public Color PositiveColor;
+    public Color NeutralColor;
+
     public Button ConnectButton;
     public Button BackButton;
 
@@ -15,12 +18,38 @@ public class MainMenuJoinGameMenu : MonoBehaviour
 
     public MainMenuOnlineMenu PreviousMenu { get; set; }
 
-    void Start()
+    private bool usesLobbyName;
+
+    private void Start()
     {
         ConnectButton.onClick.AddListener(Connect);
         BackButton.onClick.AddListener(Back);
+        HostAddressInputField.onEndEdit.AddListener(TextEntered);
 
         HostAddressInputField.text = "localhost";
+    }
+
+    private void OnDestroy()
+    {
+        ConnectButton.onClick.RemoveAllListeners();
+        BackButton.onClick.RemoveAllListeners();
+        HostAddressInputField.onEndEdit.RemoveAllListeners();
+    }
+
+    private void TextEntered(string text)
+    {
+        if (text.Contains("-"))
+            usesLobbyName = true;
+        else
+            usesLobbyName = false;
+
+        if (text.Length > 5)
+        {
+            ConnectButton.image.color = PositiveColor;
+            ConnectButton.Select();
+        }
+        else
+            ConnectButton.image.color = NeutralColor;
     }
 
     public void Show(MainMenuOnlineMenu previousMenu)

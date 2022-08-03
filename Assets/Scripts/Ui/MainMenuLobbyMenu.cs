@@ -132,17 +132,22 @@ public class MainMenuLobbyMenu : MonoBehaviour
         }
         else
         {
-            if (ButtonsContainer.Content.Count > 1)
-            {
-                ContinueButton.gameObject.SetActive(false);
-                ButtonsContainer.Content = new List<RectTransform>() { BackButton.GetComponent<RectTransform>() };
-                ButtonsContainer.CenterContent();
-            }
+            RemoveConnectButtonForClient();
         }
 
         if (playerObjects.Count == 2)
         {
             TitleText.text = CustomNetworkManager.HasAuthority ? "waiting for you to continue..." : "waiting for host to make a choice...";
+        }
+    }
+
+    public void RemoveConnectButtonForClient()
+    {
+        if (!CustomNetworkManager.Instance.IsServer && ButtonsContainer.Content.Count > 1)
+        {
+            ContinueButton.gameObject.SetActive(false);
+            ButtonsContainer.Content = new List<RectTransform>() { BackButton.GetComponent<RectTransform>() };
+            ButtonsContainer.CenterContent();
         }
     }
 

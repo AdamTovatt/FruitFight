@@ -85,6 +85,7 @@ public class MainMenuUi : UiManager
                 StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.gameObject.SetActive(true);
                 StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.Show(false, CustomNetworkManager.Instance.networkAddress, StartMenu.PlayMenu.OnlinePlayMenu);
                 StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.FindExistingPlayerIdentities();
+                StartMenu.PlayMenu.OnlinePlayMenu.LobbyMenu.RemoveConnectButtonForClient();
             }
         }
 
