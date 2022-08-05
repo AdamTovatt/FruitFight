@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
     public static MainMenuLobbyMenu Instance;
 
     public TextMeshProUGUI HostInformationText;
+    public TextMeshProUGUI LobbyNameText;
     public TextMeshProUGUI ContinueButtonText;
     public TextMeshProUGUI TitleText;
     public Button BackButton;
@@ -96,6 +98,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
             CustomNetworkManager.IsOnlineSession = true;
             CustomNetworkManager.Instance.IsServer = true;
             CustomNetworkManager.Instance.StartHost();
+            Task.Run(() => DisplayRoomName());
         }
 
         if (playerObjects.Count < 2)
@@ -103,6 +106,15 @@ public class MainMenuLobbyMenu : MonoBehaviour
             DisableContinueButton();
             TitleText.text = "waiting for players to join...";
         }
+    }
+
+    private async Task DisplayRoomName()
+    {
+        string name = await ApiHelper.GetRoomName();
+        Debug.Log("Got room name");
+        LobbyNameText.text = string.Format("lobby name: {0}", name);
+        LobbyNameText.gameObject.SetActive(false);
+        LobbyNameText.gameObject.SetActive(true);
     }
 
     public void AddPlayer(int playerId, string playerName)

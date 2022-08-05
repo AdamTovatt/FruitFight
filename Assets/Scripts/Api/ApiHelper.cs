@@ -103,6 +103,23 @@ public class ApiHelper
         }
     }
 
+    internal static async Task<string> GetRoomName()
+    {
+        try
+        {
+            HttpResponseMessage responseMessage = await PerformRequest(HttpMethod.Get, "/room/getName");
+            string response = await responseMessage.Content.ReadAsStringAsync();
+            Dictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
+            dictionary.TryGetValue("name", out string result);
+            return result;
+        }
+        catch(Exception error)
+        {
+            Debug.Log(error.Message);
+            return null;
+        }
+    }
+
     public static async void PingServer()
     {
         await PerformRequest(HttpMethod.Get, "/ping");
