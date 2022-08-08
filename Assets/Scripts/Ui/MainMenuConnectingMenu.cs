@@ -23,14 +23,14 @@ public class MainMenuConnectingMenu : MonoBehaviour
         UnBindListeners();
 
         MainMenuLobbyMenu.gameObject.SetActive(true);
-        MainMenuLobbyMenu.Show(false, string.Format("Host port: {0}", CustomNetworkManager.Instance.GetComponent<KcpTransport>().Port), previousMenu.PreviousMenu);
+        MainMenuLobbyMenu.Show(false, string.Format("host port: {0}", CustomNetworkManager.Instance.GetComponent<KcpTransport>().Port), previousMenu.PreviousMenu);
 
         gameObject.SetActive(false);
     }
 
-    public void Show(MainMenuJoinGameMenu previousMenu)
+    public void Show(MainMenuJoinGameMenu previousMenu, string connectingText)
     {
-        ConnectingText.text = string.Format("Connecting to {0}...", CustomNetworkManager.Instance.networkAddress);
+        ConnectingText.text = string.Format("connecting to {0}...", connectingText);
 
         if (previousMenu != null)
             this.previousMenu = previousMenu;

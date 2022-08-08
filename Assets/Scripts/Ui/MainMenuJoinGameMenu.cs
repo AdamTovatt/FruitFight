@@ -62,7 +62,7 @@ public class MainMenuJoinGameMenu : MonoBehaviour
         ConnectButton.Select();
     }
 
-    private void Connect()
+    private async void Connect()
     {
         if (!string.IsNullOrEmpty(HostAddressInputField.text))
         {
@@ -72,10 +72,30 @@ public class MainMenuJoinGameMenu : MonoBehaviour
                 CustomNetworkManager.Instance.StopServer();
             }
 
-            CustomNetworkManager.Instance.networkAddress = HostAddressInputField.text;
+            string ip = HostAddressInputField.text;
+            if (ip != "localhost" && !ip.Contains('.'))
+            {
+                string newIp = await ApiHelper.GetIp(ip);
+
+                Debug.Log("Got ip from roomname: " + newIp);
+
+                if (newIp != null)
+                {
+                    ip = newIp;
+                    ConnectButton.image.color = PositiveColor;
+                }
+                else
+                {
+                    ConnectButton.image.color = NeutralColor;
+                    AlertCreator.Instance.CreateNotification(string.Format("Could not find room: {0}", HostAddressInputField.text));
+                    return;
+                }
+            }
+
+            CustomNetworkManager.Instance.networkAddress = ip;
 
             ConnectingMenu.gameObject.SetActive(true);
-            ConnectingMenu.Show(this);
+            ConnectingMenu.Show(this, HostAddressInputField.text);
         }
         else
         {

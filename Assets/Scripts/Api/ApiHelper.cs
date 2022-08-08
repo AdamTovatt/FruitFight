@@ -39,7 +39,7 @@ public class ApiHelper
 
     public static void RemoveUserCredentials()
     {
-        if(UserCredentials != null)
+        if (UserCredentials != null)
         {
             UserCredentials.Devalidate();
             FileHelper.SaveUserCredentials(UserCredentials);
@@ -113,7 +113,27 @@ public class ApiHelper
             dictionary.TryGetValue("name", out string result);
             return result;
         }
-        catch(Exception error)
+        catch (Exception error)
+        {
+            Debug.Log(error.Message);
+            return null;
+        }
+    }
+
+    internal static async Task<string> GetIp(string roomName)
+    {
+        try
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("roomName", roomName);
+
+            HttpResponseMessage responseMessage = await PerformRequest(HttpMethod.Get, "/room/getIp", queryParameters: parameters);
+            string response = await responseMessage.Content.ReadAsStringAsync();
+            Dictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
+            dictionary.TryGetValue("ip", out string result);
+            return result;
+        }
+        catch (Exception error)
         {
             Debug.Log(error.Message);
             return null;
