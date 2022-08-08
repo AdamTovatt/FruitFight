@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class MainMenuLobbyMenu : MonoBehaviour
 {
+    private delegate void RoomNameFetchedHandler(string name);
+    private event RoomNameFetchedHandler OnRoomNameFetched;
+
     public static bool IsActive { get { return Instance != null && Instance.gameObject.activeSelf; } }
     public static MainMenuLobbyMenu Instance;
 
@@ -18,6 +21,7 @@ public class MainMenuLobbyMenu : MonoBehaviour
     public Button BackButton;
     public Button ContinueButton;
     public CenterContentContainer PlayerContainer;
+    public GameObject LoadingSpinner;
 
     public GameObject NetworkMethodCallerPrefab;
 
@@ -93,12 +97,15 @@ public class MainMenuLobbyMenu : MonoBehaviour
 
         BindEventListeners();
 
+        LoadingSpinner.SetActive(true);
+        LobbyNameText.gameObject.SetActive(false);
+
         if (shouldStartHost)
         {
+            DisplayRoomName();
             CustomNetworkManager.IsOnlineSession = true;
             CustomNetworkManager.Instance.IsServer = true;
             CustomNetworkManager.Instance.StartHost();
-            Task.Run(() => DisplayRoomName());
         }
 
         if (playerObjects.Count < 2)
@@ -108,12 +115,20 @@ public class MainMenuLobbyMenu : MonoBehaviour
         }
     }
 
+    private void RoomNameFetched(string name)
+    {
+        LobbyNameText.text = name;
+        Debug.Log("text: " + LobbyNameText.text);
+    }
+
     private async Task DisplayRoomName()
     {
         string name = await ApiHelper.GetRoomName();
-        Debug.Log("Got room name");
-        LobbyNameText.text = string.Format("lobby name: {0}", name);
-        LobbyNameText.gameObject.SetActive(false);
+        LoadingSpinner.SetActive(false);
+        Debug.Log("Got room name: " + name);
+        OnRoomNameFetched?.Invoke(name);
+        LobbyNameText.SetText(string.Format("lobby name: {0}", name));
+        LobbyNameText.ForceMeshUpdate(true);
         LobbyNameText.gameObject.SetActive(true);
     }
 
@@ -176,11 +191,13 @@ public class MainMenuLobbyMenu : MonoBehaviour
     private void BindEventListeners()
     {
         CustomNetworkManager.Instance.OnDisconnectedServer += PlayerDisconnected;
+        OnRoomNameFetched += RoomNameFetched;
     }
 
     private void RemoveEventListeners()
     {
         CustomNetworkManager.Instance.OnDisconnectedServer -= PlayerDisconnected;
+        OnRoomNameFetched -= RoomNameFetched;
     }
 
     private void Continue()
