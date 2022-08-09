@@ -64,9 +64,48 @@ public class ApiLevelManager
     {
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Delete, "/level/delete", null, new Dictionary<string, object>() { { "levelId", levelId } });
 
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            ApiHelper.RemoveUserCredentials();
+
         if (response.IsSuccessStatusCode)
             return true;
 
         return false;
+    }
+
+    public async static Task<bool> LikeLevel(long levelId)
+    {
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/like", null, new Dictionary<string, object>() { { "levelId", levelId } });
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            ApiHelper.RemoveUserCredentials();
+
+        if (response.IsSuccessStatusCode)
+            return true;
+
+        return false;
+    }
+
+    public async static Task<UploadLevelResponse> UpdateLevel(World world, long levelId)
+    {
+        UploadLevelRequestBody body = new UploadLevelRequestBody()
+        {
+            Description = world.Metadata.Description,
+            Name = world.Metadata.Name,
+            PuzzleRatio = 50,
+            Thumbnail = world.Metadata.ImageData,
+            twoPlayers = true
+        };
+
+        world.Metadata = null;
+        body.WorldData = world.ToJson();
+
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/upload", body, new Dictionary<string, object>() { { "levelId", levelId } });
+        string responseJson = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            ApiHelper.RemoveUserCredentials();
+
+        return new UploadLevelResponse(responseJson, response.IsSuccessStatusCode, response.StatusCode);
     }
 }

@@ -14,7 +14,7 @@ public class LevelDetailsScreen : MonoBehaviour
 
     public Button CloseButton;
     public Button PlayButton;
-    public Button LikeButton;
+    public LoadingSpinnerButton LikeButton;
     public Button PublishOnlineButton;
     public Button UpdateOnlineVersionButton;
     public Button RemovePublishedButton;
@@ -22,6 +22,10 @@ public class LevelDetailsScreen : MonoBehaviour
     public CenterContentContainer ButtonContainer;
 
     public LoginScreen LoginScreen;
+
+    public Color NeutralColor;
+    public Color PositiveColor;
+    public Color NegativeColor;
 
     private BrowseLevelsScreen parentScreen;
 
@@ -34,6 +38,14 @@ public class LevelDetailsScreen : MonoBehaviour
     {
         CloseButton.onClick.AddListener(Close);
         PlayButton.onClick.AddListener(PlayLevel);
+        LikeButton.Button.onClick.AddListener(LikeLevel);
+    }
+
+    private void OnDestroy()
+    {
+        CloseButton.onClick.RemoveAllListeners();
+        PlayButton.onClick.RemoveAllListeners();
+        LikeButton.Button.onClick.RemoveAllListeners();
     }
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
@@ -48,6 +60,8 @@ public class LevelDetailsScreen : MonoBehaviour
         ThumbnailImage.sprite = worldMetadata.GetImageDataAsSprite();
         LevelTitleText.text = worldMetadata.Name;
         LevelDescriptionText.text = worldMetadata.Description;
+
+        LikeButton.Button.image.color = NeutralColor;
 
         LevelAuthorText.text = string.Format("Created by: {0}", localLevel ? "you" : (ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId ? worldMetadata.AuthorName + " (you)" : worldMetadata.AuthorName));
 
@@ -181,6 +195,14 @@ public class LevelDetailsScreen : MonoBehaviour
                     AlertCreator.Instance.CreateNotification(uploadResult.ErrorResponse == null ? "Unknown error" : uploadResult.ErrorResponse.Message);
             }
         }
+    }
+
+    private async void LikeLevel()
+    {
+        LikeButton.ShowSpinner();
+        bool success = await ApiLevelManager.LikeLevel(currentWorldMetadata.Id);
+        LikeButton.ReturnToNormal();
+        LikeButton.Button.image.color = success ? PositiveColor : NegativeColor;
     }
 
     private async void PlayLevel()
