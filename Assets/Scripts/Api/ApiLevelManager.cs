@@ -73,6 +73,19 @@ public class ApiLevelManager
         return false;
     }
 
+    public async static Task<bool> IncreasePlays(long levelId)
+    {
+        HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/increasePlays", null, new Dictionary<string, object>() { { "levelId", levelId } });
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            ApiHelper.RemoveUserCredentials();
+
+        if (response.IsSuccessStatusCode)
+            return true;
+
+        return false;
+    }
+
     public async static Task<bool> LikeLevel(long levelId)
     {
         HttpResponseMessage response = await ApiHelper.PerformRequest(HttpMethod.Post, "/level/like", null, new Dictionary<string, object>() { { "levelId", levelId } });

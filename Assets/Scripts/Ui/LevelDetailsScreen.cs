@@ -223,6 +223,8 @@ public class LevelDetailsScreen : MonoBehaviour
 
             world = World.FromJson(currentGetLevelResponse.WorldData);
             world.Metadata = currentGetLevelResponse.Metadata;
+
+            ApiLevelManager.IncreasePlays(world.Metadata.Id);
         }
 
         if (!CustomNetworkManager.IsOnlineSession)
