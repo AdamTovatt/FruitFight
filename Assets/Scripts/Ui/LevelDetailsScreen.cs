@@ -12,12 +12,19 @@ public class LevelDetailsScreen : MonoBehaviour
     public TextMeshProUGUI LevelDescriptionText;
     public TextMeshProUGUI LevelAuthorText;
 
-    public Button CloseButton;
-    public Button PlayButton;
-    public LoadingSpinnerButton LikeButton;
-    public Button PublishOnlineButton;
-    public Button UpdateOnlineVersionButton;
-    public Button RemovePublishedButton;
+    public Button PlayButtonLocal;
+    public Button PlayButtonNotOwner;
+    public Button PlayButtonOwner;
+    public Button OpenInEditorButton;
+    public LoadingSpinnerButton UploadLevelOnlineButton;
+    public LoadingSpinnerButton NegativeButtonNotOwner;
+    public LoadingSpinnerButton NeutralButtonNotOwner;
+    public LoadingSpinnerButton PositiveButtonNotOwner;
+    public LoadingSpinnerButton NegativeButtonOwner;
+    public LoadingSpinnerButton NeutralButtonOwner;
+    public LoadingSpinnerButton PositiveButtonOwner;
+    public LoadingSpinnerButton UpdateOnlineVersionButton;
+    public LoadingSpinnerButton RemoveOnlineVersionButton;
 
     public CenterContentContainer ButtonContainer;
 
@@ -36,16 +43,24 @@ public class LevelDetailsScreen : MonoBehaviour
 
     private void Start()
     {
-        CloseButton.onClick.AddListener(Close);
-        PlayButton.onClick.AddListener(PlayLevel);
-        LikeButton.Button.onClick.AddListener(LikeLevel);
+
     }
 
     private void OnDestroy()
     {
-        CloseButton.onClick.RemoveAllListeners();
-        PlayButton.onClick.RemoveAllListeners();
-        LikeButton.Button.onClick.RemoveAllListeners();
+        PlayButtonLocal.onClick.RemoveAllListeners();
+        PlayButtonNotOwner.onClick.RemoveAllListeners();
+        PlayButtonOwner.onClick.RemoveAllListeners();
+        OpenInEditorButton.onClick.RemoveAllListeners();
+        UploadLevelOnlineButton.Button.onClick.RemoveAllListeners();
+        NegativeButtonNotOwner.Button.onClick.RemoveAllListeners();
+        NeutralButtonNotOwner.Button.onClick.RemoveAllListeners();
+        PositiveButtonNotOwner.Button.onClick.RemoveAllListeners();
+        NegativeButtonOwner.Button.onClick.RemoveAllListeners();
+        NeutralButtonOwner.Button.onClick.RemoveAllListeners();
+        PositiveButtonOwner.Button.onClick.RemoveAllListeners();
+        UpdateOnlineVersionButton.Button.onClick.RemoveAllListeners();
+        RemoveOnlineVersionButton.Button.onClick.RemoveAllListeners();
     }
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
