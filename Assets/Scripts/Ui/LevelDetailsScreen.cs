@@ -12,6 +12,7 @@ public class LevelDetailsScreen : MonoBehaviour
     public TextMeshProUGUI LevelDescriptionText;
     public TextMeshProUGUI LevelAuthorText;
 
+    public Button CloseButton;
     public Button PlayButtonLocal;
     public Button PlayButtonNotOwner;
     public Button PlayButtonOwner;
@@ -25,6 +26,10 @@ public class LevelDetailsScreen : MonoBehaviour
     public LoadingSpinnerButton PositiveButtonOwner;
     public LoadingSpinnerButton UpdateOnlineVersionButton;
     public LoadingSpinnerButton RemoveOnlineVersionButton;
+
+    public GameObject LocalPanel;
+    public GameObject NotOwnerPanel;
+    public GameObject OwnerPanel;
 
     public CenterContentContainer ButtonContainer;
 
@@ -41,9 +46,14 @@ public class LevelDetailsScreen : MonoBehaviour
 
     private GetLevelResponse currentGetLevelResponse;
 
+    private Selectable DefaultButton;
+    private LoadingSpinnerButton PositiveRateButton;
+    private LoadingSpinnerButton NeutralRateButton;
+    private LoadingSpinnerButton NegativeRateButton;
+
     private void Start()
     {
-
+        CloseButton.onClick.AddListener(Close);
     }
 
     private void OnDestroy()
@@ -61,6 +71,7 @@ public class LevelDetailsScreen : MonoBehaviour
         PositiveButtonOwner.Button.onClick.RemoveAllListeners();
         UpdateOnlineVersionButton.Button.onClick.RemoveAllListeners();
         RemoveOnlineVersionButton.Button.onClick.RemoveAllListeners();
+        CloseButton.onClick.RemoveAllListeners();
     }
 
     public void Show(WorldMetadata worldMetadata, BrowseLevelsScreen parentScreen, bool localLevel)
@@ -74,9 +85,6 @@ public class LevelDetailsScreen : MonoBehaviour
 
         ThumbnailImage.sprite = worldMetadata.GetImageDataAsSprite();
         LevelTitleText.text = worldMetadata.Name;
-        LevelDescriptionText.text = worldMetadata.Description;
-
-        LikeButton.Button.image.color = NeutralColor;
 
         LevelAuthorText.text = string.Format("Created by: {0}", localLevel ? "you" : (ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId ? worldMetadata.AuthorName + " (you)" : worldMetadata.AuthorName));
 
@@ -84,48 +92,64 @@ public class LevelDetailsScreen : MonoBehaviour
         {
             if (worldMetadata.Id == 0) //this level isn't published, at least as we know it
             {
-                PublishOnlineButton.gameObject.SetActive(true);
-                UpdateOnlineVersionButton.gameObject.SetActive(false);
-                RemovePublishedButton.gameObject.SetActive(false);
-
-                PublishOnlineButton.onClick.RemoveAllListeners();
-                PublishOnlineButton.onClick.AddListener(PublishOnlineButtonWasClicked);
+                ShowLocalLevel();
             }
             else //this level is published
             {
-                PublishOnlineButton.gameObject.SetActive(false);
-                UpdateOnlineVersionButton.gameObject.SetActive(true);
-                RemovePublishedButton.gameObject.SetActive(true);
-
-                RemovePublishedButton.onClick.RemoveAllListeners();
-                RemovePublishedButton.onClick.AddListener(RemoveOnlineButtonWasClicked);
+                ShowLocalLevel();
             }
-
-            LikeButton.gameObject.SetActive(false);
         }
         else //this is a level from the online library
         {
             if (ApiHelper.UserCredentials != null && ApiHelper.UserCredentials.UserId == worldMetadata.AuthorId) //this is our level
             {
-                RemovePublishedButton.gameObject.SetActive(true);
-                UpdateOnlineVersionButton.gameObject.SetActive(true);
-                LikeButton.gameObject.SetActive(false);
-
-                RemovePublishedButton.onClick.RemoveAllListeners();
-                RemovePublishedButton.onClick.AddListener(RemoveOnlineButtonWasClicked);
+                ShowOwnerLevel();
             }
             else //this is not our level
             {
-                RemovePublishedButton.gameObject.SetActive(false);
-                UpdateOnlineVersionButton.gameObject.SetActive(false);
-                LikeButton.gameObject.SetActive(true);
+                ShowNonOwnerLevel();
             }
-
-            PublishOnlineButton.gameObject.SetActive(false);
         }
 
         ButtonContainer.CenterContent();
         SelectDefaultButton();
+    }
+
+    private void ShowLocalLevel()
+    {
+        LocalPanel.SetActive(true);
+        NotOwnerPanel.SetActive(false);
+        OwnerPanel.SetActive(false);
+
+        PlayButtonLocal.onClick.AddListener(PlayLevel);
+    }
+
+    private void ShowNonOwnerLevel()
+    {
+        PositiveRateButton = PositiveButtonNotOwner;
+        NeutralRateButton = NeutralButtonNotOwner;
+        NegativeRateButton = NegativeButtonNotOwner;
+
+        PositiveButtonNotOwner.Button.onClick.AddListener(RatePositive);
+        PlayButtonNotOwner.onClick.AddListener(PlayLevel);
+
+        LocalPanel.SetActive(false);
+        NotOwnerPanel.SetActive(true);
+        OwnerPanel.SetActive(false);
+    }
+
+    private void ShowOwnerLevel()
+    {
+        PositiveRateButton = PositiveButtonOwner;
+        NeutralRateButton = NeutralButtonOwner;
+        NegativeRateButton = NegativeButtonOwner;
+
+        PositiveButtonOwner.Button.onClick.AddListener(RatePositive);
+        PlayButtonOwner.onClick.AddListener(PlayLevel);
+
+        LocalPanel.SetActive(false);
+        NotOwnerPanel.SetActive(false);
+        OwnerPanel.SetActive(true);
     }
 
     private async void GetCurrentLevel()
@@ -135,7 +159,8 @@ public class LevelDetailsScreen : MonoBehaviour
 
     public void SelectDefaultButton()
     {
-        PlayButton.Select();
+        if (DefaultButton != null)
+            DefaultButton.Select();
     }
 
     private async void UpdateOnlineButtonWasClicked()
@@ -212,12 +237,12 @@ public class LevelDetailsScreen : MonoBehaviour
         }
     }
 
-    private async void LikeLevel()
+    private async void RatePositive()
     {
-        LikeButton.ShowSpinner();
+        PositiveRateButton.ShowSpinner();
         bool success = await ApiLevelManager.LikeLevel(currentWorldMetadata.Id);
-        LikeButton.ReturnToNormal();
-        LikeButton.Button.image.color = success ? PositiveColor : NegativeColor;
+        PositiveRateButton.ReturnToNormal();
+        PositiveRateButton.Button.image.color = success ? PositiveColor : NegativeColor;
     }
 
     private async void PlayLevel()
